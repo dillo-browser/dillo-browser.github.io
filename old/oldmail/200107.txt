@@ -1,0 +1,593 @@
+RE: [Dillo-dev]Scaling and new panel_size...
+
+From: Mondesir, Raphael <raphael.mondesir@tf...> - 2001-07-30 13:33
+
+Thanks, alot, Pigeon.
+
+-----Original Message-----
+From: Pigeon [mailto:pigeon@fo...]
+Sent: Monday, July 30, 2001 9:17 AM
+To: 'dillo-dev@li...'
+Subject: RE: [Dillo-dev]Scaling and new panel_size...
+
+
+
+
+> How do you get Dillo to work on the IPaq? Is it framebuffered device? I'd
+> like to know this because I would like to put together a bootable floppy
+> that runs Dillo and I have plans for purchasing an IPaq in the near
+future.
+
+
+A short answer will be, have a look at http://www.handhelds.org/
+:)
+
+Yes, it's running X frame buffer. Basically the anything that is
+compiled for the ipaq (strongarm processor) will run on the ipaq running
+linux.
+
+I cross compiled dillo myself from my machine. Some other people
+have cross compiled and put binaries onto the net too. Here is one of them
+at http://www.geocities.com/glenn65535/
+
+
+
+Pigeon.
+
+
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+http://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+RE: [Dillo-dev]Scaling and new panel_size...
+
+From: Pigeon <pigeon@fo...> - 2001-07-30 13:17
+
+> How do you get Dillo to work on the IPaq? Is it framebuffered device? I'd
+> like to know this because I would like to put together a bootable floppy
+> that runs Dillo and I have plans for purchasing an IPaq in the near future.
+
+
+A short answer will be, have a look at http://www.handhelds.org/
+:)
+
+Yes, it's running X frame buffer. Basically the anything that is
+compiled for the ipaq (strongarm processor) will run on the ipaq running
+linux.
+
+I cross compiled dillo myself from my machine. Some other people
+have cross compiled and put binaries onto the net too. Here is one of them
+at http://www.geocities.com/glenn65535/
+
+
+
+Pigeon. 
+
+
+
+RE: [Dillo-dev]Scaling and new panel_size...
+
+From: Mondesir, Raphael <raphael.mondesir@tf...> - 2001-07-30 12:50
+
+Hi Pigeon,
+
+How do you get Dillo to work on the IPaq? Is it framebuffered device? I'd
+like to know this because I would like to put together a bootable floppy
+that runs Dillo and I have plans for purchasing an IPaq in the near future.
+
+Thanks,
+Raphael
+
+-----Original Message-----
+From: Pigeon [mailto:pigeon@fo...]
+Sent: Sunday, July 29, 2001 7:44 AM
+To: dillo-dev@li...
+Subject: [Dillo-dev]Scaling and new panel_size...
+
+
+
+Hi all.
+
+I've done a little patch to basically add two features that are
+really useful I reckon when I use dillo on my ipaq.
+
+First thing is a new panal_size called "tinydouble", which is basically
+based on tiny, but a bit more friendly under a small resolution under
+ipaq.
+
+Second thing is a scaling functionality. With this I can scale up and down
+a web page (kind of like zooming in and out). Again this is kind of handy
+when viewing webpages on a handheld device. The patch given here will
+scale images only. I have actually tested with scaling fonts as well, but
+the problem comes to when the text is scaled to an unreadable size. And
+also I will the scaling for fonts should be hooked to the font_factor of
+the preferences.
+
+There are a few issues with this scaling feature.
+
+Firstly, right now the image scaling works in the Html_add_widget function,
+and that means it will work not only for images, but everything that uses
+that
+function. So far from the source code only <img> and <hr> tags make use of
+that function. I didn't look at other codes in depth yet, but what is
+cool will be the ability to scale anything in a webpage (like table,
+forms, etc). I have a feeling there's a better way to handle this.
+(I've read and tried doing the scale in image.c and dw_image.c too, but I
+cannot get it to work yet.)
+
+Second issues is, the scaling will not scale images with not width and
+height attribute. Again, I think the scaling should be done in the image
+part.
+
+Third issue is, I tried hooking the spin button changes to reload the
+page, it works but it's far more easier to crash dillo (and basically
+keep on clicking reload can crash dillo quite quickly, too). And so I've
+commented that bit for now.
+
+BTW, screenshots for this patch at:
+http://pigeond.net/ipaq/dillo1.jpg
+http://pigeond.net/ipaq/dillo2.jpg
+http://pigeond.net/ipaq/dillo3.jpg
+http://pigeond.net/ipaq/dillo4.jpg
+
+And the patch:
+http://pigeond.net/ipaq/dillo-scale-tinydouble.patch
+(Based on dillo-0.5.1 tarball)
+
+Last but not least, this is the first time I patch dillo, so please excuse
+my code if I've put anything weird or out of the coding standard :)
+
+And, the tinydouble and scaling feature aren't actually related, but
+they're quite tied up together, so I've put them into one patch, instead
+of two.
+
+Pigeon.
+
+
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+http://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Scaling and new panel_size...
+
+From: Pigeon <pigeon@fo...> - 2001-07-29 11:44
+
+Hi all.
+
+I've done a little patch to basically add two features that are
+really useful I reckon when I use dillo on my ipaq.
+
+First thing is a new panal_size called "tinydouble", which is basically
+based on tiny, but a bit more friendly under a small resolution under
+ipaq.
+
+Second thing is a scaling functionality. With this I can scale up and down
+a web page (kind of like zooming in and out). Again this is kind of handy
+when viewing webpages on a handheld device. The patch given here will
+scale images only. I have actually tested with scaling fonts as well, but
+the problem comes to when the text is scaled to an unreadable size. And
+also I will the scaling for fonts should be hooked to the font_factor of
+the preferences.
+
+There are a few issues with this scaling feature.
+
+Firstly, right now the image scaling works in the Html_add_widget function,
+and that means it will work not only for images, but everything that uses that
+function. So far from the source code only <img> and <hr> tags make use of
+that function. I didn't look at other codes in depth yet, but what is
+cool will be the ability to scale anything in a webpage (like table,
+forms, etc). I have a feeling there's a better way to handle this.
+(I've read and tried doing the scale in image.c and dw_image.c too, but I
+cannot get it to work yet.)
+
+Second issues is, the scaling will not scale images with not width and
+height attribute. Again, I think the scaling should be done in the image
+part.
+
+Third issue is, I tried hooking the spin button changes to reload the
+page, it works but it's far more easier to crash dillo (and basically
+keep on clicking reload can crash dillo quite quickly, too). And so I've
+commented that bit for now.
+
+BTW, screenshots for this patch at:
+http://pigeond.net/ipaq/dillo1.jpg
+http://pigeond.net/ipaq/dillo2.jpg
+http://pigeond.net/ipaq/dillo3.jpg
+http://pigeond.net/ipaq/dillo4.jpg
+
+And the patch:
+http://pigeond.net/ipaq/dillo-scale-tinydouble.patch
+(Based on dillo-0.5.1 tarball)
+
+Last but not least, this is the first time I patch dillo, so please excuse
+my code if I've put anything weird or out of the coding standard :)
+
+And, the tinydouble and scaling feature aren't actually related, but
+they're quite tied up together, so I've put them into one patch, instead
+of two.
+
+Pigeon. 
+
+
+
+Re: [Dillo-dev]Close to 0.6.0 release
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-07-26 13:45
+
+On Wed, Jul 18, 2001 at 06:20:10AM -0700, Aaron Lehmann wrote:
+> On Sat, Jul 07, 2001 at 05:21:22PM -0400, Jorge Arellano Cid wrote:
+> > Some things to be included:
+> > 
+> > - The main window is scrollable with:
+> > 
+> > The arrow keys,
+> > [Ctrl] + {PgUp | PgDn | Home | End}]
+> > Pressing the middle mouse-button
+> 
+> I would love hjkl vi-style scrolling too. But that could possibly
+> interfere with forms.
+
+This is possible, Dw_gtk_scrolled_frame_key_press has to be modified
+for this. Gtk+ always delivered key press events from bottom to top,
+so it does not conflict with entries etc.
+
+> Ultimately, it would be awesome to have vi-style
+> editing within the forms, but that's not a very high priority item.
+
+This is the task of Gtk+, send a bug report ;-)
+
+
+Sebastian 
+
+
+
+[Dillo-dev]Find Text
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-24 14:48
+
+Hi,
+
+
+I've started implementing "find text". This is important
+because it IS the main reason for the 0.6.0 release hold-back.
+
+Sebastian: I know this was in your schedule, but as your
+abscence is taking longer that I thought, and as I devised a way
+of implementing, I just decided to start (this will also let you
+work on the other couple of bugs you told me). Please contact me
+ASAP.
+
+I have a prototype running (it works with words within tables).
+Some details:
+
+* It adds a 'findtext' method to DwContainer (table and page).
+* It uses a stack to keep track of current position.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]News
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-19 18:02
+
+Hi there!
+
+
+0.6.0
+-----
+Don't think all of this waiting time has been wasted, there're
+plenty of changes to the source that I'll commit very soon.
+
+
+User manual
+-----------
+Among misc. patches, I received the first attempt to a user
+manual (mainly hints) for dillo (thanks to Kristian A. Rink). I
+worked it out and set a new copy in the main site ([Help] link).
+The idea is to improve it. Anything that helps (from purely
+aesthetics to content improvement). I'll be expecting patches!
+
+Please remember that it is expected to be lean, useful and not
+detailed to the extremes.
+
+As I was reading it, the idea of making it more interactive,
+as happens with the file links, looked very appealing to me;
+maybe a table layout would help also.
+
+Including some hints stated in the splash screen would
+probably help.
+
+
+gtk_set_locale
+--------------
+Martynas: I saw your bug-track entry, and read the email, but
+I'm not sure still: do you mean that just adding gtk_set_locale
+(at init time) solves the problem for you?
+
+
+Dw patches
+----------
+
+Sebastian: I'll commit a truck-load of changes from my source
+tree very soon. The patch on Dw remains identical to what I sent
+you some time ago. Feel free to revert 'cum_height' to 'y_top' if
+you prefer it that way.
+
+
+That's all, cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Delayed release
+
+From: Kristian A. Rink <afterimage@gm...> - 2001-07-18 14:17
+
+Attachments: Message as HTML      Message as HTML      
+
+
+
+
+
+Re: [Dillo-dev]Close to 0.6.0 release
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-07-18 13:20
+
+On Sat, Jul 07, 2001 at 05:21:22PM -0400, Jorge Arellano Cid wrote:
+> Some things to be included:
+> 
+> - The main window is scrollable with:
+> 
+> The arrow keys,
+> [Ctrl] + {PgUp | PgDn | Home | End}]
+> Pressing the middle mouse-button
+
+I would love hjkl vi-style scrolling too. But that could possibly
+interfere with forms. Ultimately, it would be awesome to have vi-style
+editing within the forms, but that's not a very high priority item.
+
+> - Alt + ',' and Alt +'.' serve as shortcuts for Back and
+> Forward. (mnemonic: they're usually the '<' and '>' keys).
+
+Yay! 
+
+
+
+Re: [Dillo-dev]global dillo config file
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-18 01:42
+
+Eduardo,
+
+> This is just a suggestion. I think it would be useful to support
+> a global configuration file for dillo, if the user does not have one in
+> its home directory, so I added these lines to prefs.c . If a ~/.dillo/dillorc
+> is not found it will try to load /etc/dillorc , this way a system wide
+> configuration file can be provided by the packager. It is useful for
+> the ipaq for instance, because it requires different defaults that can
+> be provided in /etc/dillorc , directly in the package.
+
+OK, it's done.
+
+> It was just a
+> copy/paste, maybe it could be done in a more elegant way, but anyway...
+
+Yes, I modified it a bit.
+
+
+Obrigado!
+Jorge.- 
+
+
+
+[Dillo-dev]Delayed release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-14 13:15
+
+Hi!
+
+
+0.6.0 is on delay mainly due to circumstances that are beyond
+our control... (HW failure! ;).
+
+Meanwhile:
+
+- Has anyone reproduced BUG#166?
+
+- I've got the screenshots, but not the manual page :(
+
+
+Sebastian:
+
+I sent you the patches, but nettaxi complains it can
+deliver to 'ping.de' so I forwarded it to 'lilly.ping.de'. In any
+case, if it's easier for you, I can commit the patch and post the
+explanation here.
+
+
+That's all folks
+Jorge.- 
+
+
+
+[Dillo-dev]Leaks
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-12 12:41
+
+Hi!
+
+Sebastian:
+
+Have you received my last emails? (they were about Dw leaks &
+patches). I'm writing to you through the list to let you a chance
+of reading them on the web if your mail server is down.
+
+PD: the patch is finished!!!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]global dillo config file
+
+From: Eduardo Marcel Macan <macan@co...> - 2001-07-11 17:40
+
+Attachments: prefs.c.diff      
+
+This is just a suggestion. I think it would be useful to support
+a global configuration file for dillo, if the user does not have one in
+its home directory, so I added these lines to prefs.c . If a ~/.dillo/dillorc
+is not found it will try to load /etc/dillorc , this way a system wide
+configuration file can be provided by the packager. It is useful for
+the ipaq for instance, because it requires different defaults that can
+be provided in /etc/dillorc , directly in the package. It was just a
+copy/paste, maybe it could be done in a more elegant way, but anyway...
+
+Small diff file attached.
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+[Dillo-dev]screenshots
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-09 12:36
+
+Hi!
+
+I'm glad to inform that Eric sent me the screenshots, so that's
+done. Anyway, if you have a "killer shot", that could improve the
+screenshots page, send it to me.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Close to 0.6.0 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-07-07 21:23
+
+Hi everyone!
+
+
+I haven't posted lately, due to devote work on current code.
+Although this list seems very quiet, 0.6.0-pre has been under a
+stream-flow of patches and improvements! I'm confident that 0.6.0
+will be a great release.
+
+In order to get to it, there're still some pending tasks, but
+we're making progress on them. Among those, I'd like to have
+updated dillo-screenshots for the web site (yes, I'm asking for
+a volunteer!;), and also want to include a help page.
+
+The help page should be small, and in HTML. I'd like to have
+simple dillo tips to offer our users, not a complete manual that
+starts explaining from what BACK-button is!
+
+Some things to be included:
+
+- The main window is scrollable with:
+
+The arrow keys,
+[Ctrl] + {PgUp | PgDn | Home | End}]
+Pressing the middle mouse-button
+
+If unresponssive, focus by clicking it (but not on a link!)
+
+- Alt + ',' and Alt +'.' serve as shortcuts for Back and
+Forward. (mnemonic: they're usually the '<' and '>' keys).
+
+- Http downloads are possible, but the interface hasn't been
+finished (it's described in the project notes). If you
+still want to use it, get to the link you want to download
+and right click it, then select "Save link as...". You'll
+get notified when its done, but nothing else.
+
+- Ftp downloads can be got by getting the full ftp-link (use
+"Copy link location"), get to a terminal and issue 'wget'
+or 'curl -O' and paste the URI (usually middle button).
+
+- Stability: dillo is more stable if you let it load the main
+page before moving on (don't worry about images).
+
+- Directories, you can use:
+
+'file:' to get current directory
+'file:~' to get your home directory
+
+- Framed page don't render, but the progress bar shows
+content. If you need badly to get to that info, then "view
+source" it, try to pick the right link, and copy/paste to
+the location entry (don't close the source viewer before
+pasting).
+
+- There're lots of options in 'dillorc', among them:
+
+font_factor: defaults to 1.0, I love 1.2 and iPAQ use 0.8
+
+panel_size: <read dillorc!>
+
+- Dillo's control panel boxes can be torn off the main window
+by dragging them from the leftmost part.
+
+- Reload button will always request an end-to-end reload, but
+it will not reload embedded images.
+
+- <alike stuff>*
+
+
+Does anyone feel like helping me with it?
+
+
+Ah, finally, can anyone reproduce BUG#166? It works for me.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]set of patches
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-07-01 22:58
+
+Attachments: const.diff      fprintf.diff      prototypes.diff      stringopts.diff      
+
+1) const.diff. marks some tables of constant as const. extremely minor
+and stylistic, may result in some minute optimization by the compiler.
+
+2) fprintf.diff. prefs.c seems to allocate a buffer, sprintf into it,
+and immediately write into a file. that's what fprintf is for! i can't
+see any reason why this change would be bad.
+
+3) prototypes.diff. png.c uses abort() without including stdlib.h.
+gcc 3.0 was nice enough to detect this ANSI violation.
+
+4) stringopts.diff. several miscellaneous string optimizations. some
+strcpys are changed to memcpys (which are often faster) and sprintfs
+were changed to strcpys when this was possible. strcmps were sometimes
+broken down when it made sense. this is the most major change and it
+reduces the size of the binary by a few hundred bytes.
+
+
+the patches applied in alphabetical order with no fuzz for me. they'll
+probably work in any order.
+
+
+thanks! 
+

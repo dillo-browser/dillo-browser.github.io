@@ -1,0 +1,3654 @@
+Re: [Dillo-dev]Ditching pthreads
+
+From: Sam Dennis <sam@ma...> - 2002-01-31 23:22
+
+Some time around 8 o'clock PM on January 31, a Thursday, Sam Dennis wrote many
+things about using GIOChannels in file.c to replace pthreads without first
+trying to implement it and therefore overlooking the inadequacy of GIOChannels
+with regard to detecting EOF and the fact that we already use them in http.c.
+This shows that the statement most likely to be true in the message was about
+him not being an expect on dillo's IO subsystem. He still holds that we don't
+need threads, though. 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: Andreas Schweitzer <andy@ph...> - 2002-01-31 20:41
+
+On Thu, Jan 31, 2002 at 08:35:44PM +0000, Sam Dennis wrote:
+> Since it (pthreads if you missed the subject line) appears to be causing so
+> many problems on unusual systems, why not just remove it?
+
+If you refer to compiling on *BSD systems, I was looking into this.
+Here is a patch that should make compilation on FreeBSD - and possibly
+the others - easier :
+
+--- configure.in.orig Tue Jan 29 18:35:43 2002
++++ configure.in Thu Jan 31 15:36:07 2002
+@@ -4,6 +4,8 @@
+AM_INIT_AUTOMAKE(dillo, 0.6.4)
+AM_CONFIG_HEADER(config.h)
+
++CPPFLAGS=-I/usr/local/include
++LDFLAGS=-L/usr/local/lib
+
+dnl Options
+
+@@ -68,7 +70,7 @@
+fi
+
+
+-AC_CHECK_LIB(pthread, pthread_create)
++AC_SEARCH_LIBS(pthread_create, pthread c_r, thread_ok=yes, thread_ok=no)
+AC_CHECK_LIB(z, zlibVersion)
+AC_CHECK_LIB(png, png_check_sig)
+
+
+Of course, now you have to run autoconf again. It needs some
+testing, though. I only tested on FreeBSD so far.
+
+Now, this is *only* *compiling* ...
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Ditching pthreads
+
+From: Sam Dennis <sam@ma...> - 2002-01-31 20:30
+
+Since it (pthreads if you missed the subject line) appears to be causing so
+many problems on unusual systems, why not just remove it?
+
+I'm no expert on our IO subsystem but we already rely on glib, which has a
+very handy-looking thing called a GIOChannel. We could, of course, manage
+without it but it's there so why not use it?
+
+Of course, I haven't thoroughly scrutinised the code so it may be that there's
+some deeply profound reason for using threaded IO, but I doubt it.
+
+The only other thing we seem to use pthreads for is asynchronous DNS lookups,
+and that is optional but could be handled with, off the top of my head, a
+forked process. 
+
+
+
+Re: [Dillo-dev]dillo on *BSD
+
+From: Andreas Schweitzer <andy@ph...> - 2002-01-31 16:43
+
+Hi again,
+
+I've been looking in making ports for FreeBSD and OpenBSD
+and maybe NetBSD ;-). It seems, there is already something
+happening and NetBSD seems to have a port/package !:
+
+NetBSD :
+http://cvsweb.netbsd.org/bsdweb.cgi/pkgsrc/www/dillo/
+I have also found ports to Handhelds and whatnot ;-):
+http://mail-index.netbsd.org/port-hpcmips/2001/12/
+(this is for the MIPS HP/C handhelds like the Cassiopeias)
+
+FreeBSD work in progress :
+http://www.FreeBSD.org/cgi/query-pr.cgi?pr=33122
+
+OpenBSD work in progress :
+http://www.monkey.org/openbsd/archive/ports/0109/msg00198.html
+http://www.monkey.org/openbsd/archive/ports/0110/msg00001.html
+
+I'll probably look into this in more detail on the weekend.
+But the patches they apply should already help.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Start-up time and gtk_set_locale()
+
+From: Pekka Lampila <medar@ka...> - 2002-01-31 16:22
+
+Hi,
+
+(Ah, I'm finally able to post here, after changing my SMTP server)
+
+I've been thinking if it would be possible to reduce Dillo's start-up
+time, so I tested few things.
+
+If I place return 0; before gtk_main() in dillo.c, average runtime is
+about 2.5 seconds. (When no window manager is running). After removing
+gtk_set_locale() the average time is only about 1.8 secs.
+(My machine is P133 with 72mb of RAM)
+
+gtk_set_locale was added in 0.6.2. So maybe problems that were fixed by
+it could be dealt with some other way?
+
+On the other hand this sounds like the kind of thing that could be
+"fixed" by GTK 2.0 ...
+
+Keep up the good work. :)
+
+-- 
+Pekka Lampila - medar@ka... 
+
+
+
+Re: [Dillo-dev]Dillo on NetBSD
+
+From: Bjoern Weber <foxbow@we...> - 2002-01-31 15:06
+
+Imad <magius@pu...> schrieb am 31.01.02:
+> On Thu, 31 Jan 2002, Andreas Schweitzer wrote:
+> > > Another funny thing is the fact that I can compile only once.
+> > > If I try a second make, it bombs out, complaining about
+> > > defective AMDEP lines in the Makefile. I suppose that my
+> > > automake is outdated, yet shouldn't configure notice that?
+> > Just to check : I have to use gmake on FreeBSD, what about
+> > NetBSD ?
+> My guess would be yes, you need to use gmake, as OpenBSD is pretty
+> similiar to NetBSD and OpenBSD's BSD make will fail.
+
+Makes no real difference with me. I can use both - yet both just
+once. And that *only* happens in the checked out CVS tree, not 
+in the final distributions.
+
+Bjoern
+
+-- 
+A nuclear bomb is really funny but when it comes your way
+Falling on your breakfast table can disturb your day!
+(Off - Bad News)
+______________________________________________________________________________
+All inclusive! 100 MB Speicher, 1000 Mails, Wunschrufnummer, Superstars,
+Events, Preisvorteile und mehr unter http://club.web.de/?mc=021104 
+
+
+
+[Dillo-dev]Success on Solaris
+
+From: Miklos Magyari <miklos.magyari@et...> - 2002-01-31 15:06
+
+hi there,
+
+just to report: 0.6.4 compiles and runs fine on s SparcStation 5 with
+Solaris 8.
+
+cheers,
+Miki 
+
+
+
+Re: [Dillo-dev]Dillo on NetBSD
+
+From: Imad <magius@pu...> - 2002-01-31 14:10
+
+On Thu, 31 Jan 2002, Andreas Schweitzer wrote:
+
+> Hi,
+>
+> > Unfortunately I can't compile the cvs without tweaking.
+> > First of all I need to touch depmod in the root directory
+> > then I need to copy config.h into the src/IO directory.
+> >
+> > Another funny thing is the fact that I can compile only once.
+> > If I try a second make, it bombs out, complaining about
+> > defective AMDEP lines in the Makefile. I suppose that my
+> > automake is outdated, yet shouldn't configure notice that?
+>
+> Just to check : I have to use gmake on FreeBSD, what about
+> NetBSD ?
+
+My guess would be yes, you need to use gmake, as OpenBSD is pretty
+similiar to NetBSD and OpenBSD's BSD make will fail.
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+Re: [Dillo-dev]Dillo on NetBSD
+
+From: Andreas Schweitzer <andy@ph...> - 2002-01-31 14:06
+
+Hi,
+
+> Unfortunately I can't compile the cvs without tweaking.
+> First of all I need to touch depmod in the root directory
+> then I need to copy config.h into the src/IO directory.
+> 
+> Another funny thing is the fact that I can compile only once.
+> If I try a second make, it bombs out, complaining about
+> defective AMDEP lines in the Makefile. I suppose that my
+> automake is outdated, yet shouldn't configure notice that?
+
+Just to check : I have to use gmake on FreeBSD, what about
+NetBSD ?
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]*BSD and dillo's configure
+
+From: Imad <magius@pu...> - 2002-01-31 12:14
+
+Hi!
+
+Running configure as follows worked for me on my SPARCstation 5/OpenBSD
+3.0:
+
+LIBS="-pthread " ./configure --with-jpeg-inc=/usr/local/include
+
+However, although gmake can compile the source, Dillo repeatedly
+core-dumps. It opens up the "about" page fine but as soon as I ask it to
+fetch another page, boom! core dump:
+
+
+Setting locale to C
+dillo_dns_init: Here we go!
+Loading bookmarks...
+Nav_open_url: Url=>about:splash<
+Nav_open_url: Url=>http://dillo.so....net/ChangeLog.html<
+pid 32387: Fatal error p' at line 573 in file (errno = 0)
+1;2c
+
+It does seem possible to sometimes get through to a text-only page, but
+even that occurs very, very rarely. I *know* Dillo isn't this buggy --
+old versions didn't die nearly this easily, and Dillo's gotten better
+with time, so I'm pretty sure that it's a configuration/compile problem,
+likely with pthreads.
+
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+Re: [Dillo-dev]*BSD and dillo's configure
+
+From: Bjoern Weber <foxbow@we...> - 2002-01-31 10:18
+
+Jorge Arellano Cid <jcid@em...> schrieb am 30.01.02:
+> Hi BSDers!
+>=20
+> Within my email collection :), I have several references to
+> problems with *BSD, in what regards to jpeg-library-detection and
+> pthreads.
+>=20
+> Dillo 0.6.4 has a new check for jpeg library that seems to be
+> working (at least here and in some other machines where the
+> problem was present before). Those of you that had problems with
+> it, please test and report how it goes.
+Unfortunately I was tweaking my system instead of the Makefile to
+get rid of that problem as several other packages bombed out similar.
+
+> The pthreads library problem is more complex. As I wrote
+> before:
+[...]
+> Sometime ago Sammy sent me a big patch (60Kb aprox) that solved
+> the pthread library detection. I'm reluctant to include such a
+> big patch, specially knowing that 'configure' already takes 120Kb=20
+> Maybe there's a smaller solution that can do it. As a custom
+> test in configure.in for instance (just an idea).
+Hmmh, before installing the pthread library from NetBSD I just had=20
+to tweak about four lines in the source and kick out on superflous
+include to get things going without pthreads. But.. oh, I guess
+that hack had influences on the file->save behaviour.
+
+[...]
+> Sammy, nstalkie at tvd dot be
+> Richard, rcagny in mtice . fr
+> Bjoern, foxbow on web dot de
+> Brian, brian at budbud . dhs dot org
+[...]
+> Note1: Bjoern told me he was going to work on a solution, so he
+> may have something.
+> Note2: Brian may not have enough time. :(
+Hmmh, since there seems to be sincere interest in that point I
+will pick up my work again and will have a closer look at the
+problems I stated in another mail as well.
+
+Greetings,
+Bjoern
+
+--=20
+A nuclear bomb is really funny but when it comes your way
+Falling on your breakfast table can disturb your day!
+(Off - Bad News)
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F
+E*TRADE - neu in Deutschland. Jetzt Depot er=F6ffnen + Pr=E4mie erhalten=20
+http://etrade.web.de 
+
+
+
+[Dillo-dev]Dillo on NetBSD
+
+From: Bjoern Weber <foxbow@we...> - 2002-01-31 10:00
+
+Just for the records. After I installed the pthreads package and
+linked the jpeg and png libs down to /usr/lib the 0.6.4 version
+compiles from scratch, running like a charm.
+
+Unfortunately I can't compile the cvs without tweaking.
+First of all I need to touch depmod in the root directory
+then I need to copy config.h into the src/IO directory.
+
+Another funny thing is the fact that I can compile only once.
+If I try a second make, it bombs out, complaining about
+defective AMDEP lines in the Makefile. I suppose that my
+automake is outdated, yet shouldn't configure notice that?
+
+This all was tested on a SUN SparcStation 5 running under 
+NetBSD 1.5.2
+
+If my descriptions were too vague just send me a note and I'll
+retry it at home (actually at work, typing from memory)
+
+Greetings,
+Bjoern
+
+P.S.: The QNX x86 0.6.4 runs better than the 0.6.3 I'm about
+to make an official statement about that.
+-- 
+A nuclear bomb is really funny but when it comes your way
+Falling on your breakfast table can disturb your day!
+(Off - Bad News)
+______________________________________________________________________________
+Die Nummer, die sich jeder merkt: Ihre 01212 Wunschrufnummer von WEB.DE! 
+Jetzt sichern: http://freemail.web.de 
+
+
+
+Re: [Dillo-dev]dillo-0.6.4 ????
+
+From: Bill Thompson <billt@ha...> - 2002-01-31 02:17
+
+On Wed, 30 Jan 2002 15:01:49 +0100
+belaruse@we... wrote:
+
+> Hi,
+> 
+> where can I find dillo-0.6.4 ? 
+> http://download.so....net/dillo/ contains only dillo-0.6.3 !
+> 
+> ri
+
+dillo-0.6.4 for Mandrake 8.1 can be found at:
+ftp://ftp.eastwind.net/pub/mirrors/texstar/Mandrake-8.1-i586/dillo-0.6.4-1mdk.i586.rpm
+
+Bill
+-- 
+From the shores of Khlong YaiPhuan, Bangkok, Thailand... 
+
+
+
+Re: [Dillo-dev]dillo on *BSD
+
+From: DraX <drax@wh...> - 2002-01-30 21:37
+
+On OpenBSD you add -pthreads and it works, if memory serves that does
+-lc_r -lpthread -D_REENTERENT_ perhaps more, perhaps less.
+
+On Wed, 30 Jan 2002, John Utz wrote:
+
+> more FreeBSD input....
+> 
+> On Wed, 30 Jan 2002, Andreas Schweitzer wrote:
+> 
+> > Hi everybody,
+> > 
+> > Jorge, as you asked for some BSD fixes here it goes.
+> > 
+> > There are 2 main things that could help a lot :
+> > 
+> > 1. All the libs like jpeg anf gtk etc. live in /usr/local
+> > (/usr/local/lib /usr/local/include and /usr/local/bin/gtk-config)
+> > This is standard on all *BSD's. So, I think if autoconf/automake etc.
+> > simply starts looking in /usr/local/ then things should improve
+> > significantly. (I am not that familiar with these tools, sorry)
+> 
+> i second this, and it seems to not be a problem on any other gtk apps that 
+> use configure....
+> 
+> > 2. The trheads require the
+> > -lc_r
+> > switch instead of -lpthread .... beats me .... at least on FreeBSD.
+> > I'll check the other *BSD's eventually.
+> 
+> nope! not no more! at least in theory :-) FreeBSD-4.5 should be ok with 
+> the -lpthread and not require -lc_r ( i am running a FreeBSD-stable drop 
+> from the middle of december. it's possible that it got pulled, but i 
+> doubt it.
+> 
+> i'll actually have some FACT's in a few weeks when i finally get around to 
+> upgrading to 4.5-RELEASE. others may be able to make this change more 
+> quickly than i can in the near future.
+> 
+> > BTW, there is a port of dillo0.4 in /usr/ports/www in FreeBSD. This
+> > gave away quite a bit ;-) ....
+> 
+> obviously, one of us FreeBSD users needs to run out and fix that :-)
+> 
+> > So far, I usually got dillo compile on the *BSD's if I include a lot
+> > of things like LD_PATH=..... or --with-jpeg-lib=..... GTK_CONFIG=.....
+> 
+> assuming that Jorge patched the LIBJPEG_INCDIR problem, then you should 
+> only need:
+> 
+> ./configure --with-jpeg-include=/usr/local/include and all should be well 
+> with *compiling*, then you have to go back and fix the makefile to fixup 
+> the link problem by adding -lc_r to the LFLAGS *if* it's FreeBSD 
+> 4.4-RELEASE or earlier.
+> 
+> then you get a bunch of warnings about insecure uses of mktmp() and other 
+> things, but i ignore them 'cause the browser works :-)
+> 
+> -- 
+> 
+> John L. Utz III
+> john@ut...
+> 
+> Idiocy is the Impulse Function in the Convolution of Life
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]dillo on *BSD
+
+From: Andreas Schweitzer <andy@ph...> - 2002-01-30 20:07
+
+> > 2. The trheads require the
+> > -lc_r
+> > switch instead of -lpthread .... beats me .... at least on FreeBSD.
+> > I'll check the other *BSD's eventually.
+> 
+> nope! not no more! at least in theory :-) FreeBSD-4.5 should be ok with 
+> the -lpthread and not require -lc_r ( i am running a FreeBSD-stable drop 
+> from the middle of december. it's possible that it got pulled, but i 
+> doubt it.
+
+Well, I still run 4.4+patches though I have an 4.5 ISO image ... :-)
+
+> > BTW, there is a port of dillo0.4 in /usr/ports/www in FreeBSD. This
+> > gave away quite a bit ;-) ....
+> 
+> obviously, one of us FreeBSD users needs to run out and fix that :-)
+
+Is this the time to find out how ports are made ... ?
+
+> then you get a bunch of warnings about insecure uses of mktmp() and other 
+> things, but i ignore them 'cause the browser works :-)
+
+I think, these warnings come from make, but I'm used to them. And yes,
+I also had to use gmake
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]dillo on *BSD
+
+From: John Utz <john@ut...> - 2002-01-30 19:14
+
+more FreeBSD input....
+
+On Wed, 30 Jan 2002, Andreas Schweitzer wrote:
+
+> Hi everybody,
+> 
+> Jorge, as you asked for some BSD fixes here it goes.
+> 
+> There are 2 main things that could help a lot :
+> 
+> 1. All the libs like jpeg anf gtk etc. live in /usr/local
+> (/usr/local/lib /usr/local/include and /usr/local/bin/gtk-config)
+> This is standard on all *BSD's. So, I think if autoconf/automake etc.
+> simply starts looking in /usr/local/ then things should improve
+> significantly. (I am not that familiar with these tools, sorry)
+
+i second this, and it seems to not be a problem on any other gtk apps that 
+use configure....
+
+> 2. The trheads require the
+> -lc_r
+> switch instead of -lpthread .... beats me .... at least on FreeBSD.
+> I'll check the other *BSD's eventually.
+
+nope! not no more! at least in theory :-) FreeBSD-4.5 should be ok with 
+the -lpthread and not require -lc_r ( i am running a FreeBSD-stable drop 
+from the middle of december. it's possible that it got pulled, but i 
+doubt it.
+
+i'll actually have some FACT's in a few weeks when i finally get around to 
+upgrading to 4.5-RELEASE. others may be able to make this change more 
+quickly than i can in the near future.
+
+> BTW, there is a port of dillo0.4 in /usr/ports/www in FreeBSD. This
+> gave away quite a bit ;-) ....
+
+obviously, one of us FreeBSD users needs to run out and fix that :-)
+
+> So far, I usually got dillo compile on the *BSD's if I include a lot
+> of things like LD_PATH=..... or --with-jpeg-lib=..... GTK_CONFIG=.....
+
+assuming that Jorge patched the LIBJPEG_INCDIR problem, then you should 
+only need:
+
+./configure --with-jpeg-include=/usr/local/include and all should be well 
+with *compiling*, then you have to go back and fix the makefile to fixup 
+the link problem by adding -lc_r to the LFLAGS *if* it's FreeBSD 
+4.4-RELEASE or earlier.
+
+then you get a bunch of warnings about insecure uses of mktmp() and other 
+things, but i ignore them 'cause the browser works :-)
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]*BSD and dillo's configure
+
+From: Miklos Magyari <miklos.magyari@et...> - 2002-01-30 16:02
+
+hi all, 
+
+> Within my email collection :), I have several references to
+> problems with *BSD, in what regards to jpeg-library-detection and
+> pthreads.
+> 
+> Dillo 0.6.4 has a new check for jpeg library that seems to be
+> working (at least here and in some other machines where the
+> problem was present before). Those of you that had problems with
+> it, please test and report how it goes.
+
+> 
+> LIBS="-pthread" ./configure
+> 
+
+1) I had a success running configure in a following way:
+
+./configure --with-jpeg-inc=/usr/local/include
+
+(without --with-jpeg-inc configure didn't find the jpeg headers)
+
+2) build succeeded. Still doesn't work with BSD make, though. (Automake
+creates makefiles with some gmake specific things. One example is the
+include directive, which supports including multiple files with one
+directive with gmake, but doesn't with bsd make.)
+
+Additionally, I think GTK_CONFIG should also be set. I've compiled a lot
+of autoconf/automake programs before and got bored with gtk-config. At
+least under my FreeBSD 4.2, the file is actually called gtk12-config, so
+I've created a symlink to make configure work.
+
+cheers,
+Miki 
+
+
+
+[Dillo-dev]dillo on *BSD
+
+From: Andreas Schweitzer <andy@ph...> - 2002-01-30 15:24
+
+Hi everybody,
+
+Jorge, as you asked for some BSD fixes here it goes.
+
+There are 2 main things that could help a lot :
+
+1. All the libs like jpeg anf gtk etc. live in /usr/local
+(/usr/local/lib /usr/local/include and /usr/local/bin/gtk-config)
+This is standard on all *BSD's. So, I think if autoconf/automake etc.
+simply starts looking in /usr/local/ then things should improve
+significantly. (I am not that familiar with these tools, sorry)
+2. The trheads require the
+-lc_r
+switch instead of -lpthread .... beats me .... at least on FreeBSD.
+I'll check the other *BSD's eventually.
+
+BTW, there is a port of dillo0.4 in /usr/ports/www in FreeBSD. This
+gave away quite a bit ;-) ....
+
+So far, I usually got dillo compile on the *BSD's if I include a lot
+of things like LD_PATH=..... or --with-jpeg-lib=..... GTK_CONFIG=.....
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Re: Move from SF.
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-30 15:16
+
+Eduardo,
+
+> I am still here!!! :)
+
+Good!
+
+> I had a very late 2001 and am still having a
+> very turbulent early 2002 in Real Life(tm)... ranging
+> from getting through the bureaucracy of getting a
+> bank to finance an appartment to me, through moving
+> to the new appartment and more recently having a close
+> relative with a delicate health problem.
+
+Receive my best wishes.
+
+> I am still on forced "vacations" from almost all
+> my Free Software activities, but I can still help on the
+> move to cipsga, even if only to put you in touch
+> with the guys who can actively do it. :)
+
+Yes, please send me some names, emails, and whatever you may
+find necessary to do it.
+
+> I owe a new package of dillo to the familiar
+> distribution to the iPAQ... we are still in 0.6.2 there... :(
+
+Mmmm, I hope they can get 0.6.4 soon...
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]*BSD and dillo's configure
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-30 14:17
+
+Hi BSDers!
+
+Within my email collection :), I have several references to
+problems with *BSD, in what regards to jpeg-library-detection and
+pthreads.
+
+Dillo 0.6.4 has a new check for jpeg library that seems to be
+working (at least here and in some other machines where the
+problem was present before). Those of you that had problems with
+it, please test and report how it goes.
+
+The pthreads library problem is more complex. As I wrote
+before:
+
+> AFAIU detecting and configuring is automake&autoconf work (they
+> generate configure). So, I'd suggest to get a few pthreaded SW
+> packages, that use autoconf stuff, and see how do they solve
+> the problem in *BSD.
+
+I don't know if the latest version solves it...
+BTW: it would be very good to test with FreeBSD-4.5! too.
+
+
+Sometime ago Sammy sent me a big patch (60Kb aprox) that solved
+the pthread library detection. I'm reluctant to include such a
+big patch, specially knowing that 'configure' already takes 120Kb
+
+Maybe there's a smaller solution that can do it. As a custom
+test in configure.in for instance (just an idea).
+
+I was also reported that:
+
+> [...]
+> FreeBSD 4.4 with GTK+ 1.2.10, XFree86 4.0.3, libpng 1.2.0, and libjpeg-6b.
+> I am using dillo 0.6.2.
+>
+> A successful compile was achieved with the following parameters:
+> LDFLAGS="-L/usr/local/lib" LIBS="-pthread -ljpeg -lpng" \
+> GTK_CONFIG="/usr/X11R6/bin/gtk12-config" ./configure --with-libjpeglib
+
+so maybe:
+
+LIBS="-pthread" ./configure
+
+can be a good workaround for the interim. Please test it.
+
+
+OK, those of you interested in solving this, may contact:
+
+Sammy, nstalkie at tvd dot be
+Richard, rcagny in mtice . fr
+Bjoern, foxbow on web dot de
+Brian, brian at budbud . dhs dot org
+
+and please feel free to use the list to sort it up, keeping the
+*BSD subject, that is.
+
+
+Note1: Bjoern told me he was going to work on a solution, so he
+may have something.
+Note2: Brian may not have enough time. :(
+
+
+Let it flow!
+
+Jorge.- 
+
+
+
+[Dillo-dev]Re: 0.6.4 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-30 14:17
+
+Hi there,
+
+Sourceforge didn't update the download page, so I redirected
+our download links (from dillo's home page) to the place it can
+be found (at SF).
+
+Agh, I really feel like moving...
+
+
+Sorry for the inconvenience
+Jorge.- 
+
+
+
+[Dillo-dev]dillo-0.6.4 ????
+
+From: <belaruse@we...> - 2002-01-30 14:10
+
+Hi,
+
+where can I find dillo-0.6.4 ? 
+http://download.so....net/dillo/ contains only dillo-0.6.3 !
+
+ri 
+
+
+
+[Dillo-dev]0.6.4 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-30 11:41
+
+Hi folks!
+
+As you may have noticed, dillo-0.6.4 has been released a few
+hours ago. For those of you that haven't tried it yet, it brings
+some new features and bugfixes. As always, my advice is:
+
+Go get it!
+
+& Enjoy
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo plans for 2002
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-01-29 23:24
+
+All,
+
+Thanks Jorge for the informative information on priorities for Dillo in
+2002. I've enjoyed the time I've spent hacking around back in the I/O
+engine. After my first abortive attempt at SSL ran into trouble with
+proxies, I settled back to try it again, this time with tunnelling.
+
+The resultant patch is at
+http://members.bellatlantic.net/~mze2mqqv/dillo-ssl-cookies.2002-01-27.diff
+. I'm posting it to the list, but
+
+!!!THIS IS NOT A PATCH FOR THE FAINT OF HEART!!!
+
+I ended up reorganizing 90% of the I/O engine code, the wisdom of which,
+in retrospect, I'm unsure. For those who want to try it out, download
+the CVS dillo and download the patch into dillo's root directory. Then:
+
+$ cd ~/Projects/dillo # or wherever
+$ curl http://members.bellatlantic.net/~mze2mqqv/dillo-ssl-cookies.2002-01-27.diff
+$ patch -p1 -i ./dillo-ssl-cookies.2002-01-27.diff
+$ automake -a
+$ autoconf
+$ ./configure --enable-ssl
+$ make
+$ ./src/dillo https://www.so....net/
+
+(I love that test case because sourceforge does a redirect at its root.)
+
+I've tested the patch for wwwoffle as a proxy. I'll be putting it
+through a stress test and memory leak tests this weekend. I appreciate
+any bug reports or comments; even if this patch never sees the light of
+day, it was challenging and rewarding to code. Documentation can be
+found in 'dillo/doc/GByteArray-IO.txt'.
+
+It also got me to thinking about your "simple plugins", Jorge, although
+I don't have much history. I'll hit the mailing list archives and web
+site later to get some. By the time I was down with this patch, I was
+establishing "chain-stacks" for all operations. Expressing 'a_Http_ccc'
+as 'Http' for example, the stacks went something like this:
+
+Http: Cache<->Http<->IO<->DNS
+Http (proxy): Cache<->Http<->Proxy<->DNS
+Https: Cache<->Http<->Https<->BIO<->DNS
+Https (proxy): Cache<->Http<->Https<->Tunnel<->BIO<->DNS
+About: Cache<->About
+File: Cache<->File<->IO
+
+While I hardcoded the chains in an array in 'a_Url_get_ccc_chain', it
+certainly seems possible that given a scheme (e.g. 'ftp') a chain could
+be loaded from a symbol ('a_Dillo_Plugin_Chain'?) in an appropriate plugin 
+(e.g. 'ftp.so') and executed. What I'm not clear on is how much additional 
+access to the core dillo symbol table might be required. Are there security 
+concerns? And so on... I'll read the mailing list archives before I bore 
+you with questions.
+
+Regards,
+-jonathan springer 
+
+
+
+Re: [Dillo-dev]Dillo plans for 2002
+
+From: Eduardo Marcel <macan@co...> - 2002-01-29 16:59
+
+I am still here!!! :)
+
+I had a very late 2001 and am still having a
+very turbulent early 2002 in Real Life(tm)... ranging
+from getting through the bureaucracy of getting a
+bank to finance an appartment to me, through moving
+to the new appartment and more recently having a close
+relative with a delicate health problem.
+
+I am still on forced "vacations" from almost all
+my Free Software activities, but I can still help on the
+move to cipsga, even if only to put you in touch
+with the guys who can actively do it. :)
+
+I owe a new package of dillo to the familiar=20
+distribution to the iPAQ... we are still in 0.6.2 there... :(
+
+Regards,
+
+Eduardo
+
+
+
+On Tue, 29 Jan 2002 12:14:09 -0300 (CLST)
+Jorge Arellano Cid <jcid@em...> wrote:
+
+>=20
+> Hi there!
+>=20
+>=20
+> I've been longing to write this email almost from the first
+> week of this year, but I didn't know where (or how) to start, and
+> sort a huge myriad of unrelated things.
+>=20
+> This year began with a hectic pace for dillo. Although the
+> mailing list has show moderate traffic, my INBOX holds more than
+> a hundred emails, and there're a lot of topics pending.
+>=20
+> The only way to cope with all of them, would be to multiplex
+> myself (or clonning ;), but as I'm not able (nor willing) to do
+> either, I'll use the well known "priority list" method to try to
+> start moving it. Please note that this method has its flaws: as
+> not being able to handle every task, the scheduling problems that
+> arise when new, very important, topics spring-in and "non
+> maskarable interrupts", to name a few.
+>=20
+> The good new is that I've munched the 100+ emails into a 30
+> points list, and I'll try to start unrolling it. I say try,
+> because is not easy to handle an issue to another person when
+> he/she is not convinced of doing it. OTOH, it also happens that
+> after a lot of discussion, that person convinces me his way!
+>=20
+> NOTE: some emails will be terribly procrastinated, and some
+> others will remain unanswered. This is not the way I like it, but
+> I _can't_ answer all of them. This warning should be at the web
+> site, but that task has a lower priority than this mail... :(
+> You have been warned.
+>=20
+> NOTE2: well thought, and informed emails (or posts), are easier
+> to answer (and strongly encouraged), because I don't have to dig
+> for information the poster could have got alone.
+> Let me advice not to post your first thought on any matter, but
+> to inform yourself, consider alternatives, give it a second
+> analysis, and post back your well reasoned/backed ideas.
+>=20
+> NOTE3: There's plenty of information at the web site, and those
+> asking for things already answered there (or in the docs), will
+> not be answered.
+>=20
+>=20
+> ****************
+>=20
+>=20
+> Let's start with these:
+>=20
+> * 0.6.4 release
+> * Move from SourceForge
+> * Simple plugins
+> * cookies
+> * SSL
+> * external viewers/programs/handlers
+>=20
+>=20
+> * 0.6.4 release ****
+>=20
+> Almost ready! It'll be mainly a bugfix release (segfaults on
+> imagemaps) with some nice additions (aligning, remembering of
+> page-scrolling-position, ...).
+>=20
+> Most probably Jan 30.
+>=20
+>=20
+> * Move from SourceForge ****
+>=20
+> This had a long thread, and when it was about to be done,
+> Eduardo M. Ma=E7an, vanished !? I made repeated attempts to reach
+> him (yes, with intervals), but got no answer.
+>=20
+> Does anyone here know how to get in touch with him?
+> Eduardo: Cad=E9 voc=EA?
+>=20
+>=20
+> * Simple plugins ****
+>=20
+> Some time ago (long), Eric and I were working steadily on this.
+> Simple plugins could be a _very_ powerful tool for dillo,
+> provided careful design and a considerable amount of work is put
+> on it.
+>=20
+> In brief, "simple plugins" operate very much like a CGI, but
+> without a web server, and they also provide a tiny API that
+> broadens a bit their scope. They're _NOT_ like Netscape plugins.
+>=20
+> The point is they could handle bookmarks, preferences, FTP,
+> downloads and extensibility in a customizable way.
+>=20
+> If it's so great why aren't you working on it?
+> Believe me, if I had a twin brother, he'd be working on it!
+>=20
+> In practise, a lot of expertise and knowledge is required to
+> contribute here. Mainly: CGI/fastCGI, HTML, protocol design,
+> interprocess comunnication, deep CCC knowledge, and general dillo
+> UI knowledge.
+>=20
+> Suitable volunteers would be a bless.
+>=20
+> The second problem is that if I start working on this, all of
+> my other duties get stalled... I plan to move some high priority
+> tasks first, and when they're going to restart the plugins.
+>=20
+> NOTE: human "context switches" take lots of time.
+>=20
+>=20
+>=20
+> * Cookies ****
+>=20
+> J=F6rgen has just sent me the patch that solves almost every
+> known problem for reviewing. Don't expect it on 0.6.4.
+>=20
+> Cookies is a very sensible topic in what regards to security,
+> and privacy. So, appart form the quality/completeness/ review, it
+> _must_ be tested against "cookie abuse".
+>=20
+> Those of you using it, please test it thoroughly (a few google
+> searches will bring enough material to get you started.), and
+> report back your results.
+>=20
+>=20
+> * SSL ****
+>=20
+> This will be focused most probably after cookies.
+>=20
+> As some perspicacious developers had noted, there were several
+> tasks aiming to prepare dillo for SSL (mainly on HTML and URL
+> parsing).
+>=20
+> It becomes evident that when dillo is SSL enabled, people will
+> start to do some "sensible" work with it, and reliability starts
+> to play a primary role.
+>=20
+> Currently, it's very easy to hack-in some SSL support, but when
+> you start using it, you don't want a long and important "session"
+> to suddenly end in a segfault, or submitting wrong values.
+>=20
+> Be careful.
+>=20
+> Also bear in mind that the first SSL-enabled dillo will set a
+> major milestone, and will generate a lot of feedback. Let's take
+> our time and do it right!
+>=20
+>=20
+> * external viewers/programs/handlers ****
+>=20
+> I have at least three implementation ideas (with code) for such
+> ad-hoc functionality waiting for a review.
+>=20
+> Please also note that the "official" idea is to handle all this
+> stuff with "simple-plugins", but considering that SPI has become
+> a sort of highly-desirable-vaporware :), it may not be a bad idea
+> to choose one of these for the interim.
+>=20
+>=20
+>=20
+> ****************
+>=20
+>=20
+> It's been more than two excellent years with full dedication
+> to dillo, and God knows I'd love to keep leading and working it
+> to new heights. The only problem is that I'm running out of money
+> (as all the development had been at my expense), so now there's a
+> dire need for rising funds for dillo project.
+>=20
+> It'd be great to have a way of keeping the main developers
+> working together, and boost this once-tiny-project to a new
+> organization basis that leverages its development.
+>=20
+> There're lots of plans, ideas, and a clean code base to work
+> with.
+>=20
+> I'd love to see benefactor enterprises (or governments) that
+> aware of all the beneffits they can get from dillo as a working
+> tool (fast, reliable, secure), commit themselves to sponsor us
+> with any amount the desire. After all, we don't need lots of
+> money to keep it going, but full time dedication from the core
+> developers is a must.
+>=20
+> Those of you with any information that can help make this
+> happen, please don't hesitate to contact me. If we succeed,
+> there'll be a great dillo for all of us to enjoy!
+>=20
+>=20
+>=20
+> Sincerely
+> Jorge.-
+>=20
+>=20
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20
+
+
+--=20
+"If you have an apple and I have an apple and we exchange apples then y=
+ou=20
+and I will still each have one apple. But if you have an idea and I ha=
+ve=20
+an idea and we exchange these ideas, then each of us will have two ideas=
+."
+George Bernard Sh=
+aw=20 
+
+
+
+[Dillo-dev]Dillo plans for 2002
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-29 15:17
+
+Hi there!
+
+
+I've been longing to write this email almost from the first
+week of this year, but I didn't know where (or how) to start, and
+sort a huge myriad of unrelated things.
+
+This year began with a hectic pace for dillo. Although the
+mailing list has show moderate traffic, my INBOX holds more than
+a hundred emails, and there're a lot of topics pending.
+
+The only way to cope with all of them, would be to multiplex
+myself (or clonning ;), but as I'm not able (nor willing) to do
+either, I'll use the well known "priority list" method to try to
+start moving it. Please note that this method has its flaws: as
+not being able to handle every task, the scheduling problems that
+arise when new, very important, topics spring-in and "non
+maskarable interrupts", to name a few.
+
+The good new is that I've munched the 100+ emails into a 30
+points list, and I'll try to start unrolling it. I say try,
+because is not easy to handle an issue to another person when
+he/she is not convinced of doing it. OTOH, it also happens that
+after a lot of discussion, that person convinces me his way!
+
+NOTE: some emails will be terribly procrastinated, and some
+others will remain unanswered. This is not the way I like it, but
+I _can't_ answer all of them. This warning should be at the web
+site, but that task has a lower priority than this mail... :(
+You have been warned.
+
+NOTE2: well thought, and informed emails (or posts), are easier
+to answer (and strongly encouraged), because I don't have to dig
+for information the poster could have got alone.
+Let me advice not to post your first thought on any matter, but
+to inform yourself, consider alternatives, give it a second
+analysis, and post back your well reasoned/backed ideas.
+
+NOTE3: There's plenty of information at the web site, and those
+asking for things already answered there (or in the docs), will
+not be answered.
+
+
+****************
+
+
+Let's start with these:
+
+* 0.6.4 release
+* Move from SourceForge
+* Simple plugins
+* cookies
+* SSL
+* external viewers/programs/handlers
+
+
+* 0.6.4 release ****
+
+Almost ready! It'll be mainly a bugfix release (segfaults on
+imagemaps) with some nice additions (aligning, remembering of
+page-scrolling-position, ...).
+
+Most probably Jan 30.
+
+
+* Move from SourceForge ****
+
+This had a long thread, and when it was about to be done,
+Eduardo M. Ma=E7an, vanished !? I made repeated attempts to reach
+him (yes, with intervals), but got no answer.
+
+Does anyone here know how to get in touch with him?
+Eduardo: Cad=E9 voc=EA?
+
+
+* Simple plugins ****
+
+Some time ago (long), Eric and I were working steadily on this.
+Simple plugins could be a _very_ powerful tool for dillo,
+provided careful design and a considerable amount of work is put
+on it.
+
+In brief, "simple plugins" operate very much like a CGI, but
+without a web server, and they also provide a tiny API that
+broadens a bit their scope. They're _NOT_ like Netscape plugins.
+
+The point is they could handle bookmarks, preferences, FTP,
+downloads and extensibility in a customizable way.
+
+If it's so great why aren't you working on it?
+Believe me, if I had a twin brother, he'd be working on it!
+
+In practise, a lot of expertise and knowledge is required to
+contribute here. Mainly: CGI/fastCGI, HTML, protocol design,
+interprocess comunnication, deep CCC knowledge, and general dillo
+UI knowledge.
+
+Suitable volunteers would be a bless.
+
+The second problem is that if I start working on this, all of
+my other duties get stalled... I plan to move some high priority
+tasks first, and when they're going to restart the plugins.
+
+NOTE: human "context switches" take lots of time.
+
+
+
+* Cookies ****
+
+J=F6rgen has just sent me the patch that solves almost every
+known problem for reviewing. Don't expect it on 0.6.4.
+
+Cookies is a very sensible topic in what regards to security,
+and privacy. So, appart form the quality/completeness/ review, it
+_must_ be tested against "cookie abuse".
+
+Those of you using it, please test it thoroughly (a few google
+searches will bring enough material to get you started.), and
+report back your results.
+
+
+* SSL ****
+
+This will be focused most probably after cookies.
+
+As some perspicacious developers had noted, there were several
+tasks aiming to prepare dillo for SSL (mainly on HTML and URL
+parsing).
+
+It becomes evident that when dillo is SSL enabled, people will
+start to do some "sensible" work with it, and reliability starts
+to play a primary role.
+
+Currently, it's very easy to hack-in some SSL support, but when
+you start using it, you don't want a long and important "session"
+to suddenly end in a segfault, or submitting wrong values.
+
+Be careful.
+
+Also bear in mind that the first SSL-enabled dillo will set a
+major milestone, and will generate a lot of feedback. Let's take
+our time and do it right!
+
+
+* external viewers/programs/handlers ****
+
+I have at least three implementation ideas (with code) for such
+ad-hoc functionality waiting for a review.
+
+Please also note that the "official" idea is to handle all this
+stuff with "simple-plugins", but considering that SPI has become
+a sort of highly-desirable-vaporware :), it may not be a bad idea
+to choose one of these for the interim.
+
+
+
+****************
+
+
+It's been more than two excellent years with full dedication
+to dillo, and God knows I'd love to keep leading and working it
+to new heights. The only problem is that I'm running out of money
+(as all the development had been at my expense), so now there's a
+dire need for rising funds for dillo project.
+
+It'd be great to have a way of keeping the main developers
+working together, and boost this once-tiny-project to a new
+organization basis that leverages its development.
+
+There're lots of plans, ideas, and a clean code base to work
+with.
+
+I'd love to see benefactor enterprises (or governments) that
+aware of all the beneffits they can get from dillo as a working
+tool (fast, reliable, secure), commit themselves to sponsor us
+with any amount the desire. After all, we don't need lots of
+money to keep it going, but full time dedication from the core
+developers is a must.
+
+Those of you with any information that can help make this
+happen, please don't hesitate to contact me. If we succeed,
+there'll be a great dillo for all of us to enjoy!
+
+
+
+Sincerely
+Jorge.- 
+
+
+
+Re: [Dillo-dev]table-rendering?
+
+From: Eric GAUDET <egaudet@in...> - 2002-01-28 19:32
+
+On 28-Jan-2002 Sebastian Geerken wrote:
+> Well, there are some problems, and tables will undergo major changes
+> in the future.
+> 
+> Sebastian
+> 
+
+Hi Sebastian,
+I've been trying to make the page selection for copy and paste, but I
+encountered some problems due to the fact that there is several 'words' arrays:
+one for each DW (table cells).
+Do you plan to implement some sort of DOM methods on top of the DWs, so one
+can 'walk' the page structure?
+What's your recommendation for that in the current implementation?
+
+Best,
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 28-Jan-2002 Time: 11:27:19
+"Le premier qui me reveille pendant
+que je travaille, ca va mal aller !!!"
+---------------------------------- 
+
+
+
+[Dillo-dev]Dillo and GTK+ 2.0pre
+
+From: Michael Krueger <lcarsvision@we...> - 2002-01-28 18:59
+
+Hi,
+
+I compiled GTK+ 2.0pre (aka 1.3.11) with both the linux-fb and directfb port. 
+My goal is to write a small Linux/GNU distribution which fits on two floppies 
+and includes GUI applications. But compiling Dillo v0.6.3 (which would be the 
+included browser) seems to be not possible, even after handcoding fixes in 
+configure for pkg-config and the source. src/IO is compiled without any 
+problems, but the dw* framework files make gcc-2.95 stop. There are many 
+irrelationships with GtkArg{GetFunc,SetFunc} ("function not found") and klass 
+("structure: no member 'klass'"). I don't know how to fix these problems, the 
+GTK+ migration manual does not offer useful information.
+Has somebody ported Dillo to GTK+ 2.0pre? Or has somebody ideas to fix those 
+problems?
+
+Best regards,
+Michael Krueger
+lcarsvision@we... 
+
+
+
+Re: [Dillo-dev]CSS support under development ?
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-01-28 16:31
+
+Hi,
+
+On Thu, Jan 24, 2002 at 07:58:09AM +0200, Teemu Voipio wrote:
+> 
+> I think that having at least some basic CSS support
+> 
+> font-size, text-aling, color,
+> background-color, background (?)
+> margins, paddings, borders,
+> to begin with (and implement more when these work)
+> 
+> would really be nice improvement to this great browser and wouldn't
+> necessarily need to compromise any of it's speed as most of the code
+> needed to actually "draw" these things are actually simple or implemented
+> for HTML anyway.
+
+I have been working on a design for CSS support the last time, I'll
+soon write it down and send it to the list (there are still some
+things I want to clear first). There are different aspects, which are,
+independent of each other, quite complex:
+
+- CSS parsing and evaluating itself,
+- interaction with the HTML parser,
+- mapping on the actual rendering, and
+- the actual rendering.
+
+About the last two points: There is already a structure, DwStyle,
+handling some CSS attributes (e.g. the ones you mentioned), but some
+attributes affect the DwWidget structure itself (see doc/Dw*.txt in
+the tarball). Whether they are supported or not (the latter is likely
+in the first release-ready implementation) should be hidden, so that
+it can be added in the future (even perhaps(!) up to XML/CSS
+rendering).
+
+If you look at the code, the actual rendering is already more and more
+improved to handle things like CSS boxes, alignments etc.
+
+> And do it right from the beginning (ie. cascade them as supposed so we
+> don't end up with something like Netscape 4).
+> 
+> If nobody is doing this I can start developing the CSS parsing and
+> cascading and when I get the properties listed above (or something)
+> working reliably, start implementing them into the renderer.
+
+There will be several tasks, on which different people may work on.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Forms & enter
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-01-28 16:11
+
+On Sat, Jan 19, 2002 at 06:48:29AM -0500, Jonathan P Springer wrote:
+> [...]
+> Just as an aside, the tab behavior seems to be based on the order the elements
+> were encountered in the html, not the order in which they occur 
+> top-bottom,left-right on the screen. This comes into play when two separate
+> forms are rendered side-to-side by the table logic. For example, at the
+> Sourceforge login, I need to tab twice to get from username to password because
+> there's an independant dropdown list in the bar to their right.
+
+This behaviour is (currently) given by Gtk+, which determines the tab
+order (which is the order in which widgets were added to a parent
+widget). AFAIK, Gtk+ 2.0 provides better ways to customise this.
+
+> I know table processing is still in its infancy, but it's a behavior to keep
+> in mind.
+
+This is actually not a table problem. :-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]table-rendering?
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-01-28 15:35
+
+Hi,
+
+On Mon, Jan 28, 2002 at 03:48:28PM +0900, TANAKA Keishiro wrote:
+> >There seems to be some problems with the table rendering.
+> >For example on http://www.linuxdevices.com,in the right column the text is moved gradually farther to the right.
+> 
+> I think at first you need to check syntax of the pages and whether it
+> uses unsupported functionality by dillo.
+> You know, there are many invalid pages on the Net.
+
+Yes, http://validator.w3.org shows some errors (also on tables), but
+the main problem seems to be lists. You can show them in a more
+debuggable way by replacing "#if 0 " in Html_add_indented_widget into
+"#if 1". I haven't yet examined if this is the fault of dillo, or of
+the page.
+
+> And from my
+> experience, dillo table renderer has little problem basically. 
+> If you find the pages are correct then report the problem.
+
+Well, there are some problems, and tables will undergo major changes
+in the future.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]table-rendering?
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-01-28 06:48
+
+Hi.
+
+>There seems to be some problems with the table rendering.
+>For example on http://www.linuxdevices.com,in the right column the text is moved gradually farther to the right.
+
+I think at first you need to check syntax of the pages and whether it
+uses unsupported functionality by dillo.
+You know, there are many invalid pages on the Net. And from my
+experience, dillo table renderer has little problem basically. 
+If you find the pages are correct then report the problem.
+
+Best Regards. 
+
+
+
+[Dillo-dev]CSS support under development ?
+
+From: Teemu Voipio <mystran@wa...> - 2002-01-24 05:59
+
+I think that having at least some basic CSS support
+
+font-size, text-aling, color,
+background-color, background (?)
+margins, paddings, borders,
+to begin with (and implement more when these work)
+
+would really be nice improvement to this great browser and wouldn't
+necessarily need to compromise any of it's speed as most of the code
+needed to actually "draw" these things are actually simple or implemented
+for HTML anyway.
+
+And do it right from the beginning (ie. cascade them as supposed so we
+don't end up with something like Netscape 4).
+
+If nobody is doing this I can start developing the CSS parsing and
+cascading and when I get the properties listed above (or something)
+working reliably, start implementing them into the renderer.
+
+Any interest ?
+
+
+- Teemu Voipio <tvoipio@cc.hut.fi>
+-----------------------------------------------------------------
+Mystran == my very own nick @ IRC == god's gift to net
+does not ==
+use that ==
+MS software software and has == a verb
+at home has to only Linux == Linux from Scratch
+since he be free at home == wasteland.pp.htv.fi
+believes for all therefore. (is encrypted)
+-----------------------------------------##---------------------- 
+
+
+
+[Dillo-dev]Dillo 0.6.3 + bunch of patches ?
+
+From: Teemu Voipio <mystran@wa...> - 2002-01-24 01:32
+
+This browser is great but latest release 0.6.3 (?) is very old.
+
+There are patches available to do this and that (including cookies etc.).
+Not all of these patches apply to the 0.6.3.
+
+Is anybody in the business of trying to bring together any new releases
+that include (some of the most stable and urgent of) those patches with
+it already applied. That would make it a lot easier for people interested
+to try the browser or even to join the development...
+
+PS. please cc replies to me..
+
+- Teemu Voipio <tvoipio@cc.hut.fi>
+-----------------------------------------------------------------
+Mystran == my very own nick @ IRC == god's gift to net
+does not ==
+use that ==
+MS software software and has == a verb
+at home has to only Linux == Linux from Scratch
+since he be free at home == wasteland.pp.htv.fi
+believes for all therefore. (is encrypted)
+-----------------------------------------##---------------------- 
+
+
+
+Re: [Dillo-dev][Patch] Multiple no_proxy domains
+
+From: Nikita Borodikhin <eliterr@tk...> - 2002-01-23 11:33
+
+Hello, Jorge !
+
+On Sun, 20 Jan 2002 17:25:00 -0300 (CLST)
+Jorge Arellano Cid <jcid@em...> wrote:
+
+> I gave it a full review, and commited a new patch to the CVS.
+> Please check it out and test it through beacause I haven't a
+> proxy at hand to do so :(.
+> 
+> The main reasons for the new approach were:
+> 
+> - use the opportunity to clean up the proxy code.
+> - the patch implementation wasn't optimized for speed.
+
+OK, your version of patch is more beautiful :)
+I tested it and found that it works. Thanks.
+
+Nikita V. Borodikhin 
+
+
+
+Re: [Dillo-dev]dillo segfault
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-22 00:51
+
+On Mon, 21 Jan 2002, Eric GAUDET wrote:
+
+> Hi,
+
+Hi Eric!
+
+> I ran into a slight segfault in dillo: go to http://volnorm.so....net.
+> The problem is that an invalid color is used as table background:
+> <table bgcolor="{PAGE_BACkGROUND}" ...
+> and dillo seems to have a bug in a_Color_parse.
+> Anyway, just replace:
+>
+> color.c:248
+> - while (low <= high) {
+> with
+> + while (low < high) {
+
+Actually, that breaks the binary search :(, the fix is:
+
+colorsc:247
+- high = NCOLORS;
++ high = NCOLORS - 1;
+
+Already commited to CVS!
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]dillo segfault
+
+From: Eric GAUDET <egaudet@in...> - 2002-01-21 22:58
+
+Hi,
+I ran into a slight segfault in dillo: go to http://volnorm.so....net.
+The problem is that an invalid color is used as table background:
+<table bgcolor="{PAGE_BACkGROUND}" ...
+and dillo seems to have a bug in a_Color_parse.
+Anyway, just replace:
+
+color.c:248
+- while (low <= high) {
+with
++ while (low < high) {
+
+Best,
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 21-Jan-2002 Time: 14:53:38
+"Le premier qui me reveille pendant
+que je travaille, ca va mal aller !!!"
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bus error on Darwin 5.2 (MacOS X)
+
+From: Imran Hasnain <iah21@he...> - 2002-01-21 21:41
+
+It works like a dream :-) thanks very much, Dillo is amazing! I am using
+Darwin 5.2 (MacOS 10.1.2) with XFree 4.1 and XDarwin 1.0.6.1
+
+Imran
+
+
+On 21/1/02 7:39 pm, "Jorge Arellano Cid" <jcid@em...> wrote:
+
+>=20
+> Imran,
+>=20
+>> Firstly well done to you all for producing an excellent browser.
+>=20
+> Thanks!
+>=20
+>> One problem
+>> - in 0.6.2 and 0.6.3 on Darwin 5.2 Dillo exits with a bus error whenever=
+a
+>> link is clicked on - it worked fine in 0.6.1. URLs typed in are fine - a=
+s
+>> are Favourites. On mouseover dillo displays a strange number at the bott=
+om
+>> of the window after the URL - such as
+>> 'http://dillo.so....net/?36848,-1073746304' I don=B9t know if this h=
+as
+>> anything to do with the problem or even if it was there before.
+>>=20
+>> Hope you can help,
+>=20
+> Well, there was a bug with 0.6.3 and image maps (the funny
+> numbers after the '?' character). This has been fixed in the CVS
+> version. Please get it and tell us back how it works.
+>=20
+>=20
+> Cheers
+> Jorge.-
+>=20
+> PS: Are you using Darwin or GNU/Darwin?
+>=20
+>=20
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20 
+
+
+
+Re: [Dillo-dev]Bus error on Darwin 5.2 (MacOS X)
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-21 19:42
+
+Imran,
+
+> Firstly well done to you all for producing an excellent browser.
+
+Thanks!
+
+> One problem
+> - in 0.6.2 and 0.6.3 on Darwin 5.2 Dillo exits with a bus error whenever =
+a
+> link is clicked on - it worked fine in 0.6.1. URLs typed in are fine - as
+> are Favourites. On mouseover dillo displays a strange number at the botto=
+m
+> of the window after the URL - such as
+> 'http://dillo.so....net/?36848,-1073746304' I don=B9t know if this =
+has
+> anything to do with the problem or even if it was there before.
+>
+> Hope you can help,
+
+Well, there was a bug with 0.6.3 and image maps (the funny
+numbers after the '?' character). This has been fixed in the CVS
+version. Please get it and tell us back how it works.
+
+
+Cheers
+Jorge.-
+
+PS: Are you using Darwin or GNU/Darwin? 
+
+
+
+[Dillo-dev]Bus error on Darwin 5.2 (MacOS X)
+
+From: Imran Hasnain <iah21@he...> - 2002-01-21 15:50
+
+Firstly well done to you all for producing an excellent browser. One proble=
+m
+- in 0.6.2 and 0.6.3 on Darwin 5.2 Dillo exits with a bus error whenever a
+link is clicked on - it worked fine in 0.6.1. URLs typed in are fine - as
+are Favourites. On mouseover dillo displays a strange number at the bottom
+of the window after the URL - such as
+'http://dillo.so....net/?36848,-1073746304' I don=B9t know if this has
+anything to do with the problem or even if it was there before.
+
+Hope you can help,
+
+Imran 
+
+
+
+Re: [Dillo-dev][Patch] Multiple no_proxy domains
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-20 20:26
+
+Nikita,
+
+> Hello all !
+
+Hi!
+
+> There is a small patch that makes it possible to specify not only one site
+> to use no proxy but several domains. I think it will be useful.
+
+I gave it a full review, and commited a new patch to the CVS.
+Please check it out and test it through beacause I haven't a
+proxy at hand to do so :(.
+
+The main reasons for the new approach were:
+
+- use the opportunity to clean up the proxy code.
+- the patch implementation wasn't optimized for speed.
+
+Thanks in advance
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Segfault on image maps (BUG 277)
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-20 00:14
+
+Johannes,
+
+> Hi,
+
+Hi!
+
+> current dillo seems to have a problem with image maps (see BUG 277).
+> I think the problem is that within a_Url_set_ismap_coords() in url.c
+> it is assumed that u->path points to a position within u->buffer.
+> But then a_Url_set_ismap_coords() makes u->path point to a position
+> within u->url_string->str. So at the next call to
+> a_Url_set_ismap_coords() things go wrong.
+
+Yes, that was a bug that originated in the old http query
+construction code.
+
+> The attached check seems to solve the problem for me.
+
+I gave it a somewhat deep revision, and the problem ended being
+another (hinted above). There's a new patch at the CVS, just give
+it a try!
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Segfault on image maps (BUG 277)
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2002-01-19 11:59
+
+Hi, 
+
+current dillo seems to have a problem with image maps (see BUG 277).
+I think the problem is that within a_Url_set_ismap_coords() in url.c
+it is assumed that u->path points to a position within u->buffer.
+But then a_Url_set_ismap_coords() makes u->path point to a position
+within u->url_string->str. So at the next call to
+a_Url_set_ismap_coords() things go wrong.
+The attached check seems to solve the problem for me.
+
+Regards,
+Johannes Hofmann
+
+
+
+--- url.c.orig Sat Jan 19 11:53:08 2002
++++ url.c Sat Jan 19 12:57:35 2002
+@@ -466,7 +466,9 @@
+if (u->url_string) {
+g_string_truncate(u->url_string, u->ismap_url_len);
+g_string_append(u->url_string, coord_str);
+- u->path = u->url_string->str + (u->path - u->buffer);
++ if ((u->path >= u->buffer) && (u->path < u->buffer +
+strlen(u->buffer))) 
+{
++ u->path = u->url_string->str + (u->path - u->buffer);
++ }
+}
+} 
+
+
+
+Re: [Dillo-dev]Forms & enter
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-01-19 11:48
+
+On Fri, Jan 18, 2002 at 07:42:08PM -0600, Lars Clausen wrote:
+> On Fri, 18 Jan 2002, Jorge Arellano Cid wrote:
+> 
+> > 
+> > Lars,
+> > 
+...
+>
+> Most interfaces I've seen allow TAB to go to the next field, as does Dillo
+> currently. Thus I don't see why Enter should be used for that. In
+> addition, it is common in both other browsers and in all kinds of dialogs
+> to have Enter submit everything.
+
+Just as an aside, the tab behavior seems to be based on the order the elements
+were encountered in the html, not the order in which they occur 
+top-bottom,left-right on the screen. This comes into play when two separate
+forms are rendered side-to-side by the table logic. For example, at the
+Sourceforge login, I need to tab twice to get from username to password because
+there's an independant dropdown list in the bar to their right.
+
+I know table processing is still in its infancy, but it's a behavior to keep
+in mind.
+
+> -Lars
+> 
+
+Ciao,
+-jonathan 
+
+
+
+Re: [Dillo-dev]Forms & enter
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-19 01:42
+
+On Fri, 18 Jan 2002, Jorge Arellano Cid wrote:
+
+>=20
+> Lars,
+>=20
+>> I've been wondering about the design decision to make forms only submit
+>> on Enter when there is no Submit button. It is obviously not becuase it
+>> would be hard to code (just pick the first submit button). The specs
+>> don't (AFAICS) say anything for or against it. It's certainly very
+>> practical to have Enter submit input text. Why has it been explicitly
+>> coded so that it only happens if there is no Submit button?
+>=20
+> The point is that when facing multiple input fields, the form
+> may be submitted incomplete as a result of pressing enter after
+> filling one text entry (almost a reflex-act these days).
+
+Most interfaces I've seen allow TAB to go to the next field, as does Dillo
+currently. Thus I don't see why Enter should be used for that. In
+addition, it is common in both other browsers and in all kinds of dialogs
+to have Enter submit everything.
+
+Also, most places send you back to the input if there's something missing.
+
+> There's also another reason: as javascript is not supported,
+> and as it's often used to verify form submitions, it becomes very
+> important not to try to send an incomplete form.
+
+Well, if javascript is not supported, then it's not supported. I have yet
+to meet a place where I could submit but javascript was the only check on
+the validity of the data.
+
+> Well, that's the idea behind it, but in practice, I must
+> recognize that after some tests, the current implentation is
+> certainly lacking, and that forms without submit, send whatever
+> they have (or not) at enter-press time. Certainly not the desired
+> effect...
+
+Indeed.
+
+> There's also the issue of input types that don't generate enter
+> presses (as selection boxes); when they lack a submit. Current
+> code doesn't submit anything, and as you noticed, the SPECS don't
+> throw any light on that.
+
+We could have them generate a submit when Enter is pressed while they're
+focused.=20
+
+> It'd be very handy to fix all these annoyances at once. I
+> think:
+>=20
+> When there's a submit:
+>=20
+> - Only submit on enter when there's a single enter-press
+> generating input ('text' and 'password').
+> Note: this can be further constrained to "one and only one
+> single enter-press input", but it may be overkill...
+
+That might be sensible. I dunno... quite a few forms make sense when
+half-filled and then Enter is a blessing (keeps you offa the mouse).
+
+> When there's no submit:
+>=20
+> - If there's more than one single enter-press input, render the
+> submit (added internally), and apply the above rules.
+
+This would be a really nice feature. It would get around those silly
+no-submit inputs.
+
+> If you're willing to implement this idea, please let me know.
+> If not, volunteers are welcome ;). Note that this is not complex
+> and very suitable for those of you that feel like helping.
+
+I might. Right now I'm looking at proper frames -- was thinking about
+using GtkFrame, but fitting that and DwWidget together isn't all that
+nice. Reverse DwGtkEmbed, anyone?
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]table-rendering?
+
+From: Hugo Hallqvist <hugha495@st...> - 2002-01-19 01:36
+
+There seems to be some problems with the table rendering.
+For example on http://www.linuxdevices.com,in the right column the text is moved gradually farther to the right.
+
+
+-- 
+//Hugo Hallqvist 
+
+
+
+Re: [Dillo-dev]Forms & enter
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-01-19 00:48
+
+Lars,
+
+> I've been wondering about the design decision to make forms only submit on
+> Enter when there is no Submit button. It is obviously not becuase it would
+> be hard to code (just pick the first submit button). The specs don't
+> (AFAICS) say anything for or against it. It's certainly very practical to
+> have Enter submit input text. Why has it been explicitly coded so that it
+> only happens if there is no Submit button?
+
+The point is that when facing multiple input fields, the form
+may be submitted incomplete as a result of pressing enter after
+filling one text entry (almost a reflex-act these days).
+
+There's also another reason: as javascript is not supported,
+and as it's often used to verify form submitions, it becomes very
+important not to try to send an incomplete form.
+
+Well, that's the idea behind it, but in practice, I must
+recognize that after some tests, the current implentation is
+certainly lacking, and that forms without submit, send whatever
+they have (or not) at enter-press time. Certainly not the desired
+effect...
+
+There's also the issue of input types that don't generate enter
+presses (as selection boxes); when they lack a submit. Current
+code doesn't submit anything, and as you noticed, the SPECS don't
+throw any light on that.
+
+It'd be very handy to fix all these annoyances at once. I
+think:
+
+When there's a submit:
+
+- Only submit on enter when there's a single enter-press
+generating input ('text' and 'password').
+Note: this can be further constrained to "one and only one
+single enter-press input", but it may be overkill...
+
+
+When there's no submit:
+
+- If there's more than one single enter-press input, render the
+submit (added internally), and apply the above rules.
+
+
+If you're willing to implement this idea, please let me know.
+If not, volunteers are welcome ;). Note that this is not complex
+and very suitable for those of you that feel like helping.
+
+
+Sincerely
+Jorge.- 
+
+
+
+[Dillo-dev][Patch] Multiple no_proxy domains
+
+From: Nikita Borodikhin <eliterr@tk...> - 2002-01-18 13:21
+
+Hello all !
+
+There is a small patch that makes it possible to specify not only one site
+to use no proxy but several domains. I think it will be useful.
+
+Nikita V. Borodikhin
+eliterr_at_tkk.ru
+
+
+
+diff -urN dillo.old/dillorc dillo/dillorc
+--- dillo.old/dillorc Thu Jan 17 18:58:47 2002
++++ dillo/dillorc Fri Jan 18 19:52:44 2002
+@@ -44,8 +44,8 @@
+# Set the proxy information for http
+#http_proxy=http://localhost:8080/
+
+-# Set the domain to access without proxy
+-#no_proxy = http://www.mynet.com/
++# Set the domains to access without proxy (',' or ';' separated)
++#no_proxy = ".mynet.com,.mynet2.com"
+
+
+#-------------------------------------------------------------------------
+diff -urN dillo.old/src/IO/http.c dillo/src/IO/http.c
+--- dillo.old/src/IO/http.c Thu Jan 17 18:58:43 2002
++++ dillo/src/IO/http.c Fri Jan 18 19:48:23 2002
+@@ -71,6 +71,41 @@
+static void Http_expect_answer(SocketData_t *S);
+
+
++/*
++ * Return flag whether suffix of url is in no_proxy list
++ * (comma or semicolon separated) or not
++ */
++int Http_search_no_proxy_siffix_in_url (char *url, char *no_proxy)
++{
++ int len;
++ int result = 0;
++ int no_proxy_len = strlen (no_proxy) + 1;
++ char *proxy_suffix = (char *) g_malloc (no_proxy_len);
++
++ while (*no_proxy != 0)
++ {
++ len = 0;
++ memset (proxy_suffix, '\0', no_proxy_len);
++ 
++ while ((no_proxy [len]) && (no_proxy [len] != ',')
++ && (no_proxy [len] != ';'))
++ len++;
++ 
++ if (len != 0)
++ {
++ strncpy (proxy_suffix, no_proxy, len);
++ result = (strstr (url, proxy_suffix) != 0);
++ }
++ 
++ if (result || !(no_proxy [len])) break;
++
++ no_proxy += len + 1;
++ };
++
++ g_free (proxy_suffix);
++
++ return result;
++}
+
+/*
+* Create and init a new SocketData_t struct, insert into ValidSocks,
+@@ -296,7 +331,8 @@
+S->web = ExtraData;
+
+/* Hacked-in support for proxies */
+- if (HTTP_Proxy && !(No_Proxy && strstr(URL_STR(Url), No_Proxy) != NULL)) {
++ if (HTTP_Proxy && !(No_Proxy &&
++ Http_search_no_proxy_siffix_in_url (URL_STR(Url), No_Proxy))) {
+strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname));
+S->port = URL_PORT(HTTP_Proxy);
+S->use_proxy = TRUE; 
+
+
+
+[Dillo-dev]Problems compiling current cvs?
+
+From: Hugo Hallqvist <hugha495@st...> - 2002-01-17 21:02
+
+Hi everyone,
+
+Is there anyone else having problems compiling the current cvs-version of dillo?
+
+I get the following errors:
+
+make[3]: Entering directory `/home/hugha495/cvs/dillo/src/IO'
+source='mime.c' object='mime.o' libtool=no \
+depfile='.deps/mime.Po' tmpdepfile='.deps/mime.TPo' \
+depmode=none /bin/sh ../../depcomp \
+gcc -DHAVE_CONFIG_H -I. -I. -I../.. -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT -Wall -Waggregate-return -c `test -f mime.c || echo './'`mime.c
+../../depcomp: ../../depcomp: Filen eller katalogen finns inte
+
+Any thoughts?
+
+
+-- 
+//Hugo Hallqvist 
+
+
+
+Re: Re: [Dillo-dev]A suggestion for configuration
+
+From: Paul Chamberlain <tif@ti...> - 2002-01-17 20:56
+
+From: Russell Nelson <nelson@cr...>
+> Paul Chamberlain writes:
+> > Create an interface for local executables
+> > Secure this "local-CGI" to prevent malicious use.
+> Not necessary. It runs as the user, and can only do things the user
+> can do anyway.
+
+Consider a document that says
+
+Beutiful girls are
+<a href="localcgi:saveprefs?&homepage=>here</a>
+
+You should make it so that only local documents are allowed
+to reference local CGIs. ...Or something like that.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]A suggestion for configuration
+
+From: Russell Nelson <nelson@cr...> - 2002-01-17 19:21
+
+Paul Chamberlain writes:
+> Create an interface for local executables
+> Secure this "local-CGI" to prevent malicious use.
+
+Not necessary. It runs as the user, and can only do things the user
+can do anyway.
+
+> This would mean that the only thing added to dillo
+> is the ability to do this local-CGI thing.
+
+And looking at the plugins facility, 90% of the work to add CGI is
+already there.
+
+-- 
+-russ nelson http://russnelson.com | One has to kill more people
+Crynwr sells support for free software | PGPok | to stop them from following
+521 Pleasant Valley Rd. | +1 315 268 1925 voice | profits, than to stop them
+Potsdam, NY 13676-3213 | +1 315 268 9201 FAX | from following prophets. 
+
+
+
+Re: [Dillo-dev]A suggestion for configuration
+
+From: Paul Chamberlain <tif@ti...> - 2002-01-17 17:32
+
+Russell Nelson wrote:
+> I have a suggestion for configuring dillo: use a web form, and local
+> CGI.
+
+I made the exact same suggestion once, only I forgot to
+send it to the list (default reply is to sender). I did
+send it to the guy that mentioned working on preferences:
+
+...
+
+I was wondering if there was a way to keep the
+preferences screens, etc., out of dillo. To do
+this, I came up with the following idea:
+
+Create an interface for local executables
+Secure this "local-CGI" to prevent malicious use.
+Build a preferences editor as one of these local-CGIs.
+Screens in HTML, write results to "~/.dillo/dillorc"
+
+This would mean that the only thing added to dillo
+is the ability to do this local-CGI thing. It could
+also open up lots of other possibilities. Hmm, think
+about a local-CGI that runs "locate"...
+
+Of course, the preference screens would then have to
+live with the limitations of HTML, but I don't think
+that's a huge sacrifice.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+[Dillo-dev]A suggestion for configuration
+
+From: Russell Nelson <nelson@cr...> - 2002-01-17 16:52
+
+I have a suggestion for configuring dillo: use a web form, and local
+CGI. CGI isn't that hard to set up to execute, and it opens up all
+sorts of interesting uses of dillo. Maybe it could be done through a
+plugin? e.g. cgi:/usr/lib/dillo/config.cgi
+
+-- 
+-russ nelson http://russnelson.com | One has to kill more people
+Crynwr sells support for free software | PGPok | to stop them from following
+521 Pleasant Valley Rd. | +1 315 268 1925 voice | profits, than to stop them
+Potsdam, NY 13676-3213 | +1 315 268 9201 FAX | from following prophets. 
+
+
+
+[Dillo-dev]Staying put
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-16 21:09
+
+I just notice that the pages remember their position now. That's real
+neat! Thank you, I've missed that!
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Fake Javascript Patch (Was Re: OpenSSL Patch)
+
+From: John Utz <john@ut...> - 2002-01-16 16:28
+
+oh, cool!
+
+the idea of such a thing(fake javascript) occurred to me last nite whilst
+i was standing in the shower muttering to myself about the insufferable
+lameness of my credit union sticking javascript into some code that need
+only render tables.....grrr....
+
+i'll give this a spin tonite or tomorrow. if it get's me closer, than
+perhaps i can add some additional hacks to get what i need. :-)
+
+On Wed, 16 Jan 2002, Paul Chamberlain wrote:
+
+> John Utz wrote:
+> > and i lied when i said that having https was sufficient for me to do
+> > online banking with my credit union. i needed cookies too :-)
+> > it *still* doesnt work yet. adding cookies at least get's it past the
+> > login screen...a view source indicates.. JAVASCRIPT! CRAP! stupid thing.
+>
+> There is a slim possibility that this fake javascript patch
+> will work for you. It supports URLs of the form:
+>
+> javascript:somefunction(a,b,c,")
+>
+> At the very least, this works for yahoo's links to it's slide
+> shows. See news.yahoo.com for examples.
+> --
+> Paul Chamberlain, tif@ti...
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]A few comments, suggestions, and reflections.
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-16 14:59
+
+On Tue, 15 Jan 2002, paul@sp... wrote:
+
+> I haven't looked at the cookies patches because frankly I haven't been
+> able to get any of the patches people have put out to work (except the
+> forms patch which is great!). Is it possible (I'm sure the answer is
+> yes) to include "imaginary cookies support?" To just placate the web
+> servers and accept the cookies but just hold them in memory (ccache.[ch])
+> until Dillo is closed. There is really no need to keep them. Web pages
+> don't require that you have the cookie already, just that you are willing
+> to accept them.
+
+The cookies patch will do that. In the ~/.dillo/cookie_control file, add
+
+DEFAULT: ACCEPT_SESSION
+
+at the end.
+
+> Maybe this has been covered before and you can all fill my inbox with
+> hate mail if I'm beating a dead horse. But, why doesn't Dillo support
+> the full html code? It seems to me that that should be a primary
+> concern. For instance the <center> tag. Maybe it is more difficult than
+> it sounds. I haven't done any gui programming.
+
+Does now! Yay!
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Fake Javascript Patch (Was Re: OpenSSL Patch)
+
+From: Paul Chamberlain <tif@ti...> - 2002-01-16 14:03
+
+Attachments: javascript.diff      
+
+John Utz wrote:
+> and i lied when i said that having https was sufficient for me to do
+> online banking with my credit union. i needed cookies too :-)
+> it *still* doesnt work yet. adding cookies at least get's it past the
+> login screen...a view source indicates.. JAVASCRIPT! CRAP! stupid thing.
+
+There is a slim possibility that this fake javascript patch
+will work for you. It supports URLs of the form:
+
+javascript:somefunction(a,b,c,")
+
+At the very least, this works for yahoo's links to it's slide
+shows. See news.yahoo.com for examples.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+RE: [Dillo-dev]A few comments, suggestions, and reflections.
+
+From: Vaclav Tvrdik <Vaclav.Tvrdik@ip...> - 2002-01-16 13:48
+
+Dear dillo hackers,
+
+dillo is a great piece of software and I realy like it. Thanks to all who
+develop it. When I first time tried dillo I was little confused about not
+working CENTER flag, but late I got to used to it. I think it is not so bad
+to have all stuff aligned to left especialy on small screens. Maybe iPAQ
+users can say us more (hope soon I will be iPAQ user to :-). On small screen
+you (maybe) can avoid some scroling with scroolbar to left. If that what I
+am writing is true, maybe there could be option in cfg file. At the end let
+me one question. Are there some plans for support of CCS or javascript ?
+
+thanks again and best regards
+
+Vaclav TVRDIK
+PGP Key : 0xA983E45F
+
+
+
+
+-----Original Message-----
+From: Doug Kearns [mailto:djkea2@mu...]
+Sent: Thursday, January 17, 2002 12:27 AM
+To: dillo-dev@so...
+Subject: Re: [Dillo-dev]A few comments, suggestions, and reflections.
+
+
+On Tue, Jan 15, 2002 at 11:05:17PM -0800, Paul wrote:
+> Maybe this has been covered before and you can all fill my inbox with hate
+> mail if I'm beating a dead horse. But, why doesn't Dillo support the full
+> html code? It seems to me that that should be a primary concern. For
+> instance the <center> tag. Maybe it is more difficult than it sounds. I
+> haven't done any gui programming.
+
+Check out the latest CVS - CENTER is now supported.
+It was checked in about a week ago.
+
+Regards,
+Doug
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]A few comments, suggestions, and reflections.
+
+From: Doug Kearns <djkea2@mu...> - 2002-01-16 12:22
+
+On Tue, Jan 15, 2002 at 11:05:17PM -0800, Paul wrote:
+> Maybe this has been covered before and you can all fill my inbox with hate
+> mail if I'm beating a dead horse. But, why doesn't Dillo support the full
+> html code? It seems to me that that should be a primary concern. For
+> instance the <center> tag. Maybe it is more difficult than it sounds. I
+> haven't done any gui programming.
+
+Check out the latest CVS - CENTER is now supported.
+It was checked in about a week ago.
+
+Regards,
+Doug 
+
+
+
+[Dillo-dev]A few comments, suggestions, and reflections.
+
+From: Paul <paul@sp...> - 2002-01-16 07:05
+
+I love Dillo. I use it daily and dread the times when I am forced to crank
+up the diesel engine called Mozilla for programs that require cookies,
+ssl, java, flash, etc. (which is rare by the way) Before Dillo was thrown
+into my lap I was using a script written by Hobbit (l0pht) powered by
+netcat! The extra crap is cute and all but hardly worth the wait. With
+Dillo I don't have to sacrifice speed for legibility.
+
+I haven't looked at the cookies patches because frankly I haven't been
+able to get any of the patches people have put out to work (except the
+forms patch which is great!). Is it possible (I'm sure the answer is yes)
+to include "imaginary cookies support?" To just placate the web servers
+and accept the cookies but just hold them in memory (ccache.[ch]) until
+Dillo is closed. There is really no need to keep them. Web pages don't
+require that you have the cookie already, just that you are willing to
+accept them.
+
+Maybe this has been covered before and you can all fill my inbox with hate
+mail if I'm beating a dead horse. But, why doesn't Dillo support the full
+html code? It seems to me that that should be a primary concern. For
+instance the <center> tag. Maybe it is more difficult than it sounds. I
+haven't done any gui programming.
+
+I love Dillo. I appreciate all the hard work everyone has put into it to
+make it the fine browser it is. Because of the extensive documentation
+and attention to detail I am learning a great deal about all aspects of
+programming.
+
+-Paul (paul@sp...) 
+
+
+
+Re: [Dillo-dev]Dillo/OpenSSL Patch - Latest Version - Take 2
+
+From: John Utz <john@ut...> - 2002-01-16 06:14
+
+hi jonathan!
+
+a bug report, at least with respect to my FreeBSD 4.4-RELEASE setup:
+one thing that i find myself having to do when i use your patches is to
+manually add the new file name to the makefiles, ie https.c https.o,
+etc...
+
+and i lied when i said that having https was sufficient for me to do
+online banking with my credit union. i needed cookies too :-)
+
+it *still* doesnt work yet. adding cookies at least get's it past the
+login screen...a view source indicates.. JAVASCRIPT! CRAP! stupid thing.
+
+i should have checked for that earlier. :-(
+
+On Mon, 14 Jan 2002, Jonathan P Springer wrote:
+
+> It's been brought to my attention that the patch I posted earlier today was
+>
+> 1. Broken
+> 2. Misnamed
+> 3. Came with the wrong instructions
+>
+> I've posted a revised version of the patch. The information that follows
+> has been edited for correctness and completeness. I just completed a test
+> compile and run successfully.
+>
+> Sorry for the inconvenience.
+> -js
+>
+> -----
+>
+> I've completed a few revisions to the HTTPS for Dillo. The latest version of
+> the patch can be obtained from
+>
+> http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.2002-01-14.diff
+>
+> Changes since the initial patch include:
+>
+> 1. When Dillo is configured to use proxies, all HTTPS requests are sent to
+> the proxy server via HTTP.
+>
+> 2. Changed uint32_t to guint32. This change let me compile on a
+> Cygnus/XFree86 machine.
+>
+> 3. Add 'libcrypto' to the configuration script.
+>
+> The diffs were generated against the current CVS (as of this writing). They
+> may not apply cleanly against 0.6.3. I've also integrated Jorgen Viksell's
+> cookie patch.
+>
+> To apply the patch, download it to the root of the Dillo source tree and...
+>
+> $ patch -p1 -i dillo-ssl-cookies.2002-01-14.diff
+> $ autoconf
+> $ ./configure --enable-ssl
+> $ make
+>
+> Be sure 'gtk.m4' is in your /usr/share/aclocal directory. On many systems,
+> in must be symlinked from /usr/local/share/aclocal.
+>
+> Apologies about the need for autoconf, but shipping diffs for 'configure'
+> seemed counterproductive. Distribution tarballs should not require autoconf.
+>
+> -jonathan
+>
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+> ----- End forwarded message -----
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Dillo/OpenSSL Patch - Latest Version - Take 2
+
+From: Ulrich Schwarz <uschwarz@gm...> - 2002-01-15 11:36
+
+Hi Jonathan,
+
+On Mon, Jan 14, 2002 at 03:16:55PM -0500, Jonathan P Springer wrote:
+
+> 1. When Dillo is configured to use proxies, all HTTPS requests are
+> sent to the proxy server via HTTP.
+
+This doesn't work for any proxy I tried (squid, wwwoffle).
+
+https requests via http-proxies have to be implemented in a
+different way, just like w3m handles them.
+
+So long.
+Ulrich 
+
+
+
+Re: [Dillo-dev]Dillo/OpenSSL Patch - Latest Version - Take 2
+
+From: John Utz <john@ut...> - 2002-01-15 06:02
+
+did i read this correctly? are you running dillo on a win32 box? if
+so..COOL!
+
+On Mon, 14 Jan 2002, Jonathan P Springer wrote:
+
+> It's been brought to my attention that the patch I posted earlier today was
+>
+> 1. Broken
+> 2. Misnamed
+> 3. Came with the wrong instructions
+>
+> I've posted a revised version of the patch. The information that follows
+> has been edited for correctness and completeness. I just completed a test
+> compile and run successfully.
+>
+> Sorry for the inconvenience.
+> -js
+>
+> -----
+>
+> I've completed a few revisions to the HTTPS for Dillo. The latest version of
+> the patch can be obtained from
+>
+> http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.2002-01-14.diff
+>
+> Changes since the initial patch include:
+>
+> 1. When Dillo is configured to use proxies, all HTTPS requests are sent to
+> the proxy server via HTTP.
+>
+> 2. Changed uint32_t to guint32. This change let me compile on a
+> Cygnus/XFree86 machine.
+>
+> 3. Add 'libcrypto' to the configuration script.
+>
+> The diffs were generated against the current CVS (as of this writing). They
+> may not apply cleanly against 0.6.3. I've also integrated Jorgen Viksell's
+> cookie patch.
+>
+> To apply the patch, download it to the root of the Dillo source tree and...
+>
+> $ patch -p1 -i dillo-ssl-cookies.2002-01-14.diff
+> $ autoconf
+> $ ./configure --enable-ssl
+> $ make
+>
+> Be sure 'gtk.m4' is in your /usr/share/aclocal directory. On many systems,
+> in must be symlinked from /usr/local/share/aclocal.
+>
+> Apologies about the need for autoconf, but shipping diffs for 'configure'
+> seemed counterproductive. Distribution tarballs should not require autoconf.
+>
+> -jonathan
+>
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+> ----- End forwarded message -----
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Dillo/OpenSSL Patch - Latest Version - Take 2
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-15 04:12
+
+On Mon, 14 Jan 2002, Jonathan P. Springer wrote:
+
+> It's been brought to my attention that the patch I posted earlier today
+> was
+>=20
+> 1. Broken
+> 2. Misnamed
+> 3. Came with the wrong instructions
+>=20
+> I've posted a revised version of the patch. The information that follows
+> has been edited for correctness and completeness. I just completed a
+> test compile and run successfully.
+>=20
+> Sorry for the inconvenience.
+> -js
+>=20
+> -----
+>=20
+> I've completed a few revisions to the HTTPS for Dillo. The latest
+> version of the patch can be obtained from
+>=20
+> http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.2002-01-14.=
+diff
+[...]
+> To apply the patch, download it to the root of the Dillo source tree
+> and...
+>=20
+> $ patch -p1 -i dillo-ssl-cookies.2002-01-14.diff
+> $ autoconf
+> $ ./configure --enable-ssl
+> $ make
+
+The configure script, while it checks for OpenSSL, seems to ignore the
+results and happily try to compile for OpenSSL with headers and library
+missing. Methinks specifying --enable-ssl would mean that you want a
+warning if OpenSSL isn't there.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev][PATCH] dillo-icons-patch
+
+From: ralphtheraccoon <ralphtheraccoon@uk...> - 2002-01-14 23:53
+
+Attachments: dillo-icons-patch      
+
+hi, attached is the icons patch i mentioned a few days ago. I created it with diff -urN
+as it was the only combo i could get to work (and it is the one recomended in the linux
+kernel docs). it seems to patch in well, no compile errors or anything. About "how to install
+images"... well, as dillo is using the xpm file format -- which is text based -- the images
+are compiled into the executable itself.
+
+Dan 
+
+
+
+[Dillo-dev]About frames
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-14 22:21
+
+I've been told that w3m handles frames exactly like it handles tables.
+Might that be an idea for Dillo? I'd love to see better frames.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Dillo/OpenSSL Patch - Latest Version - Take 2
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-01-14 20:17
+
+It's been brought to my attention that the patch I posted earlier today was
+
+1. Broken
+2. Misnamed
+3. Came with the wrong instructions
+
+I've posted a revised version of the patch. The information that follows
+has been edited for correctness and completeness. I just completed a test
+compile and run successfully. 
+
+Sorry for the inconvenience.
+-js
+
+-----
+
+I've completed a few revisions to the HTTPS for Dillo. The latest version of
+the patch can be obtained from 
+
+http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.2002-01-14.diff
+
+Changes since the initial patch include:
+
+1. When Dillo is configured to use proxies, all HTTPS requests are sent to
+the proxy server via HTTP.
+
+2. Changed uint32_t to guint32. This change let me compile on a 
+Cygnus/XFree86 machine.
+
+3. Add 'libcrypto' to the configuration script.
+
+The diffs were generated against the current CVS (as of this writing). They
+may not apply cleanly against 0.6.3. I've also integrated Jorgen Viksell's
+cookie patch.
+
+To apply the patch, download it to the root of the Dillo source tree and...
+
+$ patch -p1 -i dillo-ssl-cookies.2002-01-14.diff
+$ autoconf
+$ ./configure --enable-ssl
+$ make
+
+Be sure 'gtk.m4' is in your /usr/share/aclocal directory. On many systems,
+in must be symlinked from /usr/local/share/aclocal.
+
+Apologies about the need for autoconf, but shipping diffs for 'configure'
+seemed counterproductive. Distribution tarballs should not require autoconf.
+
+-jonathan
+
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev
+
+----- End forwarded message ----- 
+
+
+
+[Dillo-dev]Dillo/OpenSSL Patch - Latest Version
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-01-14 19:11
+
+I've completed a few revisions to the HTTPS for Dillo. The latest version of
+the patch can be obtained from 
+
+http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.2001-01-14.diff
+
+Changes since the initial patch include:
+
+1. When Dillo is configured to use proxies, all HTTPS requests are sent to
+the proxy server via HTTP.
+
+2. Changed uint32_t to guint32. This change let me compile on a 
+Cygnus/XFree86 machine.
+
+3. Add 'libcrypto' to the configuration script.
+
+The diffs were generated against the current CVS (as of this writing). They
+may not apply cleanly against 0.6.3. I've also integrated Jorgen Viksell's
+cookie patch.
+
+To apply the patch, download it to the root of the Dillo source tree and...
+
+$ diff -p1 -i dillo-ssl-cookies.2001-01-14.diff
+$ autoconf
+$ ./configure --enable-ssl
+$ make
+
+Be sure 'gtk.m4' is in your /usr/share/aclocal directory. On many systems,
+in must be symlinked from /usr/local/share/aclocal.
+
+Apologies about the need for autoconf, but shipping diffs for 'configure'
+seemed counterproductive. Distribution tarballs should not require autoconf.
+
+-jonathan 
+
+
+
+Re: [Dillo-dev]image scaling?
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-01-14 16:06
+
+Hi!
+
+On Wed, Dec 12, I wrote:
+> Since there are some other problems with images, I've thought of
+> encapsulating the representation of images into a new type, which
+> provides functions for:
+> [...]
+
+I've read the code for image decoding and caching, and looked how to
+realize this idea in the current code. The following targets more on
+simple integration, changes in the current code are minimal.
+
+1. Instead of a guchar array, a new data type, DilloImageBuffer,
+should be used (DICacheEntry::ImageBuffer and DwImage::buffer). Any
+access is done by function calls: Copying the lines (in
+a_Image_write) is done by a_Image_buffer_copy_line etc. The call to
+Image_line becomes obsolete, since DilloImageBuffer will deal with
+different types: indexed, RGB, gray, RGBA, gray-alpha(?). This may
+be useful for a more efficient implementation of DilloImageBuffer.
+
+2. The modules Png, JPeg, Gif, Image and DICache deal with the
+original image size (read by the decoders), while DwImage gets the
+"viewed" size (original size, multiplied by the global image
+scaling factor) from DilloImageBuffer.
+
+3. For DwImage, there are further methods, which replace the current
+direct access. Note to worth:
+
+- Shared buffers are shared, reference counters are used. Copying
+rows will automatically also affect the related scaled buffers.
+
+- There are two methods for drawing: one called after expose events
+(Dw_image_draw), and another called by a_Dw_image_draw_row. The
+exact rules, how the buffer is scaled (this can e.g. differ by a
+pixel or so), is hidden in DilloImageBuffer.
+
+- As noted above, all DwImage code is based on the viewed size.
+
+4. The global image scaling factor is used in two places: The HTML
+parser must apply it on the WIDTH and HEIGHT attributes of the
+<IMG> tag, and DilloImageBuffer must use it to scale the inherent
+size of an image. There are two modes, between the user can switch
+by a dillorc option:
+
+(i) The original image data is preserved, and an additional scaled
+buffer is created:
+
++-------+ +------------------+ additional
+| Image | -- copy --> | DilloImageBuffer | --> scaled
++-------+ rows | (original size) | buffers
++------------------+
+| ^
+| |
+scale requests
+each row for scaled
+| buffers
+| |
+v |
++------------------+
+| DilloImageBuffer |
+| (viewed size) |
++------------------+
+^
+|
++---------+
+| DwImage |
++---------+
+
+(ii) The original data gets lost just after scaling:
+
++-------+ +------------------+
+| Image | -- copy --> | DilloImageBuffer | --> scaled
++-------+ rows | (viewed size) | buffers
++------------------+
+^
+|
++---------+
+| DwImage |
++---------+
+
+(ii) uses generally less memory, while in some cases leads to a
+lower rendering quality, as in this example:
+
+"foo.png" has a size of 100x100 pixels, the image scaling factor is
+50%, and the following HTML sniplet is rendered:
+
+<img src="foo.png">
+<img src="foo.png" width=200 height=200>
+
+The first image is displayed at a size of 50x50, the second at
+100x100. (i) will, for the second, use the original buffer, but
+(ii) will enlarge the buffer, which was scaled down before, so
+resulting in a "pixelized" image.
+
+5. Any implementation of DilloImageBuffer will handle transparency
+independent of the background, i.e. the background colour will not
+be used anymore. The first implementation may be based on GdkRGB
+and (when needed) dithered clipping bitmaps. Better implementations
+may then developed in the future.
+
+6. Background images: The modules Image and DICache do no longer
+access the DwImage directly, all calls are replaced by and
+Interface, which is then implemented by DwImage and an appropriate
+structure for background images (part of DwStyle). The interface is
+in C realized by a struct of function pointers, and a generic
+pointer on DwImage etc. (details will follow).
+
+Perhaps someone, who knows the image code better, finds a bug, or also
+a better solution. Otherwise, I'll probably soon start to implement
+these ideas.
+
+Sebastian 
+
+
+
+[Dillo-dev]Thanks!
+
+From: Peter Graf <p.graf@it...> - 2002-01-14 10:45
+
+Hi folks,
+
+I won't be able to contribute development work. I' just like to say a big
+thanks for Dillo!!! And for the way you implement it!
+
+As a user of an "excotic" platform (Motorola 68040/68060 based), I very
+much appreciate that Dillo is purely written in C, and its small size and
+high efficieny! Great that libs like GNOME are not required.
+
+Of course I am hoping for new features, but I'd also like to state from a
+users point of view that Dillo is already useful right now!
+
+Great work! Please continue the development! Thanks a lot!
+
+Peter 
+
+
+
+[Dillo-dev]Dillo-m17n patch2
+
+From: <jserv.bbs@go...> - 2002-01-10 09:44
+
+Hi, all.
+
+Thanks to <ksr@lp.nm.fujitsu.co.jp>'s contribution to m17n patch. It
+worked well with a little modification, and I intergrated some patches
+into this tarball, as https protocol, cookies, and rendering Traditional
+Chinese (Taiwan). I put it here:
+
+http://ccns.ncku.edu.tw/~jimchyun/dillo/dillo-0.63-m17n.tgz
+
+Also, I modified a configuration tool in Tk, called dillocfg. It can
+be accessed in config/dillocfg after decompression. You can see the screen-
+shot as following link:
+
+http://ccns.ncku.edu.tw/~jimchyun/dillo/snapshot/
+
+i am sorry for this page is in Traditional Chinese encoding, but some-
+how it proves that Dillo could support m17n very well indeed.
+
+Thank you very much for all your hard work, it is deeply appreciated.
+
+Sincerely,
+Jim Huang.
+--
+[1;32m¡° Origin: [33m¦¨¥\¤j¾Ç¸ê°T¤uµ{¾Ç¨t[¾K¸ê¤ßBBS][37m <goodguy.csie.ncku.edu.tw> [m
+[1;31m¡» From: [36mccns.ncku.edu.tw[m 
+
+
+
+[Dillo-dev]Latest cookies patch
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-01-09 14:30
+
+Hi all!
+
+The latest cookies patch may be found at this location:
+http://w1.211.telia.com/~u21114235/patch-cookies-8jan
+
+The only real change is that I removed a security check that made some
+sites work incorrectly.=20
+Removing that particular check and applying the patch on top of
+Jonathan Springers SSL patch actually enabled Dillo to log in to
+Hotmail. :-)
+
+Cheers,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]HTTPS/OpenSSL in Dillo
+
+From: Michael Govorun <mike@sh...> - 2002-01-09 10:59
+
+Sammy Mannaert <nstalkie@tv...> writes:
+
+> microsoft for example used a bsd licensed tcp/ip stack in win nt !
+
+obviously, this is problem with BSD-license!
+
+-- 
+Michael Govorun 
+
+
+
+Re: [Dillo-dev]m17n patch
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-01-09 02:20
+
+Hi.
+
+I mistook the URL.
+
+< http://todo.org/download/dillo/dillo-0.6.3-uo-branch-2.tar.gz
+> http://todo.org/download/dillo/dillo-0.6.3-uo-branch-2.tgz
+
+Thanks. 
+
+
+
+[Dillo-dev]m17n patch
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-01-09 01:35
+
+Hi.
+
+I put the following file,
+http://todo.org/download/dillo/dillo-0.6.3-uo-branch-2.tar.gz
+It works fine.
+
+This supports UTF-8, Japanese charsets and others (Korean etc) like
+Netscape 4.x encoding menu, it is based on Robert Thomson's Japanese
+patch and Grigory Bakunv's encoding patch. Enjoy. 
+
+
+
+Re: [Dillo-dev]HTTPS/OpenSSL in Dillo
+
+From: Sammy Mannaert <nstalkie@tv...> - 2002-01-08 21:29
+
+Jonathan Springer wrote:
+> 
+> Also, this is technically in violation of the GPL until Jorge OKs it. 
+> OpenSSL's license is BSD freeware, which is ever so slightly more 
+> restrictive than GPL. DBIO.c and https.c both require disclaimer 
+> from Jorge and I as copyright holders that it's OK to link them 
+> against libssl.
+
+actually the bsd license is less restrictive than the gpl license :)
+
+gpl:
+use our source, modify our source ... BUT : 
+distribute source if you distribute binaries
+bsd (without advertising clause):
+use our source, modify our source, release in any form
+you want
+
+microsoft for example used a bsd licensed tcp/ip stack in win nt !
+some of the tcp/ip in os2 warp were also bsd licensed if i'm not
+mistaken
+
+the problem is actually with the GPL (as you are linking against
+a non free library)
+
+http://www.openssl.org/support/faq.html#LEGAL2 
+
+
+
+Re: [Dillo-dev]HTTPS/OpenSSL in Dillo
+
+From: John Utz <john@ut...> - 2002-01-08 21:03
+
+greetings;
+
+i wanted to mention that this patch consistently works on *both* my
+redhat-7.0 box at work *and* my FreeBSD-4.4-RELEASE box at home.
+
+this makes me very happy.
+
+the previously proffered patch built ok after some fiddling, but it never
+actually worked.
+
+the one point i would make your patch is that the call to autoconf is
+probably a significant roadmap to wide adoption.
+
+whatever version of autoconf was used at your home is not the
+same one as is available on my RH7.0 or my FreeBSD box, because i had to
+do a ton of stuff by hand to get it to compile.
+
+i assume that the problem would be eliminated if this patch was committed
+to the src tree and the 'conf bits' where done as part of the rest of the
+release generation process.
+
+great patch. tnx for taking the time to provide it! i hope this https
+support gets included in the next release
+
+On Sun, 6 Jan 2002, Jonathan Springer wrote:
+
+> When I couldn't use Dillo to log on to SourceForge, I knew something had to be done about HTTPS support. Attached is the result of a few days work on extending the interface. Originally, I thought I'd just have to replicate HTTP.c and use the FD's from IO.c. Wrong! OpenSSL's libssl has these wonderful things called BIOs, except they don't behave like FDs and you can't count on anyone who doesn't have OpenSSL having them. DBIO.c in the patch replicates IO.c functionality for BIOs.
+>
+> Aargh. To apply the patch, download the attached tarball into your dillo root directory and:
+>
+> $ tar zfx dillo-ssl.tar.gz
+> $ patch -p0 -i dillo.diff
+> $ autoconf
+> $ ./configure --enable-ssl # and your other prefs
+> $ ./src/dillo https://so....net # test case
+>
+> Note that you'll need OpenSSL installed for this to work at all.
+>
+> Also, this is technically in violation of the GPL until Jorge OKs it. OpenSSL's license is BSD freeware, which is ever so slightly more restrictive than GPL. DBIO.c and https.c both require disclaimer from Jorge and I as copyright holders that it's OK to link them against libssl.
+>
+> Feel free to contact me with bugs or concerns. I've just started putting this through its paces.
+>
+> -jonathan springer <jonathan.springer@ve...>
+>
+> N.B. I still can't connect to SourceForge. Cookies are next on the list.
+>
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]toolbar images
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-08 17:01
+
+On Wed, 2 Jan 2002, ralphtheraccoon@uk... wrote:
+
+> Hi, and happy new year!
+>=20
+> I've just started hacking on dillo... I'm not all that good yet, but I've
+> seporated out the images in src/pixmaps.h into .xpm files in a new
+> src/images folder, so as to make it easier for artists to edit them
+> (if needed), and so that editing via gimp or other non-text editors
+> is possible. I've also added in using of gnome-type icons (such as
+> ROX-filer, gmc, and galeon use) so dillo is more consistant with the
+> look of other gnome/gtk apps. I'm still kinda new to this, so how should
+> I create a multi-file patch, and where should I put it?
+
+You create a patch by using diff on the original source and your modified
+source:
+
+$ tar -xzf dillo.tar.gz
+$ mv dillo dillo-orig
+$ tar -xzf dillo.tar.gz
+...modify...
+...remove editors backup files...
+$ cd dillo
+$ make dist-clean
+$ cd ..
+$ diff -Burbn dillo-orig dillo >dillo-icons-patch
+
+The dist-clean is to make sure generated files don't get into the diff,
+while your new icon files do. If you had no new files, you could just use
+
+$ diff -Burb dillo-orig dillo | grep -v '^Only in' >dillo-icons-patch
+
+If it's not not overly long, you can post it here as an attachment,
+otherwise post a link to it.
+
+What do you do for installation of the images? I've never quite figured
+out where to put such.
+
+> PS - the modifications pass the dillo.s...net guidelines ;)
+
+Good!=20=20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]New patch-o-matic site coming up
+
+From: lrclause+<dillo@cs...> - 2002-01-07 23:50
+
+With the haru.wom.ru patch-o-matic site being down, I decided to finally do
+what I've wanted to do and make my own patch-o-matic. I've hacked up some
+code to have it keep better track of what works, and it's just about
+ready. Since I won't have web-based submission for a while (until I see
+how the base stuff runs), I'd like everybody who's submitted patches to
+send me a copy, preferably with a note of when (what Dillo version) it was
+made and what it does. To avoid flooding the list with old patches, I've
+set the Reply-To: to me (hopefully the list software doesn't kill it).
+
+Happy hacking,
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]forwarded user comments
+
+From: Robert Thomson <bob@go...> - 2002-01-07 22:50
+
+Hi,
+
+Here is an email that was sent to me. I am forwarding it to the list
+because it talks about Dillo, rather than just my Japanese support patch.
+
+Regards,
+
+Bob Thomson.
+
+---------------------------------------------------------------------
+
+Rough translation:
+
+How do you do, my name is Imamichi.
+I found Dillo's record at freshmeat, and
+eventually I found the Japanese patch with google.
+I usually use Mozilla, but Dillo's lightness was exciting.
+Keep up the good work please!
+
+---------------------------------------------------------------------
+
+> From imamichi@li... Sat Jan 5 23:22:33 2002
+> Date: Mon, 24 Dec 2001 11:58:04 +0900
+> From: "今道貴司" <imamichi@li...>
+> To: Robert.Thomson@ee.ed.ac.uk
+> Subject: dillo 日本語版
+>
+> 初めまして、今道と申します。
+> freshmeatにdilloが登録されていて、
+> その日本語パッチをgoogleで検索してたどりつきました。
+> 普段はMozillaを使っていますが、dilloの軽さに感動しました。
+> これからも頑張ってください。
+>
+> -- 
+> /-----------------------------------------
+> 今道 貴司
+> 京都大学工学部情報学科
+> 数理工学コース 2回生
+> imamichi@li...
+> -----------------------------------------/ 
+
+
+
+[Dillo-dev]Forms enter patch
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-06 18:49
+
+Hope everybody had a merry Christmas and a happy New Year. Here's a small
+patch that lets you use Enter to submit a form, even if there are submit
+buttons.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile ~/src/dillo-enter-patch=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff -rbBu dillo-orig/src/html.c dillo-enter/src/html.c
+--- dillo-orig/src/html.c Wed Jan 2 10:57:17 2002
++++ dillo-enter/src/html.c Sun Jan 6 12:31:01 2002
+@@ -352,7 +352,6 @@
+html_lb->forms[nf].num_inputs =3D 0;
+html_lb->forms[nf].num_inputs_max =3D 4;
+html_lb->forms[nf].inputs =3D NULL;
+- html_lb->forms[nf].HasSubmitButton =3D FALSE;
+html_lb->num_forms++;
+=20
+// g_print("Html_form_new: action=3D%s nform=3D%d\n", action, nf);
+@@ -2595,7 +2594,6 @@
+if ( (i =3D Html_find_form(submit, html_lb)) =3D=3D -1 )
+return;
+=20
+- if ( html_lb->forms[i].HasSubmitButton =3D=3D FALSE )
+Html_submit_form(submit, html_lb);
+}
+=20
+@@ -2670,7 +2668,6 @@
+init_str =3D g_strdup(Html_get_attr2(html, tag, tagsize, "value",=
+0));
+} else if (!g_strcasecmp(type, "submit")) {
+inp_type =3D DILLO_HTML_INPUT_SUBMIT;
+- form->HasSubmitButton =3D TRUE;
+init_str =3D (value) ? value : g_strdup("submit");
+widget =3D gtk_button_new_with_label(init_str);
+gtk_widget_set_sensitive(widget, FALSE); /* Until end of FORM! */
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+[Dillo-dev]HTTPS/OpenSSL in Dillo
+
+From: Jonathan Springer <jonathan.springer@ve...> - 2002-01-06 18:37
+
+Attachments: dillo-ssl.tar.gz      
+
+When I couldn't use Dillo to log on to SourceForge, I knew something had to be done about HTTPS support. Attached is the result of a few days work on extending the interface. Originally, I thought I'd just have to replicate HTTP.c and use the FD's from IO.c. Wrong! OpenSSL's libssl has these wonderful things called BIOs, except they don't behave like FDs and you can't count on anyone who doesn't have OpenSSL having them. DBIO.c in the patch replicates IO.c functionality for BIOs.
+
+Aargh. To apply the patch, download the attached tarball into your dillo root directory and:
+
+$ tar zfx dillo-ssl.tar.gz
+$ patch -p0 -i dillo.diff
+$ autoconf
+$ ./configure --enable-ssl # and your other prefs
+$ ./src/dillo https://so....net # test case
+
+Note that you'll need OpenSSL installed for this to work at all.
+
+Also, this is technically in violation of the GPL until Jorge OKs it. OpenSSL's license is BSD freeware, which is ever so slightly more restrictive than GPL. DBIO.c and https.c both require disclaimer from Jorge and I as copyright holders that it's OK to link them against libssl.
+
+Feel free to contact me with bugs or concerns. I've just started putting this through its paces.
+
+-jonathan springer <jonathan.springer@ve...>
+
+N.B. I still can't connect to SourceForge. Cookies are next on the list. 
+
+
+
+Re: Found the problem! But why is CPPFLAGS used in a C only project?Re: [Dillo-dev]0.6.3 configure and jpeg headers
+
+From: John Utz <john@ut...> - 2002-01-04 20:13
+
+i love mailing lists!
+
+On Fri, 4 Jan 2002, Lionel Ulmer wrote:
+
+> > dillo is written in C, not C++, so there is no reason that i can
+> > comprehend for the CPPFLAGS env variable to *ever*be used in configuring
+> > or compiling this project.
+>
+> Well, it's just that CPPFLAGS are the flags given to the C PreProcessor (the
+> 'cpp' command)... So all -I directives should be in CPPFLAGS.
+>
+> CFLAGS are the parameter given to the C compiler.
+>
+> And CXXFLAGS are the one for the C++ compiler.
+>
+> At least this is my understanding of all this :-)
+
+i think that your understanding is correct. i think that CPPFLAGS gets
+misused for c++ stuff so much that i have misunderstood it's use for quite
+some time!
+
+then the fix would be to assign -ILIBJPEG_INCDIR to CPPFLAGS instead of
+CFLAGS and then the problem would be fixed
+
+> Lionel
+>
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: Found the problem! But why is CPPFLAGS used in a C only project?Re: [Dillo-dev]0.6.3 configure and jpeg headers
+
+From: Lionel Ulmer <lionel.ulmer@fr...> - 2002-01-04 20:03
+
+> dillo is written in C, not C++, so there is no reason that i can
+> comprehend for the CPPFLAGS env variable to *ever*be used in configuring
+> or compiling this project.
+
+Well, it's just that CPPFLAGS are the flags given to the C PreProcessor (the
+'cpp' command)... So all -I directives should be in CPPFLAGS.
+
+CFLAGS are the parameter given to the C compiler.
+
+And CXXFLAGS are the one for the C++ compiler.
+
+At least this is my understanding of all this :-)
+
+Lionel
+
+-- 
+Lionel Ulmer - http://www.bbrox.org/ 
+
+
+
+Found the problem! But why is CPPFLAGS used in a C only project?Re: [Dillo-dev]0.6.3 configure and jpeg headers
+
+From: John Utz <john@ut...> - 2002-01-04 19:55
+
+As i indicated i would, i poked around in the configure script on my ride
+home on the bus yesterday afternoon.
+
+I will describe the misconfiguration in a moment, but i think the question
+i ask in the header is a fundamental one, so we should tackle that first.
+
+dillo is written in C, not C++, so there is no reason that i can
+comprehend for the CPPFLAGS env variable to *ever*be used in configuring
+or compiling this project.
+
+this is a strong statement, and there may be things that i dont understand
+that somebody else could point out that makes CPPFLAGS appropriate
+(ie something broken in some compiler somewhere that requires the use of
+CPPFLAGS to compile C code).
+
+absent any compelling reason to use it, I feel that any CPP stuff should
+be removed from the configure.
+
+so, why is configure --with-jpeg-include=/usr/local/include failing to
+help gcc find my jpeg headers?
+
+because the configure correctly sets CFLAGS:
+LIBJPEG_INCDIR=$withval
+if test -n "$LIBJPEG_INCDIR"; then
+CFLAGS="$CFLAGS -I$LIBJPEG_INCDIR"
+
+but it uses the cpp compile command to build conftest for jpeg includes!
+
+for ac_header in jpeglib.h jconfig.h jerror.h jmorecfg.h
+do
+ac_ac_Header=`echo "ac_cv_header_$ac_header" | $ac_tr_sh`
+echo "$as_me:2656: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6
+if eval "test \"\${$ac_ac_Header+set}\" = set"; then
+echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+cat >conftest.$ac_ext <<_ACEOF
+#line 2662 "configure"
+#include "confdefs.h"
+#include <$ac_header>
+_ACEOF
+if { (eval echo "$as_me:2666: \"$ac_cpp conftest.$ac_ext\"") >&5
+(eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+
+
+$ac_cpp should be $ac_c !!!
+
+i'll go file a bug now
+
+On Thu, 3 Jan 2002, John Utz wrote:
+
+> hi;
+>
+> IIRC, the issue with configure not finding jpeg and png ligs and headers
+> was supposed to be fixed in 0.6.3.
+>
+> that doesnt seem to be completely true for me. it finds png headers and
+> libs ok, and it finds jpeg *libs* ok, but it cant seem to find the jpeg
+> headers.
+>
+> the JPEGLIB_INC variable is getting set correctly to /usr/local/include
+> when i specify --with-jpeg-inc, but the configure process reports no no no
+> for all of the headers.
+>
+> i'll will hopefully find out a more specific problem when i poke more
+> echo's into configure this afternoon
+>
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]0.6.3 configure and jpeg headers
+
+From: John Utz <john@ut...> - 2002-01-03 20:00
+
+hi;
+
+IIRC, the issue with configure not finding jpeg and png ligs and headers
+was supposed to be fixed in 0.6.3.
+
+that doesnt seem to be completely true for me. it finds png headers and
+libs ok, and it finds jpeg *libs* ok, but it cant seem to find the jpeg
+headers.
+
+the JPEGLIB_INC variable is getting set correctly to /usr/local/include
+when i specify --with-jpeg-inc, but the configure process reports no no no
+for all of the headers.
+
+i'll will hopefully find out a more specific problem when i poke more
+echo's into configure this afternoon
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]toolbar images
+
+From: ralphtheraccoon <ralphtheraccoon@uk...> - 2002-01-02 16:38
+
+Hi, and happy new year!
+
+I've just started hacking on dillo... I'm not all that good yet, but I've
+seporated out the images in src/pixmaps.h into .xpm files in a new
+src/images folder, so as to make it easier for artists to edit them
+(if needed), and so that editing via gimp or other non-text editors
+is possible. I've also added in using of gnome-type icons (such as
+ROX-filer, gmc, and galeon use) so dillo is more consistant with the
+look of other gnome/gtk apps. I'm still kinda new to this, so how should
+I create a multi-file patch, and where should I put it?
+
+Dan
+
+PS - the modifications pass the dillo.s...net guidelines ;) 
+
+
+
+[Dillo-dev]Forms & enter
+
+From: Lars Clausen <lrclause@cs...> - 2002-01-02 13:51
+
+First off, happy new year to everybody! May Dillo make as much progress in
+the new year as in the last.
+
+I've been wondering about the design decision to make forms only submit on
+Enter when there is no Submit button. It is obviously not becuase it would
+be hard to code (just pick the first submit button). The specs don't
+(AFAICS) say anything for or against it. It's certainly very practical to
+have Enter submit input text. Why has it been explicitly coded so that it
+only happens if there is no Submit button?
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+

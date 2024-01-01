@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Border Collapsing</title>
+
+<style type="text/css" media="all">
+
+.word {background-color: orange}
+
+
+table.collapse {
+ border-collapse: collapse;
+ border: 1px solid black;
+}
+td, th {
+  padding:5px solid #444;
+  border: 10px solid #aaa;
+  margin: 20px solid blue;
+}
+</style>
+</head>
+
+<body>
+
+<h3>Separate:</h3>
+ <table border=1 _bgcolor="red" cellpadding=0>
+ <tr><td><i class="word">Carnivores</i><td>Primates
+ <tr><td>Tiger<td>Sifaka
+ </table>
+<h3>Collapse:</h3>
+ <table class="collapse">
+ <tr><td><i class="word">Carnivores</i><td>Primates
+ <tr><td>Tiger<td>Sifaka
+ </table>
+
+</body>
+</html>

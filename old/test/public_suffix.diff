@@ -1,0 +1,341 @@
+Just making a backup. I just started testing and it appears to be
+functioning, but it hasn't been cleaned up or anything yet.
+
+diff -r 96f19eb5687f dpi/cookies.c
+--- a/dpi/cookies.c	Fri Jan 15 19:23:04 2010 +0000
++++ b/dpi/cookies.c	Sat Jan 16 02:38:26 2010 +0000
+@@ -100,6 +100,13 @@
+    Dlist *dlist;
+ } CookieNode;
+ 
++/* TODO Probably combine these two using "key" */
++
++typedef struct {
++   char *tld;
++   Dlist *list;
++} CookieSuffixNode;
++
+ typedef struct {
+    char *name;
+    char *value;
+@@ -112,6 +119,12 @@
+ } CookieData_t;
+ 
+ typedef struct {
++   bool_t exception;
++   bool_t wildcard;
++   char *name;
++} CookiesPSRule;
++
++typedef struct {
+    Dsh *sh;
+    int status;
+ } ClientInfo;
+@@ -137,6 +150,8 @@
+ "# This is a generated file!  Do not edit.\n"
+ "# [domain  TRUE  path  secure  expiry_time  name  value]\n\n";
+ 
++static Dlist *Cookies_public_suffixes;
++static char *Cookies_public_suffix_filename;
+ 
+ /*
+  * Forward declarations
+@@ -157,6 +172,13 @@
+    return dStrcasecmp(n1->domain, n2->domain);
+ }
+ 
++static int Cookies_suffix_node_cmp(const void *v1, const void *v2)
++{
++   const CookieSuffixNode *n1 = v1, *n2 = v2;
++
++   return dStrcasecmp(n1->tld, n2->tld);
++}
++
+ /*
+  * Compare function for searching a cookie node by domain
+  */
+@@ -168,6 +190,14 @@
+    return dStrcasecmp(node->domain, domain);
+ }
+ 
++static int Cookies_suffix_node_by_tld_cmp(const void *v1, const void *v2)
++{
++   const CookieSuffixNode *node = v1;
++   const char *tld = v2;
++
++   return dStrcasecmp(node->tld, tld);
++}
++
+ /*
+  * Return a file pointer. If the file doesn't exist, try to create it,
+  * with the optional 'init_str' as its content.
+@@ -215,6 +245,107 @@
+    dFree(cookie);
+ }
+ 
++static char *Cookies_get_tld(const char *host)
++{
++   char *tld;
++   uint_t after, start;
++
++   if (host) {
++      after = strlen(host);
++      if (after > 0 && host[after - 1] == '.')
++         after--;
++      start = after;
++      while (start > 0 && host[start - 1] != '.')
++         start--;
++      tld = dStrndup(host + start, after - start);
++   } else {
++      tld = dStrdup("");
++   }
++   return tld;
++}
++
++static void Cookies_get_public_suffix_list()
++{
++   FILE *stream;
++   char line[LINE_MAXLEN];
++   int rule_count = 0;
++
++   dReturn_if_fail(Cookies_public_suffix_filename);
++
++   if (!(stream = fopen(Cookies_public_suffix_filename, "r"))) {
++      MSG("Cannot read public suffix list \"%s\"\n",
++          Cookies_public_suffix_filename);
++      return;
++   }
++   MSG("Reading public suffix list \"%s\"\n", Cookies_public_suffix_filename);
++
++   while (!feof(stream)) {
++      line[0] = '\0';
++      if (!fgets(line, LINE_MAXLEN, stream) && ferror(stream)) {
++         MSG("Error while reading public suffix file \"%s\": %s\n",
++             Cookies_public_suffix_filename, dStrerror(errno));
++         break; /* bail out */
++      }
++
++      /* Remove leading and trailing whitespaces */
++      dStrstrip(line);
++
++      if (!*line || (line[0] == '/' && line[1] == '/'))
++         continue;
++
++      CookieSuffixNode *tld_node;
++      CookiesPSRule *rule;
++      char *suffix;
++      char *tld = Cookies_get_tld(line);
++
++      if (rule_count++ == 0)
++         Cookies_public_suffixes = dList_new(250);
++
++      tld_node = dList_find_sorted(Cookies_public_suffixes, tld,
++                                   Cookies_suffix_node_by_tld_cmp);
++      if (!tld_node) {
++         tld_node = dNew(CookieSuffixNode, 1);
++         tld_node->tld = tld;
++         tld_node->list = dList_new(5);
++         dList_insert_sorted(Cookies_public_suffixes, tld_node,
++                             Cookies_suffix_node_cmp);
++      } else {
++         dFree(tld);
++      }
++      rule = dNew0(CookiesPSRule, 1);
++      suffix = line;
++      if (*suffix == '!') {
++         rule->exception = TRUE;
++         suffix++;
++      }
++      if (*suffix == '*') {
++         rule->wildcard = TRUE;
++         suffix++;
++         if (*suffix != '.')
++            MSG("WARNING: Dillo assumes that . follows * (rule \"%s\")\n",
++                line);
++         if (strchr(suffix, '*'))
++            MSG("WARNING: Dillo assumes only one * (rule \"%s\")\n", line);
++      }
++
++      rule->name = dStrdup(suffix);
++
++      dList_append(tld_node->list, rule);
++   }
++
++   if (feof(stream)) {
++      /* all is well */
++
++      /* TODO We should consider a file with suspiciously few rules to be an
++       * error case as well.
++       */
++      MSG("%d rules read from public suffix list\n", rule_count);
++   } else {
++      /* TODO Tear down what we've built. */
++   }
++   fclose(stream);
++}
++
+ /*
+  * Initialize the cookies module
+  * (The 'disabled' variable is writeable only within Cookies_init)
+@@ -331,6 +462,7 @@
+          Cookies_add_cookie(cookie);
+       }
+    }
++   Cookies_get_public_suffix_list();
+ }
+ 
+ /*
+@@ -873,6 +1005,67 @@
+    }
+ }
+ 
++static bool_t Cookies_is_public_suffix(const char *d)
++{
++   char *tld, *domain;
++   uint_t domain_len;
++   CookieSuffixNode *node;
++   int i;
++   bool_t ret;
++
++   dReturn_val_if_fail(d, TRUE);
++
++   domain = dStrdup(*d == '.' ? d + 1 : d);
++   domain_len = strlen(domain);
++   if (domain_len && domain[domain_len - 1] == '.')
++      domain[--domain_len] = '\0';
++
++   tld = Cookies_get_tld(domain);
++   node = dList_find_sorted(Cookies_public_suffixes, tld,
++                            Cookies_suffix_node_by_tld_cmp);
++   dFree(tld);
++
++   if (!node) {
++      /* Perhaps we could use the dots-counting code in this case */
++      MSG("Warning: unrecognised tld \"%s\"\n", tld);
++      dFree(domain);
++      return TRUE;
++   }
++
++   ret = FALSE;
++
++   for (i = 0; i < dList_length(node->list); i++) {
++      const CookiesPSRule *rule = dList_nth_data(node->list, i);
++
++      /* BUG: We have to learn to handle punycode, unfortunately, since the
++       * stupid list insists upon having non-ascii domains. If it's possible,
++       * I'd like to put de-punycoded rules in the list.
++       */
++      if (!dStrcasecmp(domain, rule->name)) {
++         if (rule->exception) {
++            ret = FALSE;
++            MSG("Public suffix specifically allows %s\n", rule->name);
++            break;
++         } else {
++            ret = TRUE;
++            MSG("Public suffix has a rule to disallow %s\n", rule->name);
++         }
++      } else if (rule->wildcard) {
++         uint_t rule_len = strlen(rule->name);
++
++         if (domain_len > rule_len &&
++             !dStrcasecmp(domain + domain_len - rule_len, rule->name) &&
++             strchr(domain, '.') >= domain + domain_len - rule_len) {
++            ret = TRUE;
++            MSG("Public suffix has a wildcard rule to disallow *%s\n",
++                rule->name);
++         }
++      }
++   }
++   dFree(domain);
++   return ret;
++}
++
+ /*
+  * Based on the host, how many internal dots do we need in a cookie domain
+  * to make it valid? e.g., "org" is not on the list, so dillo.org is a safe
+@@ -887,20 +1080,9 @@
+    uint_t ret = 1;
+ 
+    if (host) {
+-      int start, after, tld_len;
++      char *tld = Cookies_get_tld(host);
+ 
+-      /* We may be able to trust the format of the host string more than
+-       * I am here. Trailing dots and no dots are real possibilities, though.
+-       */
+-      after = strlen(host);
+-      if (after > 0 && host[after - 1] == '.')
+-         after--;
+-      start = after;
+-      while (start > 0 && host[start - 1] != '.')
+-         start--;
+-      tld_len = after - start;
+-
+-      if (tld_len > 0) {
++      if (*tld) {
+          /* These TLDs were chosen by examining the current publicsuffix list
+           * in January 2010 and picking out those where it was simplest for
+           * them to describe the situation by beginning with a "*.[tld]" rule.
+@@ -914,14 +1096,14 @@
+          uint_t i, tld_num = sizeof(tlds) / sizeof(tlds[0]);
+ 
+          for (i = 0; i < tld_num; i++) {
+-            if (strlen(tlds[i]) == (uint_t) tld_len &&
+-                !dStrncasecmp(tlds[i], host + start, tld_len)) {
+-               MSG("TLD code matched %s\n", tlds[i]);
++            if (!dStrcasecmp(tlds[i], tld)) {
++               MSG("TLD code matched %s\n", tld);
+                ret++;
+                break;
+             }
+          }
+       }
++      dFree(tld);
+    }
+    return ret;
+ }
+@@ -947,18 +1129,21 @@
+    if (!Cookies_domain_matches(host, cookie->domain))
+       return FALSE;
+ 
+-   internal_dots = 0;
+-   for (i = 1; i < strlen(cookie->domain) - 1; i++) {
+-      if (cookie->domain[i] == '.')
+-         internal_dots++;
+-   }
++   if (Cookies_public_suffixes) {
++      if (Cookies_is_public_suffix(cookie->domain))
++         return FALSE;
++   } else {
++      /* fall back on our dot-counting heuristics */
++      internal_dots = 0;
++      for (i = 1; i < strlen(cookie->domain) - 1; i++) {
++         if (cookie->domain[i] == '.')
++            internal_dots++;
++      }
+ 
+-   /* All of this dots business is a weak hack.
+-    * TODO: accept the publicsuffix.org list as an optional external file.
+-    */
+-   if (internal_dots < Cookies_internal_dots_required(host)) {
+-      MSG("not enough dots in %s\n", cookie->domain);
+-      return FALSE;
++      if (internal_dots < Cookies_internal_dots_required(host)) {
++         MSG("not enough dots in %s\n", cookie->domain);
++         return FALSE;
++      }
+    }
+ 
+    MSG("host %s and domain %s is all right\n", host, cookie->domain);
+@@ -1187,6 +1372,11 @@
+             rule[j++] = line[i++];
+          rule[j] = '\0';
+ 
++         if (!dStrcasecmp(domain, "public_suffix_file")) {
++            Cookies_public_suffix_filename = dStrdup(rule);
++            continue;
++         }
++
+          if (dStrcasecmp(rule, "ACCEPT") == 0)
+             cc.action = COOKIE_ACCEPT;
+          else if (dStrcasecmp(rule, "ACCEPT_SESSION") == 0)

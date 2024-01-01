@@ -1,0 +1,899 @@
+diff -r a50076297212 src/IO/dpi.c
+--- a/src/IO/dpi.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/IO/dpi.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -356,9 +356,9 @@
+          if (execl(path1, "dpid", (char*)NULL) == -1) {
+             dFree(path1);
+             if (execlp("dpid", "dpid", (char*)NULL) == -1) {
+-               MSG("Dpi_start_dpid (child): %s\n", dStrerror(errno));
++               MSG_WARN("Dpi_start_dpid (child): %s\n", dStrerror(errno));
+                if (Dpi_blocking_write(st_pipe[1], "ERROR", 5) == -1) {
+-                  MSG("Dpi_start_dpid (child): can't write to pipe.\n");
++                  MSG_WARN("Dpi_start_dpid (child): can't write to pipe.\n");
+                }
+                dClose(st_pipe[1]);
+                _exit (EXIT_FAILURE);
+@@ -367,7 +367,7 @@
+       }
+    } else if (pid < 0) {
+       /* The fork failed.  Report failure.  */
+-      MSG("Dpi_start_dpid: %s\n", dStrerror(errno));
++      MSG_WARN("Dpi_start_dpid: %s\n", dStrerror(errno));
+       /* close the unused pipe */
+       dClose(st_pipe[0]);
+       dClose(st_pipe[1]);
+@@ -375,7 +375,7 @@
+       /* This is the parent process, check our child status... */
+       dClose(st_pipe[1]);
+       if ((answer = Dpi_blocking_read(st_pipe[0])) != NULL) {
+-         MSG("Dpi_start_dpid: can't start dpid\n");
++         MSG_WARN("Dpi_start_dpid: can't start dpid\n");
+          dFree(answer);
+       } else {
+          ret = 0;
+@@ -449,9 +449,10 @@
+    if (Dpi_read_comm_keys(&dpid_port) != -1) {
+       sin.sin_port = htons(dpid_port);
+       if ((sock_fd = Dpi_make_socket_fd()) == -1) {
+-         MSG("Dpi_check_dpid_ids: sock_fd=%d %s\n", sock_fd, dStrerror(errno));
++         MSG_INFO("Dpi_check_dpid_ids: sock_fd=%d %s\n", sock_fd,
++                  dStrerror(errno));
+       } else if (connect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
+-         MSG("Dpi_check_dpid_ids: %s\n", dStrerror(errno));
++         MSG_INFO("Dpi_check_dpid_ids: %s\n", dStrerror(errno));
+       } else {
+          dClose(sock_fd);
+          ret = 1;
+@@ -547,7 +548,7 @@
+       sin.sin_port = htons(dpid_port);
+       if ((sock_fd = Dpi_make_socket_fd()) == -1 ||
+           connect(sock_fd, (struct sockaddr *)&sin, sin_sz) == -1) {
+-         MSG("Dpi_get_server_port: %s\n", dStrerror(errno));
++         MSG_WARN("Dpi_get_server_port: %s\n", dStrerror(errno));
+       } else {
+          ok = 1;
+       }
+@@ -559,7 +560,7 @@
+       _MSG("[%s]\n", request);
+ 
+       if (Dpi_blocking_write(sock_fd, request, strlen(request)) == -1) {
+-         MSG("Dpi_get_server_port: %s\n", dStrerror(errno));
++         MSG_WARN("Dpi_get_server_port: %s\n", dStrerror(errno));
+       } else {
+          ok = 1;
+       }
+@@ -569,7 +570,7 @@
+       /* Get the reply */
+       ok = 0;
+       if ((rply = Dpi_blocking_read(sock_fd)) == NULL) {
+-         MSG("Dpi_get_server_port: can't read server port from dpid.\n");
++         MSG_WARN("Dpi_get_server_port: can't read server port from dpid.\n");
+       } else {
+          ok = 1;
+       }
+@@ -622,7 +623,7 @@
+    if ((sock_fd = Dpi_make_socket_fd()) == -1) {
+       perror("[dpi::socket]");
+    } else if (connect(sock_fd, (void*)&sin, sizeof(sin)) == -1) {
+-      MSG("[dpi::connect] errno:%d %s\n", errno, dStrerror(errno));
++      MSG_WARN("[dpi::connect] errno:%d %s\n", errno, dStrerror(errno));
+ 
+    /* send authentication Key (the server closes sock_fd on auth error) */
+    } else if (!(cmd = a_Dpip_build_cmd("cmd=%s msg=%s", "auth", SharedKey))) {
+diff -r a50076297212 src/IO/http.c
+--- a/src/IO/http.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/IO/http.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -393,7 +393,7 @@
+    for (i = 0; (dh = dList_nth_data(S->addr_list, i)); ++i) {
+       if ((S->SockFD = socket(dh->af, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+          S->Err = errno;
+-         MSG("Http_connect_socket ERROR: %s\n", dStrerror(errno));
++         MSG_WARN("Http_connect_socket ERROR: %s\n", dStrerror(errno));
+          continue;
+       }
+       /* set NONBLOCKING and close on exec. */
+@@ -438,7 +438,7 @@
+       if (status == -1 && errno != EINPROGRESS) {
+          S->Err = errno;
+          dClose(S->SockFD);
+-         MSG("Http_connect_socket ERROR: %s\n", dStrerror(S->Err));
++         MSG_WARN("Http_connect_socket ERROR: %s\n", dStrerror(S->Err));
+       } else {
+          a_Chain_bcb(OpSend, Info, &S->SockFD, "FD");
+          a_Chain_fcb(OpSend, Info, &S->SockFD, "FD");
+diff -r a50076297212 src/auth.c
+--- a/src/auth.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/auth.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -180,7 +180,7 @@
+          token_size++;
+       }
+       if (token_size == 0) {
+-         MSG("Auth_parse_token_value: missing auth token\n");
++         MSG_WARN("Auth_parse_token_value: missing auth token\n");
+          return 0;
+       }
+       beyond_token = *auth;
+@@ -195,11 +195,11 @@
+          break;
+       case '\0':
+       case ',':
+-         MSG("Auth_parse_token_value: missing auth token value\n");
++         MSG_WARN("Auth_parse_token_value: missing auth token value\n");
+          return 0;
+          break;
+       default:
+-         MSG("Auth_parse_token_value: garbage after auth token\n");
++         MSG_WARN("Auth_parse_token_value: garbage after auth token\n");
+          return 0;
+          break;
+       }
+@@ -233,8 +233,8 @@
+          auth_parse->realm = strdup(value);
+       return 0; /* end parsing */
+    } else
+-      MSG("Auth_parse_basic_challenge_cb: Ignoring unknown parameter: %s = "
+-          "'%s'\n", token, value);
++      MSG_WARN("Auth_parse_basic_challenge_cb: Ignoring unknown parameter: "
++               "%s = '%s'\n", token, value);
+    return 1;
+ }
+ 
+@@ -257,7 +257,7 @@
+       else if (dStrAsciiCasecmp("false", value) == 0)
+          auth_parse->stale = 0;
+       else {
+-         MSG("%s: Invalid stale value: %s\n", fn, value);
++         MSG_WARN("%s: Invalid stale value: %s\n", fn, value);
+          return 0;
+       }
+    } else if (strcmp("algorithm", token) == 0) {
+@@ -265,11 +265,11 @@
+          auth_parse->algorithm = MD5;
+       else if (strcmp("MD5-sess", value) == 0) {
+          /* auth_parse->algorithm = MD5SESS; */
+-         MSG("%s: MD5-sess algorithm disabled (not tested because 'not "
+-             "correctly implemented yet' in Apache 2.2)\n", fn);
++         MSG_WARN("%s: MD5-sess algorithm disabled (not tested because 'not "
++                  "correctly implemented yet' in Apache 2.2)\n", fn);
+          return 0;
+       } else {
+-         MSG("%s: Unknown algorithm: %s\n", fn, value);
++         MSG_WARN("%s: Unknown algorithm: %s\n", fn, value);
+          return 0;
+       }
+    } else if (strcmp("qop", token) == 0) {
+@@ -282,10 +282,10 @@
+          if (len == 8 && strncmp("auth-int", value, 8) == 0) {
+             /* auth_parse->qop = AUTHINT; */
+             /* Keep searching; maybe we'll find an "auth" yet. */
+-            MSG("%s: auth-int qop disabled (not tested because 'not "
+-                "implemented yet' in Apache 2.2)\n", fn);
++            MSG_WARN("%s: auth-int qop disabled (not tested because 'not "
++                     "implemented yet' in Apache 2.2)\n", fn);
+          } else {
+-            MSG("%s: Unknown qop value in %s\n", fn, value);
++            MSG_WARN("%s: Unknown qop value in %s\n", fn, value);
+          }
+          value += len;
+          while (*value == ' ' || *value == '\t')
+@@ -296,7 +296,7 @@
+             value++;
+       }
+    } else {
+-      MSG("%s: Ignoring unknown parameter: %s = '%s'\n", fn, token, value);
++      MSG_WARN("%s: Ignoring unknown parameter: %s = '%s'\n", fn, token,value);
+    }
+    return 1;
+ }
+@@ -322,14 +322,14 @@
+       if (auth_parse->realm) {
+          auth_parse->ok = 1;
+       } else {
+-         MSG("Auth_parse_challenge_args: missing Basic auth realm\n");
++         MSG_WARN("Auth_parse_challenge_args: missing Basic auth realm\n");
+          return;
+       }
+    } else if (auth_parse->type == DIGEST) {
+       if (auth_parse->realm && auth_parse->nonce) {
+          auth_parse->ok = 1;
+       } else {
+-         MSG("Auth_parse_challenge_args: Digest challenge incomplete\n");
++         MSG_WARN("Auth_parse_challenge_args: Digest challenge incomplete\n");
+          return;
+       }
+    }
+@@ -481,7 +481,7 @@
+       else if (realm->type == DIGEST)
+          ret = a_Digest_authorization_hdr(realm, url, request_uri);
+       else
+-         MSG("a_Auth_get_auth_str() got an unknown realm type: %i.\n",
++         MSG_WARN("a_Auth_get_auth_str() got an unknown realm type: %i.\n",
+              realm->type);
+    }
+    return ret;
+@@ -600,12 +600,12 @@
+       if (realm->qop != QOPNOTSET)
+          realm->cnonce = a_Digest_create_cnonce();
+       if (!a_Digest_compute_digest(realm, user, password)) {
+-         MSG("Auth_do_auth_dialog_cb: a_Digest_compute_digest failed.\n");
++         MSG_WARN("Auth_do_auth_dialog_cb: a_Digest_compute_digest failed.\n");
+          dList_remove_fast(host->realms, realm);
+          Auth_realm_delete(realm);
+       }
+    } else {
+-      MSG("Auth_do_auth_dialog_cb: Unknown auth type: %i\n",
++      MSG_WARN("Auth_do_auth_dialog_cb: Unknown auth type: %i\n",
+           realm->type);
+    }
+    dStrshred((char *)password);
+diff -r a50076297212 src/bw.c
+--- a/src/bw.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/bw.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -231,7 +231,7 @@
+    if (len == 1)
+       doc = dList_nth_data(bw->Docs, 0);
+    else if (len > 1)
+-      MSG("a_Bw_get_current_doc() multiple docs not implemented\n");
++      MSG_WARN("a_Bw_get_current_doc() multiple docs not implemented\n");
+ 
+    return doc;
+ }
+diff -r a50076297212 src/cache.c
+--- a/src/cache.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/cache.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -678,8 +678,8 @@
+ 
+          if (!a_Domain_permit(entry->Url, location_url)) {
+             /* don't redirect; just show body like usual (if any) */
+-            MSG("Redirection not followed from %s to %s\n",
+-                URL_HOST(entry->Url), URL_STR(location_url));
++            MSG_INFO("Redirection not followed from %s to %s\n",
++                     URL_HOST(entry->Url), URL_STR(location_url));
+             a_Url_free(location_url);
+          } else {
+             entry->Flags |= CA_Redirect;
+@@ -692,8 +692,8 @@
+                 dStrAsciiCasecmp(URL_SCHEME(location_url), "dpi") == 0 &&
+                 dStrAsciiCasecmp(URL_SCHEME(entry->Url), "dpi") != 0) {
+                /* Forbid dpi GET and POST from non dpi-generated urls */
+-               MSG("Redirection Denied! '%s' -> '%s'\n",
+-                   URL_STR(entry->Url), URL_STR(location_url));
++               MSG_INFO("Redirection Denied! '%s' -> '%s'\n",
++                        URL_STR(entry->Url), URL_STR(location_url));
+                a_Url_free(location_url);
+             } else {
+                entry->Location = location_url;
+@@ -760,7 +760,8 @@
+          }
+       }
+       if (i >= dList_length(ClientQueue)) {
+-         MSG("Cache: cookies not accepted from '%s'\n", URL_STR(entry->Url));
++         MSG_INFO("Cache: cookies not accepted from '%s'\n",
++                  URL_STR(entry->Url));
+       }
+ 
+       for (i = 0; (data = dList_nth_data(Cookies, i)); ++i)
+@@ -907,8 +908,8 @@
+           (entry->ExpectedSize != entry->TransferSize)) {
+          MSG_HTTP("Content-Length does NOT match message body at\n"
+                   "%s\n", URL_STR_(entry->Url));
+-         MSG("Expected size: %d, Transfer size: %d\n",
+-             entry->ExpectedSize, entry->TransferSize);
++         MSG_WARN("Expected size: %d, Transfer size: %d\n",
++                  entry->ExpectedSize, entry->TransferSize);
+       }
+       if (!entry->TransferSize && !(entry->Flags & CA_Redirect) &&
+           (entry->Flags & WEB_RootUrl)) {
+@@ -939,7 +940,7 @@
+       }
+    } else if (Op == IOAbort) {
+       /* unused */
+-      MSG("a_Cache_process_dbuf Op = IOAbort; not implemented!\n");
++      MSG_WARN("a_Cache_process_dbuf Op = IOAbort; not implemented!\n");
+    }
+ }
+ 
+@@ -1181,7 +1182,7 @@
+                if (st == -1) {
+                   /* MIME type is not viewable */
+                   if (ClientWeb->flags & WEB_RootUrl) {
+-                     MSG("Content-Type '%s' not viewable.\n", curr_type);
++                     MSG_WARN("Content-Type '%s' not viewable.\n", curr_type);
+                      /* prepare a download offer... */
+                      AbortEntry = OfferDownload = TRUE;
+                   } else {
+diff -r a50076297212 src/capi.c
+--- a/src/capi.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/capi.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -250,10 +250,10 @@
+    }
+ 
+    if (!allow) {
+-      MSG("a_Capi_dpi_verify_request: Permission Denied!\n");
+-      MSG("  URL_STR : %s\n", URL_STR(url));
++      MSG_INFO("a_Capi_dpi_verify_request: Permission Denied!\n");
++      MSG_INFO("  URL_STR : %s\n", URL_STR(url));
+       if (URL_FLAGS(url) & URL_Post) {
+-         MSG("  URL_DATA: %s\n", dStr_printable(URL_DATA(url), 1024));
++         MSG_INFO("  URL_DATA: %s\n", dStr_printable(URL_DATA(url), 1024));
+       }
+    }
+    return allow;
+@@ -576,7 +576,7 @@
+          a_Capi_ccc(OpSend, 1, BCK, conn->InfoSend, dbuf, NULL);
+          dFree(dbuf);
+       } else {
+-         MSG(" ERROR: [a_Capi_dpi_send_data] No open connection found\n");
++         MSG_ERR("[a_Capi_dpi_send_data] No open connection found\n");
+       }
+    }
+ 
+diff -r a50076297212 src/cookies.c
+--- a/src/cookies.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/cookies.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -86,16 +86,16 @@
+          if (init_str) {
+             rc = write(fd, init_str, strlen(init_str));
+             if (rc == -1) {
+-               MSG("Cookies: Could not write initial string to file %s: %s\n",
+-                   filename, dStrerror(errno));
++               MSG_WARN("Cookies: Could not write initial string to file %s: "
++                        "%s\n", filename, dStrerror(errno));
+             }
+          }
+          dClose(fd);
+ 
+-         MSG("Cookies: Created file: %s\n", filename);
++         MSG_INFO("Cookies: Created file: %s\n", filename);
+          F_in = fopen(filename, "r");
+       } else {
+-         MSG("Cookies: Could not create file: %s!\n", filename);
++         MSG_WARN("Cookies: Could not create file: %s!\n", filename);
+       }
+    }
+ 
+@@ -258,8 +258,8 @@
+       line[0] = '\0';
+       rc = fgets(line, LINE_MAXLEN, stream);
+       if (!rc && ferror(stream)) {
+-         MSG("Cookies1: Error while reading rule from cookiesrc: %s\n",
+-             dStrerror(errno));
++         MSG_WARN("Cookies1: Error while reading rule from cookiesrc: %s\n",
++                  dStrerror(errno));
+          fclose(stream);
+          return 2; /* bail out */
+       }
+@@ -292,8 +292,8 @@
+          else if (dStrAsciiCasecmp(rule, "DENY") == 0)
+             cc.action = COOKIE_DENY;
+          else {
+-            MSG("Cookies: rule '%s' for domain '%s' is not recognised.\n",
+-                rule, domain);
++            MSG_WARN("Cookies: rule '%s' for domain '%s' is not recognised.\n",
++                     rule, domain);
+             continue;
+          }
+ 
+diff -r a50076297212 src/css.cc
+--- a/src/css.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/css.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -539,7 +539,8 @@
+       if ((order == CSS_PRIMARY_AUTHOR ||
+            order == CSS_PRIMARY_AUTHOR_IMPORTANT) &&
+            !rule->isSafe ()) {
+-         MSG_WARN ("Ignoring unsafe author style that might reveal browsing history\n");
++         MSG_INFO("Ignoring unsafe author style that might reveal browsing "
++                  "history\n");
+          delete rule;
+       } else {
+          sheet[order].addRule (rule);
+diff -r a50076297212 src/cssparser.cc
+--- a/src/cssparser.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/cssparser.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -28,7 +28,7 @@
+ using namespace dw::core::style;
+ 
+ #define DEBUG_MSG(A, B, ...) _MSG(B, __VA_ARGS__)
+-#define MSG_CSS(A, ...) MSG(A, __VA_ARGS__)
++#define MSG_CSS(A, ...) MSG_WARN(A, __VA_ARGS__)
+ #define DEBUG_TOKEN_LEVEL   0
+ #define DEBUG_PARSE_LEVEL   0
+ #define DEBUG_CREATE_LEVEL  0
+diff -r a50076297212 src/decode.c
+--- a/src/decode.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/decode.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -116,7 +116,7 @@
+          zs->total_out = 0;
+          zs->total_in = 0;
+       } else if (rc == Z_DATA_ERROR) {
+-         MSG_ERR("gzip decompression error\n");
++         MSG_WARN("gzip decompression error\n");
+       }
+    }
+    return output;
+@@ -235,7 +235,7 @@
+          dc->free = Decode_gzip_free;
+          dc->leftover = NULL; /* not used */
+       } else {
+-         MSG("Content-Encoding '%s' not recognized.\n", format);
++         MSG_WARN("Content-Encoding '%s' not recognized.\n", format);
+       }
+    }
+    return dc;
+diff -r a50076297212 src/dicache.c
+--- a/src/dicache.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/dicache.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -323,7 +323,7 @@
+    DicEntry = a_Dicache_get_entry(url, version);
+    dReturn_if_fail ( DicEntry != NULL );
+    if (DicEntry->State < DIC_SetParms) {
+-      MSG("a_Dicache_new_scan before DIC_SetParms\n");
++      MSG_ERR("a_Dicache_new_scan before DIC_SetParms\n");
+       exit(1);
+    }
+    a_Bitvec_clear(DicEntry->BitVec);
+diff -r a50076297212 src/digest.c
+--- a/src/digest.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/digest.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -74,7 +74,7 @@
+       dStr_free(a0, 1);
+       dStr_free(ha0, 1);
+    } else {
+-      MSG("a_Digest_create_auth: Unknown algorithm.\n");
++      MSG_WARN("a_Digest_create_auth: Unknown algorithm.\n");
+       return 0;
+    }
+ 
+@@ -111,7 +111,7 @@
+       dStr_free(hentity, 1);
+       dStr_free(a2, 1);
+    } else {
+-      MSG("a_Digest_create_auth: Unknown qop value.\n");
++      MSG_WARN("a_Digest_create_auth: Unknown qop value.\n");
+       return NULL;
+    }
+    result = dStr_new(NULL);
+diff -r a50076297212 src/dns.c
+--- a/src/dns.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/dns.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -300,16 +300,16 @@
+    if (error != 0) {
+       dns_server[channel].status = error;
+       if (error == EAI_NONAME)
+-         MSG("DNS error: HOST_NOT_FOUND\n");
++         MSG_INFO("DNS error: HOST_NOT_FOUND\n");
+       else if (error == EAI_AGAIN)
+-         MSG("DNS error: TRY_AGAIN\n");
++         MSG_INFO("DNS error: TRY_AGAIN\n");
+ #ifdef EAI_NODATA
+       /* Some FreeBSD don't have this anymore */
+       else if (error == EAI_NODATA)
+-         MSG("DNS error: NO_ADDRESS\n");
++         MSG_INFO("DNS error: NO_ADDRESS\n");
+ #endif
+       else if (h_errno == EAI_FAIL)
+-         MSG("DNS error: NO_RECOVERY\n");
++         MSG_WARN("DNS error: NO_RECOVERY\n");
+    } else {
+       Dns_note_hosts(hosts, res0);
+       dns_server[channel].status = 0;
+diff -r a50076297212 src/domain.c
+--- a/src/domain.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/domain.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -47,11 +47,11 @@
+          char *tok2 = strtok(NULL, delim);
+ 
+          if (strtok(NULL, delim) != NULL) {
+-            MSG("Domain: Ignoring extraneous text at end of line %u.\n",
++            MSG_WARN("Domain: Ignoring extraneous text at end of line %u.\n",
+                 lineno);
+          }
+          if (!tok2) {
+-            MSG("Domain: Not enough fields in line %u.\n", lineno);
++            MSG_WARN("Domain: Not enough fields in line %u.\n", lineno);
+          } else {
+             if (dStrAsciiCasecmp(tok1, "default") == 0) {
+                if (dStrAsciiCasecmp(tok2, "deny") == 0) {
+@@ -61,7 +61,8 @@
+                   default_deny = FALSE;
+                   MSG("Domain: Default accept.\n");
+                } else {
+-                  MSG("Domain: Default action \"%s\" not recognised.\n", tok2);
++                  MSG_WARN("Domain: Default action \"%s\" not recognised.\n",
++                           tok2);
+                }
+             } else {
+                a_List_add(exceptions, num_exceptions, num_exceptions_max);
+@@ -145,7 +146,7 @@
+    }
+ 
+    if (ret == FALSE)
+-      MSG("Domain: DENIED from %s to %s.\n", source_host, dest_host);
++      MSG_INFO("Domain: DENIED from %s to %s.\n", source_host, dest_host);
+ 
+    return ret;
+ }
+diff -r a50076297212 src/form.cc
+--- a/src/form.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/form.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -507,13 +507,14 @@
+          if (form->method != DILLO_HTML_METHOD_POST) {
+             valid = false;
+             BUG_MSG("Forms with file input MUST use HTTP POST method\n");
+-            MSG("File input ignored in form not using HTTP POST method\n");
++            MSG_INFO("File input ignored in form not using HTTP POST "
++                     "method\n");
+          } else if (form->content_type != DILLO_HTML_ENC_MULTIPART) {
+             valid = false;
+             BUG_MSG("Forms with file input MUST use multipart/form-data"
+                     " encoding\n");
+-            MSG("File input ignored in form not using multipart/form-data"
+-                " encoding\n");
++            MSG_INFO("File input ignored in form not using multipart/form-data"
++                     " encoding\n");
+          }
+       }
+       if (valid) {
+@@ -588,7 +589,7 @@
+    const char *attrbuf;
+ 
+    if (html->InFlags & IN_FORM) {
+-      MSG("<isindex> inside <form> not handled.\n");
++      MSG_WARN("<isindex> inside <form> not handled.\n");
+       return;
+    }
+ 
+@@ -1040,7 +1041,7 @@
+       if (input) {
+          input->activate (this, num_entry_fields, event);
+       } else {
+-        MSG("DilloHtmlForm::eventHandler: ERROR, input not found!\n");
++        MSG_ERR("DilloHtmlForm::eventHandler: input not found!\n");
+       }
+    }
+ }
+@@ -1120,7 +1121,7 @@
+          dFree(action_str);
+       }
+    } else {
+-      MSG("DilloHtmlForm::buildQueryUrl: Method unknown\n");
++      MSG_ERR("DilloHtmlForm::buildQueryUrl: Method unknown\n");
+    }
+ 
+    return new_url;
+@@ -1811,7 +1812,7 @@
+                dStr_append_l(file, file_data->str, file_data->len);
+                dList_append(values, file);
+             } else {
+-               MSG("FORM file input \"%s\" not loaded.\n", filename);
++               MSG_WARN("FORM file input \"%s\" not loaded.\n", filename);
+             }
+          }
+       }
+@@ -2031,7 +2032,7 @@
+       HT2TB(html)->addWidget (button, html->styleEngine->style ());
+    }
+    if (!button)
+-      MSG("Html_input_image: unable to create image submit.\n");
++      MSG_WARN("Html_input_image: unable to create image submit.\n");
+    return button;
+ }
+ 
+diff -r a50076297212 src/gif.c
+--- a/src/gif.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/gif.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -681,7 +681,7 @@
+             case 2:         /* End code... consume remaining data chunks..? */
+                goto error;  /* Could clean up better? */
+             default:
+-               MSG("Gif_decode: error!\n");
++               MSG_WARN("Gif_decode: error!\n");
+                goto error;
+             }
+          }
+@@ -808,8 +808,8 @@
+    /* check max image size */
+    if (gif->Width <= 0 || gif->Height <= 0 ||
+        gif->Width > IMAGE_MAX_AREA / gif->Height) {
+-      MSG("Gif_do_img_desc: suspicious image size request %u x %u\n",
+-          gif->Width, gif->Height);
++      MSG_WARN("Gif_do_img_desc: suspicious image size request %u x %u\n",
++               gif->Width, gif->Height);
+       gif->state = 999;
+       return 0;
+    }
+@@ -935,7 +935,7 @@
+ 
+       default:                  /* Unknown */
+          /* gripe and complain */
+-         MSG ("gif.c::GIF_Block: Error, 0x%x found\n", *(buf-1));
++         MSG_WARN ("gif.c::GIF_Block: Error, 0x%x found\n", *(buf-1));
+          gif->state = 999;
+          return Size + 1;
+       }
+diff -r a50076297212 src/html.cc
+--- a/src/html.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/html.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -2003,7 +2003,8 @@
+       dFree(width_ptr);
+       dFree(height_ptr);
+       width_ptr = height_ptr = NULL;
+-      MSG("a_Html_image_attrs: suspicious image size request %d x %d\n", w, h);
++      MSG_WARN("a_Html_image_attrs: suspicious image size request %d x %d\n",
++               w, h);
+    } else {
+       if (CSS_LENGTH_TYPE(l_w) != CSS_LENGTH_TYPE_AUTO)
+          html->styleEngine->setNonCssHint (CSS_PROPERTY_WIDTH,
+diff -r a50076297212 src/jpeg.c
+--- a/src/jpeg.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/jpeg.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -292,9 +292,9 @@
+          if (jpeg->cinfo.image_width <= 0 || jpeg->cinfo.image_height <= 0 ||
+              jpeg->cinfo.image_width >
+              IMAGE_MAX_AREA / jpeg->cinfo.image_height) {
+-            MSG("Jpeg_write: suspicious image size request %u x %u\n",
+-                (uint_t)jpeg->cinfo.image_width,
+-                (uint_t)jpeg->cinfo.image_height);
++            MSG_WARN("Jpeg_write: suspicious image size request %u x %u\n",
++                     (uint_t)jpeg->cinfo.image_width,
++                     (uint_t)jpeg->cinfo.image_height);
+             jpeg->state = DILLO_JPEG_ERROR;
+             return;
+          }
+diff -r a50076297212 src/keys.cc
+--- a/src/keys.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/keys.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -315,7 +315,7 @@
+ 
+    // Get command code
+    if ((symcode = getCmdCode(commandName)) == KEYS_INVALID) {
+-      MSG("Keys::parseKey: Invalid command name: '%s'\n", commandName);
++      MSG_WARN("Keys::parseKey: Invalid command name: '%s'\n", commandName);
+       return;
+    }
+ 
+@@ -326,7 +326,7 @@
+       ++key;
+       modstr = dStrndup(key, p - key);
+       if ((st = getModifier(modstr)) == -1) {
+-         MSG("Keys::parseKey unknown modifier: %s\n", modstr);
++         MSG_WARN("Keys::parseKey unknown modifier: %s\n", modstr);
+       } else {
+          keymod |= st;
+       }
+@@ -346,7 +346,7 @@
+       /* keysym */
+       keycode = strtol(key, NULL, 0x10);
+    } else if ((st = getKeyCode(keystr)) == -1) {
+-      MSG("Keys::parseKey unknown keyname: %s\n", keystr);
++      MSG_WARN("Keys::parseKey unknown keyname: %s\n", keystr);
+    } else {
+       keycode = st;
+    }
+@@ -383,8 +383,8 @@
+          _MSG("Keys::parse: keycomb=%s, command=%s\n", keycomb, command);
+          parseKey(keycomb, command);
+       } else if (st < 0) {
+-         MSG("Keys::parse: Syntax error in keysrc line %d: "
+-             "keycomb=\"%s\" command=\"%s\"\n", lineno, keycomb, command);
++         MSG_WARN("Keys::parse: Syntax error in keysrc line %d: "
++                  "keycomb=\"%s\" command=\"%s\"\n", lineno, keycomb, command);
+       }
+ 
+       dFree(line);
+diff -r a50076297212 src/misc.c
+--- a/src/misc.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/misc.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -413,7 +413,7 @@
+    }
+    *label = buf;
+    if (ret == -1)
+-      MSG("Invalid search_url: \"%s\"\n", source);
++      MSG_WARN("Invalid search_url: \"%s\"\n", source);
+    return ret;
+ }
+ 
+diff -r a50076297212 src/msg.h
+--- a/src/msg.h	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/msg.h	Fri Apr 26 22:17:38 2013 +0000
+@@ -8,20 +8,22 @@
+  * You can disable any MSG* macro by adding the '_' prefix.
+  */
+ #define _MSG(...)
++#define _MSG_INFO(...)
+ #define _MSG_WARN(...)
+ #define _MSG_HTTP(...)
+ 
+-#define MSG_INNARDS(prefix, ...)                   \
+-   D_STMT_START {                                  \
+-      if (prefs.show_msg){                         \
+-         printf(prefix __VA_ARGS__);               \
+-         fflush (stdout);                          \
+-      }                                            \
++#define MSG_INNARDS(level, prefix, ...)                        \
++   D_STMT_START {                                              \
++      if (prefs.show_msg && level >= prefs.msg_level_min){     \
++         printf(prefix __VA_ARGS__);                           \
++         fflush (stdout);                                      \
++      }                                                        \
+    } D_STMT_END
+ 
+-#define MSG(...) MSG_INNARDS("", __VA_ARGS__)
+-#define MSG_WARN(...) MSG_INNARDS("** WARNING **: ", __VA_ARGS__)
+-#define MSG_ERR(...) MSG_INNARDS("** ERROR **: ", __VA_ARGS__)
+-#define MSG_HTTP(...) MSG_INNARDS("HTTP warning: ", __VA_ARGS__)
++#define MSG(...)      MSG_INNARDS(1, "", __VA_ARGS__)
++#define MSG_INFO(...) MSG_INNARDS(2, "", __VA_ARGS__)
++#define MSG_WARN(...) MSG_INNARDS(3, "** WARNING **: ", __VA_ARGS__)
++#define MSG_ERR(...)  MSG_INNARDS(4, "** ERROR **: ", __VA_ARGS__)
++#define MSG_HTTP(...) MSG_INNARDS(3, "HTTP warning: ", __VA_ARGS__)
+ 
+ #endif /* __MSG_H__ */
+diff -r a50076297212 src/paths.cc
+--- a/src/paths.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/paths.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -38,20 +38,20 @@
+    oldWorkingDir = dGetcwd();
+    rc = chdir("/tmp");
+    if (rc == -1) {
+-      MSG("paths: error changing directory to /tmp: %s\n",
+-          dStrerror(errno));
++      MSG_WARN("paths: error changing directory to /tmp: %s\n",
++               dStrerror(errno));
+    }
+ 
+    path = dStrconcat(dGethomedir(), "/.dillo", NULL);
+    if (stat(path, &st) == -1) {
+       if (errno == ENOENT) {
+-         MSG("paths: creating directory %s.\n", path);
++         MSG_INFO("paths: creating directory %s.\n", path);
+          if (mkdir(path, 0700) < 0) {
+-            MSG("paths: error creating directory %s: %s\n",
+-                path, dStrerror(errno));
++            MSG_WARN("paths: error creating directory %s: %s\n",
++                     path, dStrerror(errno));
+          }
+       } else {
+-         MSG("Dillo: error reading %s: %s\n", path, dStrerror(errno));
++         MSG_WARN("Dillo: error reading %s: %s\n", path, dStrerror(errno));
+       }
+    }
+ 
+@@ -83,14 +83,14 @@
+    char *path = dStrconcat(dGethomedir(), "/.dillo/", rcFile, NULL);
+ 
+    if (!(fp = fopen(path, "r"))) {
+-      MSG("paths: Cannot open file '%s': %s\n", path, dStrerror(errno));
++      MSG_INFO("paths: Cannot open file '%s': %s\n", path, dStrerror(errno));
+ 
+       char *path2 = dStrconcat(DILLO_SYSCONF, rcFile, NULL);
+       if (!(fp = fopen(path2, "r"))) {
+-         MSG("paths: Cannot open file '%s': %s\n", path2, dStrerror(errno));
+-         MSG("paths: Using internal defaults...\n");
++         MSG_INFO("paths: Cannot open file '%s': %s\n",path2,dStrerror(errno));
++         MSG_INFO("paths: Using internal defaults...\n");
+       } else {
+-         MSG("paths: Using %s\n", path2);
++         MSG_INFO("paths: Using %s\n", path2);
+       }
+       dFree(path2);
+    }
+diff -r a50076297212 src/png.c
+--- a/src/png.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/png.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -102,7 +102,7 @@
+ {
+    DilloPng *png;
+ 
+-   MSG("Png_error_handling: %s\n", msg);
++   MSG_WARN("Png_error_handling: %s\n", msg);
+    png = png_get_error_ptr(png_ptr);
+ 
+    png->error = 1;
+@@ -132,8 +132,8 @@
+    /* check max image size */
+    if (png->width == 0 || png->height == 0 ||
+        png->width > IMAGE_MAX_AREA / png->height) {
+-      MSG("Png_datainfo_callback: suspicious image size request %lu x %lu\n",
+-          (ulong_t) png->width, (ulong_t) png->height);
++      MSG_WARN("Png_datainfo_callback: suspicious image size request "
++               "%lu x %lu\n", (ulong_t) png->width, (ulong_t) png->height);
+       Png_error_handling(png_ptr, "Aborting...");
+       return; /* not reached */
+    }
+@@ -272,8 +272,8 @@
+         break;
+      }
+    default:
+-      MSG("Png_datarow_callback: unexpected number of channels=%d pass=%d\n",
+-          png->channels, pass);
++      MSG_ERR("Png_datarow_callback: unexpected number of channels=%d "
++              "pass=%d\n", png->channels, pass);
+       abort();
+    }
+ }
+@@ -284,7 +284,7 @@
+ 
+    _MSG("Png_dataend_callback:\n");
+    if (!info_ptr)
+-      MSG("Png_dataend_callback: info_ptr = NULL\n");
++      MSG_WARN("Png_dataend_callback: info_ptr = NULL\n");
+ 
+    png = png_get_progressive_ptr(png_ptr);
+    png->state = IS_finished;
+diff -r a50076297212 src/prefs.c
+--- a/src/prefs.c	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/prefs.c	Fri Apr 26 22:17:38 2013 +0000
+@@ -68,6 +68,7 @@
+    prefs.limit_text_width = FALSE;
+    prefs.load_images=TRUE;
+    prefs.load_stylesheets=TRUE;
++   prefs.msg_level_min = 2;
+    prefs.middle_click_drags_page = TRUE;
+    prefs.middle_click_opens_new_tab = TRUE;
+    prefs.right_click_closes_tab = FALSE;
+diff -r a50076297212 src/prefs.h
+--- a/src/prefs.h	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/prefs.h	Fri Apr 26 22:17:38 2013 +0000
+@@ -99,6 +99,7 @@
+    bool_t search_url_idx;
+    Dlist *search_urls;
+    char *save_dir;
++   int msg_level_min;
+    bool_t show_msg;
+    bool_t show_extra_warnings;
+    bool_t middle_click_drags_page;
+diff -r a50076297212 src/prefsparser.cc
+--- a/src/prefsparser.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/prefsparser.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -83,6 +83,7 @@
+         PREFS_BOOL },
+       { "middle_click_opens_new_tab", &prefs.middle_click_opens_new_tab,
+         PREFS_BOOL },
++      { "msg_level_min", &prefs.msg_level_min, PREFS_INT32 },
+       { "right_click_closes_tab", &prefs.right_click_closes_tab, PREFS_BOOL },
+       { "no_proxy", &prefs.no_proxy, PREFS_STRING },
+       { "panel_size", &prefs.panel_size, PREFS_PANEL_SIZE },
+@@ -139,7 +140,7 @@
+    }
+ 
+    if (!node) {
+-      MSG("prefs: {%s} is not a recognized token.\n", name);
++      MSG_WARN("prefs: {%s} is not a recognized token.\n", name);
+       return -1;
+    }
+ 
+@@ -151,7 +152,7 @@
+    case PREFS_COLOR:
+       *(int32_t *)node->pref = a_Color_parse(value, *(int32_t*)node->pref,&st);
+       if (st == 1)
+-         MSG("prefs: Color '%s' not recognized.\n", value);
++         MSG_WARN("prefs: Color '%s' not recognized.\n", value);
+       break;
+    case PREFS_STRING:
+       dFree(*(char **)node->pref);
+@@ -232,8 +233,8 @@
+          _MSG("prefsparser: name=%s, value=%s\n", name, value);
+          parseOption(name, value);
+       } else if (st < 0) {
+-         MSG_ERR("prefsparser: Syntax error in dillorc:"
+-                 " name=\"%s\" value=\"%s\"\n", name, value);
++         MSG_WARN("prefsparser: Syntax error in dillorc:"
++                  " name=\"%s\" value=\"%s\"\n", name, value);
+       }
+ 
+       dFree(line);
+diff -r a50076297212 src/ui.cc
+--- a/src/ui.cc	Fri Apr 26 16:42:23 2013 +0000
++++ b/src/ui.cc	Fri Apr 26 22:17:38 2013 +0000
+@@ -243,8 +243,8 @@
+       a_UIcmd_open_urlstr(bw, urlstr);
+       dFree(urlstr);
+    } else {
+-      MSG("Can't read local help file at \"%s\"."
+-          " Getting remote help...\n", path);
++      MSG_INFO("Can't read local help file at \"%s\"."
++               " Getting remote help...\n", path);
+       a_UIcmd_open_urlstr(bw, "http://www.dillo.org/dillo3-help.html");
+    }
+    dFree(path);

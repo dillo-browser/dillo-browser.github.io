@@ -1,0 +1,3639 @@
+Re: [Dillo-dev]checking cache data with HEAD
+
+From: Miklos Magyari <miklos.magyari@et...> - 2001-11-29 15:15
+
+hi,
+
+> I would love to see this fixed, but worry slightly if this will slow
+> down Dillo overall because we'd need to contact the server every time,
+> which seems to take the most time.
+
+this delay is the reason why I suggested having a config directive to
+turn this on/off. 
+Of course, it would be theoretically possible to maintain a list of
+sites that should always check for updates and the rest shouldn't, but
+this seems to be over-complicated for me and doesn't fit in dillo's
+design goals.
+
+Miki 
+
+
+
+Re: [Dillo-dev]checking cache data with HEAD
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-29 15:03
+
+On Thu, 29 Nov 2001, Miklos Magyari wrote:
+
+> hi guys,
+>=20
+> I took a quick look in the docs and the source, and it _seems_ that
+> dillo doesn't check for updates for a cached object automatically. Is
+> there any reason for it, or just simply not implemented yet?
+> I suggest at least having a new directive in dillorc for cache
+> behaviour. If the user wants to always check if the cache is up-to-date,
+> we should use http's HEAD method to compare the cached and actual
+> timestamp of an object. I would be happy to make some effort
+> implementing this feature if you like the idea.
+
+I agree a lot! Any kind of news page (slashdot, The Register, Bulletin
+Boards) suffer from lack of updates, I have to manually reload them all the
+time. I would love to see this fixed, but worry slightly if this will slow
+down Dillo overall because we'd need to contact the server every time,
+which seems to take the most time.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]checking cache data with HEAD
+
+From: Miklos Magyari <miklos.magyari@et...> - 2001-11-29 14:35
+
+> we should use http's HEAD method to compare the cached and actual
+> timestamp of an object.
+or, alternatively (what I forgot to mention) we could use conditional
+GET with If-Modified-Since directive in the request header.
+
+cheers,
+Miki 
+
+
+
+[Dillo-dev]checking cache data with HEAD
+
+From: Miklos Magyari <miklos.magyari@et...> - 2001-11-29 09:16
+
+hi guys,
+
+I took a quick look in the docs and the source, and it _seems_ that
+dillo doesn't check for updates for a cached object automatically. Is
+there any reason for it, or just simply not implemented yet?
+I suggest at least having a new directive in dillorc for cache
+behaviour. If the user wants to always check if the cache is up-to-date,
+we should use http's HEAD method to compare the cached and actual
+timestamp of an object. I would be happy to make some effort
+implementing this feature if you like the idea.
+
+cheers,
+Miki 
+
+
+
+[Dillo-dev]Link to Japanese support patch seems to be down.
+
+From: <jserv.bbs@go...> - 2001-11-28 09:09
+
+Hi, all:
+
+While I attempted to consult the [Japanese support patch] in the section
+of [i18n & l10n] in Dillo Links page (http://dillo.so....net/Links.html)
+, I found that the link http://www.ee.ed.ac.uk/~rjt/dillo/japanese.html could
+not be reachable.
+
+I am a user form Taiwan and about to make efforts to Chinese support for
+Dillo. So I hope to refer the Japanese support patch in advance.
+
+Does anyone knows the link or give me that patch? Thanks.
+
+Regards,
+Jim Huang
+--
+[1;32m¡° Origin: [33m¦¨¥\¤j¾Ç¸ê°T¤uµ{¾Ç¨t[¾K¸ê¤ßBBS][37m <goodguy.csie.ncku.edu.tw> [m
+[1;31m¡» From: [36mccns.ncku.edu.tw[m 
+
+
+
+[Dillo-dev][patch] Let Dillo display Traditional Chinese pages.
+
+From: <jserv.bbs@go...> - 2001-11-28 08:32
+
+Hi, all:
+
+I am a new user to Dillo Web Browser from Taiwan. I found it really
+nice for searching or browser. However, I also noticed that Dillo couldn't
+display Chinese Web page well, resulting from the fact that Dillo is not
+built in the manner of i18n programming paradigm.
+
+So, I did a patch to Dillo to let Dillo support Traditional Chinese
+(the language used widely in Taiwan) display and its encoding, Big-5.
+As follows:
+
+in src/dw_style.c:
+
+static void Dw_style_font_realize (DwStyleFont *font, gboolean try_all)
+{
+char fontname[256], *ItalicChar;
+
+ItalicChar = prefs.use_oblique ? "o" : "i";
+sprintf (fontname,
+"-*-%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
+font->name,
+font->bold ? "bold" : "medium",
+font->italic ? ItalicChar : "r",
+font->size);
+++ strcat (fontname,
+++ ",-arphic technology co.-ar pl mingti2l big5"
+++ "-medium-r-normal-*-*-160-*-*-c-*-big5-0");
+-- font->font = gdk_font_load(fontname);
+++ font->font = gdk_fontset_load(fontname);
+
+Here, I suppose that Taiwan Linux users all have "ar pl mingti2l big5"
+font provided by Arphic Technology. It seems to be stupid but it works
+like this:
+
+http://ccns.ncku.edu.tw/~jimchyun/misc/dillo-big5.jpg
+
+Regards,
+Jim Huang
+--
+[1;32m¡° Origin: [33m¦¨¥\¤j¾Ç¸ê°T¤uµ{¾Ç¨t[¾K¸ê¤ßBBS][37m <goodguy.csie.ncku.edu.tw> [m
+[1;31m¡» From: [36mccns.ncku.edu.tw[m 
+
+
+
+[Dillo-dev]Here's a URL parsing hack...
+
+From: Paul Chamberlain <tif@ti...> - 2001-11-28 03:44
+
+Attachments: url.diff      
+
+I grew tired of the javascript links that didn't work
+even though it was obvious to me that there was a URL
+embedded in that javascript. I hacked the url parser
+so that it looks for an embedded " if all else
+fails. At the very least this fixes a bunch of the
+links when I view news.yahoo.com.
+
+It's okay to post hacks here, right?
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-28 01:18
+
+> Currently I'm concerned with rfc2396 (details at bug-track), and 
+> there're still some patches waiting to be merged before releasing
+> dillo-0.6.3.
+> 
+
+Please say one is the cookies patch? (Dillo with cookies is pretty much feature complete for me, just add the ability to upload files and I will be the happiest man alive).
+
+> The plan is to restart working the simple-plugins after 0.6.3
+> release.
+> 
+> Note that this scheme is far from what's commonly known as a
+> plugin. It's more close to a fast-cgi interface than a dlopen
+> handled module.
+
+Why not use libguile? It is the official extension language of the 
+GNU Project, and would allow fast plugin development. Best part is 
+that you can load C code from it with (load-extension "libfoo" 
+init_function) (the .so and version stuff is added automatically). 
+This is only in unstable guile from CVS though (which is _much_ 
+improved over 1.4). So, people could write their plugins in C if they 
+wanted and simply load it into scheme and attach it to dillo, or they 
+could write the plugin entirely in scheme (or some combination of the 
+two). There is the problem of added memory used by guile though (last 
+time I checked guile used something like 8MB of vm, with about 2MB 
+resident at any time). 
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: mallum <breakfast@10...> - 2001-11-27 16:24
+
+on Tue, Nov 27, 2001 at 08:52:18AM -0300, Jorge Arellano Cid wrote:
+> 
+> Note that this scheme is far from what's commonly known as a
+> plugin. It's more close to a fast-cgi interface than a dlopen
+> handled module.
+> 
+cool. Im guessing this would make it possible to write / prototype
+plugins in languages like Python or Perl ?
+
+-- mallum 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-27 11:55
+
+Hi,
+
+> > Song Yun Zhao <song.zhao@tu...> schrieb am 27.11.01:
+> > Just wondering if Dillo has Javascript support?
+> > If not, how feasible would it be to add it?
+> I does not have JS support and as far as I am concerned
+> I'd be more than glad to keep it out of dillo - or at
+> least to keep it in a way that I can block out the code
+> with a '--disable-javascript' while configuring.
+
+My feelings exactly!
+Javascript is out of the plans.
+
+> Eventually there is an effort to include such features
+> with the planned plugin architecture.
+
+Not Javascript, just other features.
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-27 11:55
+
+Hi,
+
+> on Tue, Nov 27, 2001 at 09:35:29AM +0100, Bjoern Weber wrote:
+>
+> > Eventually there is an effort to include such features
+> > with the planned plugin architecture.
+> >
+>
+> May I enquire on what the current state of the plugin architecture is
+> ? Hows it fare on the list of priority's ?
+
+Sure.
+
+Currently I'm concerned with rfc2396 (details at bug-track),
+and there're still some patches waiting to be merged before
+releasing dillo-0.6.3.
+
+Also there's the whole subject of source forge and whether or
+not moving away...
+
+The plan is to restart working the simple-plugins after 0.6.3
+release.
+
+Note that this scheme is far from what's commonly known as a
+plugin. It's more close to a fast-cgi interface than a dlopen
+handled module.
+
+
+Greetings
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: mallum <breakfast@10...> - 2001-11-27 11:16
+
+on Tue, Nov 27, 2001 at 09:35:29AM +0100, Bjoern Weber wrote:
+
+> Eventually there is an effort to include such features
+> with the planned plugin architecture.
+> 
+
+May I enquire on what the current state of the plugin architecture is
+? Hows it fare on the list of priority's ?
+
+-- mallum 
+
+
+
+[Dillo-dev]dillo on QNX
+
+From: Bjoern Weber <foxbow@we...> - 2001-11-27 08:37
+
+Good morning,
+
+as I wrote before, I'm testing out dillo on the QNX RTP 6.1
+and so far as I'm concerned it runs smooth, yet not as stable
+as on other platforms. I'm just wondering if anyone else out
+there is interested in running dillo on that platform or has
+been testing it so we can corporate our efforts to mark out
+the last flaws.
+
+Greetings,
+Bjoern
+--=20
+Sometimes, even at infinity, the largest distance
+can be much too close...
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
+=5F=5F=5F=5F
+Geben Sie Ihren Lottotipp gerne auf den letzten Dr=FCcker ab=3FBeim WEB.DE
+Lottoservice gibt's keine Warteschlangen. http://tippen2.web.de/=3Fx=3D9 
+
+
+
+Re: [Dillo-dev]Javascript ?
+
+From: Bjoern Weber <foxbow@we...> - 2001-11-27 08:35
+
+> Song Yun Zhao <song.zhao@tu...> schrieb am 27.11.01:
+> Just wondering if Dillo has Javascript support=3F
+> If not, how feasible would it be to add it=3F
+I does not have JS support and as far as I am concerned
+I'd be more than glad to keep it out of dillo - or at=20
+least to keep it in a way that I can block out the code
+with a '--disable-javascript' while configuring.
+Eventually there is an effort to include such features
+with the planned plugin architecture.
+
+Greetings,
+Bjoern
+
+--=20
+Sometimes, even at infinity, the largest distance
+can be much too close...
+=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
+Berufsunf=E4higskeitversicherung von Mamax bei WEB.DE.=20
+Jetzt informieren! http://bu.web.de 
+
+
+
+[Dillo-dev]Javascript ?
+
+From: Song Yun Zhao <song.zhao@tu...> - 2001-11-26 23:49
+
+Hi, 
+
+Just wondering if Dillo has Javascript support?
+If not, how feasible would it be to add it?
+
+thanks 
+
+
+
+Re: [Dillo-dev]list items (was: Dillo Freezing)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-26 15:44
+
+On Wed, Nov 21, 2001 at 11:18:48PM +0100, Hugo Hallqvist wrote:
+> On Wed, 21 Nov 2001 19:41:00 +0100
+> Sebastian Geerken <sgeerken@st...> wrote:
+> 
+> > Hi,
+> > 
+> > the freeze bugfix also solved the problems I had with list items, now
+> > list items are special DwPage's. There will be some enhances, probably
+> > within a new widget DwListItem.
+> 
+> After a little more browsing. I noticed pages with numbered lists are not incremented correctly.
+> Look for example: http://www.blocket.se
+
+Fixed.
+
+Sebastian 
+
+
+
+Re: Re: [Dillo-dev]Cookies for dessert.. : )
+
+From: Paul Chamberlain <tif@ti...> - 2001-11-26 15:41
+
+Lars Clausen wrote:
+> > What kind of mechanism will the end user have to accept/deny cookies ? 
+> I've been thinking about how to do a good dialog to ask the user. I'm
+> leaning towards a standalone program that works on the cookie control
+> file. That way, Dillo isn't bloated with that interface, and those who
+> just want to use the file for control can do that.
+
+*delurking*
+
+I have also thought about using standalone programs to keep dillo
+from getting bloated while adding features. I thought that it could
+be done by implementing a "local CGI" feature, then writing CGI-like
+programs that output HTML forms and modify a user's local config files.
+It seems entirely reasonable to me to implement the entire "Preferences"
+UI in HTML this way.
+
+There are some drawbacks. You'd want to implement some security
+around this so mischevious remote web-pages couldn't try to launch
+local commands. Doing this means multiple executables, perhaps
+even multiple languages.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]tag parsing.
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-26 00:19
+
+> On Sun, 25 Nov 2001, Hugo Hallqvist wrote:
+> 
+> > Is this valid html? I saw a link on linuxtoday.com today that had
+> > one of these in it. and it showed up unparsed. < a
+> > href=">mirrors.kernel.org</a>
+> 
+> While the HTML specs don't give a formal parsing rule for tags, I
+> doubt very much that it's correct. Unfortunately, the specs are in
+> the SGML specs, which seems to cost money to look at.
+
+I don't think that SGML cares about whitespace in tags...that 
+probably should be valid html. I think that the XML standard says 
+something about this (white space not mattering, making that valid), 
+and since every valid xml document is a valid sgml document, that 
+would mean that dillo isn't parsing correctly. I'll go and look it up 
+in the standard now...(I wish I still had my annonated standard)...I 
+can't find anything that explicitly says that is wrong, but I 
+attempted to validated a document that uses that and I got this 
+error:
+
+< a href=">mirrors.kernel.org</a>.
+
+Error: end tag for element "A" which is not open; try removing the 
+end tag or check for improper nesting of elements 
+
+So, that is improper html. Linuxtoday is at fault.
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]tag parsing.
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-25 22:58
+
+On Sun, 25 Nov 2001, Hugo Hallqvist wrote:
+
+> Is this valid html? I saw a link on linuxtoday.com today that had one of
+> these in it. and it showed up unparsed. < a
+> href=3D">mirrors.kernel.org</a>
+
+While the HTML specs don't give a formal parsing rule for tags, I doubt
+very much that it's correct. Unfortunately, the specs are in the SGML
+specs, which seems to cost money to look at.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]tag parsing.
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-11-25 21:29
+
+Is this valid html? 
+I saw a link on linuxtoday.com today that had one of these in it. and it showed up unparsed.
+< a href=">mirrors.kernel.org</a>
+
+
+-- 
+//Hugo Hallqvist - hugha495 at student dot liu dot se 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-23 17:48
+
+> What do we need to move (or distribute) dillo?
+> 
+> * Download bandwidth and accurate counters
+> * mailing list (searchable and browseable)
+> * CVS
+> * Web site with a CGI enable-policy that lasts!
+> * ssh shell account for Web site administration.
+> 
+> 
+> Savannah's future looks promising, but it doesn't seem to
+> provide now what we need. Anyway, if they have (at least):
+> 
+> * Web site with a CGI enable-policy that lasts!
+> * ssh shell account for Web site administration.
+> 
+> I'd go there, and also set:
+> 
+> * mailing list (if searchable and browseable)
+> 
+> Probably downloads can be located elsewhere cause they only
+> provide http downloads from a directory, but no stats AFAIK.
+> 
+> CVS can be set within the same machine as downloads or in
+> Savannah. I'm not sure which is better. Savannah has viewCVS and
+> that's a plus, but having downloads and CVS at the same domain
+> seems like a good distribution policy...
+> 
+> Comments, suggestions, offerings etc, are very welcomed.
+> 
+> Ah, if we finally decide to move, it'd be great to release
+> 0.6.3 from the new site, probably with Livio's new design.
+> 
+> I'd go as stated, with CVS and downloads maintained by the
+> Debian-br crew!
+
+In a few months, I am planning to start a small online company (music 
+store that only carries non-copy protected cds). If all goes well, I 
+should have a server colocated somewhere before February or 
+March...it will have plenty of spare bandwidth and disk space, so 
+when I get it set up (filing incorporation papers, getting the other 
+people in in to purchase their shares, then setting up the server and 
+installing my code on it, and finally getting the first set of CDs), 
+dillo can go there if you want. I plan for the server to be a mid-
+range 1U p3 box with about 256MB of ram and a nice 40GB hard drive, 
+all running Debian.
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-23 16:44
+
+Gentlemen,
+
+
+On Mon, 12 Nov 2001, Livio Baldini Soares wrote:
+
+> Unfortunately I feel compelled to bring out a question that might cause
+> polemic. Some of you may know that VA (Linux) is changing their "ways" and
+> becoming more and more comercial. (BTW, VA Linux is the owner of sourceforge).
+> And I've recently learnt that sourforge is now using non-free software :-(
+> Before reading on, maybe you should read this article (highly recommended):
+>
+> http://www.fsfeurope.org/news/article2001-10-20-01.en.html
+
+and also:
+
+http://www.advogato.org/article/376.html
+http://slashdot.org/developers/01/11/12/1456219.shtml
+
+
+
+After careful consideration of these references, previous posts
+on this thread and from my personal experiences, I've come to
+think that unfortunately there're underhanded politics coming
+from VA.
+
+This is hard to write, specially when I'm both aware and
+grateful for all that VA has given to the Open Source & Free SW
+community. OTOH, I can't overlook the following points:
+
+* After months of license discussion, Loic was asked to give up
+his rights on contributions to the SF codebase (that were given
+under the GPL, and expected to remain as such), but later,
+without any previous warning, it was made propietary to VA.
+
+* The SF codebase that's still free is about a year old and
+in an unmaintainable state. Considering that, in conjunction with
+the time it took for Loic to sign the final document (while
+discussing it), the hypothesis of it all being planned seems a
+very plausible one.
+
+* Once on their server, you don't own the project. It can't be
+deleted, and the only way around is to tag it "unmaintained".
+This is kind of insidious! It makes people think the project is
+stalled without developers, that the last release is in SF and
+that there's no need to look for it elsewhere...
+
+* Facilities for exporting projects were "temporarily" removed.
+
+* SF is using propietary SW. There's no problem if there's a
+need, but being artificial, it gives the impression that Free-SW
+is not good enough for the task.
+
+* You're still free to use the SF server, but you won't have
+the freedom to copy, modify, study and distribute the SW it runs.
+
+* Technical issue: Download counters, although being essential
+information (both for a project and SF), are not working properly
+since months (maybe more than five). It's bug 440446 in SF's bug
+track. It was posted after a previous fix of the counters, that
+were reported to even go backwards sometimes.
+
+
+
+About dillo
+-----------
+
+I have no problems with moving dillo, even more, if that serves
+to solve the download counter and the mailing list problems, it's
+very welcome!
+
+Note: mailing lists at SF are unmaintained by now, as they're
+working on a new solution... With regard to dillo, dillo-dev was
+created by James McCollough, he's the maintainer, but all my
+attempts to reach him by email had failed :(. Thus, since mailman
+SW started asking for an admin password, I haven't access to the
+susbscribers list. SF doesn't provide a way to change this, and
+my support requests remain unanswered...
+
+
+What do we need to move (or distribute) dillo?
+
+* Download bandwidth and accurate counters
+* mailing list (searchable and browseable)
+* CVS
+* Web site with a CGI enable-policy that lasts!
+* ssh shell account for Web site administration.
+
+
+Savannah's future looks promising, but it doesn't seem to
+provide now what we need. Anyway, if they have (at least):
+
+* Web site with a CGI enable-policy that lasts!
+* ssh shell account for Web site administration.
+
+I'd go there, and also set:
+
+* mailing list (if searchable and browseable)
+
+Probably downloads can be located elsewhere cause they only
+provide http downloads from a directory, but no stats AFAIK.
+
+CVS can be set within the same machine as downloads or in
+Savannah. I'm not sure which is better. Savannah has viewCVS and
+that's a plus, but having downloads and CVS at the same domain
+seems like a good distribution policy...
+
+Comments, suggestions, offerings etc, are very welcomed.
+
+Ah, if we finally decide to move, it'd be great to release
+0.6.3 from the new site, probably with Livio's new design.
+
+I'd go as stated, with CVS and downloads maintained by the
+Debian-br crew!
+
+
+Regards
+Jorge. 
+
+
+
+Re: [Dillo-dev]"&nbsp" problem
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-23 15:51
+
+> Hello,
+> 
+> first of all I have to say thanks for your work. The Dillo is
+> absolutely super. Maybe I found small problem, which I believe is not
+> difficult to fix. The problem is with &nbsp. When I used "&nbsp" in my
+> page I expected to see empty space but I saw string "&nbsp" instead. I
+> tried it in Netscape and Mozilla and there is behavior proper (one
+> empty space). Bellow is simple code demonstrating this. Can somebody
+> fix it, or give me clue which part of source I can fix it myself.
+> 
+
+Entities must start with & and end with ;, I believe the proper 
+behavior is to take the entire page after that as an entity and not 
+display anything. So, just add a ; after nbsp (&nbsp;) and it will 
+work.
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]"&nbsp" problem
+
+From: Grigory Bakunov <black@as...> - 2001-11-23 08:41
+
+Date |Fri, 23 Nov 2001 09:25:58 +0100
+From |Vaclav Tvrdik <Vaclav.Tvrdik@ip...>
+
+Hello!
+
+
+VT> Hello,
+
+VT> first of all I have to say thanks for your work. The Dillo is absolutely
+VT> super. Maybe I found small problem, which I believe is not difficult to fix.
+VT> The problem is with &nbsp. When I used "&nbsp" in my page I expected to see
+VT> empty space but I saw string "&nbsp" instead. I tried it in Netscape and
+VT> Mozilla and there is behavior proper (one empty space). Bellow is simple
+VT> code demonstrating this. Can somebody fix it, or give me clue which part of
+VT> source I can fix it myself.
+
+VT> Thank you and best regards
+
+VT> Vaclav TVRDIK
+VT> PGP Key : 0xA983E45F
+
+VT> file : test.html
+
+VT> <HTML>
+VT> <HEAD><TITLE>test</TITLE></HEAD>
+VT> <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080"
+ALINK="#000080">>
+VT> <TABLE BORDER=1>
+VT> <TR><TD BGCOLOR=red>test of nbsp</TD><TD BGCOLOR=blue>&nbsp</TD></TR>
+VT> </TABLE>
+VT> </BODY>
+VT> </HTML>
+
+
+HUH.
+AFAIK for use entities you need to correct this &nbsp to
+&nbsp; - how it sow in http://www.w3.org
+
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]"&nbsp" problem
+
+From: Bo Lorentsen <bl@ne...> - 2001-11-23 08:37
+
+Vaclav Tvrdik wrote:
+
+> first of all I have to say thanks for your work. The Dillo is absolutely
+> super. Maybe I found small problem, which I believe is not difficult to fix.
+> The problem is with &nbsp. When I used "&nbsp" in my page I expected to see
+> empty space but I saw string "&nbsp" instead. I tried it in Netscape and
+> Mozilla and there is behavior proper (one empty space). Bellow is simple
+> code demonstrating this. Can somebody fix it, or give me clue which part of
+> source I can fix it myself.
+
+I think it would be a good idea to terminate the "&nbsp" with a simicolon, like
+this "&nbsp;".
+
+Hope this help !
+
+/BL 
+
+
+
+[Dillo-dev]"&nbsp" problem
+
+From: Vaclav Tvrdik <Vaclav.Tvrdik@ip...> - 2001-11-23 08:23
+
+Hello,
+
+first of all I have to say thanks for your work. The Dillo is absolutely
+super. Maybe I found small problem, which I believe is not difficult to fix.
+The problem is with &nbsp. When I used "&nbsp" in my page I expected to see
+empty space but I saw string "&nbsp" instead. I tried it in Netscape and
+Mozilla and there is behavior proper (one empty space). Bellow is simple
+code demonstrating this. Can somebody fix it, or give me clue which part of
+source I can fix it myself.
+
+Thank you and best regards
+
+Vaclav TVRDIK
+PGP Key : 0xA983E45F
+
+file : test.html
+
+<HTML>
+<HEAD><TITLE>test</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080"
+ALINK="#000080">
+<TABLE BORDER=1>
+<TR><TD BGCOLOR=red>test of nbsp</TD><TD BGCOLOR=blue>&nbsp</TD></TR>
+</TABLE>
+</BODY>
+</HTML> 
+
+
+
+Re: [Dillo-dev]Cookies for dessert.. : )
+
+From: William Kendrick <nbs@so...> - 2001-11-22 23:23
+
+On Thu, Nov 22, 2001 at 04:26:57PM -0600, Lars Clausen wrote:
+<snip> 
+> I've been thinking about how to do a good dialog to ask the user. I'm
+> leaning towards a standalone program that works on the cookie control
+> file.
+
+Excellent. :)
+
+-bill! 
+
+
+
+Re: [Dillo-dev]Cookies for dessert.. : )
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-22 22:27
+
+On Wed, 21 Nov 2001, hebertrich@ya... wrote:
+
+> Gentlemen ...=20
+>=20
+> What kind of mechanism will the end user have to accept/deny cookies ?=20
+
+Currently, there is a text file that controls cookies. It will allow or
+deny or allow non-persistently cookies from a given domain, plus allow a
+default setting.
+
+> What kind of built i protection will Dillo have to help the surfer
+> do it's thing while at the same time reject what is obviously cookies
+> containing personally identifiable numbers or info ?=20
+> In fact is such protection feasible ?
+
+In my opinion, not really. Very few cookies will contain the information
+themselves, all they need is an identifying number that will let them look
+into the database. There's no standard for the contents of cookies
+whatsoever. Many are also 'encrypted'. All we can say is where they are
+from, how long they will last, and who will be able to get them.
+
+> Will there be for example cookies off=20
+> cookies on ( accept all) ask user
+> accept/deny for domains... ( lil window with
+> a list ? ) third party cookies on ( accept
+> all ) ask user display cookies ( scroll list
+> ,click and view the cookie ) <keep> <delete>
+> cookie warning ( ex this cookie is
+> illegal...shows user name / password ..
+
+I've been thinking about how to do a good dialog to ask the user. I'm
+leaning towards a standalone program that works on the cookie control
+file. That way, Dillo isn't bloated with that interface, and those who
+just want to use the file for control can do that.
+
+One of the few places where I need cookies is the Dagorhir bulletin board
+(www.dagorhir.com/dagorhir/infoboard). Its cookies contain the username
+and password in cleartext, but it's not an important password, so it's ok.
+Most places that have important passwords will either use https or just
+have an identifying cookie. Trying to figure out the 'legality' of the
+cookie (beyond standards conformance) is IMHO futile.
+
+> I guess what i want to say is try to do your best, like usual : )=
+=20
+>=20
+> Can automatic protection be made to look into the cookie for obvious=20
+> UIN or other privacy issues ?=20
+
+As explained above, not really. The big privacy issues aren't in the
+contents of the cookie, but in how it's used.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Font size problem with locales, and null char in text files
+
+From: Niklas Hoglund <niklas.hoglund@te...> - 2001-11-21 21:27
+
+I'm experiencing two bugs in Dillo 0.6.2. Firstly, if I have my
+default locale setting, LC_ALL=sv_SE, Dillo ignores the font_factor
+setting and displays tiny fonts. With LC_ALL=C it works OK.
+
+Secondly, and this is more an irritating thing than a bug, when
+displaying for example the changelog on Dillo's homepage every line
+begins with a null character (the one used when the font lacks some
+character). This only happens on text displayed with the fixed-width
+font.
+
+If it matters any, I use the Debian package of Dillo.
+
+Except for that, you have my kudos for making a nice little program.
+
+-- 
+Niklas 
+
+
+
+[Dillo-dev]Cookies for dessert.. : )
+
+From: Richard <hebertrich@ya...> - 2001-11-21 20:35
+
+Gentlemen ... 
+
+What kind of mechanism will the end user have to accept/deny cookies ? 
+
+What kind of built i protection will Dillo have to help the surfer
+do it's thing while at the same time reject what is obviously cookies
+containing personally identifiable numbers or info ? 
+In fact is such protection feasible ?
+Will there be for example cookies off 
+cookies on ( accept all) ask user 
+accept/deny for domains... ( lil window with a list ? ) 
+third party cookies on ( accept all ) ask user 
+display cookies ( scroll list ,click and view the cookie ) 
+<keep> <delete>
+cookie warning ( ex this cookie is illegal...shows user name / password .. 
+
+I guess what i want to say is try to do your best, like usual : ) 
+
+Can automatic protection be made to look into the cookie for obvious 
+UIN or other privacy issues ? 
+
+Richard Hebert 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+On 20 Nov 2001 19:33:35 -0600
+Lars Clausen <lrclause@cs.uiuc.edu> wrote:
+
+> On Tue, 20 Nov 2001, Clinton Ebadi wrote:
+> 
+> > I noticed the patches for cookies and https (among other things) on 
+> > http://haru.wom.ru/pub/dillo/patches/. Are there any plans to merge 
+> > these into the main dillo source tree? Cookies would be useful to me 
+> > (i.e. for viewing sites like kuro5hin where you have to be logged in 
+> > to do important things like post).
+> [...]
+> 
+> The cookie patch out there is only half of the story. Jorgen Viksell had
+> created a different cookie patch that to some degree complemented mine. We
+> have combined the two, and now have error checking, file-based cookie
+> control and persistence. We shall send out the full patch soon.
+> 
+> -Lars
+> 
+> -- 
+> Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| Hårdgrim of Numenor
+> "I do not agree with a word that you say, but I |----------------------------
+> will defend to the death your right to say it." | Where are we going, and
+> --Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbasket?
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+Re: [Dillo-dev]list items (was: Dillo Freezing)
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-11-21 18:53
+
+On Wed, 21 Nov 2001 19:41:00 +0100
+Sebastian Geerken <sgeerken@st...> wrote:
+
+> the freeze bugfix also solved the problems I had with list items, now
+> list items are special DwPage's. There will be some enhances, probably
+> within a new widget DwListItem.
+
+I've tested the patch for a moment now, and it seems to handle every "problem-page", I've tested, fine. For example:
+http://www.tomshardware.com
+http://www.phatboydesigns.net/alloywm/index.html
+
+Very nice! Keep up the good work!
+
+-- 
+//Hugo Hallqvist - hugha495 at student dot liu dot se 
+
+
+
+[Dillo-dev]list items (was: Dillo Freezing)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-21 18:41
+
+Hi,
+
+the freeze bugfix also solved the problems I had with list items, now
+list items are special DwPage's. There will be some enhances, probably
+within a new widget DwListItem.
+
+Sebastian 
+
+
+
+Re: Dillo Freezing (was: Re: [Dillo-dev]DwPage Update)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-21 18:16
+
+On Sat, Nov 17, 2001 at 11:54:04AM -0200, Livio Baldini Soares wrote:
+> Livio Baldini Soares writes:
+> > 
+> > If there is any other info you'll like from me, just say so. I'll try to come
+> > up with a reproducible test, but my feeling is that this is like a race, or
+> > something very rare...
+> > 
+> 
+> Ok, it seems that this page causes the mentioned error about half the time:
+> http://so....net/softwaremap/trove_list.php?form_cat=87
+> 
+> If it doesn't well then try resizing the dillo window _while_ the page is
+> loading (or reloading). Here's what I got this time:
+> 
+> Dw_table_sub_calc_col_widths (sub=0x82c63e8, width=1260419230, total_width=1260419229)
+> 
+> Which is bogus, so Dw_table_size_request must be doing something wrong with
+> it's calculations.
+> 
+> hope this helps,
+
+Yes, thanks, it helped a lot to track this bug down. It should finally
+be fixed, please post your experiences.
+
+Sebastian 
+
+
+
+[Dillo-dev]it works!
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-21 16:11
+
+Cookies work. Yes indeed, they work well. The fact that I am sending this message from dillo proves it (i am away from my home box, and am using OpenWebMail on my mail host). This needs cookies to work, and it is working. So, any plans to merge this in to cvs? Woo, now I never have to leave dillo (I don't go anywhere that uses frames anyway). My one last reason for using anything other than dillo is gone :-) !
+
+--
++ hackedtobits.com -- the home of irresponsible journalism
+http://lamer.hackedtobits.com -- the home of the lamer 
+
+
+
+Re: [Dillo-dev]DwPage Update
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-21 15:40
+
+On Fri, Nov 16, 2001 at 04:35:28PM -0200, Livio Baldini Soares wrote:
+> Yeeeaaaah! :-) This bug was kind of irritating me... Well, I don't know if
+> you're aware of it or not, but this also fixed bug #252!
+
+Yes, handling of breaks was changed a bit. Bug tracking engine is
+updated.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-21 15:32
+
+On Wed, 21 Nov 2001, Grigory Bakunov wrote:
+
+> Date |Tue, 20 Nov 2001 17:11:09 -0500
+>>From |"Clinton Ebadi" <unknown_lamer@ha...>
+>=20
+> Hello!
+>=20
+> I want to say - all who use old cookies patch
+> MUST update it from patch'o'matic http://haru.wom.ru/pub/dillo/patches/
+> Now this patch is realy greate! it's not only save cookies
+> do ~/.dillo, it's can control ACCEPT/REJECT cookies.
+>=20
+> Nice work guys!
+
+Thank you! It still has one problem: The order of the control file is
+important, so if you have DEFAULT: DENY at the top, no (new) cookies are
+allowed, regardless of what's below.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Grigory Bakunov <black@as...> - 2001-11-21 07:33
+
+Date |Tue, 20 Nov 2001 17:11:09 -0500
+From |"Clinton Ebadi" <unknown_lamer@ha...>
+
+Hello!
+
+I want to say - all who use old cookies patch
+MUST update it from patch'o'matic http://haru.wom.ru/pub/dillo/patches/
+Now this patch is realy greate! it's not only save cookies
+do ~/.dillo, it's can control ACCEPT/REJECT cookies.
+
+Nice work guys!
+
+Now i only need to join http_auth and cookies patches
+to enjoy ;-)
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-21 01:33
+
+On Tue, 20 Nov 2001, Clinton Ebadi wrote:
+
+> I noticed the patches for cookies and https (among other things) on=20
+> http://haru.wom.ru/pub/dillo/patches/. Are there any plans to merge=20
+> these into the main dillo source tree? Cookies would be useful to me=20
+> (i.e. for viewing sites like kuro5hin where you have to be logged in=20
+> to do important things like post).
+[...]
+
+The cookie patch out there is only half of the story. Jorgen Viksell had
+created a different cookie patch that to some degree complemented mine. We
+have combined the two, and now have error checking, file-based cookie
+control and persistence. We shall send out the full patch soon.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-11-20 22:50
+
+> Note the "do other stuff" part...yes, I can use galeon or skipstone, 
+> but then I can't do much else. Usually I am running xchat, xmms, 
+> gaim, a bunch of wterms, and dillo. I can do that fine. If you 
+> replace dillo with galeon, I have to lose gaim, xmms, and a few 
+> wterms to make the box usable.
+
+point taken. I can't gainsay that dillo is a *lot* better than just about
+every other browser out there, in terms of memory use. Just saying that
+it's not hopeless without it. :)
+
+Carl Soderstrom. 
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-20 22:38
+
+> > I am in a bit of a tough situation 
+> > with dillo--it is the only browser I can use on my box, since I have
+> > a mere 32MB of ram (and cannot install Netscape Navigator as it is
+> > non-free software). 
+> 
+> I used to run Galeon in 32MB of ram, with acceptable performance. it's
+> no speed demon, but it's not bad. was a lot better on a Cyrix 166/32MB
+> than Netscape was on a 486/100/32MB. on this same machine, Mozilla was
+> nearly unusable.
+> 
+
+Note the "do other stuff" part...yes, I can use galeon or skipstone, 
+but then I can't do much else. Usually I am running xchat, xmms, 
+gaim, a bunch of wterms, and dillo. I can do that fine. If you 
+replace dillo with galeon, I have to lose gaim, xmms, and a few 
+wterms to make the box usable.
+
+> it makes a world of difference to use a lightweight window
+> manager/desktop environment. KDE and/or GNOME+Sawfish will crush
+> anything with less than 64MB; jettison those if you haven't already. I
+> use FVWM; but Blackbox or WindowMaker will work about as well. Galeon
+> takes up a bit more memory than Konqueror, but (IMHO) has a much
+> nicer user interface. give it a try. :) 
+
+I run WindowMaker 0.70. I have no need for desktop evironments. I 
+even have my WindowMaker settings tuned way down, so it uses a mere 
+700K of ram (including all of my dock apps). I have a solid color for 
+a background, and make sure to minimize my background stuff to keep 
+ram for myself (about the only daemons I run are boa and cron).
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]Cookies and https
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-11-20 22:19
+
+> I am in a bit of a tough situation 
+> with dillo--it is the only browser I can use on my box, since I have 
+> a mere 32MB of ram (and cannot install Netscape Navigator as it is 
+> non-free software). 
+
+I used to run Galeon in 32MB of ram, with acceptable performance. it's no
+speed demon, but it's not bad. was a lot better on a Cyrix 166/32MB than Netscape
+was on a 486/100/32MB. on this same machine, Mozilla was nearly unusable.
+
+it makes a world of difference to use a lightweight window manager/desktop
+environment. KDE and/or GNOME+Sawfish will crush anything with less than
+64MB; jettison those if you haven't already. I use FVWM; but Blackbox or
+WindowMaker will work about as well. 
+Galeon takes up a bit more memory than Konqueror, but (IMHO) has a much
+nicer user interface. give it a try. :) 
+
+Carl Soderstrom. 
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+[Dillo-dev]Cookies and https
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-20 22:03
+
+I noticed the patches for cookies and https (among other things) on 
+http://haru.wom.ru/pub/dillo/patches/. Are there any plans to merge 
+these into the main dillo source tree? Cookies would be useful to me 
+(i.e. for viewing sites like kuro5hin where you have to be logged in 
+to do important things like post). I am in a bit of a tough situation 
+with dillo--it is the only browser I can use on my box, since I have 
+a mere 32MB of ram (and cannot install Netscape Navigator as it is 
+non-free software). Having to load konqueror to do something as 
+simple as post a message to k5 is painful (especially since I can't 
+do much else when running konqueror or mozilla).
+
+If no one else wants to do it, I will manually apply the patches to 
+the stuff in cvs (since cookies was done for 0.62) and submit a cvs 
+diff (just ask). 
+
+Even without cookies, dillo still rocks. Uses less than 1MB of ram 
+(woo, no dicache is great!) and renders most sites (one exception: 
+any of the forums in forums.newdoom.com...) extremely well. My only 
+complaints would be a lack of cookies, https, frames, and disk cache 
+(you see, I am on a dial-up so...). I can live without all of those 
+(except maybe cookies). I had an idea for implementing frames: since 
+dillo has the html widget, why not just use a GtkLayout and embed 
+multiple dillo widgets inside? Anyway, I can apply those patches and 
+send a big diff if you'd like (just say what patches and I'll start 
+working on it when I get the message).
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]dillo strange behaviour (fwd)
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-20 17:17
+
+Hi everyone!
+
+
+On Tue, 16 Oct 2001, Grigory Bakunov wrote:
+
+> I found realy strange dillo behaviour on rpmfind.net site.
+>
+> look - at first search we have this html:
+> ----- HTML-phase-1 ------------------------------------
+> <form method="get" action="/linux/rpm2html/search.php" enctype="application/x-www-form-urlencoded">
+> <input type="text" size="35" name="query" value="">
+> <input type="submit" value="Search ..." name="submit">
+> </form>
+> ------------------------------------------------END-------
+>
+> so, realy good work form. after input into 'query' field text '12345'
+> and press submit we pass to rpmfind.net site next url query:
+> http://rpmfind.net/linux/rpm2html/search.php?query=1234&submit=Search+...
+> and now form in html look like this
+>
+> ------- HTML-phase-2---------------------------------
+> <form action="/linux/rpm2html/search.php?query=1234" enctype="application/x-www-form-urlencoded" method="GET">
+> <input name="query" type="TEXT" size="60" value="1234">
+> <input name=submit type=submit value="Search ...">
+> </form>
+> ------------------------------------------------END-----
+> As all see - authors of rpmfind site place our 'query' string into form action tag.
+> so, after input into query field '4321' and press submit - we have VERY strange URL string:
+> http://rpmfind.net/linux/rpm2html/search.php?query=1234?query=4321&submit=Search+...
+> look! we have to 'query' variable in url. but RFC says it's not correct.
+> and at least - we have absolutely wrong html form text -
+>
+> ------- HTML-phase-3---------------------------------
+> <form action="/linux/rpm2html/search.php?query=1234%3Fquery%3D4321"
+> enctype="application/x-www-form-urlencoded" method="GET">
+> <input name="query" type="TEXT" size="60" value="1234?query=4321">
+> <input name=submit type=submit value="Search ...">
+> </form>
+> ------------------------------------------------END----
+>
+> so, we need to remove dublicate variables when insert new variables by GET method.
+> Thanks for all who be so patient and read this message to the end.
+
+By the time this report was posted, rpmfind.net was down or
+unaccessible from here. But now it seems to be back again and the
+patch for BUG#255 I just commited, should also fix this bug!
+
+Note: to remove duplicate variables is NOT the rigth solution.
+It's a matter of resolving as RFC2396 suggests!
+
+BTW: the current URL resolver fails a lot when contrasted with
+RFC2396's examples, but it doesn't seem to cause much trouble
+because it happens in not-so-common cases. Anyway, now I'm
+playing with a parsing prototype that uses regular expresions. If
+there's a knowledgeable volunteer (versed in url.c, RFCs, RE,
+...) willing to finish it please drop me note. If not, I'll keep
+working on it, because it is a very sensible part of the browser.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Forgot (fwd)
+
+From: Grigory Bakunov <black@as...> - 2001-11-19 15:08
+
+Date |Mon, 19 Nov 2001 11:22:00 -0300 (CLST)
+From |Jorge Arellano Cid <jcid@em...>
+
+Hello!
+
+
+JAC> (this is a fwd, because I got no answer to the original)
+
+huh. i always forget to answer. ;-)
+realy sorry.
+
+JAC> ---------- Forwarded message ----------
+JAC> Date: Tue, 6 Nov 2001 21:03:42 -0300 (CLST)
+JAC> From: Jorge Arellano Cid <jcid@em...>
+JAC> To: Grigory Bakunov <black@as...>
+JAC> Subject: Re: [Dillo-dev]Forgot
+
+
+JAC> Grigory,
+
+>> Also i make small sites with all patches what i found at this moment.
+>> http://haru.wom.ru/pub/dillo/patches/
+>> All patches cleaned for current cvs version.
+>> You can add your own patch by form on site.
+
+JAC> I gave the path-o-matic a try! Nice work.
+
+JAC> One of the reasons I had for not enabling sourceforge's one, is
+JAC> that currently I have more than enough things to worry about, and
+JAC> adding more is a NO-NO for me.
+
+JAC> Well, if you add an explanation that those patches are there
+JAC> for improvement, that they haven't been accepted yet, and that
+JAC> using them may break otherwise good behaviour, that they're
+JAC> posted there to let interested developers work them out without
+JAC> trashing the mailing list, and also ask the poster to explain
+JAC> briefly what they're known to break and warn that the submission
+JAC> MUST be done using a browser other than dillo (no file upload
+JAC> facility yet), I'll gladly add a link to it from somewhere
+JAC> convenient in the site.
+
+Realy all my problems in too short english practice - if somebody
+write this explanation for site - i place it on first page and make
+more frienly interface. also i want to add optional <textarea/> instead of 
+<input type='file'/> - so dillo users can cut'n'paste their patches
+to textarea.
+
+Currently all patches brint to conformity with dillo cvs code and applyed
+without any HUNKs.
+
+Two patches - http_auth and cookies - conflicts.
+Two patches - my encodings and Japanise by Robert Thomson - do similar things -
+help to work with different encodings in html.
+
+JAC> Wow!, I can't believe I wrote it all in a single paragraph! :)
+Wow! I don't try to repeat your deed. ;-)
+
+Thanks for not so small piece of realy great code - i
+enjoy to read your nice coding style.
+
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Font Handling
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-19 14:05
+
+Hi,
+
+On Sun, Nov 18, 2001 at 04:05:48PM -0500, Clinton Ebadi wrote:
+> Hello, I've been looking through the source, trying to find a way to 
+> change the default font from helvetica to arial (helvetica scales 
+> really badly). I was able to change it (the font table), but that 
+> still makes it an ugly hack. I am going to add an option to the 
+> configuration file to allow for configuration of the default fonts. 
+
+I was already working on this, some time ago I nearly finished some
+modifications on font handling:
+
+1. introduction of generic fonts (see
+http://www.w3.org/TR/CSS2/fonts.html#generic-font-families), and
+dillorc options to define them. Furthermore some changes in the
+HTML parser, e.g. to use "monospace" for <PRE>,
+
+2. an option for setting the default font, and
+
+3. some more modifications for handling as much fonts as possible,
+e.g. search for "black" fonts if a bold variant is not available
+in a specific family.
+
+(This is BTW registered as bug #176.)
+
+Unfortunately, the work is currently on an inaccessible hard disk, I
+hope to get it within the next time, until then you'll have to work
+with a private modification :-)
+
+> What would be the best way of doing this? My idea was to have a field 
+> like this:
+> 
+> default_fonts=foo&bar&baz
+> 
+> (font names separated by &), and then to write a function to parse 
+> this line and set the font table to use those (from what I read in 
+> html.c, that means I would have to rewrite some of the html init code 
+> to handle more than four font options), with the last font in the 
+> table being NULL, so the new code would know when to stop looking for 
+> default fonts.
+
+Handling lists of fonts (also for <font> and CSS) is what
+a_Dw_style_font_new_from_list (dw_style.c) was intended for.
+
+> Of course, if you know the first font will exist 
+> (which is usually the case when you are overriding the defaults), why 
+> have more than one option? My idea for the long run (once I have more 
+> time to do this) is to have these options:
+> 
+> default_fixed_font=foo&bar
+> default_sans-serif_font=foo&bar
+> default_serif_font=foo&bar
+
+Already part of my patch.
+
+> default_font_size=10 (eventually add pt, in, cm, mm, px extensions)
+> default_font_style=sans-serif (or serif / fixed)
+> 
+> Where you can still use more than one font (to get rid of the hard-
+> coded font table). So, is my idea good, or does it need any changes? 
+> (or is someone already doing this).
+
+It does not even have to be implemented. ;-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]replace GtkOptionMenu with GtkCombo?
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-19 13:38
+
+On Sun, Nov 18, 2001 at 02:57:49PM +1100, Hayden wrote:
+> Hello,
+> 
+> Just wondering why you are using the GtkOptionMenu for the select tags. Other browsers seem to use their widget set equivalent of the GtkCombo.
+> Is there any reason why GtkCombo is not/can not be used?
+
+From http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#edef-SELECT:
+
+The SELECT element creates a menu. Each choice offered by the menu
+is represented by an OPTION element. A SELECT element must contain
+at least one OPTION element.
+
+And, on the same page before:
+
+menus
+Menus offer users options from which to choose. The SELECT
+element creates a menu, in combination with the OPTGROUP and
+OPTION elements.
+
+GtkOptionMenu is indeed intended for this, while GtkCombo is a
+combination of a menu and an entry. (Mozilla seems to imitate the
+Windows look, rendering an option menu in a way similar to combos, but
+you cannot edit the text.)
+
+Sebastian 
+
+
+
+[Dillo-dev]Font Handling
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-11-18 20:57
+
+Hello, I've been looking through the source, trying to find a way to 
+change the default font from helvetica to arial (helvetica scales 
+really badly). I was able to change it (the font table), but that 
+still makes it an ugly hack. I am going to add an option to the 
+configuration file to allow for configuration of the default fonts. 
+What would be the best way of doing this? My idea was to have a field 
+like this:
+
+default_fonts=foo&bar&baz
+
+(font names separated by &), and then to write a function to parse 
+this line and set the font table to use those (from what I read in 
+html.c, that means I would have to rewrite some of the html init code 
+to handle more than four font options), with the last font in the 
+table being NULL, so the new code would know when to stop looking for 
+default fonts. Of course, if you know the first font will exist 
+(which is usually the case when you are overriding the defaults), why 
+have more than one option? My idea for the long run (once I have more 
+time to do this) is to have these options:
+
+default_fixed_font=foo&bar
+default_sans-serif_font=foo&bar
+default_serif_font=foo&bar
+default_font_size=10 (eventually add pt, in, cm, mm, px extensions)
+default_font_style=sans-serif (or serif / fixed)
+
+Where you can still use more than one font (to get rid of the hard-
+coded font table). So, is my idea good, or does it need any changes? 
+(or is someone already doing this).
+
+-------------------------------
+#umbclinux @ irc.openprojects.net
+lamer.hackedtobits.com
+linux@ck...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]replace GtkOptionMenu with GtkCombo?
+
+From: Hayden <super_super_hero_hayden@ya...> - 2001-11-18 06:02
+
+Hello,
+
+Just wondering why you are using the GtkOptionMenu for the select tags. Other browsers seem to use their widget set equivalent of the GtkCombo.
+Is there any reason why GtkCombo is not/can not be used?
+
+
+Hayden 
+
+
+
+Re: [Dillo-dev]minor error in https patch
+
+From: Grigory Bakunov <black@as...> - 2001-11-18 03:09
+
+Date |Sun, 18 Nov 2001 13:10:06 +1100
+From |Hayden <super_super_hero_hayden@ya...>
+
+Hello!
+
+H> When using Dillo with the https patch applied you lose the about protocol (well whatever it is), this is because in io/Url.c on line 102 the 3 should be a 4.
+
+
+fixed in patchomatic.
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]minor error in https patch
+
+From: Hayden <super_super_hero_hayden@ya...> - 2001-11-18 03:02
+
+When using Dillo with the https patch applied you lose the about protocol (well whatever it is), this is because in io/Url.c on line 102 the 3 should be a 4.
+
+
+Hayden 
+
+
+
+RE: [Dillo-dev]dillo plugins patch
+
+From: Eric GAUDET <egaudet@in...> - 2001-11-17 21:08
+
+-- En reponse de "[Dillo-dev]dillo plugins patch" de Grigory Bakunov, le
+17-Nov-2001 :
+> I search for updates to my dillo patchomatic site and found
+> this:
+> http://www.rti-zone.org/dillo/
+> I want to know - what's with this code ? somebody maintain
+> this ? it's still work ?
+> 
+
+I don't maintain this code, because the dillo plugins interface has changed
+since. This was the implementation I proposed before, but Jorge wants more. I'm
+still waiting for the new one, though :-(
+
+> 
+> Also i want to say - i update https,encodings,http_auth
+> patches on patchomatic for current dillo cvs code.
+> 
+> 
+> look for: http://haru.wom.ru/pub/dillo/
+> 
+> -------------------------------------------------------
+> Grigory Bakunov
+> ASPLinux Support Team
+> http://www.asplinux.ru
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 17-Nov-2001 a 13:06:16
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]dillo plugins patch
+
+From: Grigory Bakunov <black@as...> - 2001-11-17 16:41
+
+I search for updates to my dillo patchomatic site and found
+this:
+http://www.rti-zone.org/dillo/
+I want to know - what's with this code ? somebody maintain
+this ? it's still work ?
+
+
+Also i want to say - i update https,encodings,http_auth
+patches on patchomatic for current dillo cvs code.
+
+
+look for: http://haru.wom.ru/pub/dillo/
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: Dillo Freezing (was: Re: [Dillo-dev]DwPage Update)
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-17 13:54
+
+Livio Baldini Soares writes:
+> 
+> If there is any other info you'll like from me, just say so. I'll try to come
+> up with a reproducible test, but my feeling is that this is like a race, or
+> something very rare...
+> 
+
+Ok, it seems that this page causes the mentioned error about half the time:
+http://so....net/softwaremap/trove_list.php?form_cat=87
+
+If it doesn't well then try resizing the dillo window _while_ the page is
+loading (or reloading). Here's what I got this time:
+
+Dw_table_sub_calc_col_widths (sub=0x82c63e8, width=1260419230, total_width=1260419229)
+
+Which is bogus, so Dw_table_size_request must be doing something wrong with
+it's calculations.
+
+hope this helps,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Dillo Freezing (was: Re: [Dillo-dev]DwPage Update)
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-17 13:40
+
+Well, here goes some bad news :(
+
+Sebastian Geerken writes:
+> Hi!
+> 
+> The "invisible list/blockquote" bug has been fixed, changes are in the
+> CVS. I've furthermore worked on the <p><li> bug (by putting it into an
+> own widget), but have not succeeded to get it to run bug free. This is
+> what the new code in DwPage is for.
+
+Ever since the first change (on 0.6.2) in DwTable and DwWidget, Dillo has
+sometimes been "freezing". It happens not so often (something like 2 times a
+day). I have no way to reproduce this, but I've attached gdb to the frozen dillo
+and it seems to be spinning at Dw_table_sub_calc_col_widths() (always!).
+
+More precisely here's the loop in gdb:
+Entry point: Dw_table_sub_calc_col_widths (sub=0x82e3f98, width=721, total_width=720).
+
+BTW: I don't know if it's ok for `width` to be bigger than `total_width`...
+
+loop: 
+1346 do {
+1351 width_norm_cols = avail_width;
+1352 num_norm_cols = num_cols;
+1353 for (i = 0; i < sub->num_subs; i++) {
+1354 if (sub_status[i] != AT_NORM) {
+1353 for (i = 0; i < sub->num_subs; i++) {
+1354 if (sub_status[i] != AT_NORM) {
+1353 for (i = 0; i < sub->num_subs; i++) {
+1376 success = TRUE;
+1377 for (i = 0; success && i < sub->num_subs; i++) {
+1378 cols_per_sub = (sub->subs[i].end_col - sub->subs[i].start_col);
+1380 switch (sub_status[i]) {
+1383 if (width_norm_cols * cols_per_sub
+1393 sub_status[i] = AT_MAX;
+1396 break;
+1418 success = FALSE;
+1377 for (i = 0; success && i < sub->num_subs; i++) {
+1346 do {
+
+Last but not least, this is the backtrace:
+
+#0 Dw_table_sub_calc_col_widths (sub=0x82e3f98, width=721, total_width=720)
+at dw_table.c:1351
+#1 0x805cd1c in Dw_table_size_request (widget=0x832a810, requisition=0x837bba4) 
+at dw_table.c:290
+#2 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x832a810, 
+func=0x805cb34 <Dw_table_size_request>, func_data=0x0, args=0xbfffdd20)
+at gtkmarshal.c:193
+#3 0x40147bf3 in gtk_signal_real_emit (object=0x832a810, signal_id=105, 
+params=0xbfffdd20) at gtksignal.c:1432
+#4 0x40145cff in gtk_signal_emit (object=0x832a810, signal_id=105)
+at gtksignal.c:552
+#5 0x805f068 in a_Dw_widget_size_request (widget=0x832a810, 
+requisition=0x837bba4) at dw_widget.c:494
+#6 0x805a441 in Dw_page_calc_widget_size (page=0x82caa10, widget=0x832a810, 
+size=0x837bba4) at dw_page.c:800
+#7 0x805a779 in Dw_page_rewrap (page=0x82caa10) at dw_page.c:863
+#8 0x805985d in Dw_page_size_request (widget=0x82caa10, 
+requisition=0xbfffe47c) at dw_page.c:334
+#9 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x82caa10, 
+func=0x8059834 <Dw_page_size_request>, func_data=0x0, args=0xbfffe158)
+at gtkmarshal.c:193
+#10 0x40147bf3 in gtk_signal_real_emit (object=0x82caa10, signal_id=105, 
+params=0xbfffe158) at gtksignal.c:1432
+#11 0x40145cff in gtk_signal_emit (object=0x82caa10, signal_id=105)
+at gtksignal.c:552
+#12 0x805f068 in a_Dw_widget_size_request (widget=0x82caa10, 
+requisition=0xbfffe47c) at dw_widget.c:494
+#13 0x805ce3d in Dw_table_size_request (widget=0x8399d40, 
+requisition=0x83ee998) at dw_table.c:323
+#14 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x8399d40, 
+func=0x805cb34 <Dw_table_size_request>, func_data=0x0, args=0xbfffe520)
+at gtkmarshal.c:193
+#15 0x40147bf3 in gtk_signal_real_emit (object=0x8399d40, signal_id=105, 
+params=0xbfffe520) at gtksignal.c:1432
+#16 0x40145cff in gtk_signal_emit (object=0x8399d40, signal_id=105)
+at gtksignal.c:552
+#17 0x805f068 in a_Dw_widget_size_request (widget=0x8399d40, 
+requisition=0x83ee998) at dw_widget.c:494
+#18 0x805a441 in Dw_page_calc_widget_size (page=0x827c450, widget=0x8399d40, 
+size=0x83ee998) at dw_page.c:800
+#19 0x805a779 in Dw_page_rewrap (page=0x827c450) at dw_page.c:863
+#20 0x805985d in Dw_page_size_request (widget=0x827c450, 
+requisition=0xbfffec7c) at dw_page.c:334
+#21 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x827c450, 
+func=0x8059834 <Dw_page_size_request>, func_data=0x0, args=0xbfffe958)
+at gtkmarshal.c:193
+#22 0x40147bf3 in gtk_signal_real_emit (object=0x827c450, signal_id=105, 
+params=0xbfffe958) at gtksignal.c:1432
+#23 0x40145cff in gtk_signal_emit (object=0x827c450, signal_id=105)
+at gtksignal.c:552
+#24 0x805f068 in a_Dw_widget_size_request (widget=0x827c450, 
+requisition=0xbfffec7c) at dw_widget.c:494
+#25 0x805ce3d in Dw_table_size_request (widget=0x831e678, 
+requisition=0x82a4a18) at dw_table.c:323
+#26 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x831e678, 
+func=0x805cb34 <Dw_table_size_request>, func_data=0x0, args=0xbfffed20)
+at gtkmarshal.c:193
+#27 0x40147bf3 in gtk_signal_real_emit (object=0x831e678, signal_id=105, 
+params=0xbfffed20) at gtksignal.c:1432
+#28 0x40145cff in gtk_signal_emit (object=0x831e678, signal_id=105)
+at gtksignal.c:552
+#29 0x805f068 in a_Dw_widget_size_request (widget=0x831e678, 
+requisition=0x82a4a18) at dw_widget.c:494
+#30 0x805a441 in Dw_page_calc_widget_size (page=0x836d2d0, widget=0x831e678, 
+size=0x82a4a18) at dw_page.c:800
+#31 0x805a779 in Dw_page_rewrap (page=0x836d2d0) at dw_page.c:863
+#32 0x805985d in Dw_page_size_request (widget=0x836d2d0, 
+requisition=0xbffff4ac) at dw_page.c:334
+#33 0x401184d5 in gtk_marshal_NONE__POINTER (object=0x836d2d0, 
+func=0x8059834 <Dw_page_size_request>, func_data=0x0, args=0xbffff158)
+at gtkmarshal.c:193
+#34 0x40147bf3 in gtk_signal_real_emit (object=0x836d2d0, signal_id=105, 
+params=0xbffff158) at gtksignal.c:1432
+#35 0x40145cff in gtk_signal_emit (object=0x836d2d0, signal_id=105)
+at gtksignal.c:552
+#36 0x805f068 in a_Dw_widget_size_request (widget=0x836d2d0, 
+requisition=0xbffff4ac) at dw_widget.c:494
+#37 0x8057bef in Dw_gtk_viewport_calc_child_size (viewport=0x8179420, 
+child_width=938, child_height=607, child_requisition=0xbffff4ac)
+at dw_gtk_viewport.c:497
+#38 0x8057d70 in Dw_gtk_viewport_calc_size (viewport=0x8179420)
+at dw_gtk_viewport.c:586
+#39 0x805fee8 in Dw_widget_queue_resize_idle (data=0x8179420)
+at dw_widget.c:1076
+
+
+If there is any other info you'll like from me, just say so. I'll try to come
+up with a reproducible test, but my feeling is that this is like a race, or
+something very rare...
+
+best regards! 
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Handhelds
+
+From: Sam J. <sam@ne...> - 2001-11-17 12:52
+
+Jorge Arellano Cid wrote:
+
+> Sam also sent a patch to increase the customization granularity
+> of the control panel, allowing the user to chose which widgets to
+> hide. Unfortunately it broke some key bindings and raised
+> gdk-CRITICAL warnings. :(
+
+
+Hmm it ran without errors patched against 0.6.2 for me, and since nobody 
+on the list complained I assumed it was ok.
+
+
+> The idea was good indeed so there's a new rewritten patch for
+> that on CVS. What does it mean? Now you can tailor dillo's panel
+> even further by hiding some widgets.
+
+
+Looks good.
+
+
+> As for the pen-pointing device, I think a good solution is to
+> have two small buttons (rightmost part of the status bar), that
+> fake a middle or right click. i.e. the user presses rigth-lock
+> button, then the next pen-click event (a physical left) is
+> trapped, stopped, and a new event (right-click) is emmited. This
+> is not on CVS, but I'll be expecting the patch! :-)
+
+I thought about this too, but then decided that this functionality would 
+be more useful as a standalone program so it can be used with other apps 
+as well. Maybe Shooby's XRmouse will do the trick.
+
+Regards,
+Sam
+
+-- 
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+Re: [Dillo-dev]Handhelds
+
+From: Shooby Ban <shooby@gn...> - 2001-11-17 10:47
+
+] The second part is the user interface. Sam pointed out that the
+]iPAQ only has a left click (is uses a pen like device), so it was
+]missing a lot of the UI.
+
+I have made a mouse button changing applet for iPaq once, so I can use
+right-click menus well. But I've got problems with big images and forms,
+with the original gtk fileopen dialog (that's huge)...
+
+]icons even smaller, now there's the posibility of hiding the
+]whole control panel! (AKA full-screen mode). This will benefit
+
+Cool man! This is a good idea!
+
+]have two small buttons (rightmost part of the status bar), that
+]fake a middle or right click. i.e. the user presses rigth-lock
+
+Look at projects.gnome.hu/xrmouse for nice looking stuff :))) maybe in a
+widget indneed a popup window.
+
+Regards,
+Shooby
+
+-- 
+Sho 
+
+
+
+RE: [Dillo-dev]Handhelds
+
+From: Mondesir, Raphael <raphael.mondesir@tf...> - 2001-11-16 21:34
+
+Does anyone know where I can find a bootable floppy distribution of Dillo?
+
+Thanks,
+Raphael
+
+-----Original Message-----
+From: William Kendrick [mailto:nbs@so...]
+Sent: Friday, November 16, 2001 4:26 PM
+To: dillo-dev@li...
+Subject: Re: [Dillo-dev]Handhelds
+
+
+On Fri, Nov 16, 2001 at 05:34:34PM -0300, Jorge Arellano Cid wrote:
+<snip>
+> Well, there're still some things pending, but I thought iPAQ
+> users would be happy to read this.
+
+Cool! :) My interest in Dillo (in fact, my knowledge of its existence)
+came from my ownership of an Agenda VR3 PDA. I'll soon be in possession
+of a Sharp SL-5000 PDA, too. Unfortunately, neither come with GTK+.
+(Agenda runs X11 and has FLTK. Sharp runs QtEmbeded.) My greatest dream
+would be to have Dillo's interface code abstracted from GTK+, so that
+it could be built against Qt and FLTK bindings, too. :)
+
+Anyway... at least these first steps are sounding good. Thanks Jorge &
+all!
+
+-bill!
+(who has an Atari 800XL set up next to his Linux box at home ;) )
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]Handhelds
+
+From: William Kendrick <nbs@so...> - 2001-11-16 21:26
+
+On Fri, Nov 16, 2001 at 05:34:34PM -0300, Jorge Arellano Cid wrote:
+<snip>
+> Well, there're still some things pending, but I thought iPAQ
+> users would be happy to read this.
+
+Cool! :) My interest in Dillo (in fact, my knowledge of its existence)
+came from my ownership of an Agenda VR3 PDA. I'll soon be in possession
+of a Sharp SL-5000 PDA, too. Unfortunately, neither come with GTK+.
+(Agenda runs X11 and has FLTK. Sharp runs QtEmbeded.) My greatest dream
+would be to have Dillo's interface code abstracted from GTK+, so that
+it could be built against Qt and FLTK bindings, too. :)
+
+Anyway... at least these first steps are sounding good. Thanks Jorge & all!
+
+-bill!
+(who has an Atari 800XL set up next to his Linux box at home ;) ) 
+
+
+
+[Dillo-dev]Handhelds
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-16 20:37
+
+Hi everyone!
+
+
+Sometime ago (more than I'd like) there was a thread about
+running dillo on handhelds; I wish I could have had the time to
+answer it then, but my priority list was pointing to different
+places...
+
+While thinking about some issues raised there, I began to
+develop an interface model and to code some bits. The good news
+is that this procrastinated answer not only has ideas but also
+some code news.
+
+First, running on handhelds has never been a goal in dillo, so
+developing specific modules to enable or allow some PDAs to run
+dillo is more likely to be discarded. Specially if the required
+code is complex, or big, or too specific.
+
+OTOH, making dillo able to run on legacy HW is a desired
+feature. And there's where handhelds may benefit.
+
+Ironically, the main problem (IMNSHO;) of running dillo on PDAs
+wasn't mentioned then: memory usage.
+
+Dillo's dicache was taking huge amounts of memory (roughly
+3xoriginal image size) for RGB buffers. And that's the main
+memory consumption source. Fortunately, Livio and I were
+discussing from some time ago, about a new implementation of the
+dicache to allow a memory boundary. In short: The first part of
+that work is done (thanks Livio!), and the CVS version uses a lot
+less memory!
+
+The second part is the user interface. Sam pointed out that the
+iPAQ only has a left click (is uses a pen like device), so it was
+missing a lot of the UI.
+
+Sometimes I receive patches for very specific things that only
+solve problems in a rather narrow scope. Certainly, a better
+practice is to try to identify the root, and to try to develop a
+model that solves the problem in a more generic way. (I don't
+remember exactly, but I'd bet 90% I read that in the ANTIC
+magazine, almost 20 years ago, in a best-practices section.
+Caveat emptor! --FWIW my favorite at the time was ANALOG).
+
+So I finally came out with a new UI model. Instead of making
+icons even smaller, now there's the posibility of hiding the
+whole control panel! (AKA full-screen mode). This will benefit
+every single user, and for small resolution devices it will
+increase the viewport size. And yes, it's already on CVS!
+
+Sam also sent a patch to increase the customization granularity
+of the control panel, allowing the user to chose which widgets to
+hide. Unfortunately it broke some key bindings and raised
+gdk-CRITICAL warnings. :(
+
+The idea was good indeed so there's a new rewritten patch for
+that on CVS. What does it mean? Now you can tailor dillo's panel
+even further by hiding some widgets.
+
+As for the pen-pointing device, I think a good solution is to
+have two small buttons (rightmost part of the status bar), that
+fake a middle or right click. i.e. the user presses rigth-lock
+button, then the next pen-click event (a physical left) is
+trapped, stopped, and a new event (right-click) is emmited. This
+is not on CVS, but I'll be expecting the patch! :-)
+
+Well, there're still some things pending, but I thought iPAQ
+users would be happy to read this.
+
+
+Regards
+Jorge.-
+
+
+PS: I'm very interested in the sourceforge issue. Just post all
+your comments and links, to help find out what to do. 
+
+
+
+Re: [Dillo-dev]DwPage Update
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-16 18:35
+
+Hi Sebastian!
+
+Sebastian Geerken writes:
+> Hi!
+> 
+> The "invisible list/blockquote" bug has been fixed, changes are in the
+> CVS. I've furthermore worked on the <p><li> bug (by putting it into an
+> own widget), but have not succeeded to get it to run bug free. This is
+> what the new code in DwPage is for.
+
+Yeeeaaaah! :-) This bug was kind of irritating me... Well, I don't know if
+you're aware of it or not, but this also fixed bug #252!
+
+BTW: The new "full-screen" mode activated by double left click is awesome! I
+_really_ liked it! Congrats for you and Jorge!
+
+
+best regars to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]DwPage Update
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-16 18:19
+
+Hi!
+
+The "invisible list/blockquote" bug has been fixed, changes are in the
+CVS. I've furthermore worked on the <p><li> bug (by putting it into an
+own widget), but have not succeeded to get it to run bug free. This is
+what the new code in DwPage is for.
+
+More on this later.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Ron Farrer <rbf@fa...> - 2001-11-13 18:16
+
+Livio Baldini Soares (livio@li...) wrote:
+
+> Hello again,
+> 
+> sorry for bringing this up again.
+
+No need to apologize IMHO. It is an important issue that needs to be
+discussed.
+
+> It won't be that bad to stay at sourceforge, but I'm very "political" about
+> Free Software. So my suggestion was to move in to Savannah, for example, which
+> is pure Free Software. But if noone else sees a point, than we might as well
+> just stick with sourceforge.
+
+My feelings exactly. My opinion, which doesn't count for anything, would
+be to move to Savannah.
+
+> > > PS: On other news, I have tried to start a new Dillo web page. I am _not_ a web
+> > > developer, and haven't made more than a few ugly pages in my life. So I
+> > > really need suggestions and opinions. Currently I haven't made any changes
+> > > in the contents of Dillo home page, just the organization (layout)... what
+> > > would you guys like to see at our home page? Info, links, etc? What about
+> > > the layout? New art? New logo? The preview version I've made is available
+> > > here:
+> > > 
+> > > http://www.linux.ime.usp.br/~livio/dillo/new-home/
+> 
+> Hummm.. noone had time to look at the site :( Is it _that_ bad? :-P
+
+It looks fine, although you might want to remove the sourceforge logo as
+it isn't on sourceforge...
+
+Anyway I haven't contributed code to dillo (yet) so my opinion likely
+doesn't count on this, but should it then that is how I feel about the
+whole issue.
+
+Ron
+-- 
+Email: <rbf@fa...> or <rbf@de...>
+
+P.S. I maintain the dillo Debian package and was wondering if anyone has
+any improvements they'd like to see? 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Eduardo Marcel Maçan <macan@co...> - 2001-11-13 17:02
+
+Heh, really... but I guess we should make a button saying
+"best viewed with dillo" hehehehe :)
+
+Em Tue, 13 Nov 2001 09:10:21 -0600 Carl Wilhelm Soderstrom <chrome@re...> escreveu:
+> > > > http://www.linux.ime.usp.br/~livio/dillo/new-home/
+> > 
+> > Hummm.. noone had time to look at the site :( Is it _that_ bad? :-P
+> 
+> I looked at it, and it's not bad at all. You just need to remove the
+> Sourceforge logo from it (since that particular page isn't hosted there). :)
+> 
+> Carl Soderstrom
+> -- 
+> Network Engineer
+> Real-Time Enterprises
+> (952) 943-8700
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-11-13 15:10
+
+> > > http://www.linux.ime.usp.br/~livio/dillo/new-home/
+> 
+> Hummm.. noone had time to look at the site :( Is it _that_ bad? :-P
+
+I looked at it, and it's not bad at all. You just need to remove the
+Sourceforge logo from it (since that particular page isn't hosted there). :)
+
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-13 13:01
+
+Hello again,
+
+sorry for bringing this up again.
+
+Richard writes:
+> On Mon, 12 Nov 2001 15:01:47 -0200
+> Livio Baldini Soares <livio@li...> wrote:
+> 
+> 
+> Well i read ... : ( 
+> 
+> This is extremely important.
+> By giving someone copyright on their work they just give it away.
+> By god i hope you havent signed this.
+
+No, we haven't and we probably won't be asked to. The author (Loïc Dachary)
+had contributed to the Sourceforge web site code so they needed to get his
+permission to use his contributions.
+
+> Definitely move out of there.
+
+Well, it's not as desperate as it might seem. There was a pretty insightful
+discussion at slashdot yesterday about this same issue:
+(http://slashdot.org/developers/01/11/12/1456219.shtml). And another discussion
+at Adgovato: (http://www.advogato.org/article/376.html).
+
+It seems the director of sourceforge himself wrote to say what was going
+on. The title of his post is `From the Site Director of Sourceforge.net` and is
+near the end of the page, and the longest you'll. They have no intention of
+asking any of the projects to close their source. It seems VA (Linux) Systems is
+in financial difficulties and they are trying to get around it.
+
+It won't be that bad to stay at sourceforge, but I'm very "political" about
+Free Software. So my suggestion was to move in to Savannah, for example, which
+is pure Free Software. But if noone else sees a point, than we might as well
+just stick with sourceforge.
+
+> > PS: On other news, I have tried to start a new Dillo web page. I am _not_ a web
+> > developer, and haven't made more than a few ugly pages in my life. So I
+> > really need suggestions and opinions. Currently I haven't made any changes
+> > in the contents of Dillo home page, just the organization (layout)... what
+> > would you guys like to see at our home page? Info, links, etc? What about
+> > the layout? New art? New logo? The preview version I've made is available
+> > here:
+> > 
+> > http://www.linux.ime.usp.br/~livio/dillo/new-home/
+
+Hummm.. noone had time to look at the site :( Is it _that_ bad? :-P
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Richard <hebertrich@ya...> - 2001-11-13 01:54
+
+On Mon, 12 Nov 2001 15:01:47 -0200
+Livio Baldini Soares <livio@li...> wrote:
+
+I hope you will keep us informed as to where the project will move.
+
+I reread again and again ...cause it's a complex article..though i see a few differences 
+from my first reading i see that the need to move is real and extremely important.
+
+This is too much for me .
+Ill totally boycott Sourceforge from now on.
+Not being able to pull out a project and move it to another site is highway robbery.
+No less no more.Time to fly out the nest, i agree.
+
+
+Sorry i had a bad time reading and verifying all this...
+im stunned and dont find this funny at all.
+
+
+this being said need beta testers ? 
+i love to torture applications . Muah ha ha ha 
+
+: ) 
+
+
+
+
+
+
+
+
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Richard <hebertrich@ya...> - 2001-11-13 01:26
+
+On Mon, 12 Nov 2001 15:01:47 -0200
+Livio Baldini Soares <livio@li...> wrote:
+
+
+Well i read ... : ( 
+
+This is extremely important.
+By giving someone copyright on their work they just give it away.
+By god i hope you havent signed this.
+
+Get the heck out of there.Fast
+This stinks and i hope every project will be able to get out along
+with their software.If not, that you can setup somewhere else ,change all the links
+without having them sue you cause they have a copyright on your work.
+Definitely move out.
+
+This is incredible news .Dangerous to the max.
+This should be highly published and this article
+spread throughout to every developper.
+
+Definitely move out of there.
+
+
+
+
+
+> Hi everyone!
+> 
+> Unfortunately I feel compelled to bring out a question that might cause
+> polemic. Some of you may know that VA (Linux) is changing their "ways" and
+> becoming more and more comercial. (BTW, VA Linux is the owner of sourceforge).
+> And I've recently learnt that sourforge is now using non-free software :-(
+> Before reading on, maybe you should read this article (highly recommended):
+> 
+> http://www.fsfeurope.org/news/article2001-10-20-01.en.html
+> 
+> And there is a very interesting issue about _extracting_ the Dillo project
+> from sourceforge... it seems there is not way! There used to be a way, but now
+> the support for project data exportation has been removed.
+> 
+> After reading the section `Escape Entrapment` from the above article, I felt I
+> needed to right to you guys and ask your opinions. I have been very satisfied
+> with sourceforge's services, but this is terrible news... My suggestions is to
+> take everything from Dillo away from sourceforge and move into Savannah
+> (savannah.gnu.org). GNU and the FSF have long time been faithful to Free
+> Software and I believe we should move ASAP.
+> 
+> What do you guys think?
+> 
+> PS: On other news, I have tried to start a new Dillo web page. I am _not_ a web
+> developer, and haven't made more than a few ugly pages in my life. So I
+> really need suggestions and opinions. Currently I haven't made any changes
+> in the contents of Dillo home page, just the organization (layout)... what
+> would you guys like to see at our home page? Info, links, etc? What about
+> the layout? New art? New logo? The preview version I've made is available
+> here:
+> 
+> http://www.linux.ime.usp.br/~livio/dillo/new-home/
+> 
+> best regards and sorry for being the one with the bad news,
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+Re: [Dillo-dev]Are these legal links ?
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-13 01:01
+
+Michael,
+
+> I wonder if the links on this page are legal HTML links. They contain a
+> slash and dillo doesn't seem to interpret it correctly.
+>
+> http://www.linuxgazette.com/issue71/lg_tips71.html
+
+They're legal (as specified in rfc1808):
+
+fragment = *( uchar | reserved )
+[...]
+reserved = ";" | "/" | "?" | ":" | "@" | "&" | "="
+
+
+I made a fix, and a bug-track entry.
+
+
+See ya'
+Jorge.- 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Eduardo Marcel Maçan <macan@co...> - 2001-11-12 17:42
+
+Attachments: Message as HTML      
+
+New home for dillo...
+
+Lívio, since you, like me, are a Brazilian guy, you certainly know cipsga...
+http://www.cipsga.org.br , which plays the role of the Free Software Foundation
+in Brazil (sort of) and has strived to give the community what it needs
+to grow around here..
+
+If a new home is needed to host dillo from now on, I can arrange for
+it to be hosted on CIPSGA servers, which already host the
+debian.org.br primary web mirror, and the pages of the debian-br group.
+The Debian-br crew is responsible for the maintainance of the servers,
+I am sure we can quickly arrange space and software to support
+the development of the dillo web browser.
+
+I must say, dillo has somewhat of a cult following among us in the
+debian-br team :)
+
+Regards!
+
+Eduardo Maçan
+
+On Mon, 12 Nov 2001 15:01:47 -0200
+Livio Baldini Soares <livio@li...> wrote:
+
+> Hi everyone!
+> 
+> Unfortunately I feel compelled to bring out a question that might cause
+> polemic. Some of you may know that VA (Linux) is changing their "ways" and
+> becoming more and more comercial. (BTW, VA Linux is the owner of sourceforge).
+> And I've recently learnt that sourforge is now using non-free software :-(
+> Before reading on, maybe you should read this article (highly recommended):
+> 
+> http://www.fsfeurope.org/news/article2001-10-20-01.en.html
+> 
+> And there is a very interesting issue about _extracting_ the Dillo project
+> from sourceforge... it seems there is not way! There used to be a way, but now
+> the support for project data exportation has been removed.
+> 
+> After reading the section `Escape Entrapment` from the above article, I felt I
+> needed to right to you guys and ask your opinions. I have been very satisfied
+> with sourceforge's services, but this is terrible news... My suggestions is to
+> take everything from Dillo away from sourceforge and move into Savannah
+> (savannah.gnu.org). GNU and the FSF have long time been faithful to Free
+> Software and I believe we should move ASAP.
+> 
+> What do you guys think?
+> 
+> PS: On other news, I have tried to start a new Dillo web page. I am _not_ a web
+> developer, and haven't made more than a few ugly pages in my life. So I
+> really need suggestions and opinions. Currently I haven't made any changes
+> in the contents of Dillo home page, just the organization (layout)... what
+> would you guys like to see at our home page? Info, links, etc? What about
+> the layout? New art? New logo? The preview version I've made is available
+> here:
+> 
+> http://www.linux.ime.usp.br/~livio/dillo/new-home/
+> 
+> best regards and sorry for being the one with the bad news,
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+[Dillo-dev]About (leaving) SourceForge :-(
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-12 17:01
+
+Hi everyone!
+
+Unfortunately I feel compelled to bring out a question that might cause
+polemic. Some of you may know that VA (Linux) is changing their "ways" and
+becoming more and more comercial. (BTW, VA Linux is the owner of sourceforge).
+And I've recently learnt that sourforge is now using non-free software :-(
+Before reading on, maybe you should read this article (highly recommended):
+
+http://www.fsfeurope.org/news/article2001-10-20-01.en.html
+
+And there is a very interesting issue about _extracting_ the Dillo project
+from sourceforge... it seems there is not way! There used to be a way, but now
+the support for project data exportation has been removed.
+
+After reading the section `Escape Entrapment` from the above article, I felt I
+needed to right to you guys and ask your opinions. I have been very satisfied
+with sourceforge's services, but this is terrible news... My suggestions is to
+take everything from Dillo away from sourceforge and move into Savannah
+(savannah.gnu.org). GNU and the FSF have long time been faithful to Free
+Software and I believe we should move ASAP.
+
+What do you guys think?
+
+PS: On other news, I have tried to start a new Dillo web page. I am _not_ a web
+developer, and haven't made more than a few ugly pages in my life. So I
+really need suggestions and opinions. Currently I haven't made any changes
+in the contents of Dillo home page, just the organization (layout)... what
+would you guys like to see at our home page? Info, links, etc? What about
+the layout? New art? New logo? The preview version I've made is available
+here:
+
+http://www.linux.ime.usp.br/~livio/dillo/new-home/
+
+best regards and sorry for being the one with the bad news,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Are these legal links ?
+
+From: Michael Duelli <m.duelli@we...> - 2001-11-12 11:00
+
+Hi,
+
+I wonder if the links on this page are legal HTML links. They contain a 
+slash and dillo doesn't seem to interpret it correctly.
+
+http://www.linuxgazette.com/issue71/lg_tips71.html
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net
+http://linuxmaths.s...net 
+
+
+
+Re: [Dillo-dev]configure
+
+From: Bjoern Weber <foxbow@we...> - 2001-11-09 07:40
+
+Jorge Arellano Cid <jcid@em...> schrieb am 08.11.01:
+[.. pthread.h + configure ..]
+> AFAIU detecting and configuring is automake&autoconf work (they
+> generate configure). So, I'd suggest to get a few pthreaded SW
+> packages, that use autoconf stuff, and see how do they solve the
+> problem in *BSD.
+I will look out for that and give my best to test.
+
+[...]
+> [the same applies for jpeg]
+In fact I can tell that the imlib package suffers the same problem.
+I have not been able to compile the imlib on a Sparc-NetBSD 1.3-1.5
+without manually dabbling either the configure script to lie or the
+sourcecode so it's able to find all the gfxlibs located in 
+usr/local.
+
+[.. compiling jpeg/png ..]
+> Yes, jpeg's code is not nested inside a #ifdef; in any case, I
+> don't yet find very useful to add the option of excluding jpeg or
+> png or gif...
+I'll sign that, yet it does not make much sense either to look for 
+the headers first, forget the evidence that they're not found
+and continue like nothing happened. If the libs are and headers
+are required and not found, I think configure should bail out
+with an error and not with a warning and produce incorrect 
+makefiles/code.
+
+[...]
+> Please send me the details of your QNX config, so I can list it
+> in the platform compatibility list.
+I am reluctant to do that since dillo bombs out from time to time
+and unless I found out if that is due to the X emulation, the gtk
+port or dillo I won't tell that it's really running. Unfortunately
+I was not able to reproduce the behaviour in any way so I'll keep
+on watching and share my wisdom with you when it's there =)
+
+A nice friday to you all!
+Bjoern
+-- 
+Sometimes, even at infinity, the largest distance
+can be much too close...
+________________________________________________________________
+Keine verlorenen Lotto-Quittungen, keine vergessenen Gewinne mehr! 
+Beim WEB.DE Lottoservice: http://tippen2.web.de/?x=13 
+
+
+
+[Dillo-dev]great work on Dillo, keep it up. (fwd)
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-08 18:40
+
+---------- Forwarded message ----------
+Date: Wed, 31 Oct 2001 23:02:31 -0000
+From: Steve Nicholson <steve.nicholson@yo...>
+To: jcid@us...
+Subject: great work on Dillo, keep it up.
+
+Hi
+Have been trying different web browsers on my Debian workstation to find
+something that is light and fast to work on a P133 laptop I have been
+given. I normally keep well away from alpha stuff but thought I would
+try it since I was so disappointed with everything else I have tried.
+I'm very very impressed, Dillo is fantastic and just what I have been
+looking for it's really fast compared to anything else I've found. It's
+light with the basic functionality I want ,open multiple windows, open
+new window clicking on window, renders tables and graphics with most
+operations able to be done from the keyboard. This is just to say
+thanks your work is really appreciated and I will definitely be keeping
+an eye on developments. There are far too many bloatware web browsers
+round now this fills a gap for sure.
+
+I noticed there is a bug report regarding viewing items on eBay, is
+there anything I can do to help with this? I don't know anything about
+C, but I do development for HTML and Zope if there is anything I can do
+regarding testing etc. let me know.
+
+Thanks again and have a fantastic day.
+
+Steve
+-------------------------------------------------------
+Your Solutions Ltd, +44 (0)207 473 1004, London, UK
+http://www.yoursolutions.com/ IT Technical services
+------------------------------------------------------- 
+
+
+
+[Dillo-dev]<br><br>...<br>
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-08 13:27
+
+Hi,
+
+Michael Duelli wrote:
+
+> Hi,
+> I don't know if this is a bug but it seems like dillo does render several
+> <br> as one <br>.
+
+I even received a patch for this, but when reviewing the HTML
+specs, it was undefined!
+
+Netscape and Mozilla add a blank line for each <br>, but lynx
+doesn't! Is hard to tell wich is right because when it's not
+clearly stated in the standar, it's up to the user agent.
+
+Personally, I tend to think that the philosophy behind HTML/XML
+rendering, is to let the user agent (AKA browser) decide how to
+render contents, and to allow extra fine-tunning, on appearance,
+to CSS.
+
+If anyone can provide a SPEC quote, or related work, that shows
+some more light on it, it'd be appreciated.
+
+
+Cheers
+Jorge.- 
+
+
+
+RE: [Dillo-dev]configure
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-08 13:27
+
+Hi!
+
+Bjoern Weber wrote:
+
+> Something concerning the configure script.
+> Upon compiling dillo-0.6.2 on a sparc with NetBSD 1.5
+> I encountered a couple of problems with the results of
+> the configure script. The script found out that there was
+> no pthread.h (which is correct) but still insisted using it.
+
+AFAIU detecting and configuring is automake&autoconf work (they
+generate configure). So, I'd suggest to get a few pthreaded SW
+packages, that use autoconf stuff, and see how do they solve the
+problem in *BSD.
+
+If one of them manages to detect and configure the right
+includes and libs, it'd be a matter of examining its configure.in
+and pasting to dillo!
+
+OTOH, if none of the sample packages does it right, most
+probably is a bug, or problem, of the autoconf stuff...
+
+[the same applies for jpeg]
+
+> Although it did not find any headers for libjpeg or libpng
+> which are clearly installed. Interesting fact, if the
+> configure finds out that there is no *jpeg*.h, the matching
+> source will be compiled though, only the -ljpeg in the
+> linker options is omitted. This behaviour I could reproduce
+> on the sparc as well as on a qnx-X86 machine.
+
+Yes, jpeg's code is not nested inside a #ifdef; in any case, I
+don't yet find very useful to add the option of excluding jpeg or
+png or gif...
+
+The point is that Jpeg libs must be found unless installed in a
+weird location (as /opt/custom/vodooo/...). So usr/local/...
+should be detected!
+
+[The same strategy as for pthread is advised]
+
+> But the good thing is, after adapting the Makefile both
+> dillo's are running smoothly!
+
+That's why dillo is listed to run in *BSD!
+
+Please send me the details of your QNX config, so I can list it
+in the platform compatibility list.
+
+
+
+Sammy wrote:
+
+> hi,
+>
+> i've found two problems with the configure script. one thing
+> is that the --with-jpeglib & --with-jpeginc options aren't
+> working. these should be fixed in the next release (i sent
+> in a patch). this should solve the jpeg includes not being
+> found in net/open/freebsd (i use freebsd).
+
+I already commited a slightly modified patch to CVS, please
+test it and tell me how it does.
+
+Note: this patch doesn't solve the problem of detecting the
+installation place, it just provides a way to explicitly specify
+where they are.
+
+Note2: It's basically Sammy's patch, but I don't have a *BSD to
+test it.
+
+
+> i also sent in a patch that corrects the -pthread problem
+> but it probably won't come into the main tree as it was a
+> rather large fix (because of the inclusion of two scripts
+> from autoconf to detect the hosttype).
+> the problem for pthread could be solved easily though
+> (also with passing a --with-libpthread option or something
+> alike where you can add linker options to use instead of
+> the default -lpthread)
+
+Let's try the above described procedure. If everything fails, a
+configure option (as --without-libpthread) can be developed as a
+workaround...
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]email problems
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-07 22:41
+
+Hi there!
+
+
+I've been under a pretty busy schedule: big patches, lots of
+email, a lot of code to review, and my nettaxi account stopped
+receiving email and started bouncing it :(.
+
+Mmmm, that's a tough problem. I dislike a lot to lose email,
+so, please, those of you that sent me anything between Nov 2 and
+Nov 7, please resend it to jcid@so... (I just updated
+the forwarding address), or to my ematic account. Thanks.
+
+And as we're talking about email, the [mailing list] link of
+the home page was updated; please click it, an read what it says,
+specially the newest subscribers.
+
+
+Finally, beware that current CVS is not as stable as usual.
+We're dealing with massive patches and it'll take extra work to
+tune it up!
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Just uploaded
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-07 17:51
+
+Hi!
+
+Thanks for the hints so far. Some notes:
+
+Two bugs have already been fixed: (i) in <PRE>, words should not be
+wrapped, and (ii) crashes at long pages. Changes are in the CVS.
+
+About Lists: I can reproduce this every time with
+http://www.rti-zone.org/dillo/Html.testsuite/lists_unord.html, but not
+locally, this is the reason why I did not notice the bug before. BTW,
+if you look at the source, you'll find that indentation is now done by
+nested widgets (for simplicity), so the problem is that somehow whole
+widgets are not seen. For testing, resize the window, then the missing
+lists will suddenly appear.
+
+Sebastian 
+
+
+
+[Dillo-dev]Segmentation fault in Dw_page_word_wrap
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-07 17:49
+
+Hi! I've been getting segfaults with dillo recently, normally after
+using it for a while. I ran it in gdb to try to isolate the problems,
+unfortunately that made X get stuck when it actually segfaulted. I had to
+kill gdb, but its dying words were:
+
+Nav_open_url: Url=3D>http://www6.tomshardware.com/cpu/index.html<
+
+Program received signal SIGSEGV, Segmentation fault.
+Dw_page_word_wrap (page=3D0x86b67e0, word_ind=3D5765) at dw_page.c:687
+687 last_line->top =3D
+(gdb) Terminated
+
+Hopefully its sacrifice is not in vain:)
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]dillo
+
+From: Intrepids Wrath <bigbrat64@ho...> - 2001-11-07 16:30
+
+Just downloaded the dillo web browser really love the speed.
+I am fairly new to the linux envirement. as you can see though manged to 
+get dillo up and running really quick. Only ten seconds after up and 
+running it froze.
+Probably something from my side not sure am really fast learner took me 
+about an hour to learn how to compile files without documentation. and 
+would like to participate in this project
+even if it's just posting little minor erros recieved. But also 
+learning really fast on source codes. running mandrake 8.0 had to add a 
+few files in compiling cause recieved errors the first 2 attempts but 
+once I loaded the file opened with ease. I took the browser into a 
+message board and it opens ok but will not open threads sends you back 
+to logins. Also a little familiar with wing commander for editing if 
+there is a source that can be edited into the dillo would appreciate all 
+that I can play with. Thank-you for your time
+One dedicated illeterate computer abuser.lol 
+
+
+
+Re: [Dillo-dev]Just uploaded
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-07 11:14
+
+Hello again... here's some more feedback...
+
+Livio Baldini Soares writes:
+> Sebastian Geerken writes:
+> > Hi!
+> > 
+> > I've just uploaded some major changes, especially in DwPage. I've
+> > tested it, but it would be better to get some feedback.
+
+(...)
+
+> http://www.ime.usp.br/~kon/MAC5755/noticias.html
+> http://www.ime.usp.br/dcc/posgrad/bolsas/cand-bolsa.html
+> http://www.ime.usp.br/dcc/posgrad/faq/faq2/node2.html
+> http://www.ime.usp.br/dcc/ (this is a different problem.. the links on the
+> right column can't be clicked)
+
+The problem seems to show up when the pages are already in the cache. They may
+load up fine for the first time but go back and then forward again... generally
+the lists will be gone.
+
+> http://www.rti-zone.org/dillo/Html.testsuite/lists_ord.html and
+> http://www.rti-zone.org/dillo/Html.testsuite/lists_lists_unord.html render just fine...
+
+Not exactly.. these too very seldomly get renderd incorrectly. Usually the
+last list on both of these pages (30 element, and 4-nested). Try viewing these
+from cache, or reloading the pages, then maybe you'll see what I mean.
+
+
+And there is another issue that showed up after the changes... Some borders on
+tables are rendering wider on the top then on the rest of the table. For
+example:
+
+http://www.happypenguin.org (check out the tables on the _right_ column of the
+page - where they have links to other sites)
+http://www.ime.usp.br/dcc/pograd/ (there is only one big table with a blue border)
+
+Sorry I can't help out on finding these problems... but I have no time on my
+hands :(
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]email problems
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-11-07 00:06
+
+Hi there!
+
+
+I've been under a pretty busy schedule: big patches, lots of
+email, a lot of code to review, and my nettaxi account stopped
+receiving email and started bouncing it :(.
+
+Mmmm, that's a tough problem. I dislike a lot to lose email,
+so, please, those of you that sent me anything between Nov 2 and
+Nov 6, please resend it to jcid@so... (I just updated
+the forwarding address), or to my ematic account. Thanks.
+
+And as we're talking about email, the [mailing list] link of
+the home page was updated; please click it, an read what it says,
+specially the newest subscribers.
+
+
+Finally, beware that current CVS is not as stable as usual.
+We're dealing with massive patches and it'll take extra work to
+tune it up!
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]<br><br>...<br>
+
+From: Michael Duelli <m.duelli@we...> - 2001-11-06 20:21
+
+Hi,
+
+I don't know if this is a bug but it seems like dillo does render several 
+<br>s as on <br>.
+
+Regards,
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net
+http://linuxmaths.s...net 
+
+
+
+Re: [Dillo-dev]Just uploaded
+
+From: Livio Baldini Soares <livio@li...> - 2001-11-06 19:11
+
+Hello Sebastian!
+
+Sebastian Geerken writes:
+> Hi!
+> 
+> I've just uploaded some major changes, especially in DwPage. I've
+> tested it, but it would be better to get some feedback.
+
+Humm.. I seem to be getting some problems rendering lists (ordered or
+unordered). But I can't come up with a single test case which fails for me 100%
+of the time... here are some links to simple pages which (sometimes) shows this
+problem:
+
+http://www.ime.usp.br/~kon/MAC5755/noticias.html
+http://www.ime.usp.br/dcc/posgrad/bolsas/cand-bolsa.html
+http://www.ime.usp.br/dcc/posgrad/faq/faq2/node2.html
+http://www.ime.usp.br/dcc/ (this is a different problem.. the links on the
+right column can't be clicked)
+
+The lists disappears altogether... (check the sources to see what I mean). But
+this is not true to all lists, for example the tests at
+http://www.rti-zone.org/dillo/Html.testsuite/lists_ord.html and
+http://www.rti-zone.org/dillo/Html.testsuite/lists_lists_unord.html render just fine...
+
+Besides these problems, the rest seem to be just fine. ;)
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]configure
+
+From: Bjoern Weber <foxbow@we...> - 2001-11-06 08:22
+
+DraX <drax@wh...> schrieb am 05.11.01:
+> the jpeg .h's are installed by default in /usr/local/include 
+> and ./configure (atleast on openbsd) dosen't pick them up. 
+> so try ln -s'ing cp'ing or playing wtih configure options.
+Well, as I told, I managed to get things running and I 
+consider /usr/local/ a reasonable place for additional
+libraries/includes, so configure should be able to find
+things there as well. But as I read before, the 
+(malfunctioning) --with-jpeglib= options will be working
+in the next release, so the problem shall dissolve then.
+
+Bjoern
+-- 
+Sometimes, even at infinity, the largest distance
+can be much too close...
+______________________________________________________________________________
+Lotto online tippen! Egal zu welcher Zeit, egal von welchem Ort. 
+Mit dem WEB.DE Lottoservice. http://tippen2.web.de/?x=5 
+
+
+
+[Dillo-dev]Minding my own business..optional reading : )
+
+From: Richard <hebertrich@ya...> - 2001-11-05 19:54
+
+Normally i mind my own business..
+Sip my coffee and look in from the sidelines..
+
+There are lots of people out there making things timeless..
+Some other make huge efforts at duplicating what's been done.
+A good example is IRC clients for Linux.
+There are more than we can can count.
+Web browsers are basically the same.
+Skipstone,Galeon,Opera,Mozilla,Netscape,Explorer ( i 
+stop here the page would be half-full ) All of them have 
+the same basic goal.Display everything,do everything and if it does the job
+half assed,well too bad.They all have plug-ins , cookies, java 
+and i leave aside the graphical interface that is basically the same.
+
+As far as i can make it they try with more or less success
+to stick to the standards and render pages more or less like they
+were intended to be viewed by the designer.A page seen in Explorer dosent
+look the same in Netscape..
+
+What im asking myself is this.
+What has Dillo to offer that will make it unique,have a "market share"
+that's his own and be able to grow and be popular ?
+Certainly you can see that in the browser war, unless your browser
+has something unique, has a unique approach to doing things
+or something that can make the balance tip so ever lightly in it's favor 
+that the best efforts of the programmers will be in the long term vain 
+and Dillo would stay a project that never lifted off the runway.
+
+Back i started with a Altair 6800 , i was programming with switches and
+reading the output in bin on a row of led's.I seen lot's software since.
+All the projects that have been successful software wise had something
+unique and innovative.Written in C is an advantage, i grant you.
+But to the user ? What are you getting him ready for as an experience 
+that is unique so that Dillo gets spoken of and is turned into a
+success story ?
+
+Im interrested to the max in Dillo.
+I beleive you're at a crossroads and that this browser can do real
+well in the open source community.
+I just havent seen any thoughts about where you guys are going.
+I see feature requests that more or less are what's in other browsers.
+If you can resist the traps of being just like any other browser
+this project stands a fair chance.
+Then again what can this project offer the end user that will make it unique ?
+Im curious about your thoughts on the matter.
+
+
+Yeah i know what business is it of mine ? : ) 
+
+Richard Hebert
+Computing enthusiast.
+
+
+
+
+
+
+
+
+
+
+
+
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+Re: [Dillo-dev]configure
+
+From: DraX <drax@wh...> - 2001-11-05 18:36
+
+the jpeg .h's are installed by default in /usr/local/include and
+./configure (atleast on openbsd) dosen't pick them up. so try ln -s'ing
+cp'ing or playing wtih configure options.
+
+
+On Mon, 5 Nov 2001, Bjoern Weber wrote:
+
+> 
+> Something concerning the configure script.
+> Upon compiling dillo-0.6.2 on a sparc with NetBSD 1.5
+> I encountered a couple of problems with the results of
+> the configure script. The script found out that there was
+> no pthread.h (which is correct) but still insisted using it.
+> Although it did not find any headers for libjpeg or libpng
+> which are clearly installed. Interesting fact, if the
+> configure finds out that there is no *jpeg*.h, the matching
+> source will be compiled though, only the -ljpeg in the
+> linker options is omitted. This behaviour I could reproduce
+> on the sparc as well as on a qnx-X86 machine.
+> 
+> Should that be consider as a bug or a glitch that will be
+> fixed in the cleanup - I did not find a matching entry yet.
+> 
+> But the good thing is, after adapting the Makefile both
+> dillo's are running smoothly!
+> 
+> Bjoern Weber
+> -- 
+> Sometimes, even at infinity, the largest distance
+> can be much too close...
+> ________________________________________________________________
+> Lotto online tippen! Egal zu welcher Zeit, egal von welchem Ort.
+> Mit dem WEB.DE Lottoservice. http://tippen2.web.de/?x=13
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]New dillo-cvs crashes on big htmlpages
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-11-05 18:31
+
+Hi, all.
+
+The new code in cvs seems to bail out on big html-pages.
+It crashes in
+Dw_page_word_wrap, dw_page.c:687
+repeatedly.
+
+Testcases: http://i184.ryd.student.liu.se/
+
+-- 
+//Hugo Hallqvist - hugha495 at student dot liu dot se 
+
+
+
+[Dillo-dev]Just uploaded
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-05 17:45
+
+Hi!
+
+I've just uploaded some major changes, especially in DwPage. I've
+tested it, but it would be better to get some feedback.
+
+The documentation in the distribution has partly become out of date,
+but will be updated within a few days.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]configure
+
+From: Sammy Mannaert <nstalkie@tv...> - 2001-11-05 16:56
+
+Bjoern Weber wrote:
+> 
+> Something concerning the configure script.
+> Upon compiling dillo-0.6.2 on a sparc with NetBSD 1.5
+> I encountered a couple of problems with the results of
+> the configure script. The script found out that there was
+> no pthread.h (which is correct) but still insisted using it.
+> Although it did not find any headers for libjpeg or libpng
+> which are clearly installed. Interesting fact, if the
+> configure finds out that there is no *jpeg*.h, the matching
+> source will be compiled though, only the -ljpeg in the
+> linker options is omitted. This behaviour I could reproduce
+> on the sparc as well as on a qnx-X86 machine.
+> 
+> Should that be consider as a bug or a glitch that will be
+> fixed in the cleanup - I did not find a matching entry yet.
+> 
+> But the good thing is, after adapting the Makefile both
+> dillo's are running smoothly!
+> 
+
+hi,
+
+i've found two problems with the configure script. one thing
+is that the --with-jpeglib & --with-jpeginc options aren't 
+working. these should be fixed in the next release (i sent
+in a patch). this should solve the jpeg includes not being
+found in net/open/freebsd (i use freebsd).
+i also sent in a patch that corrects the -pthread problem
+but it probably won't come into the main tree as it was a 
+rather large fix (because of the inclusion of two scripts
+from autoconf to detect the hosttype). 
+the problem for pthread could be solved easily though 
+(also with passing a --with-libpthread option or something
+alike where you can add linker options to use instead of
+the default -lpthread) 
+
+
+
+Re: [Dillo-dev]Plugins sustem ?
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-11-05 15:40
+
+On Fri, Nov 02, 2001 at 05:11:54PM +0100, Rolly Arnaud wrote:
+> Hi!
+> I'm new to the mailing-list and i've few questions :
+> 
+> 1) Dillo have a strange behaviour when rendering backgrounds on many websites 
+> (slashdot for example) : Is it due to the politic 'render only correct HTML' ?
+
+Do you mean the following:
+
+1. Go to "
+2. Go then to another section, e.g.
+- " or
+- " or
+- ...
+The round corners of the titles are then drawn incorrectly:
+green on grey/brown background.
+
+This is because these images are read from an additional cache, the
+DICache (Decompressed Image data), which handles only RGB data, and so
+has problems with transparency.
+
+So, this is indeed a bug.
+
+> 2) I'm interested in a plug-in system that would allow integration of new 
+> embedding functionnalities (aka Netscape plug-ins). Is it possible with the 
+> current software design ? Is there someone working on it ?
+
+Look at " section
+"Plugins". Graphical plugins are planned, but not for the next time,
+one problem is that the current rendering is not very mature, there
+will be still relevant changes in it.
+
+Sebastian 
+
+
+
+[Dillo-dev]configure
+
+From: Bjoern Weber <foxbow@we...> - 2001-11-05 15:25
+
+Something concerning the configure script.
+Upon compiling dillo-0.6.2 on a sparc with NetBSD 1.5
+I encountered a couple of problems with the results of
+the configure script. The script found out that there was
+no pthread.h (which is correct) but still insisted using it.
+Although it did not find any headers for libjpeg or libpng
+which are clearly installed. Interesting fact, if the
+configure finds out that there is no *jpeg*.h, the matching
+source will be compiled though, only the -ljpeg in the
+linker options is omitted. This behaviour I could reproduce
+on the sparc as well as on a qnx-X86 machine.
+
+Should that be consider as a bug or a glitch that will be
+fixed in the cleanup - I did not find a matching entry yet.
+
+But the good thing is, after adapting the Makefile both
+dillo's are running smoothly!
+
+Bjoern Weber
+-- 
+Sometimes, even at infinity, the largest distance
+can be much too close...
+________________________________________________________________
+Lotto online tippen! Egal zu welcher Zeit, egal von welchem Ort.
+Mit dem WEB.DE Lottoservice. http://tippen2.web.de/?x=13 
+
+
+
+Re: [Dillo-dev]features .yes but which ? 
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-11-04 04:11
+
+> If i wanted frills id get Mozilla which i trashed and dont use.
+> If i need a reasonably fast browser with pulg in support for fun pages and downloads
+> i use Opera.
+
+take a look at Galeon (galeon.so....net). it's mozilla wrapped in GTK;
+so it's got Mozilla's rendering engine; but runs a lot faster and has more
+user-desired features (since the user interface isn't being designed by
+AOL). it still takes the same amount of memory as mozilla, due to the
+rendering engine; but at least it's a lot more responsive and
+user-customizable. 
+
+I like Dillo because it has its own rendering engine; and hopefully will
+be able to avoid the bloat that characterizes mozilla, when the rendering
+engine is done. 
+
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]features .yes but which ? ( the story of the malicious cucumber.. )
+
+From: Lars Clausen <lrclause@cs...> - 2001-11-03 20:54
+
+On Sat, 03 Nov 2001, hebertrich@ya... wrote:
+
+> Good Morning=20=20
+>=20
+>=20
+> Downloads,frames and cut and paste of text, that would be it for me .If
+> you put in cookies a way to disable them totally would be cool. Once
+> Dillo is at that point ill put it on archive and keep it .
+>=20
+> Nice work .
+> It's a great lil browser as it is, cant wait to see what's up next.
+
+Cookies are being worked on, a way to totally disable them is probably a
+good idea. I like the smallness as well, but many sites don't work without
+e.g. frames. And if we keep as many features as possible out in plugins,
+we can keep it small.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]features .yes but which ? ( the story of the malicious cucumber.. )
+
+From: Richard <hebertrich@ya...> - 2001-11-03 17:55
+
+Good Morning 
+
+
+Benn using Dillo for two weeks now.
+Trying Dillo is a fun experience.
+I was reading the bug trak ..many are more feature requests than bugs and it's by reading them
+more than noticing anything peculiar that i have a lil beef..
+
+Many of the feature enhancements requests mentioned would make dillo just like any browser.
+What's fun right now about dillo is this.It dosent support JAVA ,it has NO plugins
+it dosent animate ,dosent support cookies and there aint a thing wrong with this.
+
+What is missing is downloads,frames and text cut and paste from/to the browser.
+
+Why did i download Dillo ? Fast, no frills.
+If i wanted frills id get Mozilla which i trashed and dont use.
+If i need a reasonably fast browser with pulg in support for fun pages and downloads
+i use Opera.
+
+Traditional browsers are a pain.
+Mostly they do many things and do them bad.
+I see Dillo as the alternative to bloated,slow large and inefficient traditional browsers.
+
+See if i need a page real quick,i use Dillo 
+If i could have a fast no frils browser that supports downloads..id keep it .
+I dont need cookies , animations, flash, when i want to get information quick.
+
+I beleive Dillo has acheived this.
+Fast to the point and no frills.
+
+Downloads,frames and cut and paste of text, that would be it for me .If you put in cookies
+a way to disable them totally would be cool.
+Once Dillo is at that point ill put it on archive and keep it .
+
+Nice work .
+It's a great lil browser as it is, cant wait to see what's up next.
+
+best regards 
+richard
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+[Dillo-dev]Bug in bitvec.c line 48 ?
+
+From: Michael Duelli <m.duelli@we...> - 2001-11-03 14:47
+
+Hi,
+
+have a look at
+
+http://www.suse.de/de/support/index.html with dillo
+
+I am getting this message in the terminal several times:
+
+** CRITICAL **: file bitvec.c: line 48 (a_Bitvec_get_bit): assertion `pos 
+< bvec->len' failed.
+
+Regards,
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net
+http://linuxmaths.s...net 
+
+
+
+[Dillo-dev]Plugins sustem ?
+
+From: Rolly Arnaud <arolly@an...> - 2001-11-02 16:02
+
+Hi!
+I'm new to the mailing-list and i've few questions :
+
+1) Dillo have a strange behaviour when rendering backgrounds on many websites 
+(slashdot for example) : Is it due to the politic 'render only correct HTML' ?
+
+2) I'm interested in a plug-in system that would allow integration of new 
+embedding functionnalities (aka Netscape plug-ins). Is it possible with the 
+current software design ? Is there someone working on it ?
+
+Thanks. 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Steve Nicholson <steve.nicholson@yo...> - 2001-11-01 22:34
+
+> > It's not the web browsers job. It shouldn't be there. It
+> adds bloat to the browser, and other applications problary does a
+better job.
+
+I have to agree, it doesn't matter if it only uses a small amount of
+memory or cpu adding this. If you added every feature everyone wanted
+as part of the main program it would be bloated and slow like the rest.
+I want something that does the core things fast. I do web development
+and don't consider quickly viewing source to be core, there are lots of
+ways available for me to do that. I find some of the source viewers
+frustrating in other apps and want to be able to choose what I use.
+Since it is mainly more technical people that would want this it would
+be better to have it more configurable than an internal viewer. If it's
+a quick peak I want calling a basic xterm with Less will do, then a
+different keybinding to have an in-depth look with something that
+colours the different tags is what I want.
+
+I came in half way through this thread since I only came across Dillo
+yesterday and joined the list but wanted to express my view on it. I
+think all the extra bits that other programs do well should be left to
+those programs, e.g. downloading files use wget, etc. If the user has
+to configure a download tool this could be considered a feature by some
+IT departments as it would prevent most uses from downloading crap to
+their work PC.
+
+Steve. 
+
+
+
+[Dillo-dev]problems browsing gtk-manual
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-11-01 19:56
+
+Hi everyone!
+
+I noticed a few problems when browsing gtks and glibs reference documentation today.
+There are alot of these things inside the html-files: &#8212; 
+and they didn't show up before when using the old code version 0.62.
+
+Is this a problem with the new tag-parsing code ?
+
+btw: they should show up as - (minus), atleast they do so in netscape.
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+Re: ENOUGH! (was: [Dillo-dev]Re: feature request: searching HTML source)
+
+From: William Kendrick <nbs@so...> - 2001-11-01 08:18
+
+On Wed, Oct 31, 2001 at 07:30:20PM -0800, Eric GAUDET wrote:
+> Enough with this childish behaviour and name calling !!!!
+> If you can't discuss in a civil manner and respect the other readers,
+> LEAVE THE LIST.
+> I don't care if you fork the project, I'm just used to the soft tone of this
+> list and I love it like that.
+
+"./configure --enable internal-source-viewer"
+
+or not!
+
+:^P
+
+
+:)
+
+-bill! 
+
+
+
+ENOUGH! (was: [Dillo-dev]Re: feature request: searching HTML source)
+
+From: Eric GAUDET <egaudet@in...> - 2001-11-01 03:30
+
+Enough with this childish behaviour and name calling !!!!
+If you can't discuss in a civil manner and respect the other readers,
+LEAVE THE LIST.
+I don't care if you fork the project, I'm just used to the soft tone of this
+list and I love it like that.
+
+-- En reponse de "Re: [Dillo-dev]Re: feature request: searching HTML source" de
+DraX, le 31-Oct-2001 :
+> On Wed, 31 Oct 2001, Martin Samuelsson wrote:
+>> On Wed, Oct 31, 2001 at 12:24:24PM -0800, DraX wrote:
+...
+...> I don't understand, bloat, bloat, bloat, bloat ...
+...
+...> I just find spawning an external proccess just to look at some html is
+...> stupid.
+...
+>> 
+>> I'm sure you'll understand the unix way in building applications about
+>> the same time you learn how to quote other people on mailing lists.
+>> Answers should be below the original text and irrelevant text should be
+>> removed. There are rfc:s defining this and, most important, it really
+>> helps the readers.
+>> 
+> Flaming me dosen't make you sound more credible you know?
+> 
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 31-Oct-2001 a 19:24:37
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+

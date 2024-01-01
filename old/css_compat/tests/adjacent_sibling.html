@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>adjacent sibling selectors</title>
+<style type=text/css>
+li, li + li + li { text-decoration: none }
+li + li  { text-decoration: underline }
+</style>
+</head>
+<body>
+<ul>
+<li>foo bar</li>
+<li>this and only this should be underlined</li>
+<li>foo bar</li>
+<li>foo bar</li>
+<li>foo bar</li>
+<li>foo bar</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+<body>
+<h3>colspan=2,cellspacing=100</h3>
+This table will not resize to one word because the cellspacing is
+larger than its minimum word size.
+<table border=1 cellspacing=100 bgcolor=lightgreen>
+ <TR>
+  <TD colspan=2> Cell, and stuff to test out table cell layout. This
+   should be long enough for testing. </TD></TR>
+</table>
+
+<br> This table has cell(min,max) < cellspacing
+<table border=1 cellspacing=100 bgcolor=lightgreen>
+ <TR>
+  <TD colspan=2>C</TD></TR>
+</table>
+
+<br> This table has cell(min,max) < cellspacing
+<table border=1 cellspacing=100 bgcolor=lightgreen>
+ <TR>
+  <TD colspan=3>A</TD></TR>
+ <tr><td>1<td>2<td>3
+</table>
+
+<br> This table has colspan=100
+<table border=1 cellspacing=4 bgcolor=lightgreen>
+ <TR>
+  <TD colspan=100>A</TD></TR>
+</table>
+
+</body>
+</html>
+

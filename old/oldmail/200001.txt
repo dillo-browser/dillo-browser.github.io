@@ -1,0 +1,313 @@
+[Dillo-dev]News!
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-01-13 14:41
+
+HI there!
+
+Time for good news!:
+
+* Finally, I made the arrangements to keep working full-time on Dillo
+project (At least for some months). I think that will significatively help
+the whole project, specially at this critical fixing-redesignning stage.
+
+* Updated the web site
+
+* Fixed several things inside the code (including severe memory leaks).
+
+
+Currently I'm heavily changing the dicache, imgsink and Image modules
+(code, algorithms and ADTs). Please focus on bug fixing, and expect big
+changes in the next release!
+
+I'll try to devote all my time to this task; please excuse me if I 
+procrastinate other subjects...
+
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Memory Leak
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-01-07 15:09
+
+Luca,
+(& everyone)
+
+> Hi,
+> 
+> I'm testing Dillo and I don't like what I see. I've changed malloc in
+> g_malloc, free in g_free and realloc in g_realloc in all the source tree.
+> I've recompiled my glib with mem_profile enabled, at the end of main()
+> I've added g_mem_profile() just before the return.
+
+Nice!
+Did you just run a script to change them?
+(please send it to me)
+
+> 
+> Test:
+> Run Dillo and then press <CTRL-X> (to close Dillo): 
+> 143 Kb allocated
+> 35 Kb freed
+> 108 Kb in use :(
+> 
+> Run Dillo, open http://www.polito.it, open http://www.gzilla.com (here I got
+> GLib-WARNING **: freeing previously freed memory :( ), open segfault.org,
+> <CTRL-X>:
+> 2.8 Mb allocated
+> 1.8 Mb freed
+> 1 Mb in use :(
+> 
+> Run Dillo, open http://www.polito.it, open Dillo Home Page, open http://www.gzilla.com, 
+> <CTRL-X> (this time I have't got the GLib warning):
+> 1.9 Mb
+> 1 Mb
+> 0.9 Mb in use 
+> 
+> Maybe we'd solve this bug to stabilize Dillo, too.
+
+Of course.
+
+Some time ago, Daniel (Roberts) posted a very similar report to gzilla
+mailing list (he worked with 'leaky' or similar), the fact that matters is
+that Dillo doesn't deallocate the memory it uses before exiting; it leaves
+all the cleanning work to the OS.
+Specially significative is the DIC (decompressed image cache), wich I'm
+extensively working now; It allocates memory for every single image Dillo
+loads (uncompressed allocation).
+There're also other resources (I remember five lists of allocated stuff)
+that don't get deallocated when finishing...
+
+I think it would be very interesting to write the deallocating functions
+(as a_Dicache_free_all for instance), call them before exiting and
+make a review of what happens then.
+
+Personally, I've worked enough those modules, up to be deeply convinced,
+that such a test is required. I can even try to write some of those
+deallocating functions quickly.
+
+Actually, I've worked the code a lot, and would like to standarize it to
+g_malloc and friends (as you did), integrate your latest patch, write
+the deallocating functions, and make a new release to work with.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Memory Leak
+
+From: Luca Rota <drake@fr...> - 2000-01-06 15:35
+
+Hi,
+
+I'm testing Dillo and I don't like what I see. I've changed malloc in
+g_malloc, free in g_free and realloc in g_realloc in all the source tree.
+I've recompiled my glib with mem_profile enabled, at the end of main()
+I've added g_mem_profile() just before the return.
+
+Test:
+Run Dillo and then press <CTRL-X> (to close Dillo): 
+143 Kb allocated
+35 Kb freed
+108 Kb in use :(
+
+Run Dillo, open http://www.polito.it, open http://www.gzilla.com (here I got
+GLib-WARNING **: freeing previously freed memory :( ), open segfault.org,
+<CTRL-X>:
+2.8 Mb allocated
+1.8 Mb freed
+1 Mb in use :(
+
+Run Dillo, open http://www.polito.it, open Dillo Home Page, open http://www.gzilla.com, 
+<CTRL-X> (this time I have't got the GLib warning):
+1.9 Mb
+1 Mb
+0.9 Mb in use 
+
+Maybe we'd solve this bug to stabilize Dillo, too.
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]New release
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-01-05 23:45
+
+Sammy,
+
+
+> What is the library for the png routines ? i get undefined references
+> from png.c :)
+
+Sorry, it seems I'll have to include a check within the
+autoconf stuff...
+
+
+The PNG support requires libpng-1.0.5 or better
+(available at http://www.cdrom.com/pub/png/) 
+
+... it also requires zlib-1.1.3 or better
+(available http://www.cdrom.com/pub/infozip/zlib/)
+
+but if you're running Redhat, you'd better grab the rpms.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]New release
+
+From: <jamesm@gt...> - 2000-01-05 23:21
+
+its libpng, and it can be downloaded from ftp.cdrom.com or
+metalab.unc.edu, or just about any big ftp site. I also had to add -lz
+to the makefile to link with zlib (That's probably your problem).
+
+-James McCollough 
+
+
+
+Re: [Dillo-dev]New release
+
+From: nightstalker <nstalkie@tv...> - 2000-01-05 22:05
+
+What is the library for the png routines ? i get undefined references
+from png.c :)
+
+sammy 
+
+
+
+[Dillo-dev]New release
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-01-05 01:02
+
+Hi!
+
+
+Finally dillo-0.0.4 is finished, and ready for download. It
+includes several changes, bug fixes and improvements; some things
+didn't make it into the tarball due to stability concerns, but I
+hope to polish them enough to add them in the next release.
+Anyway you'll find plenty of changes in the Changelog.
+
+I hope you enjoy this release.
+
+Caveat: The background color support is not yet completed and
+if you happen to browse a page with BLACK background, you'll not
+see the text! -- Luca is currently working on this.
+
+
+Jorge.-
+
+
+Pd: James, tomorrow I'll send you a detailed answer in regard to
+the progress bar code; I liked it very much and I think we're a
+few touches away from a first class meter! 
+
+
+
+Re: [Dillo-dev]What's about i18n (internationalization)?
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-01-04 14:00
+
+Luca,
+(and everyone!)
+
+> Hi,
+> in this days I've tried to add i18n to Dillo. I'm using gettext package.
+> I've added the po/ and intl/ into source tree, modified the configure.in and
+> added the necessary code to dillo.c and menu.c thus I've tried to translate
+> some menu items in Italian (it works !).
+> 
+> So my question is: Are we interested in i18n?
+
+Of course it's a desirable feature, but I'd rather prefer we
+focus on bug fixing now; I've been deeply digging the sources
+these days and I'm somewhat scared on what I've found.
+
+Please don't get me wrong, I do like those new features, what
+I'm trying to do is to finish the stabilization process, and end
+up with a rock-solid browser that's easy to understand and to
+extend. BTW: when adding the PNG decoding routines, Geoff used a
+very similar aproach to what he saw with GIF and JPG. But the
+underlying mechanism was broken, so he was not able to know in
+advance that it wasn't his code's fault when some images were not
+rendering... I've experienced that several times before, and it's
+incredibly discouraging to start trying to find were the bug is
+(or whether your fault or not), in a very big code base that you
+don't know, that's undocumented and sometimes misleadingly
+commented...
+
+I don't want our developers to experience that painful coding
+facts, and that's why I prefer to stabilize, clean and fix what
+we have now, and after that, to focus on what we'd like to add or
+improve. As a matter of fact, I've found several more bugs while
+working the code and I'll introduce them into the bug track ASAP.
+
+Please don't be deceived by a pretty face, Dillo _IS_ very
+BUGGED now, we haven't reached the safe extensibilty milestone
+yet. You have been warned...
+
+
+------
+
+Luca:
+In regard to 'text', 'link', 'vlink' and 'alink', they are
+highly required now (cause bgcolor will be included in the next
+release). Please make a feature-fault entry at the bug-track and
+keep up the good job!
+
+
+sincerely
+Jorge.-
+
+
+Pd: I'll try to release dillo-0.0.4 today. 
+
+
+
+[Dillo-dev]What's about i18n (internationalization)?
+
+From: Luca Rota <drake@fr...> - 2000-01-03 14:50
+
+Hi,
+in this days I've tried to add i18n to Dillo. I'm using gettext package.
+I've added the po/ and intl/ into source tree, modified the configure.in and
+added the necessary code to dillo.c and menu.c thus I've tried to translate
+some menu items in Italian (it works !).
+
+So my question is: Are we interested in i18n?
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]Site is UP!!!
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-01-02 00:59
+
+Hi everyone!
+2000 year greetings to you!
+
+Quick Good News:
+
+- Our site is working again!!!
+(Go & check it please :)
+
+- Internet is working OK (No big Y2K problems here)
+
+- dillo-0.0.4 will be great!
+
+
+
+Jorge.- 
+
+

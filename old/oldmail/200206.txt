@@ -1,0 +1,4972 @@
+Re: [Dillo-dev]Sites that use SSI that work well with dillo
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-29 21:49
+
+Lee,
+
+> Hi,
+>
+> I'm looking for sites that work well with dillo, especially ones that
+> use server side include scripting. The point would be to demonstrate
+> the usefulness of dillo without the need for client side scripting, etc.
+>
+> Thanks in advance.
+
+Well, I think your best bet is for sites that use cookies to
+keep certain "state" information. For instance, freshmeat.net and
+http://www.linuxapps.com. I was able to make the 0.6.6-release
+announcement on both sites with dillo (which requires login, DB
+consulting and information updating using cookies and forms).
+
+I hope some other persons at this list point you to better
+examples. There was a guy sometime ago that was testing a web
+calendar application, but though I wrote to him, I never got an
+answer.
+
+Well, I think a radical example would be to enable dillo with
+the HTTPS patch (very unstable), and try so....net. I
+haven't done that yet, and maybe it doesn't work, but if it
+works --even barely--, it could be more convincing than the above
+mentioned examples.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Sad News
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-29 21:49
+
+Hi developers,
+
+
+As you have noticed since a few months, dillo project is in a
+dire need for funding in order to continue its development at
+full steam.
+
+As some of you already know, I have been working full time on
+it for two years and a half, at my expense. At the present time
+I've completely run out of money, and the current situation
+forces me to search for a regular job to pay my bills.
+
+This is not the result of lack of planning but of two disgraces
+in a row that hit me, the latest of them, being the decline of a
+Chilean enterprise whom which I had a closed-by-word agreement
+that was to let me work in dillo for a full year while waiting
+for the funding initiative to thrive.
+
+Currently, I'm trying to find a short term project job that
+lets me save some money, with a view to resume my work with dillo
+thereafter. God knows that's not the fate I hoped for the project
+I've devoted my best efforts to. So, if there's someone on this
+list studying whether dillo could suit their needs, and wants to
+hire me for a short working/consulting period, they'll have the
+highest priority.
+
+The irony in all this is that dillo project is in a point where
+it can boost into a new level. There're plenty of ideas and most
+of them have working prototypes: encryption (https), port to
+GTK2, support for different languages, interoperation, embedding
+dillo in a GTK+ application (a sylpheed branch does that), IPv6,
+CSS, serving as front end for embedded apps., etc.
+
+I know all the code inside dillo, and I know how close all
+those goals are. They need just a few months of full time work to
+flourish.
+
+Well, I'll try to keep the pace of patch reviewing and
+integration, but certainly, my development contributions will
+shrink as the new job starts.
+
+
+
+Best regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]BR taking extra space and problem with spaces in table
+
+From: Pekka Lampila <medar@ka...> - 2002-06-28 18:42
+
+On Tue, 25 Jun 2002 14:13:23 +0200
+Sebastian Geerken <sgeerken@st...> wrote:
+
+> In this case, multiple <br>'s would not be rendered properly. A
+> solution may be to examine if this is the first <br> in series (by
+> looking if there are DW_CONTENT_BREAK's before), but for my taste,
+> this is somehow too hackish. (Other opinions?)
+
+It's should work and is certainly better than the current situation.
+So in my opinion, that kind of fix should be committed.
+
+If someone figures out better approach it can be tought about later.
+
+> There are anyway problems with spaces, e.g. dillo does not render
+> something like
+> 
+> Some text with an <u> underliner </ul> word.
+> 
+> AFAIK, the spaces after <ul> and before </ul> should be ignored, as
+> they have to in after <table> and <tr>, etc. This should IMO solved
+> generally in the HTML parser.
+
+Sounds reasonable to me. And not all that complicated to implement either...
+
+
+PS. Your Mail-Followup-To header is a bit strange:
+Mail-Followup-To: sgeerken, Dillo-dev <dillo-dev@so...>
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+[Dillo-dev]Links graphics homepage
+
+From: Frank McCormick <fmccormick@sy...> - 2002-06-28 10:55
+
+Patrick, your email isn't working.
+
+This is the Links graphics homepage.
+
+
+
+http://atrey.karlin.mff.cuni.cz/~clock/twibright/links/
+
+
+>>* Frank McCormick <fmccormick@sy...> [06-27-02 14:28]:
+>> 
+>> I have been testing out Links <graphics version> and am wondering if
+>any> of the code it uses could be borrowed for Dillo.
+
+
+
+>Cannot find the "Links <graphics version>". Please give direction. I
+>would like to give it a trial. 
+
+
+
+Re: [Dillo-dev]Links graphics
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-27 19:47
+
+Frank McCormick wrote:
+
+>I have been testing out Links <graphics version> and am wondering if any
+>of the code it uses could be borrowed for Dillo.
+>
+>It runs extremely well and fast even on my weak-kneed 100 mhz Pentium I,
+>I'd say almost as fast as Dillo. The executable size however is something
+>else..over 3 megs.
+>
+>It even does Hotmail, a site that throws even Opera into a frenzy from
+>time to time, it handles HTTP and FTP downloads, maintains a bookmark
+>list, and seems to handle most cookies well.
+>
+>Just a thought as I am no C programmer - I only dabble in uurgh Pascal.:)
+>
+>
+>
+>
+>-------------------------------------------------------
+>Sponsored by:
+>ThinkGeek at http://www.ThinkGeek.com/
+>_______________________________________________
+>Dillo-dev mailing list
+>Dillo-dev@li...
+>https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+I've looked at the source code and the comments are in a language I 
+don't know, Czech I think.
+So this kind of inhibits using it. 
+
+
+
+[Dillo-dev]Links graphics
+
+From: Frank McCormick <fmccormick@sy...> - 2002-06-27 19:24
+
+I have been testing out Links <graphics version> and am wondering if any
+of the code it uses could be borrowed for Dillo.
+
+It runs extremely well and fast even on my weak-kneed 100 mhz Pentium I,
+I'd say almost as fast as Dillo. The executable size however is something
+else..over 3 megs.
+
+It even does Hotmail, a site that throws even Opera into a frenzy from
+time to time, it handles HTTP and FTP downloads, maintains a bookmark
+list, and seems to handle most cookies well.
+
+Just a thought as I am no C programmer - I only dabble in uurgh Pascal.:) 
+
+
+
+[Dillo-dev]Sites that use SSI that work well with dillo
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-27 19:05
+
+Hi,
+
+I'm looking for sites that work well with dillo, especially ones that
+use server side include scripting. The point would be to demonstrate
+the usefulness of dillo without the need for client side scripting, etc.
+
+Thanks in advance.
+
+Disclaimer: The information contained in this transmission, including any
+attachments, may contain confidential information of Matsushita Avionics
+Systems Corporation. This transmission is intended only for the use of the
+addressee(s) listed above. Unauthorized review, dissemination or other use
+of the information contained in this transmission is strictly prohibited.
+If you have received this transmission in error or have reason to believe
+you are not authorized to receive it, please notify the sender by return
+email and promptly delete the transmission. 
+
+
+
+Re: [Dillo-dev]size of binary
+
+From: Pat Shanahan <pat@em...> - 2002-06-26 21:54
+
+* William S. <wstan@xs...> [06-26-02 00:34]:
+> I just took a quick look at the size of the
+> dillo binary. I was wondering if this is
+> normal or related to the cache building up.
+> 
+> -rwxr-xr-x 1 root wheel 5469118 Jun 7 03:06 dillo
+> 
+> -- 
+> Bill
+> Amsterdam, NL
+
+-rwxr-xr-x 1 root root 244460 May 30 16:27 dillo
+?? 4 instances up ??
+-- 
+Patrick Shanahan
+Registered Linux User #207535 
+@ http://counter.li.org 
+
+
+
+Re: [Dillo-dev]size of binary
+
+From: William S. <wstan@xs...> - 2002-06-26 06:18
+
+-rwxr-xr-x 1 root wheel 229376 Jun 26 08:17 /usr/local/dillo/bin/dillo
+
+Looks like that did the trick.
+Thank you.
+
+On Tue, Jun 25, 2002 at 10:54:20PM -0700, Eric GAUDET wrote:
+> You probably still have the debug information in the binary (which is the
+> default, as dillo is still in alpha stage)
+> Try this:
+> 
+> strip --strip-all dillo
+> 
+
+-- 
+Bill
+Amsterdam, NL 
+
+
+
+RE: [Dillo-dev]size of binary
+
+From: Eric GAUDET <eric@rt...> - 2002-06-26 05:55
+
+You probably still have the debug information in the binary (which is the
+default, as dillo is still in alpha stage)
+Try this:
+
+strip --strip-all dillo
+
+-- En reponse de "[Dillo-dev]size of binary" de William S., le 26-Jun-2002 :
+> I just took a quick look at the size of the
+> dillo binary. I was wondering if this is
+> normal or related to the cache building up.
+> 
+> -rwxr-xr-x 1 root wheel 5469118 Jun 7 03:06 dillo
+> 
+> -- 
+> Bill
+> Amsterdam, NL
+> 
+> 
+> -------------------------------------------------------
+> This s...net email is sponsored by: Jabber Inc.
+> Don't miss the IM event of the season | Special offer for OSDN members! 
+> JabConf 2002, Aug. 20-22, Keystone, CO http://www.jabberconf.com/osdn
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------------------------------------------
+Eric GAUDET <eric@rt...>
+Le 25-Jun-2002 a 22:53:22
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+[Dillo-dev]size of binary
+
+From: William S. <wstan@xs...> - 2002-06-26 05:27
+
+I just took a quick look at the size of the
+dillo binary. I was wondering if this is
+normal or related to the cache building up.
+
+-rwxr-xr-x 1 root wheel 5469118 Jun 7 03:06 dillo
+
+-- 
+Bill
+Amsterdam, NL 
+
+
+
+Re: [Dillo-dev]BR taking extra space and problem with spaces in table
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-06-25 12:14
+
+On Tue, Jun 25, 2002 at 08:56:53AM +0300, Pekka Lampila wrote:
+> Take a look at: http://kirjasto.org/medar/dillo/extraspace.html
+> 
+> The two green squares and the red "Hi-box" shouldn't have space between
+> them. This is solved by dw_page.c part of attached diff, setting
+> linebreak's ascent and descent to 0. I think this is right solution, but
+> could be wrong.
+
+In this case, multiple <br>'s would not be rendered properly. A
+solution may be to examine if this is the first <br> in series (by
+looking if there are DW_CONTENT_BREAK's before), but for my taste,
+this is somehow too hackish. (Other opinions?)
+
+> This error shows in many places, like slashdot.org for example :)
+> 
+> Second flaw in Dillo's rendering of my test page is that the red box
+> should cover the black cell beneath it entirely. It doesn't because
+> a space is inserted in the black cell.
+> 
+> The html.c part of the diff tries to deal with this simply by disabling
+> adding of spaces when in TABLE or TR. But this breaks some badly
+> formatted html that Dillo currently handles nicely. So after aplying the
+> diff, the "This is badly formatted HTML" part of test page is rendered
+> without spaces.
+
+There are anyway problems with spaces, e.g. dillo does not render
+something like
+
+Some text with an <u> underliner </ul> word.
+
+AFAIK, the spaces after <ul> and before </ul> should be ignored, as
+they have to in after <table> and <tr>, etc. This should IMO solved
+generally in the HTML parser.
+
+Sebastian 
+
+
+
+[Dillo-dev]BR taking extra space and problem with spaces in table
+
+From: Pekka Lampila <medar@ka...> - 2002-06-25 05:57
+
+Attachments: extraspace.diff      
+
+Hi,
+
+Take a look at: http://kirjasto.org/medar/dillo/extraspace.html
+
+The two green squares and the red "Hi-box" shouldn't have space between
+them. This is solved by dw_page.c part of attached diff, setting
+linebreak's ascent and descent to 0. I think this is right solution, but
+could be wrong.
+
+This error shows in many places, like slashdot.org for example :)
+
+Second flaw in Dillo's rendering of my test page is that the red box
+should cover the black cell beneath it entirely. It doesn't because
+a space is inserted in the black cell.
+
+The html.c part of the diff tries to deal with this simply by disabling
+adding of spaces when in TABLE or TR. But this breaks some badly
+formatted html that Dillo currently handles nicely. So after aplying the
+diff, the "This is badly formatted HTML" part of test page is rendered
+without spaces.
+
+So I'm hoping that someone can make better fix for this problem.
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+[Dillo-dev]Multiple URLs from commandline
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2002-06-24 16:37
+
+Attachments: dillo_multi_url.patch      
+
+Hi all,
+
+here is a very small patch, that allows dillo to accept multiple URLs
+from the command line. With this patch you can do for example:
+
+"dillo http://www.slashdot.org 
+
+For each URL a new browser window will pop up. Don't know how others 
+feel about popping up multiple windows at startup, but it's useful 
+for me, especially for offline browsing.
+
+Regards,
+Johannes Hofmann 
+
+
+
+[Dillo-dev]2 requests: copy email adress and copy/paste text
+
+From: Mathieu Roy <yeupou@gn...> - 2002-06-24 08:34
+
+Hi,
+
+I can't copy/paste text in html page rendered by dillo. Is it normal? 
+If it is, should not this thing be a the goals list?
+
+Could it be possible to have, like in galeon, a "copy email adress" for 
+urls beginning with a mailto: ?
+
+Best regards,
+
+
+-- 
+Mathieu Roy
+http://savannah.gnu.org/users/yeupou
+http://yeupou.coleumes.org
+http://gpg.coleumes.org (GPG Key) 
+
+
+
+Re: [Dillo-dev]Newest bug entries
+
+From: Philip Blundell <pb@ne...> - 2002-06-23 11:38
+
+On Sat, 2002-06-22 at 20:15, Jorge Arellano Cid wrote:
+> Just some comments on newest bug entries. This is mainly of
+> interest to their authors.
+
+Did you have any thoughts on the IPv6 patch I sent you a few weeks ago?
+
+p. 
+
+
+
+[Dillo-dev]Newest bug entries
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-22 19:17
+
+Hi there!
+
+Just some comments on newest bug entries. This is mainly of
+interest to their authors.
+
+Note that some of these are to be deleted soon:
+
+#354:
+
+It seems a double problem, one with dillo not rendering two
+tables in a row (#355), and some bad HTML.
+
+
+#356
+
+Explained in HtmlParser.txt
+
+
+#357
+
+'METHODDEF' is defined in jmorecfg.h, included from jpeglib.h.
+
+Quoting from IJG's jmorecfg.h:
+>>
+[...]
+/* These macros are used in all function definitions and extern declarations.
+* You could modify them if you need to change function linkage conventions;
+* in particular, you'll need to do that to make the library a Windows DLL.
+* Another application is to make all functions global for use with debuggers
+* or code profilers that require it.
+*/
+
+/* a function called through method pointers: */
+#define METHODDEF(type) static type
+/* a function used only in its module: */
+#define LOCAL(type) static type
+/* a function referenced thru EXTERNs: */
+#define GLOBAL(type) type
+/* a reference to a GLOBAL function: */
+#define EXTERN(type) extern type
+[...]
+>>
+
+
+#358
+
+I just commited a patch for it. Please test it as I don't have
+that kind of filesystem a hand. I added some explicative messages
+too.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]killing the cache
+
+From: William S. <wstan@xs...> - 2002-06-22 08:50
+
+Is there any way to kill the cache that Dillo
+holds in memory or disk? It seems that just hitting
+reload does not remove the "attributes" of a particular
+page.
+
+Thank you,
+-- 
+Bill
+Amsterdam, NL 
+
+
+
+Re: [Dillo-dev]Very large table cells
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-06-21 15:51
+
+Hi,
+
+On Mon, Jun 17, 2002 at 08:12:53PM -0700, Eric GAUDET wrote:
+> I have been browsing a couple of web sites that use tables in a strange
+> fashion. At first I did not pay attention ("damn broken html"), but as this
+> seems to be pretty common so I wanted to share it with you:
+> 
+> <table width="100%>
+> <tr>
+> <td width="10000">My title bar</td>
+> <td>Here my regular body</td>
+> </tr>
+> </table>
+> 
+> Most broswers seem to deal fine with that, and W3C html specs are superbly
+> ignoring the topic. Dillo, however, draws a 10000 pix wide page.
+
+Sometimes the CSS spec is more precise (by nature), and from my
+understanding, the table has to make sure that the table cell fits
+into the 100%.
+
+The problem is that dillo currently deals with width specifications in
+the way that they are only honoured if they are not smaller than the
+minimal width, and for simplicity, if a table cell has a specified
+width w, the table sets min = max = w, so assuming that the table cell
+"needs" the 10000 pixels.
+
+(Generally, this behaviour has two reasons, first it may sometimes be
+useful to correct size specifications to make all the content visible;
+second, since clipping is not possible yet -- although planned -- you
+would get quite a mess of widgets drawing in other widgets'
+allocations.)
+
+I plan to redesign anything having to do with sizes, so this will
+probably change.
+
+On Tue, Jun 18, 2002 at 12:38:55AM -0400, Andreas Schweitzer wrote:
+> Well, the other browsers seem to ignore the 10000pix wide cell.
+> One could argue with 2 arguments :
+> 1. first come wins : i.e. the 100% is the definite spec
+
+In an other sense, dillo first handles the 10000pix and then the 100%
+:-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-18 14:53
+
+>
+>
+>
+> The mission: if ever dillo segfaults, try to find out how it
+>happened and ideally, find a way to reproduce it (don't forget to
+>grab the latest debug messages too!).
+>
+> 
+>
+
+Have you tried using the script catchsegv? (On Redhat in /usr/bin) I
+just ran across it last week, appears promising. I will try it the
+first chance I get. 
+
+
+
+Re: [Dillo-dev]Very large table cells
+
+From: Andreas Schweitzer <andy@ph...> - 2002-06-18 04:39
+
+Hi
+
+On Mon, Jun 17, 2002 at 08:12:53PM -0700, Eric GAUDET wrote:
+> I have been browsing a couple of web sites that use tables in a strange
+> fashion. At first I did not pay attention ("damn broken html"), but as this
+> seems to be pretty common so I wanted to share it with you:
+> 
+> <table width="100%>
+> <tr>
+> <td width="10000">My title bar</td>
+> <td>Here my regular body</td>
+> </tr>
+> </table>
+> 
+> Most broswers seem to deal fine with that, and W3C html specs are superbly
+> ignoring the topic. Dillo, however, draws a 10000 pix wide page.
+
+Well, the other browsers seem to ignore the 10000pix wide cell.
+One could argue with 2 arguments :
+1. first come wins : i.e. the 100% is the definite spec
+2. a percent spec is much more device independent than a pixel spec.
+and shouldn't the web be device independet ? So, in conflict, take
+the least device dependent spec.
+
+Just my 2 cents - w/o having checked the standard ... trusting Eric there.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Very large table cells
+
+From: Eric GAUDET <eric@rt...> - 2002-06-18 03:13
+
+Hi all,
+
+I have been browsing a couple of web sites that use tables in a strange
+fashion. At first I did not pay attention ("damn broken html"), but as this
+seems to be pretty common so I wanted to share it with you:
+
+<table width="100%>
+<tr>
+<td width="10000">My title bar</td>
+<td>Here my regular body</td>
+</tr>
+</table>
+
+Most broswers seem to deal fine with that, and W3C html specs are superbly
+ignoring the topic. Dillo, however, draws a 10000 pix wide page.
+
+Here is my interpretation: explicit table cell dimensions (width attributes of
+td and tr) are always bound to the explicit dimension of the element including
+them (td->tr->table). However, table content drive the actual table cell
+dimensions (for instance a width="10000" image would stretch the table in every
+browser).
+
+I am not sure how you guys want to handle this, but it is really painful to
+read such pages.
+
+References:
+http://www.lik-sang.com/catalog/news.php?artc=2497
+http://www.imaging-resource.com/PRODS/D7I/D7IA.HTM
+
+Best,
+Eric
+
+------------------------------------------------------------------------
+Eric GAUDET <eric@rt...>
+Le 17-Jun-2002 a 19:43:54
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+Re: [Dillo-dev]Porting to GTK+-2.0
+
+From: Pekka Lampila <medar@ka...> - 2002-06-17 13:49
+
+On 16 Jun 2002 18:19:05 +0200
+Jorgen Viksell <jorgen.viksell@te...> wrote:
+
+Hi,
+
+> Hi,
+> 
+> > Hi,
+> > 
+> > I ported Dillo to GTK+-2.0. Please test.
+> 
+> Works great here! :-)
+
+Good. :)
+
+> I fiddled around some and added basic pango support. The most apparent
+> problem is speed, specificly the use of PangoLayout combined with UTF8
+> conversion.
+> There is a need to change the logics of DwPage and not use one
+> PangoLayout for each word, but reuse it.
+
+Yes, and the cache system should probably handle the conversion so that
+in html.c all the data is always UTF8?
+
+> I'll look into it some more tomorrow.
+
+If you get it to work, I can include it in my next patch.
+
+Which should BTW include user editable keybindings through
+gtk_accel_map_save/load() :)
+
+> Anyways, antialiased text is nice and fuzzy! ;-)
+
+And my graphic card is not supported by XF4.x, not fair!
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-16 22:14
+
+Hi there!
+
+> > [Livio wrote]
+> >
+> > I have a patch here which (seems) to fix it. There are two fixes in
+> > it:
+> >
+> > [1] The fix Jorge and I had made in 0.6.5-pre, which was removed. This
+> > will make IO_write and IO_callback correctly treat EAGAIN.
+> >
+> > [2] Remove the constraint for freeing the buffer in write operations.
+> > This error should not appear commonly in Dillo's regular use,
+> > because it is very rare to have a HTTP query with more than one
+> > buffer long, and therefore the IOvec.iov_base won't be
+> > modified. But this, in fact, can happen (resulting in a Seg
+> > Fault). What I've done to fix this problem, is added a
+> > `buffer_start` field to IOData_t, which is _private_. IO users
+> > shouldn't bother to set this, I have done so in a_IO_ccc().
+> >
+> > Jorge, do you think that [2] fixes other problems you might of had
+> > with the EAGAIN handler?
+>
+> I'm giving a deep review to the problem, and it seems [2] may
+> be the fix to the problems I had.
+>
+> Quoting myself:
+>
+> <<
+> I'm a bit hesitant with this subject. This is the story: I've
+> been working on presentation material for the site, and testing
+> its rendering with dillo; that is, small html files that are
+> re-created by a script very often, and then reloaded into dillo.
+> The sad news is that I've caught this problem twice:
+
+OK, I gave the patch a lot of thought and reviews, but with no
+clear results. :o
+
+The funny thing is that the only one using IOWrite then, was
+about:splash, and it does NOT free the buffer, so the hopes for
+the fix on freeing the buffer in write operations being able to
+silently cope with the "phantom" bug, seem gone now.
+
+The other interesting fact is that I was working on a directory
+(i.e. file:/ method), and it doesn't use IOWrite. The only one
+that could have requested to free the buffer is http:/, which I
+wasn't using.
+
+What does all this comes down to?
+
+Well, considering all the facts, I decided to commit a slightly
+modified version of the patch (that does the same! :), so we can
+give it more testing and hopefully get some debug messages to
+review.
+
+The mission: if ever dillo segfaults, try to find out how it
+happened and ideally, find a way to reproduce it (don't forget to
+grab the latest debug messages too!).
+
+
+Good luck
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Porting to GTK+-2.0
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-06-16 16:12
+
+Hi,
+
+> Hi,
+>=20
+> I ported Dillo to GTK+-2.0. Please test.
+
+Works great here! :-)
+=20
+> Diff against current CVS:
+> http://kirjasto.org/medar/dillo/gtk2_dillo_2002-06-16.diff.gz
+>=20
+> Screenshot, which looks just like GTK+-1.2 version :)
+> http://kirjasto.org/medar/dillo/gtk2_dillo_2002-06-16.png
+>=20
+> There are three problems that I'm aware of. Copy Link Location,
+> scrolling with arrow keys and accelator keys in menus are all broken.
+> I should hopefully be able to fix these soon.
+>=20
+> And of course there is more bugs, that I haven't spotted.
+> (Please help in finding them.)
+>=20
+> Note that this patch just tries to convert current functionality to
+> gtk2. There are more features in gtk2 that we can take advantage of.
+> Most importantly Pango.
+
+I fiddled around some and added basic pango support. The most apparent
+problem is speed, specificly the use of PangoLayout combined with UTF8
+conversion.
+There is a need to change the logics of DwPage and not use one
+PangoLayout for each word, but reuse it.
+
+I'll look into it some more tomorrow.
+
+Anyways, antialiased text is nice and fuzzy! ;-)
+
+Regards,
+J=F6rgen 
+
+
+
+[Dillo-dev]Porting to GTK+-2.0
+
+From: Pekka Lampila <medar@ka...> - 2002-06-16 12:12
+
+Hi,
+
+I ported Dillo to GTK+-2.0. Please test.
+
+Diff against current CVS:
+http://kirjasto.org/medar/dillo/gtk2_dillo_2002-06-16.diff.gz
+
+Screenshot, which looks just like GTK+-1.2 version :)
+http://kirjasto.org/medar/dillo/gtk2_dillo_2002-06-16.png
+
+There are three problems that I'm aware of. Copy Link Location,
+scrolling with arrow keys and accelator keys in menus are all broken.
+I should hopefully be able to fix these soon.
+
+And of course there is more bugs, that I haven't spotted.
+(Please help in finding them.)
+
+Note that this patch just tries to convert current functionality to
+gtk2. There are more features in gtk2 that we can take advantage of.
+Most importantly Pango.
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+[Dillo-dev]remote url control and testing patch part 4
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-13 15:24
+
+Here is the test script. Note that the url MUST be quoted and terminated 
+with a ';' character.
+
+You can use a zero time delay but seems to interrupt html_close() and 
+leak memory.
+It is fun to watch how fast the cpu can render though.
+(For me anyway)
+-------------
+
+#!/bin/sh
+# rurl-cmeu99-2.sh
+
+if [ -n $1 ] ; then
+DURATION=$1
+else
+DURATION=3
+fi
+
+
+HOST="cmeu99"
+
+
+while true; do
+
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 "
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 
+"
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 
+"
+sleep $DURATION
+/home/lee/src/wpipe1/wpipe1/wpipe1 
+"
+sleep $DURATION
+
+
+done
+
+Disclaimer: The information contained in this transmission, including any
+attachments, may contain confidential information of Matsushita Avionics
+Systems Corporation. This transmission is intended only for the use of the
+addressee(s) listed above. Unauthorized review, dissemination or other use
+of the information contained in this transmission is strictly prohibited.
+If you have received this transmission in error or have reason to believe
+you are not authorized to receive it, please notify the sender by return
+email and promptly delete the transmission. 
+
+
+
+[Dillo-dev]remote url control and testing patch part 3
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-13 15:17
+
+Here is the header file, dillo.c patch. The make file was modified to 
+use mtrace, only -g and not -O2.
+
+----------------------
+/*
+* File : rurl.h - Dillo
+*
+*
+* 
+*
+* Remote url
+*/
+
+#ifndef __RURL_H__
+#define __RURL_H__
+
+#include "browser.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#define MAXURL 1024
+
+void rurl_server_req(BrowserWindow *bw);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* __RURL_H__ */
+
+
+--------------------------------------------------
+Only in dillo-0.6.6-namedpipe/: CVS
+Only in dillo-0.6.6/: ChangeLog.old
+diff -pru dillo-0.6.6/config.log dillo-0.6.6-namedpipe/config.log
+--- dillo-0.6.6/config.log Tue Jun 4 10:43:32 2002
++++ dillo-0.6.6-namedpipe/config.log Mon Jun 10 10:15:43 2002
+@@ -10,11 +10,11 @@ generated by GNU Autoconf 2.50. Invocat
+## Platform. ##
+## ---------- ##
+
+-hostname = borabora
++hostname = fiji
+uname -m = i686
+-uname -r = 2.4.18-4
++uname -r = 2.4.18
+uname -s = Linux
+-uname -v = #1 Thu May 2 18:47:38 EDT 2002
++uname -v = #2 Sat Mar 9 03:16:53 PST 2002
+
+/usr/bin/uname -p = unknown
+/bin/uname -X = unknown
+@@ -27,7 +27,7 @@ hostinfo = unknown
+/usr/bin/oslevel = unknown
+/bin/universe = unknown
+
+-PATH = /bin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/home/lee/bin
++PATH = /bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin:/usr/java/j2re1.4.0/bin
+
+## ------------ ##
+## Core tests. ##
+@@ -119,7 +119,7 @@ configure:2468: checking how to run the
+configure:2495: gcc -E -I/usr/local/include conftest.c
+configure:2501: $? = 0
+configure:2528: gcc -E -I/usr/local/include conftest.c
+-configure:2525:28: ac_nonexistent.h: No such file or directory
++configure:2525: ac_nonexistent.h: No such file or directory
+configure:2534: $? = 1
+configure: failed program was:
+#line 2524 "configure"
+@@ -129,7 +129,7 @@ configure:2571: result: gcc -E
+configure:2586: gcc -E -I/usr/local/include conftest.c
+configure:2592: $? = 0
+configure:2619: gcc -E -I/usr/local/include conftest.c
+-configure:2616:28: ac_nonexistent.h: No such file or directory
++configure:2616: ac_nonexistent.h: No such file or directory
+configure:2625: $? = 1
+configure: failed program was:
+#line 2615 "configure"
+@@ -173,8 +173,6 @@ configure:3087: checking for ANSI C head
+configure:3101: gcc -E -I/usr/local/include conftest.c
+configure:3107: $? = 0
+configure:3194: gcc -o conftest -I/usr/include/gtk-1.2 
+-I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include -g 
+-O2 -D_REENTRANT -D_THREAD_SAFE -Wall -Waggregate-return 
+-I/usr/local/include -L/usr/local/lib conftest.c -lpng -lz -lpthread 
+-L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl 
+-lXi -lXext -lX11 -lm >&5
+-configure: In function `main':
+-configure:3186: warning: implicit declaration of function `exit'
+configure:3197: $? = 0
+configure:3199: ./conftest
+configure:3202: $? = 0
+@@ -205,7 +203,7 @@ configure:3427: creating ./config.status
+
+This file was extended by config.status 2.50, executed with
+> ./config.status
+-on borabora
++on fiji
+
+config.status:3877: creating Makefile
+config.status:3877: creating doc/Makefile
+@@ -217,45 +215,45 @@ config.status:3969: creating config.h
+## Cache variables. ##
+## ----------------- ##
+
+-ac_cv_c_compiler_gnu=yes
+-ac_cv_env_CC_set=
+-ac_cv_env_CC_value=
+-ac_cv_env_CFLAGS_set=
+-ac_cv_env_CFLAGS_value=
+-ac_cv_env_CPPFLAGS_set=
+-ac_cv_env_CPPFLAGS_value=
+-ac_cv_env_CPP_set=
+-ac_cv_env_CPP_value=
+-ac_cv_env_LDFLAGS_set=
+-ac_cv_env_LDFLAGS_value=
+-ac_cv_env_build_alias_set=
+-ac_cv_env_build_alias_value=
+-ac_cv_env_host_alias_set=
+-ac_cv_env_host_alias_value=
+-ac_cv_env_target_alias_set=
+-ac_cv_env_target_alias_value=
+-ac_cv_func_socket=yes
+-ac_cv_header_fcntl_h=yes
+-ac_cv_header_jconfig_h=yes
+-ac_cv_header_jerror_h=yes
+-ac_cv_header_jmorecfg_h=yes
+-ac_cv_header_jpeglib_h=yes
+-ac_cv_header_stdc=yes
+-ac_cv_header_sys_uio_h=yes
+-ac_cv_header_unistd_h=yes
+-ac_cv_lib_jpeg_jpeg_destroy_decompress=yes
+-ac_cv_lib_png_png_check_sig=yes
+-ac_cv_lib_pthread_pthread_create=yes
+-ac_cv_lib_z_zlibVersion=yes
+-ac_cv_objext=o
+-ac_cv_path_GTK_CONFIG=/usr/bin/gtk-config
++ac_cv_c_compiler_gnu='yes'
++ac_cv_env_CC_set=''
++ac_cv_env_CC_value=''
++ac_cv_env_CFLAGS_set=''
++ac_cv_env_CFLAGS_value=''
++ac_cv_env_CPPFLAGS_set=''
++ac_cv_env_CPPFLAGS_value=''
++ac_cv_env_CPP_set=''
++ac_cv_env_CPP_value=''
++ac_cv_env_LDFLAGS_set=''
++ac_cv_env_LDFLAGS_value=''
++ac_cv_env_build_alias_set=''
++ac_cv_env_build_alias_value=''
++ac_cv_env_host_alias_set=''
++ac_cv_env_host_alias_value=''
++ac_cv_env_target_alias_set=''
++ac_cv_env_target_alias_value=''
++ac_cv_func_socket='yes'
++ac_cv_header_fcntl_h='yes'
++ac_cv_header_jconfig_h='yes'
++ac_cv_header_jerror_h='yes'
++ac_cv_header_jmorecfg_h='yes'
++ac_cv_header_jpeglib_h='yes'
++ac_cv_header_stdc='yes'
++ac_cv_header_sys_uio_h='yes'
++ac_cv_header_unistd_h='yes'
++ac_cv_lib_jpeg_jpeg_destroy_decompress='yes'
++ac_cv_lib_png_png_check_sig='yes'
++ac_cv_lib_pthread_pthread_create='yes'
++ac_cv_lib_z_zlibVersion='yes'
++ac_cv_objext='o'
++ac_cv_path_GTK_CONFIG='/usr/bin/gtk-config'
+ac_cv_path_install='/usr/bin/install -c'
+ac_cv_prog_CPP='gcc -E'
+-ac_cv_prog_ac_ct_CC=gcc
+-ac_cv_prog_ac_ct_RANLIB=ranlib
+-ac_cv_prog_cc_g=yes
+-ac_cv_prog_make_make_set=yes
+-am_cv_prog_cc_stdc=
++ac_cv_prog_ac_ct_CC='gcc'
++ac_cv_prog_ac_ct_RANLIB='ranlib'
++ac_cv_prog_cc_g='yes'
++ac_cv_prog_make_make_set='yes'
++am_cv_prog_cc_stdc=''
+
+## ------------ ##
+## confdefs.h. ##
+Only in dillo-0.6.6-namedpipe/doc: CVS
+diff -pru dillo-0.6.6/mkinstalldirs dillo-0.6.6-namedpipe/mkinstalldirs
+--- dillo-0.6.6/mkinstalldirs Tue Aug 29 19:43:34 2000
++++ dillo-0.6.6-namedpipe/mkinstalldirs Mon Jun 10 10:15:43 2002
+@@ -4,7 +4,7 @@
+# Created: 1993-05-16
+# Public domain
+
+-# $Id: mkinstalldirs,v 1.8 2000/08/30 02:43:34 jcid Exp $
++# $Id: mkinstalldirs,v 1.1.1.1 2002/06/10 17:15:43 lee Exp $
+
+errstatus=0
+
+Only in dillo-0.6.6-namedpipe/src/.deps: CVS
+diff -pru dillo-0.6.6/src/.deps/bookmark.P 
+dillo-0.6.6-namedpipe/src/.deps/bookmark.P
+--- dillo-0.6.6/src/.deps/bookmark.P Tue Jun 4 10:43:58 2002
++++ dillo-0.6.6-namedpipe/src/.deps/bookmark.P Mon Jun 10 12:50:39 2002
+@@ -110,16 +110,15 @@ bookmark.o: bookmark.c /usr/include/gtk-
+/usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h list.h interface.h browser.h url.h dillo.h \
+- web.h cache.h chain.h html.h dw_widget.h dw_style.h dw_image.h \
+- dw_tooltip.h image.h bitvec.h nav.h misc.h history.h menu.h
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/string.h list.h interface.h \
++ browser.h url.h dillo.h web.h cache.h chain.h html.h dw_widget.h \
++ dw_style.h dw_image.h dw_tooltip.h image.h bitvec.h nav.h misc.h \
++ history.h menu.h
+bookmark.c :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+@@ -264,7 +263,6 @@ bookmark.c :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -277,8 +275,6 @@ bookmark.c :
+/usr/include/sys/sysmacros.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+list.h :
+interface.h :
+browser.h :
+diff -pru dillo-0.6.6/src/.deps/cache.P 
+dillo-0.6.6-namedpipe/src/.deps/cache.P
+--- dillo-0.6.6/src/.deps/cache.P Tue Jun 4 10:43:45 2002
++++ dillo-0.6.6-namedpipe/src/.deps/cache.P Mon Jun 10 12:50:27 2002
+@@ -8,8 +8,7 @@ cache.o: cache.c /usr/include/ctype.h /u
+/usr/include/bits/select.h /usr/include/bits/sigset.h \
+/usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+/usr/include/sys/stat.h /usr/include/bits/stat.h /usr/include/stdlib.h \
+- /usr/include/alloca.h /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/fcntl.h \
++ /usr/include/alloca.h /usr/include/string.h /usr/include/fcntl.h \
+/usr/include/bits/fcntl.h /usr/include/unistd.h \
+/usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+/usr/include/getopt.h ../config.h list.h IO/Url.h \
+@@ -122,8 +121,8 @@ cache.o: cache.c /usr/include/ctype.h /u
+dw_widget.h dw_style.h dw_image.h /usr/include/stdio.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h dw_tooltip.h \
+- image.h bitvec.h dicache.h interface.h nav.h cookies.h debug.h
++ /usr/include/bits/stdio_lim.h dw_tooltip.h image.h bitvec.h dicache.h \
++ interface.h nav.h cookies.h debug.h
+cache.c :
+/usr/include/ctype.h :
+/usr/include/features.h :
+@@ -147,8 +146,6 @@ cache.c :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/fcntl.h :
+/usr/include/bits/fcntl.h :
+/usr/include/unistd.h :
+@@ -302,7 +299,6 @@ dw_image.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+dw_tooltip.h :
+image.h :
+bitvec.h :
+diff -pru dillo-0.6.6/src/.deps/colors.P 
+dillo-0.6.6-namedpipe/src/.deps/colors.P
+--- dillo-0.6.6/src/.deps/colors.P Tue Jun 4 10:44:12 2002
++++ dillo-0.6.6-namedpipe/src/.deps/colors.P Mon Jun 10 12:50:50 2002
+@@ -1,11 +1,10 @@
+colors.o: colors.c /usr/include/string.h /usr/include/features.h \
+/usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
++ /usr/include/stdlib.h /usr/include/sys/types.h \
+/usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h \
+- /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
++ /usr/include/bits/sched.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
+/usr/include/bits/select.h /usr/include/bits/sigset.h \
+/usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+/usr/include/alloca.h /usr/include/glib-1.2/glib.h \
+@@ -24,16 +23,14 @@ colors.c :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
++/usr/include/stdlib.h :
++/usr/include/sys/types.h :
+/usr/include/bits/types.h :
+/usr/include/bits/pthreadtypes.h :
+/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+-/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+diff -pru dillo-0.6.6/src/.deps/commands.P 
+dillo-0.6.6-namedpipe/src/.deps/commands.P
+--- dillo-0.6.6/src/.deps/commands.P Tue Jun 4 10:43:43 2002
++++ dillo-0.6.6-namedpipe/src/.deps/commands.P Mon Jun 10 12:50:26 2002
+@@ -108,18 +108,16 @@ commands.o: commands.c /usr/include/gtk-
+/usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/sys/time.h /usr/include/time.h /usr/include/bits/time.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/unistd.h \
+- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+- /usr/include/getopt.h /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h bookmark.h browser.h \
+- /usr/include/sys/types.h /usr/include/sys/sysmacros.h url.h interface.h \
+- dillo.h web.h cache.h chain.h html.h dw_widget.h dw_style.h dw_image.h \
+- dw_tooltip.h image.h bitvec.h history.h nav.h misc.h commands.h prefs.h \
+- menu.h
++ /usr/include/bits/stdio_lim.h /usr/include/sys/time.h \
++ /usr/include/time.h /usr/include/bits/time.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
++ /usr/include/bits/confname.h /usr/include/getopt.h \
++ /usr/include/string.h bookmark.h browser.h /usr/include/sys/types.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
++ /usr/include/sys/sysmacros.h url.h interface.h dillo.h web.h cache.h \
++ chain.h html.h dw_widget.h dw_style.h dw_image.h dw_tooltip.h image.h \
++ bitvec.h history.h nav.h misc.h commands.h prefs.h menu.h
+commands.c :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+@@ -260,7 +258,6 @@ commands.c :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/sys/time.h :
+/usr/include/time.h :
+/usr/include/bits/time.h :
+@@ -272,14 +269,11 @@ commands.c :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+bookmark.h :
+browser.h :
+/usr/include/sys/types.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/sysmacros.h :
+url.h :
+interface.h :
+diff -pru dillo-0.6.6/src/.deps/cookies.P 
+dillo-0.6.6-namedpipe/src/.deps/cookies.P
+--- dillo-0.6.6/src/.deps/cookies.P Tue Jun 4 10:44:13 2002
++++ dillo-0.6.6-namedpipe/src/.deps/cookies.P Mon Jun 10 12:50:50 2002
+@@ -12,17 +12,15 @@ cookies.o: cookies.c /usr/include/sys/ty
+/usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/ctype.h IO/Url.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/ctype.h IO/Url.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+/usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+/usr/include/bits/posix2_lim.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/float.h ../config.h \
+- chain.h url.h /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h IO/IO.h /usr/include/unistd.h \
++ chain.h url.h /usr/include/string.h IO/IO.h /usr/include/unistd.h \
+/usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+/usr/include/getopt.h /usr/include/sys/uio.h /usr/include/bits/uio.h \
+misc.h list.h cookies.h debug.h
+@@ -58,7 +56,6 @@ cookies.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/ctype.h :
+IO/Url.h :
+/usr/include/glib-1.2/glib.h :
+@@ -75,8 +72,6 @@ IO/Url.h :
+chain.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+IO/IO.h :
+/usr/include/unistd.h :
+/usr/include/bits/posix_opt.h :
+diff -pru dillo-0.6.6/src/.deps/dicache.P 
+dillo-0.6.6-namedpipe/src/.deps/dicache.P
+--- dillo-0.6.6/src/.deps/dicache.P Tue Jun 4 10:43:59 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dicache.P Mon Jun 10 12:50:39 2002
+@@ -110,15 +110,13 @@ dicache.o: dicache.c /usr/include/glib-1
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/time.h /usr/include/bits/time.h /usr/include/sys/select.h \
+/usr/include/bits/select.h /usr/include/bits/sigset.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h /usr/include/stdio.h \
+- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+- /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h image.h \
+- dw_image.h dw_widget.h dw_style.h dw_tooltip.h url.h bitvec.h web.h \
+- cache.h chain.h html.h browser.h /usr/include/sys/types.h \
+- /usr/include/sys/sysmacros.h dicache.h interface.h prefs.h
++ /usr/include/string.h /usr/include/stdio.h /usr/include/libio.h \
++ /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h \
++ /usr/include/gconv.h /usr/include/bits/stdio_lim.h image.h dw_image.h \
++ dw_widget.h dw_style.h dw_tooltip.h url.h bitvec.h web.h cache.h \
++ chain.h html.h browser.h /usr/include/sys/types.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/sysmacros.h dicache.h \
++ interface.h prefs.h
+dicache.c :
+/usr/include/glib-1.2/glib.h :
+/usr/lib/glib/include/glibconfig.h :
+@@ -259,11 +257,6 @@ dicache.c :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+@@ -271,7 +264,6 @@ dicache.c :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+image.h :
+dw_image.h :
+dw_widget.h :
+@@ -285,6 +277,8 @@ chain.h :
+html.h :
+browser.h :
+/usr/include/sys/types.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/sysmacros.h :
+dicache.h :
+interface.h :
+diff -pru dillo-0.6.6/src/.deps/dillo.P 
+dillo-0.6.6-namedpipe/src/.deps/dillo.P
+--- dillo-0.6.6/src/.deps/dillo.P Tue Jun 4 10:43:58 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dillo.P Mon Jun 10 12:50:38 2002
+@@ -5,10 +5,9 @@ dillo.o: dillo.c /usr/include/stdio.h /u
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -114,13 +113,12 @@ dillo.o: dillo.c /usr/include/stdio.h /u
+/usr/include/sys/select.h /usr/include/bits/select.h \
+/usr/include/bits/sigset.h /usr/include/bits/time.h \
+/usr/include/sys/sysmacros.h /usr/include/sys/stat.h \
+- /usr/include/bits/stat.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/stdlib.h /usr/include/errno.h /usr/include/bits/errno.h \
+- /usr/include/linux/errno.h /usr/include/asm/errno.h \
+- /usr/include/fcntl.h /usr/include/bits/fcntl.h /usr/include/unistd.h \
+- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+- /usr/include/getopt.h /usr/include/alloca.h /usr/include/signal.h \
++ /usr/include/bits/stat.h /usr/include/string.h /usr/include/errno.h \
++ /usr/include/bits/errno.h /usr/include/linux/errno.h \
++ /usr/include/asm/errno.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
++ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
++ /usr/include/bits/confname.h /usr/include/getopt.h \
++ /usr/include/stdlib.h /usr/include/alloca.h /usr/include/signal.h \
+/usr/include/bits/signum.h /usr/include/bits/siginfo.h \
+/usr/include/bits/wordsize.h /usr/include/bits/sigaction.h \
+/usr/include/bits/sigcontext.h /usr/include/asm/sigcontext.h \
+@@ -129,7 +127,7 @@ dillo.o: dillo.c /usr/include/stdio.h /u
+dw_image.h dw_tooltip.h image.h bitvec.h misc.h dw_gtk_statuslabel.h \
+nav.h history.h bookmark.h dicache.h dns.h IO/Url.h ../config.h IO/IO.h \
+/usr/include/sys/uio.h /usr/include/bits/uio.h IO/mime.h prefs.h \
+- interface.h dw.h cookies.h
++ interface.h dw.h cookies.h rurl.h
+dillo.c :
+/usr/include/stdio.h :
+/usr/include/features.h :
+@@ -146,7 +144,6 @@ dillo.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -283,9 +280,6 @@ dillo.c :
+/usr/include/sys/stat.h :
+/usr/include/bits/stat.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+/usr/include/errno.h :
+/usr/include/bits/errno.h :
+/usr/include/linux/errno.h :
+@@ -296,6 +290,7 @@ dillo.c :
+/usr/include/bits/posix_opt.h :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
++/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/signal.h :
+/usr/include/bits/signum.h :
+@@ -336,3 +331,4 @@ prefs.h :
+interface.h :
+dw.h :
+cookies.h :
++rurl.h :
+diff -pru dillo-0.6.6/src/.deps/dns.P dillo-0.6.6-namedpipe/src/.deps/dns.P
+--- dillo-0.6.6/src/.deps/dns.P Tue Jun 4 10:44:00 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dns.P Mon Jun 10 12:50:40 2002
+@@ -31,13 +31,11 @@ dns.o: dns.c /usr/include/pthread.h /usr
+/usr/include/stdlib.h /usr/include/alloca.h /usr/include/stdio.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/gconv.h /usr/include/bits/stdio_lim.h \
+- /usr/include/bits/stdio.h /usr/include/bits/signum.h \
+- /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
+- /usr/include/bits/sigcontext.h /usr/include/asm/sigcontext.h \
+- /usr/include/bits/sigstack.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h dns.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/bits/signum.h /usr/include/bits/siginfo.h \
++ /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
++ /usr/include/asm/sigcontext.h /usr/include/bits/sigstack.h \
++ /usr/include/string.h dns.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
+/usr/include/gtk-1.2/gdk/gdkcursors.h /usr/include/gtk-1.2/gdk/gdkrgb.h \
+/usr/include/gtk-1.2/gtk/gtkaccelgroup.h \
+/usr/include/gtk-1.2/gtk/gtkobject.h /usr/include/gtk-1.2/gtk/gtkarg.h \
+@@ -198,7 +196,6 @@ dns.c :
+/usr/include/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/bits/signum.h :
+/usr/include/bits/siginfo.h :
+/usr/include/bits/sigaction.h :
+@@ -206,8 +203,6 @@ dns.c :
+/usr/include/asm/sigcontext.h :
+/usr/include/bits/sigstack.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+dns.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+diff -pru dillo-0.6.6/src/.deps/dw_aligned_page.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_aligned_page.P
+--- dillo-0.6.6/src/.deps/dw_aligned_page.P Tue Jun 4 10:43:45 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_aligned_page.P Mon Jun 10 
+12:50:27 2002
+@@ -23,8 +23,7 @@ dw_aligned_page.o: dw_aligned_page.c dw_
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/stdlib.h list.h
++ /usr/include/string.h list.h
+dw_aligned_page.c :
+dw_aligned_page.h :
+dw_page.h :
+@@ -70,7 +69,4 @@ findtext.h :
+/usr/include/bits/endian.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+list.h :
+diff -pru dillo-0.6.6/src/.deps/dw_gtk_scrolled_window.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_gtk_scrolled_window.P
+--- dillo-0.6.6/src/.deps/dw_gtk_scrolled_window.P Tue Jun 4 
+10:43:49 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_gtk_scrolled_window.P Mon Jun 
+10 12:50:31 2002
+@@ -33,9 +33,8 @@ dw_gtk_scrolled_window.o: dw_gtk_scrolle
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/stdlib.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gtk/gtkaccellabel.h \
++ /usr/include/string.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gtk/gtkaccellabel.h \
+/usr/include/gtk-1.2/gtk/gtklabel.h /usr/include/gtk-1.2/gtk/gtkmisc.h \
+/usr/include/gtk-1.2/gtk/gtkalignment.h \
+/usr/include/gtk-1.2/gtk/gtkaspectframe.h \
+@@ -168,9 +167,6 @@ findtext.h :
+/usr/include/bits/endian.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gtk/gtkaccellabel.h :
+/usr/include/gtk-1.2/gtk/gtklabel.h :
+diff -pru dillo-0.6.6/src/.deps/dw_gtk_statuslabel.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_gtk_statuslabel.P
+--- dillo-0.6.6/src/.deps/dw_gtk_statuslabel.P Tue Jun 4 10:43:49 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_gtk_statuslabel.P Mon Jun 10 
+12:50:31 2002
+@@ -20,11 +20,7 @@ dw_gtk_statuslabel.o: dw_gtk_statuslabel
+/usr/include/gtk-1.2/gtk/gtkadjustment.h \
+/usr/include/gtk-1.2/gtk/gtkdata.h /usr/include/gtk-1.2/gtk/gtkstyle.h \
+dw_gtk_statuslabel.h /usr/include/string.h \
+- /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h
++ /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h
+dw_gtk_statuslabel.c :
+/usr/include/gtk-1.2/gtk/gtklabel.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+@@ -60,11 +56,3 @@ dw_gtk_statuslabel.c :
+dw_gtk_statuslabel.h :
+/usr/include/string.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/bits/types.h :
+-/usr/include/bits/pthreadtypes.h :
+-/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+diff -pru dillo-0.6.6/src/.deps/dw_image.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_image.P
+--- dillo-0.6.6/src/.deps/dw_image.P Tue Jun 4 10:43:51 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_image.P Mon Jun 10 12:50:32 2002
+@@ -6,7 +6,7 @@ dw_image.o: dw_image.c dw_image.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h dw_widget.h \
++ /usr/include/bits/stdio_lim.h dw_widget.h \
+/usr/include/gtk-1.2/gtk/gtkobject.h /usr/include/gtk-1.2/gtk/gtkarg.h \
+/usr/include/gtk-1.2/gtk/gtktypeutils.h /usr/include/glib-1.2/glib.h \
+/usr/lib/glib/include/glibconfig.h \
+@@ -24,10 +24,8 @@ dw_image.o: dw_image.c dw_image.h /usr/i
+/usr/include/gtk-1.2/gtk/gtkaccelgroup.h \
+/usr/include/gtk-1.2/gtk/gtkadjustment.h \
+/usr/include/gtk-1.2/gtk/gtkdata.h /usr/include/gtk-1.2/gtk/gtkstyle.h \
+- dw_style.h dw_tooltip.h url.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h /usr/include/stdlib.h \
+- dw_gtk_viewport.h /usr/include/gtk-1.2/gtk/gtklayout.h \
++ dw_style.h dw_tooltip.h url.h /usr/include/string.h dw_gtk_viewport.h \
++ /usr/include/gtk-1.2/gtk/gtklayout.h \
+/usr/include/gtk-1.2/gtk/gtkcontainer.h prefs.h dw_marshal.h list.h \
+dicache.h bitvec.h image.h /usr/include/gtk-1.2/gtk/gtk.h \
+/usr/include/gtk-1.2/gtk/gtkaccellabel.h \
+@@ -132,7 +130,6 @@ dw_image.h :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+dw_widget.h :
+/usr/include/gtk-1.2/gtk/gtkobject.h :
+/usr/include/gtk-1.2/gtk/gtkarg.h :
+@@ -163,11 +160,6 @@ dw_style.h :
+dw_tooltip.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+dw_gtk_viewport.h :
+/usr/include/gtk-1.2/gtk/gtklayout.h :
+/usr/include/gtk-1.2/gtk/gtkcontainer.h :
+diff -pru dillo-0.6.6/src/.deps/dw_list_item.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_list_item.P
+--- dillo-0.6.6/src/.deps/dw_list_item.P Tue Jun 4 10:43:51 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_list_item.P Mon Jun 10 
+12:50:33 2002
+@@ -23,8 +23,7 @@ dw_list_item.o: dw_list_item.c dw_list_i
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/stdlib.h
++ /usr/include/string.h
+dw_list_item.c :
+dw_list_item.h :
+dw_aligned_page.h :
+@@ -71,6 +70,3 @@ findtext.h :
+/usr/include/bits/endian.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+diff -pru dillo-0.6.6/src/.deps/dw_page.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_page.P
+--- dillo-0.6.6/src/.deps/dw_page.P Tue Jun 4 10:43:52 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_page.P Mon Jun 10 12:50:34 2002
+@@ -4,15 +4,12 @@ dw_page.o: dw_page.c /usr/include/ctype.
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/stdlib.h /usr/include/stdio.h /usr/include/libio.h \
+- /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h \
+- /usr/include/gconv.h \
++ /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
++ /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -128,9 +125,6 @@ dw_page.c :
+/usr/include/endian.h :
+/usr/include/bits/endian.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+@@ -139,7 +133,6 @@ dw_page.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+diff -pru dillo-0.6.6/src/.deps/dw_style.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_style.P
+--- dillo-0.6.6/src/.deps/dw_style.P Tue Jun 4 10:43:53 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_style.P Mon Jun 10 12:50:34 2002
+@@ -20,14 +20,12 @@ dw_style.o: dw_style.c dw_style.h /usr/i
+/usr/include/gtk-1.2/gtk/gtkdata.h /usr/include/gtk-1.2/gtk/gtkstyle.h \
+prefs.h url.h /usr/include/string.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h /usr/include/stdio.h \
++ /usr/include/stdio.h /usr/include/bits/types.h \
++ /usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/ctype.h debug.h
++ /usr/include/bits/stdio_lim.h /usr/include/ctype.h \
++ /usr/include/endian.h /usr/include/bits/endian.h debug.h
+dw_style.c :
+dw_style.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -64,21 +62,17 @@ prefs.h :
+url.h :
+/usr/include/string.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
++/usr/include/stdio.h :
+/usr/include/bits/types.h :
+/usr/include/bits/pthreadtypes.h :
+/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+-/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+/usr/include/wchar.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/ctype.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+debug.h :
+diff -pru dillo-0.6.6/src/.deps/dw_table.P 
+dillo-0.6.6-namedpipe/src/.deps/dw_table.P
+--- dillo-0.6.6/src/.deps/dw_table.P Tue Jun 4 10:43:54 2002
++++ dillo-0.6.6-namedpipe/src/.deps/dw_table.P Mon Jun 10 12:50:34 2002
+@@ -1,10 +1,6 @@
+dw_table.o: dw_table.c /usr/include/string.h /usr/include/features.h \
+/usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+- /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h dw_table.h \
++ /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h dw_table.h \
+dw_container.h dw_widget.h /usr/include/gtk-1.2/gtk/gtkobject.h \
+/usr/include/gtk-1.2/gtk/gtkarg.h \
+/usr/include/gtk-1.2/gtk/gtktypeutils.h /usr/include/glib-1.2/glib.h \
+@@ -24,8 +20,10 @@ dw_table.o: dw_table.c /usr/include/stri
+/usr/include/gtk-1.2/gtk/gtkaccelgroup.h \
+/usr/include/gtk-1.2/gtk/gtkadjustment.h \
+/usr/include/gtk-1.2/gtk/gtkdata.h /usr/include/gtk-1.2/gtk/gtkstyle.h \
+- dw_style.h findtext.h /usr/include/ctype.h bitvec.h list.h prefs.h \
+- url.h dw_gtk_viewport.h /usr/include/gtk-1.2/gtk/gtklayout.h \
++ dw_style.h findtext.h /usr/include/ctype.h /usr/include/bits/types.h \
++ /usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
++ /usr/include/endian.h /usr/include/bits/endian.h bitvec.h list.h \
++ prefs.h url.h dw_gtk_viewport.h /usr/include/gtk-1.2/gtk/gtklayout.h \
+/usr/include/gtk-1.2/gtk/gtkcontainer.h debug.h
+dw_table.c :
+/usr/include/string.h :
+@@ -33,14 +31,6 @@ dw_table.c :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/bits/types.h :
+-/usr/include/bits/pthreadtypes.h :
+-/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+dw_table.h :
+dw_container.h :
+dw_widget.h :
+@@ -73,6 +63,11 @@ dw_widget.h :
+dw_style.h :
+findtext.h :
+/usr/include/ctype.h :
++/usr/include/bits/types.h :
++/usr/include/bits/pthreadtypes.h :
++/usr/include/bits/sched.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+bitvec.h :
+list.h :
+prefs.h :
+diff -pru dillo-0.6.6/src/.deps/findtext.P 
+dillo-0.6.6-namedpipe/src/.deps/findtext.P
+--- dillo-0.6.6/src/.deps/findtext.P Tue Jun 4 10:43:56 2002
++++ dillo-0.6.6-namedpipe/src/.deps/findtext.P Mon Jun 10 12:50:36 2002
+@@ -1,12 +1,10 @@
+findtext.o: findtext.c /usr/include/string.h /usr/include/features.h \
+/usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+- /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
++ /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h findtext.h \
++ /usr/include/ctype.h /usr/include/bits/types.h \
++ /usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h findtext.h \
+- /usr/include/ctype.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -31,16 +29,13 @@ findtext.c :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
++findtext.h :
++/usr/include/ctype.h :
+/usr/include/bits/types.h :
+/usr/include/bits/pthreadtypes.h :
+/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+-findtext.h :
+-/usr/include/ctype.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/glib-1.2/glib.h :
+/usr/lib/glib/include/glibconfig.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h :
+diff -pru dillo-0.6.6/src/.deps/gif.P dillo-0.6.6-namedpipe/src/.deps/gif.P
+--- dillo-0.6.6/src/.deps/gif.P Tue Jun 4 10:44:01 2002
++++ dillo-0.6.6-namedpipe/src/.deps/gif.P Mon Jun 10 12:50:41 2002
+@@ -5,10 +5,7 @@ gif.o: gif.c /usr/include/stdio.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h \
++ /usr/include/bits/stdio_lim.h /usr/include/string.h \
+/usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+/usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+/usr/lib/glib/include/glibconfig.h \
+@@ -115,6 +112,7 @@ gif.o: gif.c /usr/include/stdio.h /usr/i
+/usr/include/gtk-1.2/gtk/gtkvseparator.h image.h dw_image.h dw_widget.h \
+dw_style.h dw_tooltip.h url.h bitvec.h web.h cache.h chain.h html.h \
+browser.h /usr/include/sys/types.h /usr/include/time.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
+/usr/include/sys/select.h /usr/include/bits/select.h \
+/usr/include/bits/sigset.h /usr/include/bits/time.h \
+/usr/include/sys/sysmacros.h dicache.h prefs.h
+@@ -134,13 +132,7 @@ gif.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -279,6 +271,8 @@ html.h :
+browser.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+diff -pru dillo-0.6.6/src/.deps/history.P 
+dillo-0.6.6-namedpipe/src/.deps/history.P
+--- dillo-0.6.6/src/.deps/history.P Tue Jun 4 10:44:08 2002
++++ dillo-0.6.6-namedpipe/src/.deps/history.P Mon Jun 10 12:50:46 2002
+@@ -9,11 +9,7 @@ history.o: history.c list.h history.h /u
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/float.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h url.h \
+/usr/include/string.h \
+- /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h
++ /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h
+history.c :
+list.h :
+history.h :
+@@ -34,11 +30,3 @@ history.h :
+url.h :
+/usr/include/string.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/bits/types.h :
+-/usr/include/bits/pthreadtypes.h :
+-/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+diff -pru dillo-0.6.6/src/.deps/html.P 
+dillo-0.6.6-namedpipe/src/.deps/html.P
+--- dillo-0.6.6/src/.deps/html.P Tue Jun 4 10:44:06 2002
++++ dillo-0.6.6-namedpipe/src/.deps/html.P Mon Jun 10 12:50:44 2002
+@@ -4,7 +4,6 @@ html.o: html.c /usr/include/ctype.h /usr
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/endian.h /usr/include/bits/endian.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+/usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+/usr/include/sys/select.h /usr/include/bits/select.h \
+/usr/include/bits/sigset.h /usr/include/bits/time.h \
+@@ -12,10 +11,9 @@ html.o: html.c /usr/include/ctype.h /usr
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/math.h /usr/include/bits/huge_val.h \
+- /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+- /usr/include/bits/mathinline.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/bits/stdio_lim.h /usr/include/math.h \
++ /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
++ /usr/include/bits/mathcalls.h /usr/include/gtk-1.2/gtk/gtk.h \
+/usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
+/usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+@@ -139,8 +137,6 @@ html.c :
+/usr/include/endian.h :
+/usr/include/bits/endian.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -158,12 +154,10 @@ html.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/math.h :
+/usr/include/bits/huge_val.h :
+/usr/include/bits/mathdef.h :
+/usr/include/bits/mathcalls.h :
+-/usr/include/bits/mathinline.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+diff -pru dillo-0.6.6/src/.deps/image.P 
+dillo-0.6.6-namedpipe/src/.deps/image.P
+--- dillo-0.6.6/src/.deps/image.P Tue Jun 4 10:44:06 2002
++++ dillo-0.6.6-namedpipe/src/.deps/image.P Mon Jun 10 12:50:45 2002
+@@ -108,10 +108,7 @@ image.o: image.c /usr/include/gtk-1.2/gt
+/usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h image.h dw_image.h \
++ /usr/include/bits/stdio_lim.h /usr/include/string.h image.h dw_image.h \
+dw_widget.h dw_style.h dw_tooltip.h url.h bitvec.h
+image.c :
+/usr/include/gtk-1.2/gtk/gtk.h :
+@@ -253,13 +250,7 @@ image.c :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+image.h :
+dw_image.h :
+dw_widget.h :
+diff -pru dillo-0.6.6/src/.deps/interface.P 
+dillo-0.6.6-namedpipe/src/.deps/interface.P
+--- dillo-0.6.6/src/.deps/interface.P Tue Jun 4 10:44:08 2002
++++ dillo-0.6.6-namedpipe/src/.deps/interface.P Mon Jun 10 12:50:46 2002
+@@ -5,8 +5,8 @@ interface.o: interface.c /usr/include/st
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/ctype.h /usr/include/endian.h /usr/include/bits/endian.h \
++ /usr/include/bits/stdio_lim.h /usr/include/ctype.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
+/usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+/usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+/usr/lib/glib/include/glibconfig.h \
+@@ -116,16 +116,14 @@ interface.o: interface.c /usr/include/st
+/usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+/usr/include/sys/stat.h /usr/include/bits/stat.h \
+/usr/include/sys/time.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
+- list.h dillo.h browser.h url.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/stdlib.h web.h cache.h chain.h html.h dw_widget.h \
+- dw_style.h dw_image.h dw_tooltip.h image.h bitvec.h history.h nav.h \
+- IO/Url.h ../config.h IO/IO.h /usr/include/unistd.h \
+- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+- /usr/include/getopt.h /usr/include/sys/uio.h /usr/include/bits/uio.h \
+- interface.h commands.h menu.h bookmark.h prefs.h \
+- dw_gtk_scrolled_window.h dw_gtk_viewport.h dw_gtk_statuslabel.h \
+- dw_container.h findtext.h progressbar.h pixmaps.h \
++ list.h dillo.h browser.h url.h /usr/include/string.h web.h cache.h \
++ chain.h html.h dw_widget.h dw_style.h dw_image.h dw_tooltip.h image.h \
++ bitvec.h history.h nav.h IO/Url.h ../config.h IO/IO.h \
++ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
++ /usr/include/bits/confname.h /usr/include/getopt.h \
++ /usr/include/sys/uio.h /usr/include/bits/uio.h interface.h commands.h \
++ menu.h bookmark.h prefs.h dw_gtk_scrolled_window.h dw_gtk_viewport.h \
++ dw_gtk_statuslabel.h dw_container.h findtext.h progressbar.h pixmaps.h \
+/usr/include/gtk-1.2/gdk/gdkkeysyms.h debug.h
+interface.c :
+/usr/include/stdio.h :
+@@ -143,7 +141,6 @@ interface.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/ctype.h :
+/usr/include/endian.h :
+/usr/include/bits/endian.h :
+@@ -288,9 +285,6 @@ dillo.h :
+browser.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+web.h :
+cache.h :
+chain.h :
+diff -pru dillo-0.6.6/src/.deps/jpeg.P 
+dillo-0.6.6-namedpipe/src/.deps/jpeg.P
+--- dillo-0.6.6/src/.deps/jpeg.P Tue Jun 4 10:44:02 2002
++++ dillo-0.6.6-namedpipe/src/.deps/jpeg.P Mon Jun 10 12:50:42 2002
+@@ -5,10 +5,9 @@ jpeg.o: jpeg.c /usr/include/stdio.h /usr
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -113,12 +112,11 @@ jpeg.o: jpeg.c /usr/include/stdio.h /usr
+/usr/include/bits/setjmp.h /usr/include/bits/sigset.h \
+/usr/include/jpeglib.h /usr/include/jconfig.h /usr/include/jmorecfg.h \
+image.h dw_image.h dw_widget.h dw_style.h dw_tooltip.h url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h bitvec.h web.h cache.h \
+- chain.h html.h browser.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/time.h /usr/include/sys/sysmacros.h dicache.h
++ /usr/include/string.h bitvec.h web.h cache.h chain.h html.h browser.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/time.h \
++ /usr/include/sys/sysmacros.h dicache.h
+jpeg.c :
+/usr/include/stdio.h :
+/usr/include/features.h :
+@@ -135,7 +133,6 @@ jpeg.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -273,11 +270,6 @@ dw_style.h :
+dw_tooltip.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+bitvec.h :
+web.h :
+cache.h :
+@@ -286,6 +278,8 @@ html.h :
+browser.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/time.h :
+diff -pru dillo-0.6.6/src/.deps/menu.P 
+dillo-0.6.6-namedpipe/src/.deps/menu.P
+--- dillo-0.6.6/src/.deps/menu.P Tue Jun 4 10:44:11 2002
++++ dillo-0.6.6-namedpipe/src/.deps/menu.P Mon Jun 10 12:50:49 2002
+@@ -5,16 +5,15 @@ menu.o: menu.c /usr/include/stdio.h /usr
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/gtk-1.2/gtk/gtk.h \
+- /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
+- /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/string.h \
++ /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
++ /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
++ /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -135,7 +134,6 @@ menu.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -148,8 +146,6 @@ menu.c :
+/usr/include/sys/sysmacros.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+diff -pru dillo-0.6.6/src/.deps/misc.P 
+dillo-0.6.6-namedpipe/src/.deps/misc.P
+--- dillo-0.6.6/src/.deps/misc.P Tue Jun 4 10:44:07 2002
++++ dillo-0.6.6-namedpipe/src/.deps/misc.P Mon Jun 10 12:50:45 2002
+@@ -108,16 +108,14 @@ misc.o: misc.c /usr/include/gtk-1.2/gtk/
+/usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+- /usr/include/bits/confname.h /usr/include/getopt.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/ctype.h
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/unistd.h \
++ /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
++ /usr/include/getopt.h /usr/include/string.h /usr/include/ctype.h
+misc.c :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+@@ -258,7 +256,6 @@ misc.c :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -275,6 +272,4 @@ misc.c :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/ctype.h :
+diff -pru dillo-0.6.6/src/.deps/nav.P dillo-0.6.6-namedpipe/src/.deps/nav.P
+--- dillo-0.6.6/src/.deps/nav.P Tue Jun 4 10:44:09 2002
++++ dillo-0.6.6-namedpipe/src/.deps/nav.P Mon Jun 10 12:50:47 2002
+@@ -5,10 +5,9 @@ nav.o: nav.c /usr/include/stdio.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -114,11 +113,9 @@ nav.o: nav.c /usr/include/stdio.h /usr/i
+/usr/include/bits/endian.h /usr/include/sys/select.h \
+/usr/include/bits/select.h /usr/include/bits/sigset.h \
+/usr/include/bits/time.h /usr/include/sys/sysmacros.h url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/stdlib.h dw_widget.h \
+- dw_style.h history.h web.h cache.h chain.h html.h dw_image.h \
+- dw_tooltip.h image.h bitvec.h menu.h interface.h \
+- dw_gtk_scrolled_window.h prefs.h commands.h debug.h
++ /usr/include/string.h dw_widget.h dw_style.h history.h web.h cache.h \
++ chain.h html.h dw_image.h dw_tooltip.h image.h bitvec.h menu.h \
++ interface.h dw_gtk_scrolled_window.h prefs.h commands.h debug.h
+nav.c :
+/usr/include/stdio.h :
+/usr/include/features.h :
+@@ -135,7 +132,6 @@ nav.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -274,9 +270,6 @@ browser.h :
+/usr/include/sys/sysmacros.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/stdlib.h :
+dw_widget.h :
+dw_style.h :
+history.h :
+diff -pru dillo-0.6.6/src/.deps/plain.P 
+dillo-0.6.6-namedpipe/src/.deps/plain.P
+--- dillo-0.6.6/src/.deps/plain.P Tue Jun 4 10:44:10 2002
++++ dillo-0.6.6-namedpipe/src/.deps/plain.P Mon Jun 10 12:50:48 2002
+@@ -1,12 +1,8 @@
+plain.o: plain.c /usr/include/string.h /usr/include/features.h \
+/usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h /usr/include/math.h \
+- /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
+- /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
++ /usr/include/math.h /usr/include/bits/huge_val.h \
++ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+/usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+/usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+/usr/lib/glib/include/glibconfig.h \
+@@ -113,34 +109,26 @@ plain.o: plain.c /usr/include/string.h /
+/usr/include/gtk-1.2/gtk/gtkvscale.h \
+/usr/include/gtk-1.2/gtk/gtkvseparator.h prefs.h url.h dw_page.h \
+dw_container.h dw_widget.h dw_style.h findtext.h /usr/include/ctype.h \
+- cache.h chain.h browser.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h web.h html.h dw_image.h \
+- /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+- /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h dw_tooltip.h \
+- image.h bitvec.h interface.h progressbar.h misc.h history.h nav.h \
+- menu.h
++ /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
++ /usr/include/bits/sched.h /usr/include/endian.h \
++ /usr/include/bits/endian.h cache.h chain.h browser.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h web.h html.h \
++ dw_image.h /usr/include/stdio.h /usr/include/libio.h \
++ /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h \
++ /usr/include/gconv.h /usr/include/bits/stdio_lim.h dw_tooltip.h image.h \
++ bitvec.h interface.h progressbar.h misc.h history.h nav.h menu.h
+plain.c :
+/usr/include/string.h :
+/usr/include/features.h :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/bits/types.h :
+-/usr/include/bits/pthreadtypes.h :
+-/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+/usr/include/math.h :
+/usr/include/bits/huge_val.h :
+/usr/include/bits/mathdef.h :
+/usr/include/bits/mathcalls.h :
+-/usr/include/bits/mathinline.h :
+/usr/include/gtk-1.2/gtk/gtk.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+@@ -274,6 +262,11 @@ dw_widget.h :
+dw_style.h :
+findtext.h :
+/usr/include/ctype.h :
++/usr/include/bits/types.h :
++/usr/include/bits/pthreadtypes.h :
++/usr/include/bits/sched.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+cache.h :
+chain.h :
+browser.h :
+@@ -294,7 +287,6 @@ dw_image.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+dw_tooltip.h :
+image.h :
+bitvec.h :
+diff -pru dillo-0.6.6/src/.deps/png.P dillo-0.6.6-namedpipe/src/.deps/png.P
+--- dillo-0.6.6/src/.deps/png.P Tue Jun 4 10:44:03 2002
++++ dillo-0.6.6-namedpipe/src/.deps/png.P Mon Jun 10 12:50:43 2002
+@@ -5,18 +5,17 @@ png.o: png.c /usr/include/stdio.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h \
+- /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+- /usr/include/bits/select.h /usr/include/bits/sigset.h \
+- /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+- /usr/include/alloca.h /usr/include/zlib.h /usr/include/zconf.h \
+- /usr/include/png.h /usr/include/pngconf.h /usr/include/setjmp.h \
+- /usr/include/bits/setjmp.h /usr/include/gtk-1.2/gtk/gtk.h \
+- /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
+- /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/string.h \
++ /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
++ /usr/include/sys/select.h /usr/include/bits/select.h \
++ /usr/include/bits/sigset.h /usr/include/bits/time.h \
++ /usr/include/sys/sysmacros.h /usr/include/alloca.h /usr/include/zlib.h \
++ /usr/include/zconf.h /usr/include/png.h /usr/include/pngconf.h \
++ /usr/include/setjmp.h /usr/include/bits/setjmp.h \
++ /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
++ /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
++ /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -136,15 +135,12 @@ png.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+diff -pru dillo-0.6.6/src/.deps/prefs.P 
+dillo-0.6.6-namedpipe/src/.deps/prefs.P
+--- dillo-0.6.6/src/.deps/prefs.P Tue Jun 4 10:44:12 2002
++++ dillo-0.6.6-namedpipe/src/.deps/prefs.P Mon Jun 10 12:50:49 2002
+@@ -16,11 +16,10 @@ prefs.o: prefs.c /usr/include/glib-1.2/g
+/usr/include/bits/sigset.h /usr/include/bits/time.h \
+/usr/include/sys/sysmacros.h /usr/include/sys/stat.h \
+/usr/include/bits/stat.h /usr/include/stdlib.h /usr/include/alloca.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/fcntl.h \
+- /usr/include/bits/fcntl.h /usr/include/locale.h \
+- /usr/include/bits/locale.h prefs.h url.h colors.h dillo.h browser.h \
+- /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/string.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
++ /usr/include/locale.h /usr/include/bits/locale.h prefs.h url.h colors.h \
++ dillo.h browser.h /usr/include/gtk-1.2/gdk/gdk.h \
++ /usr/include/gtk-1.2/gdk/gdktypes.h \
+/usr/include/gtk-1.2/gdk/gdkcursors.h /usr/include/gtk-1.2/gdk/gdkrgb.h \
+/usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gtk/gtkaccelgroup.h \
+/usr/include/gtk-1.2/gtk/gtkobject.h /usr/include/gtk-1.2/gtk/gtkarg.h \
+@@ -119,8 +118,7 @@ prefs.o: prefs.c /usr/include/glib-1.2/g
+dw_widget.h dw_style.h dw_image.h /usr/include/stdio.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h dw_tooltip.h \
+- image.h bitvec.h misc.h
++ /usr/include/bits/stdio_lim.h dw_tooltip.h image.h bitvec.h misc.h
+prefs.c :
+/usr/include/glib-1.2/glib.h :
+/usr/lib/glib/include/glibconfig.h :
+@@ -154,8 +152,6 @@ prefs.c :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/fcntl.h :
+/usr/include/bits/fcntl.h :
+/usr/include/locale.h :
+@@ -293,7 +289,6 @@ dw_image.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+dw_tooltip.h :
+image.h :
+bitvec.h :
+diff -pru dillo-0.6.6/src/.deps/progressbar.P 
+dillo-0.6.6-namedpipe/src/.deps/progressbar.P
+--- dillo-0.6.6/src/.deps/progressbar.P Tue Jun 4 10:43:57 2002
++++ dillo-0.6.6-namedpipe/src/.deps/progressbar.P Mon Jun 10 12:50:37 
+2002
+@@ -2,16 +2,14 @@ progressbar.o: progressbar.c /usr/includ
+/usr/include/features.h /usr/include/sys/cdefs.h \
+/usr/include/gnu/stubs.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h /usr/include/stdio.h \
++ /usr/include/stdio.h /usr/include/bits/types.h \
++ /usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
+- /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/gtk-1.2/gdk/gdk.h \
++ /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
++ /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -119,15 +117,10 @@ progressbar.c :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
++/usr/include/stdio.h :
+/usr/include/bits/types.h :
+/usr/include/bits/pthreadtypes.h :
+/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+-/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+/usr/include/wchar.h :
+@@ -135,7 +128,6 @@ progressbar.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/gtk-1.2/gdk/gdk.h :
+/usr/include/gtk-1.2/gdk/gdktypes.h :
+/usr/include/glib-1.2/glib.h :
+diff -pru dillo-0.6.6/src/.deps/url.P dillo-0.6.6-namedpipe/src/.deps/url.P
+--- dillo-0.6.6/src/.deps/url.P Tue Jun 4 10:44:13 2002
++++ dillo-0.6.6-namedpipe/src/.deps/url.P Mon Jun 10 12:50:50 2002
+@@ -5,14 +5,12 @@ url.o: url.c /usr/include/stdio.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/ctype.h \
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/string.h /usr/include/ctype.h \
+/usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+@@ -36,7 +34,6 @@ url.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -49,8 +46,6 @@ url.c :
+/usr/include/sys/sysmacros.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/ctype.h :
+/usr/include/glib-1.2/glib.h :
+/usr/lib/glib/include/glibconfig.h :
+diff -pru dillo-0.6.6/src/.deps/web.P dillo-0.6.6-namedpipe/src/.deps/web.P
+--- dillo-0.6.6/src/.deps/web.P Tue Jun 4 10:43:56 2002
++++ dillo-0.6.6-namedpipe/src/.deps/web.P Mon Jun 10 12:50:37 2002
+@@ -5,15 +5,14 @@ web.o: web.c /usr/include/stdio.h /usr/i
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/gtk-1.2/gtk/gtk.h /usr/include/gtk-1.2/gdk/gdk.h \
+- /usr/include/gtk-1.2/gdk/gdktypes.h /usr/include/glib-1.2/glib.h \
+- /usr/lib/glib/include/glibconfig.h \
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/gtk-1.2/gtk/gtk.h \
++ /usr/include/gtk-1.2/gdk/gdk.h /usr/include/gtk-1.2/gdk/gdktypes.h \
++ /usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -116,9 +115,8 @@ web.o: web.c /usr/include/stdio.h /usr/i
+/usr/include/gtk-1.2/gtk/gtkvscale.h \
+/usr/include/gtk-1.2/gtk/gtkvseparator.h /usr/include/math.h \
+/usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
+- /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h dillo.h \
+- browser.h url.h /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h web.h cache.h chain.h html.h dw_widget.h \
++ /usr/include/bits/mathcalls.h dillo.h browser.h url.h \
++ /usr/include/string.h web.h cache.h chain.h html.h dw_widget.h \
+dw_style.h dw_image.h dw_tooltip.h image.h bitvec.h nav.h interface.h \
+IO/IO.h /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+/usr/include/bits/confname.h /usr/include/getopt.h \
+@@ -140,7 +138,6 @@ web.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -280,13 +277,10 @@ web.c :
+/usr/include/bits/huge_val.h :
+/usr/include/bits/mathdef.h :
+/usr/include/bits/mathcalls.h :
+-/usr/include/bits/mathinline.h :
+dillo.h :
+browser.h :
+url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+web.h :
+cache.h :
+chain.h :
+Only in dillo-0.6.6-namedpipe/src: CVS
+Only in dillo-0.6.6-namedpipe/src/IO/.deps: CVS
+diff -pru dillo-0.6.6/src/IO/.deps/IO.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/IO.P
+--- dillo-0.6.6/src/IO/.deps/IO.P Tue Jun 4 10:43:42 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/IO.P Mon Jun 10 12:50:25 2002
+@@ -5,18 +5,18 @@ IO.o: IO.c /usr/include/stdio.h /usr/inc
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/errno.h /usr/include/bits/errno.h \
+- /usr/include/linux/errno.h /usr/include/asm/errno.h \
+- /usr/include/fcntl.h /usr/include/bits/fcntl.h /usr/include/sys/types.h \
+- /usr/include/time.h /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/unistd.h \
+- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+- /usr/include/getopt.h /usr/include/sys/stat.h /usr/include/bits/stat.h \
+- /usr/include/sys/uio.h /usr/include/bits/uio.h \
+- /usr/include/sys/socket.h /usr/include/bits/socket.h \
++ /usr/include/bits/stdio_lim.h /usr/include/errno.h \
++ /usr/include/bits/errno.h /usr/include/linux/errno.h \
++ /usr/include/asm/errno.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
++ /usr/include/bits/confname.h /usr/include/getopt.h \
++ /usr/include/sys/stat.h /usr/include/bits/stat.h /usr/include/sys/uio.h \
++ /usr/include/bits/uio.h /usr/include/sys/socket.h \
++ /usr/include/bits/socket.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/limits.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/syslimits.h \
+/usr/include/limits.h /usr/include/bits/posix1_lim.h \
+@@ -44,7 +44,6 @@ IO.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/errno.h :
+/usr/include/bits/errno.h :
+/usr/include/linux/errno.h :
+diff -pru dillo-0.6.6/src/IO/.deps/Url.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/Url.P
+--- dillo-0.6.6/src/IO/.deps/Url.P Tue Jun 4 10:43:39 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/Url.P Mon Jun 10 12:50:22 2002
+@@ -17,8 +17,7 @@ Url.o: Url.c /usr/include/glib-1.2/glib.
+/usr/include/bits/sigset.h /usr/include/bits/time.h \
+/usr/include/sys/sysmacros.h /usr/include/alloca.h /usr/include/ctype.h \
+../list.h ../misc.h Url.h ../../config.h ../chain.h ../url.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h IO.h /usr/include/unistd.h \
++ /usr/include/string.h IO.h /usr/include/unistd.h \
+/usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+/usr/include/getopt.h /usr/include/sys/uio.h /usr/include/bits/uio.h
+Url.c :
+@@ -59,8 +58,6 @@ Url.h :
+../chain.h :
+../url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+IO.h :
+/usr/include/unistd.h :
+/usr/include/bits/posix_opt.h :
+diff -pru dillo-0.6.6/src/IO/.deps/about.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/about.P
+--- dillo-0.6.6/src/IO/.deps/about.P Tue Jun 4 10:43:39 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/about.P Mon Jun 10 12:50:22 2002
+@@ -14,12 +14,10 @@ about.o: about.c /usr/include/pthread.h
+/usr/include/bits/posix2_lim.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/float.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h ../../config.h \
+- ../chain.h ../url.h /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/endian.h \
+- /usr/include/bits/endian.h /usr/include/stdlib.h IO.h \
+- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+- /usr/include/bits/confname.h /usr/include/getopt.h \
+- /usr/include/sys/uio.h /usr/include/sys/types.h \
++ ../chain.h ../url.h /usr/include/string.h IO.h /usr/include/unistd.h \
++ /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
++ /usr/include/getopt.h /usr/include/sys/uio.h /usr/include/sys/types.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
+/usr/include/sys/select.h /usr/include/bits/select.h \
+/usr/include/sys/sysmacros.h /usr/include/bits/uio.h ../nav.h \
+../browser.h /usr/include/gtk-1.2/gdk/gdk.h \
+@@ -122,8 +120,7 @@ about.o: about.c /usr/include/pthread.h
+../web.h ../cache.h ../html.h ../dw_image.h /usr/include/stdio.h \
+/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+/usr/include/bits/wchar.h /usr/include/gconv.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h ../dw_tooltip.h \
+- ../image.h ../bitvec.h
++ /usr/include/bits/stdio_lim.h ../dw_tooltip.h ../image.h ../bitvec.h
+about.c :
+/usr/include/pthread.h :
+/usr/include/features.h :
+@@ -156,11 +153,6 @@ Url.h :
+../chain.h :
+../url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/stdlib.h :
+IO.h :
+/usr/include/unistd.h :
+/usr/include/bits/posix_opt.h :
+@@ -168,6 +160,8 @@ IO.h :
+/usr/include/getopt.h :
+/usr/include/sys/uio.h :
+/usr/include/sys/types.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/sys/sysmacros.h :
+@@ -301,7 +295,6 @@ IO.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+../dw_tooltip.h :
+../image.h :
+../bitvec.h :
+diff -pru dillo-0.6.6/src/IO/.deps/file.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/file.P
+--- dillo-0.6.6/src/IO/.deps/file.P Tue Jun 4 10:43:41 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/file.P Mon Jun 10 12:50:24 2002
+@@ -15,17 +15,15 @@ file.o: file.c /usr/include/pthread.h /u
+/usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h \
+/usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+/usr/include/fcntl.h /usr/include/bits/fcntl.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+/usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/bits/signum.h /usr/include/bits/siginfo.h \
+- /usr/include/bits/wordsize.h /usr/include/bits/sigaction.h \
+- /usr/include/bits/sigcontext.h /usr/include/asm/sigcontext.h \
+- /usr/include/bits/sigstack.h /usr/include/math.h \
+- /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
+- /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
++ /usr/include/bits/stdio_lim.h /usr/include/bits/signum.h \
++ /usr/include/bits/siginfo.h /usr/include/bits/wordsize.h \
++ /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
++ /usr/include/asm/sigcontext.h /usr/include/bits/sigstack.h \
++ /usr/include/math.h /usr/include/bits/huge_val.h \
++ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+/usr/include/errno.h /usr/include/bits/errno.h \
+/usr/include/linux/errno.h /usr/include/asm/errno.h Url.h \
+/usr/include/glib-1.2/glib.h /usr/lib/glib/include/glibconfig.h \
+@@ -172,8 +170,6 @@ file.c :
+/usr/include/fcntl.h :
+/usr/include/bits/fcntl.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+@@ -182,7 +178,6 @@ file.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/bits/signum.h :
+/usr/include/bits/siginfo.h :
+/usr/include/bits/wordsize.h :
+@@ -194,7 +189,6 @@ file.c :
+/usr/include/bits/huge_val.h :
+/usr/include/bits/mathdef.h :
+/usr/include/bits/mathcalls.h :
+-/usr/include/bits/mathinline.h :
+/usr/include/errno.h :
+/usr/include/bits/errno.h :
+/usr/include/linux/errno.h :
+diff -pru dillo-0.6.6/src/IO/.deps/http.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/http.P
+--- dillo-0.6.6/src/IO/.deps/http.P Tue Jun 4 10:43:42 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/http.P Mon Jun 10 12:50:25 2002
+@@ -5,10 +5,9 @@ http.o: http.c /usr/include/unistd.h /us
+/usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
+/usr/include/bits/confname.h /usr/include/getopt.h /usr/include/errno.h \
+/usr/include/bits/errno.h /usr/include/linux/errno.h \
+- /usr/include/asm/errno.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h /usr/include/stdlib.h \
+- /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
++ /usr/include/asm/errno.h /usr/include/string.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
+/usr/include/bits/select.h /usr/include/bits/sigset.h \
+/usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+/usr/include/alloca.h /usr/include/signal.h /usr/include/bits/signum.h \
+@@ -134,8 +133,8 @@ http.o: http.c /usr/include/unistd.h /us
+../browser.h ../dw_widget.h ../dw_style.h ../dw_image.h \
+/usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/gconv.h /usr/include/bits/stdio_lim.h \
+- /usr/include/bits/stdio.h ../dw_tooltip.h ../image.h ../bitvec.h \
+- ../interface.h ../cookies.h ../prefs.h ../debug.h
++ ../dw_tooltip.h ../image.h ../bitvec.h ../interface.h ../cookies.h \
++ ../prefs.h ../debug.h
+http.c :
+/usr/include/unistd.h :
+/usr/include/features.h :
+@@ -153,13 +152,11 @@ http.c :
+/usr/include/linux/errno.h :
+/usr/include/asm/errno.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+@@ -339,7 +336,6 @@ IO.h :
+/usr/include/wchar.h :
+/usr/include/gconv.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+../dw_tooltip.h :
+../image.h :
+../bitvec.h :
+diff -pru dillo-0.6.6/src/IO/.deps/mime.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/mime.P
+--- dillo-0.6.6/src/IO/.deps/mime.P Tue Jun 4 10:43:38 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/mime.P Mon Jun 10 12:50:21 2002
+@@ -106,18 +106,16 @@ mime.o: mime.c mime.h \
+/usr/include/gtk-1.2/gtk/gtkvruler.h \
+/usr/include/gtk-1.2/gtk/gtkvscale.h \
+/usr/include/gtk-1.2/gtk/gtkvseparator.h ../dw_widget.h ../dw_style.h \
+- ../cache.h ../chain.h ../url.h /usr/include/string.h \
+- /usr/include/bits/string.h /usr/include/bits/string2.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/bits/types.h /usr/include/bits/pthreadtypes.h \
+- /usr/include/bits/sched.h /usr/include/stdlib.h ../IO/Url.h \
++ ../cache.h ../chain.h ../url.h /usr/include/string.h ../IO/Url.h \
+../../config.h ../IO/IO.h /usr/include/unistd.h \
+- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+- /usr/include/getopt.h /usr/include/sys/uio.h /usr/include/sys/types.h \
+- /usr/include/time.h /usr/include/sys/select.h \
+- /usr/include/bits/select.h /usr/include/bits/sigset.h \
+- /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+- /usr/include/bits/uio.h ../list.h
++ /usr/include/bits/posix_opt.h /usr/include/bits/types.h \
++ /usr/include/bits/pthreadtypes.h /usr/include/bits/sched.h \
++ /usr/include/bits/confname.h /usr/include/getopt.h \
++ /usr/include/sys/uio.h /usr/include/sys/types.h /usr/include/time.h \
++ /usr/include/endian.h /usr/include/bits/endian.h \
++ /usr/include/sys/select.h /usr/include/bits/select.h \
++ /usr/include/bits/sigset.h /usr/include/bits/time.h \
++ /usr/include/sys/sysmacros.h /usr/include/bits/uio.h ../list.h
+mime.c :
+mime.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h :
+@@ -255,24 +253,21 @@ mime.h :
+../chain.h :
+../url.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+-/usr/include/endian.h :
+-/usr/include/bits/endian.h :
+-/usr/include/bits/types.h :
+-/usr/include/bits/pthreadtypes.h :
+-/usr/include/bits/sched.h :
+-/usr/include/stdlib.h :
+../IO/Url.h :
+../../config.h :
+../IO/IO.h :
+/usr/include/unistd.h :
+/usr/include/bits/posix_opt.h :
++/usr/include/bits/types.h :
++/usr/include/bits/pthreadtypes.h :
++/usr/include/bits/sched.h :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
+/usr/include/sys/uio.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
++/usr/include/endian.h :
++/usr/include/bits/endian.h :
+/usr/include/sys/select.h :
+/usr/include/bits/select.h :
+/usr/include/bits/sigset.h :
+diff -pru dillo-0.6.6/src/IO/.deps/proto.P 
+dillo-0.6.6-namedpipe/src/IO/.deps/proto.P
+--- dillo-0.6.6/src/IO/.deps/proto.P Tue Jun 4 10:43:40 2002
++++ dillo-0.6.6-namedpipe/src/IO/.deps/proto.P Mon Jun 10 12:50:23 2002
+@@ -5,16 +5,14 @@ proto.o: proto.c /usr/include/stdio.h /u
+/usr/include/bits/sched.h /usr/include/libio.h /usr/include/_G_config.h \
+/usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h \
+- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
+- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+- /usr/include/endian.h /usr/include/bits/endian.h \
+- /usr/include/sys/select.h /usr/include/bits/select.h \
+- /usr/include/bits/sigset.h /usr/include/bits/time.h \
+- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+- /usr/include/bits/confname.h /usr/include/getopt.h \
+- /usr/include/string.h /usr/include/bits/string.h \
+- /usr/include/bits/string2.h /usr/include/fcntl.h \
++ /usr/include/bits/stdio_lim.h /usr/include/stdlib.h \
++ /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
++ /usr/include/bits/endian.h /usr/include/sys/select.h \
++ /usr/include/bits/select.h /usr/include/bits/sigset.h \
++ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
++ /usr/include/alloca.h /usr/include/unistd.h \
++ /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
++ /usr/include/getopt.h /usr/include/string.h /usr/include/fcntl.h \
+/usr/include/bits/fcntl.h /usr/include/errno.h \
+/usr/include/bits/errno.h /usr/include/linux/errno.h \
+/usr/include/asm/errno.h /usr/include/signal.h \
+@@ -147,7 +145,6 @@ proto.c :
+/usr/include/gconv.h :
+/usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+-/usr/include/bits/stdio.h :
+/usr/include/stdlib.h :
+/usr/include/sys/types.h :
+/usr/include/time.h :
+@@ -164,8 +161,6 @@ proto.c :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
+/usr/include/string.h :
+-/usr/include/bits/string.h :
+-/usr/include/bits/string2.h :
+/usr/include/fcntl.h :
+/usr/include/bits/fcntl.h :
+/usr/include/errno.h :
+Only in dillo-0.6.6-namedpipe/src/IO: CVS
+diff -pru dillo-0.6.6/src/IO/Makefile dillo-0.6.6-namedpipe/src/IO/Makefile
+--- dillo-0.6.6/src/IO/Makefile Tue Jun 4 10:43:32 2002
++++ dillo-0.6.6-namedpipe/src/IO/Makefile Mon Jun 10 11:17:20 2002
+@@ -78,15 +78,17 @@ CONFIG_HEADER = ../../config.h
+CONFIG_CLEAN_FILES =
+LIBRARIES = $(noinst_LIBRARIES)
+
+-
++#DEBUG=-O2
++DEBUG=-g
+DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../..
+CPPFLAGS = -I/usr/local/include
+-LDFLAGS = -L/usr/local/lib
++LDFLAGS = -L/usr/local/lib $(DEBUG)
+LIBS = -lpng -lz -lpthread -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk 
+-rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
+libDio_a_LIBADD =
+libDio_a_OBJECTS = mime.o about.o Url.o proto.o file.o http.o IO.o
+AR = ar
+-CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
++#CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
++CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include $(DEBUG) -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) 
+$(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+Only in dillo-0.6.6-namedpipe/src/IO: Makefile.~1.1.1.1.~
+diff -pru dillo-0.6.6/src/Makefile dillo-0.6.6-namedpipe/src/Makefile
+--- dillo-0.6.6/src/Makefile Tue Jun 4 10:43:32 2002
++++ dillo-0.6.6-namedpipe/src/Makefile Mon Jun 10 11:16:55 2002
+@@ -84,10 +84,11 @@ CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES =
+PROGRAMS = $(bin_PROGRAMS)
+
+-
++#DEBUG=-O2
++DEBUG=-g
+DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I..
+CPPFLAGS = -I/usr/local/include
+-LDFLAGS = -L/usr/local/lib
++LDFLAGS = -L/usr/local/lib $(DEBUG)
+LIBS = -lpng -lz -lpthread -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk 
+-rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
+dillo_OBJECTS = chain.o commands.o cache.o dw.o dw_aligned_page.o \
+dw_bullet.o dw_button.o dw_container.o dw_embed_gtk.o \
+@@ -99,7 +100,9 @@ png.o html.o image.o misc.o interface.o
+prefs.o colors.o bitvec.o klist.o url.o cookies.o
+dillo_DEPENDENCIES = IO/libDio.a
+dillo_LDFLAGS =
+-CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
++
++#CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
++CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 
+-I/usr/lib/glib/include -I/usr/X11R6/include $(DEBUG) -D_REENTRANT 
+-D_THREAD_SAFE -Wall -Waggregate-return
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) 
+$(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+Only in dillo-0.6.6-namedpipe/src: Makefile.~1.1.1.1.~
+diff -pru dillo-0.6.6/src/dillo.c dillo-0.6.6-namedpipe/src/dillo.c
+--- dillo-0.6.6/src/dillo.c Mon Mar 18 07:02:50 2002
++++ dillo-0.6.6-namedpipe/src/dillo.c Mon Jun 10 12:48:51 2002
+@@ -17,6 +17,12 @@
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++
++
++New Command line order
++./dillo http://url.com -geometry
++
++
+*/
+
+#include <stdio.h>
+@@ -46,6 +52,7 @@
+#include "dw.h"
+#include "dw_widget.h"
+#include "cookies.h"
++#include "rurl.h"
+
+
+/*
+@@ -54,6 +61,154 @@
+static void Dillo_check_home_dir(char *dir);
+
+
++// Globals (To Do: consider moving to rurl.h)
++int pfd=-1;
++char pipe_buf[MAXURL];
++char * pipe_buf_p = pipe_buf;
++BrowserWindow *bwp;
++const int DEBUG1=0;
++const int DEBUG2=0;
++const int DEBUG3=0;
++const int DEBUG33=0;
++
++
++// Read from the named pipe and lauch url. Read one char at a time 
+until ';'
++static void pipe_input_callback (gpointer data,
++ gint source,
++ GdkInputCondition condition ) {
++ 
++ DilloUrl *start_url;
++ char rurl_str[MAXURL];
++ int numread=0;
++ char c='\0';
++ int i=0;
++
++ if (DEBUG1) printf("pipe_input_callback2:: condition = %d\n", condition);
++ if (DEBUG1) printf("source %d\n", source);
++
++ memset(pipe_buf,0,sizeof(pipe_buf));
++ memset(rurl_str,0,sizeof(rurl_str));
++ numread=0; i=0;
++
++ numread=read(pfd,&c,1);
++ pipe_buf[i++]=c;
++
++ if (numread > 0) {
++ // Verify the URL syntax
++ while (c != ';') {
++ numread=read(pfd,&c,1);
++ pipe_buf[i++]=c;
++
++ }
++ //replace ';'
++ if (pipe_buf[i-1] == ';') pipe_buf[i-1]=(char)NULL;
++
++ if (DEBUG1) {
++ printf("URL:%s\n",pipe_buf);
++ printf("Number of bytes read:%d\n",numread);
++ }
++
++ strncpy(rurl_str,pipe_buf,MAXURL);
++
++ /* Send dillo remote url */
++ start_url = a_Url_new(rurl_str, NULL, 0, 0);
++ if (DEBUG1) {
++ printf ("url_string=%s\n", start_url->url_string->str);
++ }
++
++ a_Nav_push(bwp, start_url);
++ if (DEBUG1) printf("After a_Nav_push\n");
++ a_Url_free(start_url);
++ if (DEBUG1) printf("After a_Url_free\n");
++ 
++ }
++
++}
++
++
++//Setup the named pipe and callback
++
++void a_rurl_init(void *data) {
++
++ char* pipe="/dev/dilremurl";
++ const int DEBUG1=1;
++ int mode=O_RDWR | O_NONBLOCK ;
++ struct stat statbuf;
++ gint RemoveMe;
++
++ bwp = (BrowserWindow *)data;
++
++ //Make sure pipe exists
++ if (lstat(pipe, &statbuf) < 0) {
++ fprintf(stderr,"Cannot stat named pipe %s\n",pipe);
++ exit (-1);
++ }
++
++ // Open in non blocking
++ pfd=open(pipe,mode);
++ if (pfd < 0) {
++ fprintf(stderr, "Failed to open named pipe\n");
++ }
++ else
++ if (DEBUG1) printf("pfd = %d\n", pfd);
++
++ // Monitor named pipe descriptor
++ RemoveMe = gdk_input_add(pfd, GDK_INPUT_READ, pipe_input_callback, 
+NULL);
++}
++
++// This is for command line parsing of -geometry=XSIZExYSIZE only. The 
+offsets would need "+/-" to be resolved.
++// A window manager has to be running or the size request is ignored.
++int ParseGeometry(char * ingeometry, int *X, int *Y, int *Xoffset, int 
+*Yoffset) {
++
++ int status=0;
++ int len=strlen(ingeometry);
++ char icopy[len];
++ char *p;
++ const char *delims="=x+-";
++ int count=0;
++
++ memset(icopy,0, sizeof(icopy));
++ strncpy(icopy,ingeometry,len);
++
++ p = strtok(icopy,delims);
++
++ // First token will be X
++ if (p) { 
++ *X = (int) strtol(p, (char **)NULL, 10);
++ if (DEBUG2) g_print("X =%d\n", *X);
++ }
++ else
++ return (-1); // No token
++
++ count=0;
++ do {
++ p = strtok('\0', delims);
++ if (p) {
++ switch (count) {
++ case 0: // 2nd will be Y
++ *Y = (int) strtol(p, (char **)NULL, 10);
++ if (DEBUG2) g_print("Y = %d Count=%d \n", *Y, count);
++ break;
++ case 1:
++ *Xoffset = (int) strtol(p, (char **)NULL, 10);
++ if (DEBUG2) g_print("Xoffset = %d Count=%d \n", *Xoffset, count);
++ break;
++ case 2:
++ *Yoffset = (int) strtol(p, (char **)NULL, 10);
++ if (DEBUG2) g_print("Yoffset = %d Count=%d \n", *Yoffset, count);
++ break;
++ default:
++ status=-1; // Shouldn't happen
++ }
++ }
++ count++;
++ } while (p);
++
++ return (status);
++
++}
++
++
+
+/*
+* ******************************** MAIN 
+*************************************
+@@ -63,6 +218,40 @@ gint main(int argc, char *argv[])
+gchar *file;
+DilloUrl *start_url;
+BrowserWindow *bw;
++ int Xsize=640;
++ int Ysize=480;
++ int Xoffset=0;
++ int Yoffset=0;
++ const int GSIZE=255;
++ char geometry[GSIZE];
++ int i=1;
++ int retval=0;
++
++ memset(geometry,0, sizeof(geometry));
++ 
++ for (i=1; i< argc; i++) {
++ if (( !g_strcasecmp (argv[i], "-geometry")) || ( !g_strcasecmp 
+(argv[i], "-g"))) {
++ if (argv[i+1]) {
++ strncpy(geometry, argv[i+1], GSIZE);
++ retval=ParseGeometry(geometry, &Xsize, &Ysize, &Xoffset, &Yoffset);
++ if (retval)
++ g_print("Error in ParseGeometry\n");
++ } 
++ else
++ g_print("argv[i+1] doesn't exist\n");
++ }
++ }
++
++
++
++
++ if (DEBUG1) {
++ g_print("Xsize = %d\n", Xsize);
++ g_print("Ysize = %d\n", Ysize);
++ g_print("Xoffset = %d\n", Xoffset);
++ g_print("Yoffset = %d\n", Yoffset);
++ }
++ 
+
+/* This lets threads in the file module end peacefully when aborted
+* todo: implement a cleaner mechanism (in file.c) */
+@@ -87,6 +276,10 @@ gint main(int argc, char *argv[])
+a_Dw_init();
+a_Cookies_init();
+
++ //Override prefs file with command line
++ prefs.width=Xsize;
++ prefs.height=Ysize;
++
+/* a_Nav_init() has been moved into this call because it needs to be
+* initialized with the new browser_window structure */
+bw = a_Interface_browser_window_new(prefs.width, prefs.height);
+@@ -98,7 +291,7 @@ gint main(int argc, char *argv[])
+a_Nav_push(bw, start_url);
+a_Url_free(start_url);
+
+- if (argc == 2) {
++ if (argc >= 2) {
+if (access(argv[1], F_OK) == 0) {
+GString *UrlStr = g_string_sized_new(128);
+
+@@ -120,6 +313,9 @@ gint main(int argc, char *argv[])
+}
+
+
++ //Start the remote url listener
++ a_rurl_init(bw);
++
+gtk_main();
+
+/*
+Only in dillo-0.6.6-namedpipe/src: dillo.c.~1.1.1.1.~
+Only in dillo-0.6.6-namedpipe/src: rurl.h
+
+
+Disclaimer: The information contained in this transmission, including any
+attachments, may contain confidential information of Matsushita Avionics
+Systems Corporation. This transmission is intended only for the use of the
+addressee(s) listed above. Unauthorized review, dissemination or other use
+of the information contained in this transmission is strictly prohibited.
+If you have received this transmission in error or have reason to believe
+you are not authorized to receive it, please notify the sender by return
+email and promptly delete the transmission. 
+
+
+
+[Dillo-dev]remote url control and testing patch part 2
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-13 15:03
+
+This is the pipe writer, called wpipe1 in the script.
+------------------------------------------------------------------------
+
+/***************************************************************************
+main.c - description
+-------------------
+begin : Thu May 9 10:57:59 PDT 2002
+copyright : (C) 2002 by Lee Van Dyke
+email : lee@borabora
+
+***************************************************************************/
+
+/***************************************************************************
+* *
+* This program is free software; you can redistribute it and/or modify *
+* it under the terms of the GNU General Public License as published by *
+* the Free Software Foundation; either version 2 of the License, or *
+* (at your option) any later version. *
+* *
+
+***************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
+const int MAXBUF=1024;
+
+
+int main(int argc, char *argv[])
+{
+
+char buf[MAXBUF];
+char usage[]="Usage: %s 
+char* pipe="/dev/dilremurl";
+int id=0;
+int mode=O_WRONLY;
+int numwritten=0;
+int slen=0;
+
+memset(buf,'\0',(size_t)MAXBUF);
+
+if (argc == 2) {
+
+slen=strlen(argv[1]);
+printf("Size of input: %d\n",slen);
+
+if (slen < MAXBUF)
+strncpy(buf,argv[1],slen);
+else {
+printf("Input size exceeds buffer length, exiting\n");
+exit (-1);
+}
+
+}
+else{
+printf(usage,argv[0]);
+exit (-1);
+}
+
+// Will block until both sides opened.
+id=open(pipe,mode);
+if (id < 0) {
+fprintf(stderr,"Failed to open named pipe\n");
+// Do error processing
+}
+
+numwritten=write(id,buf,slen);
+printf("buf=%s numwritten=%d\n", buf, numwritten);
+return EXIT_SUCCESS;
+}
+
+Disclaimer: The information contained in this transmission, including any
+attachments, may contain confidential information of Matsushita Avionics
+Systems Corporation. This transmission is intended only for the use of the
+addressee(s) listed above. Unauthorized review, dissemination or other use
+of the information contained in this transmission is strictly prohibited.
+If you have received this transmission in error or have reason to believe
+you are not authorized to receive it, please notify the sender by return
+email and promptly delete the transmission. 
+
+
+
+[Dillo-dev]remote url control and testing patch part 1
+
+From: Lee Van Dyke <VandykeL@ma...> - 2002-06-13 14:54
+
+Hi,
+
+Here is a (1st cut) patch that allows another process to control
+dillo's current url via a named pipe. The pipe writer test program,
+wpipe1, reads a string, writes to the pipe and dillo responds. The
+test script, rurl-cmeu99-2.sh, demonstrates how to use wpipe1.The test
+script takes one parameter, a delay in seconds, which can be zero.
+
+The other side benefit of this patch is automated testing. Now you can
+apply industrial strength tests easily (and without the refresh
+meta-tag). For example, the above script can be used to measure memory
+leaks by running overnight, etc.
+
+One thing I'm not sure of is how far dillo renders the current page
+when a new request arrives. I have to dig deeper to verify but I
+assume a new request aborts the current one?
+
+Well, it appears to interrupt the html parser so html_close() probably
+doesn't get called and does leak memory if the delay time is less than
+the render time.
+
+To use the patch create the named pipe on the target machine:
+mknod /dev/dilremurl p
+chmod 666 /dev/dilremurl
+
+-----------------------------------------------------
+The mail list restricts messages over 100k.
+So I will break up the pieces until I find an ftp server to use.
+
+
+
+Disclaimer: The information contained in this transmission, including any
+attachments, may contain confidential information of Matsushita Avionics
+Systems Corporation. This transmission is intended only for the use of the
+addressee(s) listed above. Unauthorized review, dissemination or other use
+of the information contained in this transmission is strictly prohibited.
+If you have received this transmission in error or have reason to believe
+you are not authorized to receive it, please notify the sender by return
+email and promptly delete the transmission. 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-06-13 07:12
+
+thanks for that!
+
+still confused as to why it would be so difficult to have a switch so 
+that the cache was saved, but I'll drop it for now.
+
+thanks again
+
+jonathan 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: Geoff Lane <zzassgl@tw...> - 2002-06-13 06:48
+
+> 
+> you've misunderstood my desire, I use dsl when online, however to 
+> demonstrate dillo to other colleagues and students, it would be useful.
+> 
+> I realise one can save pages, however our pages are more or less only 
+> images.
+> 
+> so the only simple way I know is if it is possible to cache images.....
+> 
+> Perhaps this could be a feature that had to be 'added'
+
+Probably the quickest/easiest/least code method would be to use the proxy
+mechanism and run a small, local caching proxy such as WWWOFFLE
+(http://www.gedanken.demon.co.uk/wwwoffle/)
+
+I haven't tried this though.
+
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\ 
+
+
+
+Re: [Dillo-dev]feature request: frames support
+
+From: Imad <magius@pu...> - 2002-06-13 00:23
+
+On Thu, 13 Jun 2002, Robert [unknown-8bit] Blacqui=E8re wrote:
+
+> Hi, dillo developers and users,
+>
+> I started using dillo a few days ago with great joy. But for some reaso=
+n
+> i need (would like) support for frames. I have setup a set of web pages
+> to monitor some machines an display the results graphs and cgi answers
+> in to a reponse frame. So i was wondering if there is a plan for this t=
+o
+> implement frame support. This would make mozilla and netscape disappear
+> from my disc. No need for them any more.
+
+Full frames support, to the best of my knowledge, is on the todo list.
+You could use Links 2.x (the new, graphical version:
+http://freshmeat.net/redir/links/5817/url_homepage/) until Dillo adds in
+frames support and still free your system of bloated Mozilla/Netscape.
+
+--=20
+Best,
+Imad Hussain 
+
+
+
+[Dillo-dev]feature request: frames support
+
+From: Robert <dillo@gu...> - 2002-06-12 23:04
+
+Hi, dillo developers and users,
+
+I started using dillo a few days ago with great joy. But for some reason
+i need (would like) support for frames. I have setup a set of web pages
+to monitor some machines an display the results graphs and cgi answers
+in to a reponse frame. So i was wondering if there is a plan for this to
+implement frame support. This would make mozilla and netscape disappear
+from my disc. No need for them any more. 
+
+
+Robert
+
+
+-- 
+Microsoft: Where do you want to go today?
+Linux: Where do you want to go tomorrow?
+FreeBSD: Are you guys coming or what?
+OpenBSD: He guys you left some holes out there! 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: no one <neverbefound@su...> - 2002-06-12 21:19
+
+Ack, stop spreading FUD you lot :-P
+
+Dillo has a full memory-cache system, a default dillo will cache
+everything that it surfs across into memory - this will persist until that
+instance of dillo is closed.
+
+There is however, no hard-drive cache - so you'll have to leave the Dillo
+executable running from when you were connected to the internet.
+
+For instance, if you surf to http://slashdot.org, and then type the same
+URL into Dillo 'X' hrs later, a full copy of the page will be pulled out
+the cache...
+
+If you want to see what's actually in the cache, 
+
+apply this patch:
+http://www.ime.usp.br/~livio/dillo/patches/cache-size-limit.diff
+by Livio Baldini Soares
+
+& a URL of 'about:cache' will bring up a nice listing of what's in the
+cache...
+
+I wrote quick 1-line patch to the above patch :) to make the cache list
+into a load of clickable hyperlinks, but I seem to have lost it... if
+you'd like a better search for it, or a x86 linux binary - mail me ;)
+
+Just to reiterate: Dillo has a lovely efficient cache, but its entirely
+memory based so you'll have to use the same executable that was running
+when you were connected to the net...
+
+Jarvist
+
+P.S. A quicker (as in works without having to install any extra programs)
+method of making a local copy of a website for demonstration purposes is
+to use 'wget' such as
+wget -rkl 1 http://slashdot.org
+
+(-r: recursive
+-k: locallised links
+-l 1: goes 1-'click' deep
+)
+
+On Wed, 12 Jun 2002 15:18:58 -0400
+Andreas Schweitzer <andy@ph...> pleasently wrote:
+
+> On Wed, Jun 12, 2002 at 07:50:07PM +0100, jonathan chetwynd wrote:
+> > you've misunderstood my desire, I use dsl when online, however to 
+> > demonstrate dillo to other colleagues and students, it would be
+> > useful.
+> 
+> I think you still could use wwwoffle for that.
+> 
+> > I realise one can save pages, however our pages are more or less only 
+> > images.
+> > 
+> > so the only simple way I know is if it is possible to cache
+> > images.....
+> > 
+> > Perhaps this could be a feature that had to be 'added'
+> 
+> I think this is what Livio tried to explain. Namely, that
+> dillo will not maintain a writable cache.
+> 
+> In the meantime try
+> http://langfeldt.net/w3mir/
+> to create a local copy of what you want to demonstrate.
+
+-- 
+
+Courdoroy pillows- They're making headlines! 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: Andreas Schweitzer <andy@ph...> - 2002-06-12 19:19
+
+On Wed, Jun 12, 2002 at 07:50:07PM +0100, jonathan chetwynd wrote:
+> you've misunderstood my desire, I use dsl when online, however to 
+> demonstrate dillo to other colleagues and students, it would be useful.
+
+I think you still could use wwwoffle for that.
+
+> I realise one can save pages, however our pages are more or less only 
+> images.
+> 
+> so the only simple way I know is if it is possible to cache images.....
+> 
+> Perhaps this could be a feature that had to be 'added'
+
+I think this is what Livio tried to explain. Namely, that
+dillo will not maintain a writable cache.
+
+In the meantime try
+http://langfeldt.net/w3mir/
+to create a local copy of what you want to demonstrate.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-06-12 19:01
+
+you've misunderstood my desire, I use dsl when online, however to 
+demonstrate dillo to other colleagues and students, it would be useful.
+
+I realise one can save pages, however our pages are more or less only 
+images.
+
+so the only simple way I know is if it is possible to cache images.....
+
+Perhaps this could be a feature that had to be 'added'
+
+thanks
+
+jonathan 
+
+
+
+Re: [Dillo-dev]Dillo scaling hack
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-06-12 18:53
+
+thanks for that, I see there is a new version of dillo out.
+
+I liked the scaling feature, it particularly suits our website 
+http://www.peepo.com, take a look.
+
+for some reason the images are more spreadout than in the original 
+dillo, cannot fathom why this should be.
+
+does anyone know?
+
+the actual control seems a littl awkward, it is hard to tell if one has 
+activated it or not.
+
+thanks
+
+jonathan 
+
+
+
+Re: [Dillo-dev]Dillo scaling hack
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-06-12 15:20
+
+On Wed, Jun 12, 2002 at 09:40:11PM +1000, Pigeon wrote:
+> 
+> Dear all,
+> 
+> After a few months I finally got time to redo this dillo scaling hack.
+> 
+> Details at http://pigeond.net/dillo/
+> 
+> Right now the hack is pretty much a "hack".
+> 
+> Basically the scaling is done in the image and the font. I wanted to put the scaling in the DwStyles but due the way dillo works, it wasn't quite appropriate. So right now, the scaling is done a bit everywhere when needed.
+> 
+> Also I'd like make the scale work for more widgets and stuffs. For instance, table right now is not scaled yet, and viewing standalone images will not be scaled yet. Stuffs like that.
+> 
+> I think scaling for a web browser is pretty useful and I'm wondering if anyone got any suggestions for more proper hack for this feature...
+
+I've some thoughts on this, yes. I'm of the opinion that scaling the entire
+webpage is probably the wrong way to go: we've only got 240x320 pixels, after
+all: If I try to fit a page designed for 800x600 by scaling it, the font
+will get unreadable before the whole page width is in place. Sometimes,
+actually, I want to scale fonts _up_ for low light, etc.
+
+I've been pleased, actually, with how well a lot of pages work with just 
+font scaling and the limit_text_width wrapping text to the viewport. If a
+table is all text, the columns narrow down to a single viewports width, and
+that works fine for the multicolumn layout sort of problems, as long as:
+
+1. columns only contain text (images blow the column widths out)
+2. columns are dimensioned with widths in pixels
+
+In both cases, you can still read the text, it's just hard to scroll across
+to the next column. Both of these are a pixel sizing issues. There are
+other pixel sizing issues, as well: HRs, etc. Basically, anything that
+can be sized in absolute pixels will blow away tables and screen space.
+
+I'm trying out a hack that scales _all_ absolute sizes by half, as well as
+image dimensions (for unsized images) This solves the direct view problem,
+BTW.
+
+My hack is at:
+
+http://wallace.ece.rice.edu/dillo/
+
+No ARM binaries to test, I'm afraid. Do you have a cross-compile setup
+working for dillo? I'd love to know how you set it up.
+
+Ross
+-- 
+Ross Reedstrom, Ph.D. reedstrm@ri...
+Executive Director phone: 713-348-6166
+Gulf Coast Consortium for Bioinformatics fax: 713-348-6182
+Rice University MS-39
+Houston, TX 77005 
+
+
+
+Re: [Dillo-dev]Dillo scaling hack
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-06-12 14:13
+
+On Wed, Jun 12, 2002 at 01:19:42PM +0100, jonathan chetwynd wrote:
+> Looks great, I usually use ipkg install, so could you please remind me, 
+> Or frankly, tell me, as I dont do this much how to try your version?
+> 
+> presumably ipkg remove dillo
+
+From what I see on his website, _don't_ remove your existing dillo,
+just replace the file /usr/bin/dillo with the dillo-scale-hack-0.6.5-arm
+file, and either rename it to 'dillo', or make a symlink named 'dillo'
+pointing to it. That way, you keep your menu entries, config file, etc.,
+that come in the ipkg.
+
+Ross 
+
+
+
+Re: [Dillo-dev]offline cache
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-12 12:47
+
+Hi Jonathan!
+
+jonathan chetwynd writes:
+> is there a simple way to cache pages for offline viewing?
+
+First of all read dillo/doc/Cache.txt, particularly the section
+entitled "Cache Philosophy". I personally feel that Dillo will start
+to become bloated if it tried to do too many jobs at once. Plus you
+can bet that a cache server which was conceived to do that function
+will do a better job than Dillo, which was conceived to be a browser. 
+
+I'm not sure if Squid allows you to cache and browse offline, but
+I'm sure wwwoffle[1] can. I used to use it when I had a very (_very_)
+bad dial-up connection. I know that there are other packages which
+also cache for offline browsing, but as far as I know, wwwoffle is the
+most famous/used. 
+
+[1] http://www.gedanken.demon.co.uk/wwwoffle/
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]offline cache
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-06-12 12:31
+
+is there a simple way to cache pages for offline viewing?
+
+thanks
+
+jonathan 
+
+
+
+Re: [Dillo-dev]Dillo scaling hack
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-06-12 12:31
+
+Looks great, I usually use ipkg install, so could you please remind me, 
+Or frankly, tell me, as I dont do this much how to try your version?
+
+presumably ipkg remove dillo
+
+.....
+
+mine is 0.6.5
+
+thanks
+
+jonathan chetwynd
+
+I'm particularly interested, as our site for people with a severe 
+learning difficulty, uses plenty of images, and we've discussed using 
+svg, to respond to scaling needs. 
+
+
+
+[Dillo-dev]Dillo scaling hack
+
+From: Pigeon <pigeon@pi...> - 2002-06-12 11:40
+
+Dear all,
+
+After a few months I finally got time to redo this dillo scaling hack.
+
+Details at http://pigeond.net/dillo/
+
+Right now the hack is pretty much a "hack".
+
+Basically the scaling is done in the image and the font. I wanted to put the scaling in the DwStyles but due the way dillo works, it wasn't quite appropriate. So right now, the scaling is done a bit everywhere when needed.
+
+Also I'd like make the scale work for more widgets and stuffs. For instance, table right now is not scaled yet, and viewing standalone images will not be scaled yet. Stuffs like that.
+
+I think scaling for a web browser is pretty useful and I'm wondering if anyone got any suggestions for more proper hack for this feature...
+
+Thanks.
+
+
+Pigeon. 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-12 03:22
+
+Oi Livio!
+
+
+> My previous patch (for limiting the size of cache), will not work
+> correctly because IO_write():IO.c doesn't behave correctly when it
+> gets a EAGAIN error (it will enter an eternal loop, making infinite
+> writev() calls).
+>
+> I have a patch here which (seems) to fix it. There are two fixes in
+> it:
+>
+> [1] The fix Jorge and I had made in 0.6.5-pre, which was removed. This
+> will make IO_write and IO_callback correctly treat EAGAIN.
+>
+> [2] Remove the constraint for freeing the buffer in write operations.
+> This error should not appear commonly in Dillo's regular use,
+> because it is very rare to have a HTTP query with more than one
+> buffer long, and therefore the IOvec.iov_base won't be
+> modified. But this, in fact, can happen (resulting in a Seg
+> Fault). What I've done to fix this problem, is added a
+> `buffer_start` field to IOData_t, which is _private_. IO users
+> shouldn't bother to set this, I have done so in a_IO_ccc().
+>
+> Jorge, do you think that [2] fixes other problems you might of had
+> with the EAGAIN handler?
+
+I'm giving a deep review to the problem, and it seems [2] may
+be the fix to the problems I had.
+
+Quoting myself:
+
+<<
+I'm a bit hesitant with this subject. This is the story: I've
+been working on presentation material for the site, and testing
+its rendering with dillo; that is, small html files that are
+re-created by a script very often, and then reloaded into dillo.
+The sad news is that I've caught this problem twice:
+
+--
+Nav_open_url: Url=>file:/tmp/funding/advantages.html#eff<
+[New Thread 31776 (LWP 413)]
+Delayed SIGSTOP caught for LWP 413.
+LWP 413 exited.
+Nav_open_url: Url=>file:/tmp/funding/advantages.html#eff<
+Cannot find thread 33: invalid thread handle
+(gdb) bt
+#0 0x40083881 in __linuxthreads_create_event () at events.c:26
+#1 0x4007d4da in pthread_handle_create (thread=0x40088e90, attr=0x0,
+start_routine=0x8075a38 <File_transfer_file>, arg=0x80eda08,
+mask=0x80f9dfc, father_pid=276, report_events=1, event_maskp=0x40088fec)
+at manager.c:615
+#2 0x4007ce78 in __pthread_manager (arg=0xd) at manager.c:157
+#3 0x4007cf80 in pthread_start_thread (arg=0xd) at manager.c:221
+--
+
+When it continues, a SEGFAULT pops...
+>>
+
+Finally, FWIW, I hit the problem four times while making the
+presentation, but never with the old handler...
+
+
+> If it doesn't, can you please try to give me
+> some directions into reproducing your problems?
+
+Unfortunately not. All I know is I had those problems, but my
+efforts to reproduce them again have been sterile. Well, I could
+start working just as I did then, but if I hit the bug, I'll have
+barely more than the quoted backtrace.
+
+I'll keep on reviewing the code trying to get to the roots.
+
+> So the IO patch is at:
+> http://www.ime.usp.br/~livio/dillo/patches/fix-io-egain-and-free-write.diff
+
+Good idea.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]patch to manage submenus in bookmarks
+
+From: Tomas Guemes <tomas@pa...> - 2002-06-11 13:19
+
+Attachments: Message as HTML      
+
+Hi all,
+
+I know the bookmark stuff is planned to be manage with the simple
+plugins idea but meanwhile i though it could be practical to be able to
+handle submenus in it. 
+
+I dig a little bit in the bookmark of other browsers and found the xbel
+format, i wonder if making xbel the native format for dillo bookmarks is
+a good choice. If you think is good idea i can work on it.
+
+You can find the patch, and more information in 
+
+http://aseed.antenna.nl/~tomas/web/dillo/ 
+or
+http://pasky.dhs.org/tomas/dillo/
+
+Any sugestion to the source is wellcome.
+
+greetings
+
+Tomas
+
+(O0o.. . . . . ..o0O0o.. . . . . ..o0O)
+
+Tomas Guemes Sanchez 
+tomas@pa... 
+tguemes@mi... 
+
+(O0o.. . . . . ..o0O0o.. . . . . ..o0O) 
+
+
+
+Re: [Dillo-dev]Dillo vs. mailman
+
+From: Ralph Slooten <ralph@de...> - 2002-06-10 20:39
+
+I have just discovered that dillo's cookies aren't working at all with the 
+latest CVS, and in fact tracing back to pre-compiled versions I have made 
+haven't been working for the last week or more. I'm sorry, I'm not a 
+programmer, just a great admirer of Dillo, so I cannot point out what's 
+wrong here at all. Whether I use the --enable-cookies or not, it makes no 
+difference. I have even tried deleting my whole ~/.dillo folder (actually 
+renaming), but this does not work either. Something tells me something is 
+broken in the code. And yes, before anyone doubts my intelligence (cough 
+cough) the cookiesrc states "DEFAULT ACCEPT" ;-)
+
+Is it just me, or am I correct?
+
+Greetings
+Ralph
+
+On 10 Jun 2002, Lars Clausen wrote:
+
+> 
+> Dillo has for a while not been able to send cookies to Mailman's admin
+> interface, to my great annoyance. Dillo does it right, Mailman doesn't
+> parse the quotes correctly. This is apparently fixed in the development
+> version 2.1, but the 2.0.* versions will not be fixed. For those who want
+> to use Mailman with Dillo, here's a really ugly kludge to turn off the
+> quotes:
+> 
+> Index: cookies.c
+> ===================================================================
+> RCS file: /cvsroot/dillo/dillo/src/cookies.c,v
+> retrieving revision 1.10
+> diff -u -r1.10 cookies.c
+> --- cookies.c 27 May 2002 21:11:58 -0000 1.10
+> +++ cookies.c 10 Jun 2002 19:42:35 -0000
+> @@ -940,6 +940,9 @@
+> matching_cookies = g_list_next(matching_cookies)) {
+> cookie = (CookieData_t *) matching_cookies->data;
+> q = (cookie->version == 0 ? "" : "\"");
+> + /* Kludge to allow admindb to work */
+> + if (cookie->path && strstr(cookie->path, "/mailman/"))
+> + q = "";
+> 
+> g_string_sprintfa(cookie_gstring, 
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev]Dillo vs. mailman
+
+From: Lars Clausen <lrclause@cs...> - 2002-06-10 19:43
+
+Dillo has for a while not been able to send cookies to Mailman's admin
+interface, to my great annoyance. Dillo does it right, Mailman doesn't
+parse the quotes correctly. This is apparently fixed in the development
+version 2.1, but the 2.0.* versions will not be fixed. For those who wan=
+t
+to use Mailman with Dillo, here's a really ugly kludge to turn off the
+quotes:
+
+Index: cookies.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /cvsroot/dillo/dillo/src/cookies.c,v
+retrieving revision 1.10
+diff -u -r1.10 cookies.c
+--- cookies.c 27 May 2002 21:11:58 -0000 1.10
++++ cookies.c 10 Jun 2002 19:42:35 -0000
+@@ -940,6 +940,9 @@
+matching_cookies =3D g_list_next(matching_cookies)) {
+cookie =3D (CookieData_t *) matching_cookies->data;
+q =3D (cookie->version =3D=3D 0 ? "" : "\"");
++ /* Kludge to allow admindb to work */
++ if (cookie->path && strstr(cookie->path, "/mailman/"))
++ q =3D "";
+=20
+g_string_sprintfa(cookie_gstring, "%s=3D%s%s%s",
+cookie->name, q, cookie->value, q);
+
+This is not intended to go into the sources, of course.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: John Utz <john@ut...> - 2002-06-10 17:30
+
+i'd hafta say that's a pretty powerful advantage.
+
+sure, it's irrelevant to an ascii-native user, but ascii-native is a 
+pretty small chunk of the real world and supporting native charsets is 
+going to make life a little better for 3rd world netusers...
+
+On 10 Jun 2002, Lars Clausen wrote:
+
+> 
+> On Thu, 30 May 2002, Freya@he... wrote:
+> > 
+> > But why would you want to port it to gtk2?
+> > What advantage does that bring?
+> 
+> In a word: Pango. Full support for just about any charset out there. We
+> tried hacking things into Dia to support East Asian fonts, and it was a
+> nightmare. Pango has this wheel implemented once and for all. 
+> 
+> -Lars
+> 
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Lars Clausen <lrclause@cs...> - 2002-06-10 16:43
+
+On Thu, 30 May 2002, Freya@he... wrote:
+>=20
+> But why would you want to port it to gtk2?
+> What advantage does that bring?
+
+In a word: Pango. Full support for just about any charset out there. We
+tried hacking things into Dia to support East Asian fonts, and it was a
+nightmare. Pango has this wheel implemented once and for all. =20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: no one <neverbefound@su...> - 2002-06-04 00:27
+
+On Mon, 3 Jun 2002 17:58:27 -0300
+Livio Baldini Soares <livio@im...> pleasently wrote:
+
+> Hum, bad news :-/ My patch isn't responsible for this crash. What
+> may be happening is that my patch makes this bug a _little_ bit more
+> reproducible, but I've managed to hit this with _current_ CVS code.
+
+Easyily (sic) reproducible bug in a cache-limit & IO-bug-fix patched
+dillo-0.6.6:
+
+Open up a site linking to many graphics files such as:
+http://www.slackware.com/~msimons/slackware/grfx/
+
+As images are loading, call a 'about:cache-clear'
+
+Segfault _guranteed_ :), 
+though empty about:cache-clear sometimes loads before it goes under...
+
+Jarvist
+-- 
+
+Courdoroy pillows- They're making headlines! 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-03 20:58
+
+Hello Andreas!
+
+Andreas Schweitzer writes:
+> Hi
+
+[...]
+
+> > Jorge, do you think that [2] fixes other problems you might of had
+> > with the EAGAIN handler? If it doesn't, can you please try to give me
+> > some directions into reproducing your problems?
+> 
+> With this patch, the cache page no longer freezes. But, I do get a segfault
+> when doing "extreme websurfing" ;-) .... I have 2 or 3 windows open and
+> click like a madman in all of them :-) .... with this patch I eventually
+> get a segfault, without I cannot (I tried hard, though :-) ... I'm
+> afraid this is not very specific, but maybe it helps.
+
+Hum, bad news :-/ My patch isn't responsible for this crash. What
+may be happening is that my patch makes this bug a _little_ bit more
+reproducible, but I've managed to hit this with _current_ CVS code.
+
+Sometimes, I get this segfault:
+
+#2 0x401fe70b in g_free () from /usr/lib/libglib-1.2.so.0
+#3 0x08087c44 in IO_free (io=0x8126fe8) at IO.c:93
+#4 0x0808803f in a_IO_ccc (Op=5, Branch=-1, Info=0x8271370, Data=0x0, ExtraData=0x0) at IO.c:339
+
+Which is the free-during-write bug. I can "fix" this either by using
+my IO patch, or simply commenting off the g_free() in IO_free() just
+for the sake of testing (but yes, the latter will leak memory).
+
+But the problem Andreas was referring to is another one. It takes me
+about 15 minutes of *madly* loading and reloading pages to hit this
+(it is very difficult even with or without my pathes).
+
+I can't really get to the bottom of this issue, but all my stack
+traces look very similar:
+
+#0 0x08081b4a in a_Url_str (u=0x81519a8) at url.c:59
+#1 0x080534ee in Cache_url_hash (key=0x81519a8) at cache.c:91
+#2 0x401f9dec in g_hash_table_lookup () from /usr/lib/libglib-1.2.so.0
+#3 0x08053854 in Cache_entry_search (Url=0x81519a8) at cache.c:232
+#4 0x080549ae in Cache_process_io (Op=3, VPtr=0x816e620) at cache.c:700
+#5 0x0805530e in a_Cache_ccc (Op=4, Branch=2, Info=0x8148ed0, Data=0x816e620, ExtraData=0x0) at cache.c:1043
+#6 0x08052910 in a_Chain_fcb (Op=4, Branch=2, Info=0x815da08, Data=0x816e620, ExtraData=0x0) at chain.c:71
+#7 0x08088000 in a_IO_ccc (Op=4, Branch=2, Info=0x815da08, Data=0x816e620, ExtraData=0x0) at IO.c:327
+#8 0x08087d01 in IO_read (io=0x816e620) at IO.c:156
+#9 0x08087e14 in IO_callback (src=0x815a978, cond=G_IO_IN, data=0x22) at IO.c:238
+#10 0x401fbe10 in g_io_add_watch () from /usr/lib/libglib-1.2.so.0
+
+And the contents of (u) in a_Url_str are just non-sense.
+
+I believe that when this error is discovered inside Dillo's current
+code, my patch will probably stop misbehaving.
+
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Paul Chamberlain <tif@ti...> - 2002-06-03 14:56
+
+Michael Govorun wrote:
+> It seems to me that about:cache working with few entries in cache, but
+> freeze dillo after number exceeds ~ 35 entries.
+
+Just a thought... What happens if the cache code can't
+find anything that is removable, due to everything being
+in use? It seems like this might cause such behavior.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+[Dillo-dev]Font Faces
+
+From: Chris Hawks <chrish@sy...> - 2002-06-02 22:28
+
+Thanks for all the replies to my question about the #ifdefed font face
+support. I agree with Livio that this should be a preference controlled
+item and am still willing to share my patch for changing the font faces
+(and sizes) on the widgets.
+
+
+Christopher R. Hawks
+HAWKSoft
+-------------------------------------------------------------------------
+"There's nothing wrong with Microsoft that taking a machine-gun to their
+entire Marketing and Advertising department wouldn't cure." 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Andreas Schweitzer <andy@ph...> - 2002-06-02 18:12
+
+Hi
+
+> I've done the following test: opened 5-6 windows with different
+> pages, then on another window used "Save Link As..." on a very big
+> file (for example, go to http://www.kernel.org/pub/linux/kernel/v2.4/,
+> and pick a kernel there), and watched the about:cache page. I kept
+> reloading it and saw that when current cache size reached the maximum,
+> it started trying to "clean" the cache. It then removed all images and
+> other pages. The only ones that remain are:
+> 
+> [1] Entries that have a client (that is, which are being downloaded).
+> 
+> [2] Entries that are RootURLs currently beeing viewed on browser
+> windows.
+
+This does remind me of some issues I thought about when I had the bold
+idea to implement the cache size myself ;-) ....
+
+- What happens if the data for one page is larger than the cache size ?
+
+- Is the cache size a strict upper limit ? Or can we exceed it until
+the page is fully loaded and then clean up, or should we clean up
+before a page gets loaded ? E.g. what happens when the server does not send
+the page size ?
+
+- For viewing or downloading files of the size approximatley the RAM size,
+do we want to have a safty break ? Or should this be the job of the OS ?
+Will dillo know when its ulimit is reached ?
+
+Just some food for though ... maybe some tough ones ...
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Andreas Schweitzer <andy@ph...> - 2002-06-02 18:04
+
+Hi
+
+> [2] Remove the constraint for freeing the buffer in write operations.
+> This error should not appear commonly in Dillo's regular use,
+> because it is very rare to have a HTTP query with more than one
+> buffer long, and therefore the IOvec.iov_base won't be
+> modified. But this, in fact, can happen (resulting in a Seg
+> Fault). What I've done to fix this problem, is added a
+> `buffer_start` field to IOData_t, which is _private_. IO users
+> shouldn't bother to set this, I have done so in a_IO_ccc().
+> 
+> Jorge, do you think that [2] fixes other problems you might of had
+> with the EAGAIN handler? If it doesn't, can you please try to give me
+> some directions into reproducing your problems?
+
+With this patch, the cache page no longer freezes. But, I do get a segfault
+when doing "extreme websurfing" ;-) .... I have 2 or 3 windows open and
+click like a madman in all of them :-) .... with this patch I eventually
+get a segfault, without I cannot (I tried hard, though :-) ... I'm
+afraid this is not very specific, but maybe it helps.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-02 18:01
+
+Hello Hugo!
+
+Hugo Hallqvist writes:
+> On 2 Jun, Livio Baldini Soares wrote:
+> 
+> > My previous patch (for limiting the size of cache), will not work
+> > correctly because IO_write():IO.c doesn't behave correctly when it
+> > gets a EAGAIN error (it will enter an eternal loop, making infinite
+> > writev() calls).
+> > 
+> > I have a patch here which (seems) to fix it. There are two fixes in
+> > it:
+
+[...]
+
+> After a little testing, atleast I cannot find the reload-bug again.
+> However, I have found a way to easy go beyond the cache-limits of this
+> patch. Just use "save link as..." from popupmenu over a filelink that is
+> bigger than current cachesize limit.
+
+Yes, this is absolutely true. Let me please try to explain a little
+bit better what my patch tries to do and why:
+
+There are several ways of bypassing the cache_size limit, one of
+them is that which you have described. The main issues here are a
+number of restrictions which currently exists in the cache and IO
+modules. For instance, downloading currently requires that the whole
+file be brought to the cache. Also, all URLs which are being viewed
+are required to be in Cache, so that HTML font viewing ("View page
+Source") and "Save page As..." work correctly. They both "assume"
+that their data is in the Cache.
+
+But these restrictions can be dealt with later on, and when they are
+resolved, cache_size limit will be a "tighter" limit than it is today.
+
+I've done the following test: opened 5-6 windows with different
+pages, then on another window used "Save Link As..." on a very big
+file (for example, go to http://www.kernel.org/pub/linux/kernel/v2.4/,
+and pick a kernel there), and watched the about:cache page. I kept
+reloading it and saw that when current cache size reached the maximum,
+it started trying to "clean" the cache. It then removed all images and
+other pages. The only ones that remain are:
+
+[1] Entries that have a client (that is, which are being downloaded).
+
+[2] Entries that are RootURLs currently beeing viewed on browser
+windows.
+
+But, as soon as the file gets downloaded, it is _also_removed_ from
+the cache.
+
+I hope this helps you to understand what the patch is supposed to
+do... 
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev][PATCH] Fixing IO_write
+
+From: Hugo Hallqvist <hugha495@st...> - 2002-06-02 17:19
+
+On 2 Jun, Livio Baldini Soares wrote:
+
+> My previous patch (for limiting the size of cache), will not work
+> correctly because IO_write():IO.c doesn't behave correctly when it
+> gets a EAGAIN error (it will enter an eternal loop, making infinite
+> writev() calls).
+> 
+> I have a patch here which (seems) to fix it. There are two fixes in
+> it:
+> 
+> [1] The fix Jorge and I had made in 0.6.5-pre, which was removed. This
+> will make IO_write and IO_callback correctly treat EAGAIN.
+> 
+> [2] Remove the constraint for freeing the buffer in write operations.
+> This error should not appear commonly in Dillo's regular use,
+> because it is very rare to have a HTTP query with more than one
+> buffer long, and therefore the IOvec.iov_base won't be
+> modified. But this, in fact, can happen (resulting in a Seg
+> Fault). What I've done to fix this problem, is added a
+> `buffer_start` field to IOData_t, which is _private_. IO users
+> shouldn't bother to set this, I have done so in a_IO_ccc().
+
+After a little testing, atleast I cannot find the reload-bug again.
+However, I have found a way to easy go beyond the cache-limits of this
+patch. Just use "save link as..." from popupmenu over a filelink that is
+bigger than current cachesize limit.
+
+Maybe this is not intended to be fixed by the patch, since it says "half
+implemented" in web.c?
+
+Anyway, normal browsing seems to work just fine.
+
+-- 
+//Hugo Hallqvist 
+
+
+
+[Dillo-dev][PATCH] Fixing IO_write
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-02 16:45
+
+Hello again!
+
+Thanks Hugo and Andreas for helping discover this error!
+
+My previous patch (for limiting the size of cache), will not work
+correctly because IO_write():IO.c doesn't behave correctly when it
+gets a EAGAIN error (it will enter an eternal loop, making infinite
+writev() calls).
+
+I have a patch here which (seems) to fix it. There are two fixes in
+it:
+
+[1] The fix Jorge and I had made in 0.6.5-pre, which was removed. This
+will make IO_write and IO_callback correctly treat EAGAIN.
+
+[2] Remove the constraint for freeing the buffer in write operations.
+This error should not appear commonly in Dillo's regular use,
+because it is very rare to have a HTTP query with more than one
+buffer long, and therefore the IOvec.iov_base won't be
+modified. But this, in fact, can happen (resulting in a Seg
+Fault). What I've done to fix this problem, is added a
+`buffer_start` field to IOData_t, which is _private_. IO users
+shouldn't bother to set this, I have done so in a_IO_ccc().
+
+Jorge, do you think that [2] fixes other problems you might of had
+with the EAGAIN handler? If it doesn't, can you please try to give me
+some directions into reproducing your problems?
+
+So the IO patch is at:
+http://www.ime.usp.br/~livio/dillo/patches/fix-io-egain-and-free-write.diff
+
+And the previously announced patch for limiting the size of cache:
+http://www.ime.usp.br/~livio/dillo/patches/cache-size-limit.diff
+
+I would like to hear feedback with respect to his IO patch too. 
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Andreas Schweitzer <andy@ph...> - 2002-06-02 15:56
+
+Just to confirm what Livio said
+
+> After applying the patch to dillo i tested it out a bit and found a few
+> strange things:
+> 
+> 2. I of course thought about hitting reload, and that made dillo freeze 
+> with 100% cpu usage.
+
+Sounds just like my problem.
+
+> 3. When having browsed a bit, it seems that it won't take away anything
+> from the cache. I set my size to ~ 5 MB and dillo was over 18 MB
+> after a while.
+
+I tested that as well - but works for me. I set the size to 100k or so.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Hugo Hallqvist <hugha495@st...> - 2002-06-02 15:21
+
+On 2 Jun, Livio Baldini Soares wrote:
+
+>> After applying the patch to dillo i tested it out a bit and found a few
+>> strange things:
+>> 
+>> 1. Quite often the about:cache won't get updated, it says it has found
+>> my cachesize limit from dillorc, but not much else. 
+> 
+> You have to hit reload, or else you'll get a cached version of
+> about:cache, that's why it doesn't get updated.
+
+Yes, I think I overloaded it too quickly with this 4KB limit, because
+everything just froze after having visited a few pages and hitting
+reload in about:cache. However now that I've tested it a bit more it
+seems to function well, apart from this reload thing. 
+
+>> 2. I of course thought about hitting reload, and that made dillo freeze 
+>> with 100% cpu usage. 
+> 
+> Ok, this was also reported by Andreas, and I _think_ it isn't the
+> patch's fault. I'm pretty sure it has to do with the IO.c EAGAIN issue
+> during writes. Jorge and I tried to fix the problem, but he said there
+> were some issues with that patch (which I couldn't reproduce), so he
+> backed it out for the 0.6.5 release. I'll try to get on top of that
+> today.
+> 
+> Anyway the problem arises when the about:cache page is over 4KiB
+> long (which is the size of a buffer, at least in Linux). When it is
+> over 4KiB, we have to write in in "chunks" (i.e. one buffer at a
+> time). So everything should work ok, as long as about:cache is smaller
+> than 4KiB.
+> 
+>> 3. When having browsed a bit, it seems that it won't take away anything
+>> from the cache. I set my size to ~ 5 MB and dillo was over 18 MB
+>> after a while.
+> 
+> Humm, I'm not sure what the problem is here, but be sure to notice
+> the difference between Dillo's memory usage and _cache_! My patch
+> doesn't promise to control Dillo's memory size, only the size of
+> _cache_.
+
+Yes, this was an error of mine, I loaded dillo with a bunch of graphics
+intensive sites, a couple of windows open. It probably should take some
+memory in such situations. :-)
+
+> 
+> There are two ways to verifiy if the patch is working:
+> 
+> [1] Look at the about:cache and check the "Current cache size: "
+> field, for big cache_sizes (I think over 1MiB), it should almost
+> never get over the "Maximum specified size: ".
+> 
+
+Well, this part is hard, I cannot go to more than a few pages, before
+the about:cache reload-bug hits me. So I cannot really verify that it
+keeps it within the limits, however it doesn't impact stability as far
+as I can tell.
+
+> [2] Put cache_size=00 and see if the about:cache always contains
+> _only_ the URL which are currently beeing viewed (remember to
+> reload the page to updated it).
+
+This one I can verify, it works as you describe it. It lists the urls of
+the browser windows, and size is very small. Also in this mode I cannot
+reproduce the reload-bug, which probably is correct, since it would
+require _many_ open windows at the same time to get to 4kb size of
+about:cache when it is only displaying toplevel urls.
+
+-- 
+//Hugo Hallqvist 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-02 14:55
+
+Hello Hugo!
+
+Hugo Hallqvist writes:
+> On 1 Jun, Livio Baldini Soares wrote:
+> 
+> > Ok, so before sending this oficially to Jorge, I think I would like
+> > some feedback. First, any comments about the functionalities I've
+> > inserted, but most importantly about the stability of the code. I
+> > would be very interested in receiving bug reports. Send replies only
+> > to me _if_ your comments won't be of interest to other subscribers to
+> > this list. 
+> 
+> After applying the patch to dillo i tested it out a bit and found a few
+> strange things:
+> 
+> 1. Quite often the about:cache won't get updated, it says it has found
+> my cachesize limit from dillorc, but not much else. 
+
+You have to hit reload, or else you'll get a cached version of
+about:cache, that's why it doesn't get updated.
+
+> 2. I of course thought about hitting reload, and that made dillo freeze 
+> with 100% cpu usage. 
+
+Ok, this was also reported by Andreas, and I _think_ it isn't the
+patch's fault. I'm pretty sure it has to do with the IO.c EAGAIN issue
+during writes. Jorge and I tried to fix the problem, but he said there
+were some issues with that patch (which I couldn't reproduce), so he
+backed it out for the 0.6.5 release. I'll try to get on top of that
+today.
+
+Anyway the problem arises when the about:cache page is over 4KiB
+long (which is the size of a buffer, at least in Linux). When it is
+over 4KiB, we have to write in in "chunks" (i.e. one buffer at a
+time). So everything should work ok, as long as about:cache is smaller
+than 4KiB.
+
+> 3. When having browsed a bit, it seems that it won't take away anything
+> from the cache. I set my size to ~ 5 MB and dillo was over 18 MB
+> after a while.
+
+Humm, I'm not sure what the problem is here, but be sure to notice
+the difference between Dillo's memory usage and _cache_! My patch
+doesn't promise to control Dillo's memory size, only the size of
+_cache_.
+
+There are two ways to verifiy if the patch is working:
+
+[1] Look at the about:cache and check the "Current cache size: "
+field, for big cache_sizes (I think over 1MiB), it should almost
+never get over the "Maximum specified size: ".
+
+[2] Put cache_size=00 and see if the about:cache always contains
+_only_ the URL which are currently beeing viewed (remember to
+reload the page to updated it).
+
+
+Thanks a lot for the feedback! I'll try to see if I can fix the
+problems you and Andreas have seen. As soon as I do, I'll post the
+patch here. 
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Michael Govorun <mike@sh...> - 2002-06-02 14:31
+
+Hugo Hallqvist <hugha495@st...> writes:
+
+> After applying the patch to dillo i tested it out a bit and found a few
+> strange things:
+> 
+> 1. Quite often the about:cache won't get updated, it says it has found
+> my cachesize limit from dillorc, but not much else.
+> 2. I of course thought about hitting reload, and that made dillo freeze 
+> with 100% cpu usage.
+
+It seems to me that about:cache working with few entries in cache, but
+freeze dillo after number exceeds ~ 35 entries.
+
+> 3. When having browsed a bit, it seems that it won't take away anything
+> from the cache. I set my size to ~ 5 MB and dillo was over 18 MB
+> after a while.
+
+In my case (cache_size=50000) I found cache limit working good. No speed
+penalities have been observed (but how to measure?). No crashes for 3
+hours.
+The patch applied to clean 0.6.6.
+-- 
+Michael Govorun 
+
+
+
+Re: [Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Hugo Hallqvist <hugha495@st...> - 2002-06-02 09:48
+
+On 1 Jun, Livio Baldini Soares wrote:
+
+> Ok, so before sending this oficially to Jorge, I think I would like
+> some feedback. First, any comments about the functionalities I've
+> inserted, but most importantly about the stability of the code. I
+> would be very interested in receiving bug reports. Send replies only
+> to me _if_ your comments won't be of interest to other subscribers to
+> this list. 
+
+After applying the patch to dillo i tested it out a bit and found a few
+strange things:
+
+1. Quite often the about:cache won't get updated, it says it has found
+my cachesize limit from dillorc, but not much else.
+2. I of course thought about hitting reload, and that made dillo freeze 
+with 100% cpu usage.
+3. When having browsed a bit, it seems that it won't take away anything
+from the cache. I set my size to ~ 5 MB and dillo was over 18 MB
+after a while.
+
+I will try a little more, a clean dillo without any other patches maybe
+will work better.
+
+-- 
+//Hugo Hallqvist 
+
+
+
+[Dillo-dev][ANNOUNCEMENT] Cache Limit! :-D (and other fun cache utilities)
+
+From: Livio Baldini Soares <livio@im...> - 2002-06-02 02:26
+
+Hya folks!!! 
+
+I'm _very_ happy to announce that I think I have (finally) a
+ready-to-use patch which limits the size of cache!
+
+Jorge, congratulations on the LinuxDevices article! I am hoping that
+this patch will be welcomed by the embedded devices people, and will
+help enhance the Dillo experience for them (and users of other low
+systems, where memory is an issue).
+
+Dificulties (sorry for the wait)
+-----------
+
+It has taken me a _looonngg_ time to complete this patch (seems that
+my first post about this was on 20-Feb-2002, with a beta version). The
+main problem was trying to keep track of which URLs are being
+displayed (these entries can't be removed from cache, for various
+reasons).
+
+My first try was to keep reference counters for all entries. This
+solution was very ugly (specially in the reload situation with more
+than one browser window viewing the same Url.. grrr :-/). I almost had
+a working solution to that, but the code started to look ugly and
+complicated! After spending more than 4 or 5 weekends on this, I
+finally I gave up. And then I had no more time to dedicate to Dillo
+(which is bad :_(. There was a Brazilian holiday this thursday, so I
+sat down and was determined to get this going.
+
+Finally, I had an _obvious_ idea to my problem, which I would reject
+at first, but as I've thought and tried a bunch of other solutions,
+this actually seemed the best. All I do now is check every
+browser_window's nav stack to see if this is the URL currectly viewed.
+Thus I implemented Cache_browser_window_search(), with a linear search
+through the browser windows (shouldn't hurt much, as it is linear on
+the number of windows the user has open).
+
+Now that I've finished this patch kind of looks trivial... ;-)
+
+Features
+--------
+
+The following patch adds these 3 features:
+
+[1] cache_size preference option to dillorc. The size should be
+specified in _bytes_. If you want to disable caching you have to
+use `00` instead of just plain `0`, or else the parser will
+complain.
+
+[2] about:cache This page should contain all the info about the
+current cache, which include: number of entries,
+total cache size, size specified in dillorc, all the
+entries (URLs and size). It also contains a link to
+about about:cache-clear.
+
+[3] about:cache-clear This clears all cache entries which currently
+don't have a client (i.e. are not in the middle
+of being downloaded/processed), and are not
+being displayed in any browser window. And then
+shows the new cache info in the about:cache
+format.
+
+I've tried the features out, and they seem to work correctly. Be
+careful with [2] and [3]. If you want to update the contents of the
+page, be sure to hit _reload_! If you want to clear the cache, go to
+about:cache-clear and hit reload, otherwise the cache-clear function
+will not be activated.
+
+I would like to know, which of these features are of interest?
+Initially, I had set out to do only [1], and used [2] and [3] for
+debugging. But now I'm thinking that this may be useful to others... 
+
+Implementation
+--------------
+
+I basically implemented this using a LRU (least recently used)
+policy. For those not familiar with Virtual Memory in operating
+systems, LRU is a very common policy to choose which memory pages
+should be evicted to swap. That is, LRU tries to choose a page which
+has the lowest probability of being chosen again, or of being needed
+in the near future.
+
+I considered this policy to suit Dillo's cache perfectly, because in
+a strict sense, it is the same problem as in the operating system's
+VM. In the VM we have physical memory (RAM) as cache, fast, and the
+disk as swap, slow, and in Dillo, memory also as cache, and the
+network as a "slow-medium".
+
+Does anybody see a better suited policy to use? 
+
+Another advantage of LRU, is it's simple implementation. I used a
+doubly-linked list where elements at the beginning are "recent" and
+the ones at the end are "old". Whenever a page gets revisited (in VM
+we call this "touched"), I simply remove the entry (with doubly-linked
+list, this operation is O(1)), and add the entry to the beginning
+(which is O(1) too).
+
+When I have to remove something from the list, I simply start
+removing from the end. 
+
+Patch
+-----
+
+The patch is at:
+
+http://www.ime.usp.br/~livio/dillo/patches/cache-size-limit.diff
+
+
+The files which are modified are:
+
+dillorc: Added the cache_size option are reorganized the sections. 
+
+about.c: Added the about:cache and about:cache-clear mechanisms, and
+changed About_send() to be more generic, and not just send
+the splash screen.
+
+cache.[ch]: The "bulk" of the changes. Basically added the LRU as
+described above in [Implementation], and
+a_Cache_list_entries, which builds a HTML from the entries
+for usage in about:cache. Also added a_Cache_clear() for
+usage in about:cache-clear.
+
+prefs.[ch]: Just added the cache_size preferences.
+
+
+Ok, so before sending this oficially to Jorge, I think I would like
+some feedback. First, any comments about the functionalities I've
+inserted, but most importantly about the stability of the code. I
+would be very interested in receiving bug reports. Send replies only
+to me _if_ your comments won't be of interest to other subscribers to
+this list. 
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Article
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-06-01 17:03
+
+Hi there!
+
+Good news, the article I was writing for LinuxDevices.com is
+already at the front page! (http://LinuxDevices.com).
+
+Enjoy!
+
+
+Cheers
+Jorge.- 
+

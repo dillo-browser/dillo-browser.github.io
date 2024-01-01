@@ -1,0 +1,1858 @@
+[Dillo-dev]End of ematic account.
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-08-30 20:32
+
+**** Important ****
+
+Hi there!
+
+
+Ematic did it again, but this will be the last time!
+
+I switched my email address, so please update your bookmarks.
+
+
+Thanks
+Jorge.-
+
+
+PD: Don't ask where! 
+
+
+
+[Dillo-dev]Tuxscreen: No Images
+
+From: Brad Colbert <brad@rn...> - 2002-08-30 05:19
+
+Hi folks,
+
+I finally got dillo to compile and run on a Tuxscreen phone but it won't
+seem to render images. I compiled it against both, jpeglib and pnglib
+but it doesn't seem to matter.
+
+Has anyone else had a similar problem? If so, did you fix it? If so
+how?
+
+Thanks,
+Brad 
+
+
+
+Re: [Dillo-dev]Dpi progress
+
+From: Jamin W. Collins <jcollins@as...> - 2002-08-27 18:34
+
+On Tue, 27 Aug 2002 14:09:37 -0400 (CLT)
+Jorge Arellano Cid <jcid@em...> wrote:
+
+> -----------
+> The Problem
+> -----------
+> 
+> My Thinkpad laptop decided to go dark,
+> and as I keep all of my dillo project stuff in it,
+> it's a serious problem.
+> 
+> 
+> The LCD is hard to read, maybe showing 50% of the brightness it
+> should. May it be the inverter? I don't know.
+> 
+> Just in case there's someone knowledgeable here, any help would
+> be highly appreciated.
+
+Perhaps a bit of over simplication, but how about pulling the data off
+said laptop and putting it into a CVS server or other storage location. I
+(and I'm sure others) can offer storage and replication of the data. 
+
+Doesn't help much with the laptop, but it does preserve the data.
+
+-- 
+Jamin W. Collins 
+
+
+
+[Dillo-dev]Hyperlinks as images
+
+From: <jbradford@di...> - 2002-08-27 18:15
+
+Hi everyone,
+
+I thought of this idea a while ago, but I'm not sure how useful/practical it would be in practice, but at least it is an original, (as far as I know) and interesting idea:
+
+How about an option to render all hyperlinks as small, (e.g. 128x128), thumbnails of the page they link to? Ignoring the fact that it would be wasteful of bandwidth, (fetching the html and inline images of all the linked pages), I can think of at least one instance where it would be very useful - locating a site that you found by following 20 links from one page to another, and then didn't bother to bookmark, but wished you had. Everybody has done it from time to time, you can 'see' the page in your head, but none or your searches turns it up. Now, if you could quickly glance down a load of thumbails of search results, wouldn't that help?
+
+Even if this isn't deemed a workable idea, at least I can use this post as prior art when somebody patents the idea, (which they are bound to try to do eventually) :-).
+
+John. 
+
+
+
+Re: [Dillo-dev]Downloads & hacking
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-27 18:14
+
+Matthieu,
+
+On 24 Aug 2002, Matthieu Sozeau wrote:
+
+> Hello dillo devs,
+>
+> this is my first post to this list so first I thank you for this
+> lightning-fast browser.
+
+Thanks, and welcome aboard.
+
+> I hacked up a download manager as I see no
+> volunteer had come to it until now. I made it similar to the Opera's
+> transfer manager, in a separate window, which can be hidden at
+> will. Just to name a few problems, there is no progress bar, first
+> because GtkCList do not support widget cell's in gtk-1.2 and second,
+> because the CacheClient_t struct has not the total length in it. As
+> this cache client is not attached to a browser window, it segfaults
+> when cache wants to remove its clients. There are "beware of
+> downloads, transitory code" messages around this functions, so I
+> hope we can find a nice solution.
+
+Well, the latest idea is to implement downloads with the new
+dpi framework (one minor glitch is that I haven't finished coding
+it yet! :).
+
+The point is to write an external program (dpi server) that
+handles download requests.
+
+Here's what you can do while I work on the dpi framework (my
+next post will be on my progress):
+
+Write a server that listens on a certain port for commands
+(don't care about cmd. syntax now). If it can queue the commands,
+and service them from there, that's enough.
+
+That is:
+
+--------------
+<some cmd> -----> | Dpi server |
+--------------
+|
+<answer> <-------------'
+
+
+Note: <answer may be void if an action is taken>
+
+
+So far you have a "get this URL" command and started
+downloading it to some local directory. If you keep the time it
+started, the downloaded bytes and the total size, some stats can
+be given back when required.
+
+For instance:
+
+--------------
+<stats please> -----> | Dpi server |
+--------------
+|
+<html answer> <-------------'
+
+
+A simple HTML page can do the trick:
+
+>>
+
+<h1>Downloads</h1>
+<table bgcolor='white' width='70%' border='1'>
+<tr>
+<td> file1.tgz </td>
+<td> 63000/100000 </td>
+<td> 63% </td>
+<td width='100%'> <table width='100%' cellpadding='8' cellspacing='1'>
+<tr><td bgcolor='blue' width='63%'></td>
+<td bgcolor='gray' width='37%'></td></tr>
+</table> </td>
+</tr>
+</table>
+
+>>
+
+That solves the status bar issue!
+
+There are some good advantages for this scheme.
+
+You may like to read my previous posts about the new dpi, and
+certainly the one I'm about to write :).
+
+Ok, if you code it as sketched above, you'd end up with a
+server that can listen to commands while it downloads, and
+consequently answer some statistics about what's going on.
+
+The details should become clear when I release the first
+version of a dpi-program, that is: bookmarks.
+
+>
+> Anyway, I'm really willing to help this project grow rapidly, and
+> there are things I'd like to do when i understand it more, like
+> tabs, XML-ability or gestures. For now I just wait for your
+> comments/advices/flame and walks around the bug database :)
+>
+>
+> my diff is at http://mattam.ath.cx/progs/dillo/dl.diff.gz
+
+I read your diff, and hope this lines get you started.
+
+Tabs?
+
+I already have a patch for tabs, it may eventually get in, but
+as dpi is the bottleneck and first concern, I'm 99% on it.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Dpi progress
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-27 18:14
+
+Hi there!
+
+After some hard work on the required CCCs for the dpi, it all
+seemed to work smoothly, but after adding some random delays to
+fake asynchronous behaviour, it became clear that there were race
+conditions, and some events were not being generated.
+
+A deep analysis showed that forcing the events somehow could
+fix the problems, but I couldn't find a witty (and simple and
+portable) way to do the trick. Then, there was a stance for
+generating the events as glib does (very dangerous), and also of
+forcing the actions those events trigger, but frankly, that is
+asking for trouble because code maintenance becomes a nightmare
+from then.
+
+Hmmm, there was also the possibility of using threads; that way
+the events are generated automatically, but it also involved all
+the inherent complexity of threads.
+
+Tough decision.
+
+...
+
+
+After some more thoughts I decided to try the threaded stuff.
+
+Quite complex, if you ask me: threads always look simpler than
+they really are.
+
+Well, now I have a fancy thread (with mutex, conditions and
+local tricks), that does the job OK.
+
+Now, I need to test it on the querying branch (currently it
+sends the built-up HTML from DPI to the ordinary IO-Cache
+answer branch).
+
+Up to this point, it works.
+
+After setting it on the querying branch, it would be a matter
+of designing the appropriate CCCs for error control and message
+passing. From then, some improving of the bookmarks dpi-program,
+writing some docs and it could go to the CVS.
+
+
+
+-----------
+The Problem
+-----------
+
+My Thinkpad laptop decided to go dark,
+and as I keep all of my dillo project stuff in it,
+it's a serious problem.
+
+
+The LCD is hard to read, maybe showing 50% of the brightness it
+should. May it be the inverter? I don't know.
+
+Just in case there's someone knowledgeable here, any help would
+be highly appreciated.
+
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev][patch] Bug 220 - saving entered datas in forms
+
+From: Jamin W. Collins <jcollins@as...> - 2002-08-27 13:42
+
+On Tue, 27 Aug 2002 20:25:41 +0700
+"Nikita V. Borodikhin" <eliterr@tk...> wrote:
+
+> Question: Should we save values when user just filled controls
+> and pushes the back button whithout submitting ?
+
+IMO, yes.
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev][patch] Bug 220 - saving entered datas in forms
+
+From: <jbradford@di...> - 2002-08-27 13:40
+
+Hi,
+
+> I made a patch that fixes bug 220.
+
+Thanks, that was one that irritated me quite a lot :-)
+
+> P.S.
+> Question: Should we save values when user just filled controls
+> and pushes the back button whithout submitting ?
+
+Best make it a configure option
+
+On a related note, could we make it so that middle clicking a form submit button opens the link in a new window? Amaya does this, and I liked it a lot.
+
+John. 
+
+
+
+[Dillo-dev][patch] Bug 220 - saving entered datas in forms
+
+From: Nikita V. Borodikhin <eliterr@tk...> - 2002-08-27 13:31
+
+Hello all Dillo developers !
+
+I made a patch that fixes bug 220.
+
+This is a description of how it shold work:
+-------------------------------------------------------------
+When user submits any form from page to server current values
+of all changable input elements in all forms are saved
+in array in browser window's history.
+
+If user shows this page again using backward/forward controls
+then input elements are filled with their last values again.
+
+Restoring of course if not performed when page is reloaded or
+the same URL is opened in other dillo's window or even when it
+is opened in the same window but in other position in history.
+--------------------------------------------------------------
+
+I tested this patch and found it works as I mean so enjoy.
+...and catch possible bugs
+
+Patch against current CVS tree:
+http://www.tkk.ru/~eliterr/dillo/dillo-saving-values.diff
+
+P.S.
+Question: Should we save values when user just filled controls
+and pushes the back button whithout submitting ?
+
+Nikita V. Borodikhin 
+
+
+
+[Dillo-dev]Downloads & hacking
+
+From: Matthieu Sozeau <mattam@ne...> - 2002-08-24 02:51
+
+Hello dillo devs,
+
+this is my first post to this list so first I thank you for this
+lightning-fast browser. I hacked up a download manager as I see no
+volunteer had come to it until now. I made it similar to the Opera's
+transfer manager, in a separate window, which can be hidden at
+will. Just to name a few problems, there is no progress bar, first 
+because GtkCList do not support widget cell's in gtk-1.2 and second,
+because the CacheClient_t struct has not the total length in it. As
+this cache client is not attached to a browser window, it segfaults
+when cache wants to remove its clients. There are "beware of
+downloads, transitory code" messages around this functions, so I
+hope we can find a nice solution.
+
+Anyway, I'm really willing to help this project grow rapidly, and
+there are things I'd like to do when i understand it more, like
+tabs, XML-ability or gestures. For now I just wait for your
+comments/advices/flame and walks around the bug database :)
+
+
+my diff is at http://mattam.ath.cx/progs/dillo/dl.diff.gz
+
+-- 
+"There are two ways of constructing a software design; one way is to
+make it so simple that there are obviously no deficiencies, and the
+other way is to make it so complicated that there are no obvious
+deficiencies. The first method is far more difficult."
+- C. A. R. Hoare 
+
+
+
+Re: [Dillo-dev]CVS
+
+From: Jamin W. Collins <jcollins@as...> - 2002-08-23 22:12
+
+On Fri, 23 Aug 2002 23:02:04 +0100
+jbradford@di... wrote:
+
+> I've been happily using Dillo for a couple of months, and I thought the
+> project had died - looking at CVS nothing has changed since about 1982 -
+> but now I've found everybody lurking on this mailing list :-)
+
+Not sure which CVS server you're looking at. Take a look here:
+
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/
+
+> So, basically, I was just wondering if there was a reason for not
+> updating the CVS tree, (apart from lack of time), because I don't really
+> feel like going through a couple of months of mailing list archive just
+> to pick out all the patches :-).
+
+You seem to be little out of touch with the current status. The project
+is now hosted here:
+
+http://dillo.cipsga.org.br/
+
+HTH
+
+-- 
+Jamin W. Collins 
+
+
+
+[Dillo-dev]CVS
+
+From: <jbradford@di...> - 2002-08-23 21:54
+
+Hi,
+
+I've been happily using Dillo for a couple of months, and I thought the project had died - looking at CVS nothing has changed since about 1982 - but now I've found everybody lurking on this mailing list :-)
+
+So, basically, I was just wondering if there was a reason for not updating the CVS tree, (apart from lack of time), because I don't really feel like going through a couple of months of mailing list archive just to pick out all the patches :-).
+
+Does the CVS tree need a maintainer or something? Can I help?
+
+Anyway, good work on Dillo, I've noticed a few unusual, and not-frequently-reproduced bugs, but they may well have been attended to since the begining of June, so I'll wait until I'm up to date with the lastest 'pre-patches' to comment :-).
+
+John. 
+
+
+
+Re: [Dillo-dev]Getting Dillo to work on arm7
+
+From: Philip Blundell <pb@ne...> - 2002-08-19 07:38
+
+On Sun, 2002-08-18 at 07:06, Alan DuBoff wrote:
+> Has anyone compiled Dillo and have it running on an arm7 cpu? I think one of 
+> the psions might have that chip, can't remember.
+
+The binary from Debian should work on an EP7312. You will indeed need
+an X server; TinyX is probably your best bet, but "big X" with the fbdev
+driver would be OK also.
+
+p. 
+
+
+
+[Dillo-dev]Getting Dillo to work on arm7
+
+From: Alan DuBoff <aland@So...> - 2002-08-18 06:09
+
+I'm trying to get Dillo running on a Cirrus Logic EP7312, which has an arm7 
+chip in it.
+
+I have downloaded the latest source 0.6.6 and grabbed the gtk+-1.2.10 and 
+glib-1.2.10 sources as well.
+
+I think I'll need some flavor of X, and I wasn't sure if I can do that with 
+MicroWindows/Nano-X, or if I'll need some other X server.
+
+I wasn't able to find a list of dependancies, but I'm sure it's somewhere.
+
+Has anyone compiled Dillo and have it running on an arm7 cpu? I think one of 
+the psions might have that chip, can't remember.
+
+-- 
+
+Alan DuBoff
+Software Orchestration, Inc.
+GPG: 1024D/B7A9EBEE 5E00 57CD 5336 5E0B 288B 4126 0D49 0D99 B7A9 EBEE 
+
+
+
+[Dillo-dev]anchor support for navigation (back/forward) [PATCH]
+
+From: Frank Gevaerts <frank@ge...> - 2002-08-16 18:58
+
+Hi,
+
+I needed a small fast browser for some html we have produced. I needed
+navigation within the html file, which dillo does not provide as of
+v0.66. So I had a look and came up with the following patch. Can you
+advise me on whether this is the right way to do it ? It seems to work
+here.
+
+Frank
+
+
+diff -ur dillo-0.6.6/src/history.c dillo-0.6.6.fg/src/history.c
+--- dillo-0.6.6/src/history.c 2002-04-10 02:53:58.000000000 +0200
++++ dillo-0.6.6.fg/src/history.c 2002-08-16 17:58:55.000000000 +0200
+@@ -38,7 +38,7 @@
+gint i, idx;
+
+for (i = 0; i < history_size; ++i)
+- if (a_Url_cmp(history[i].url, url) == 0)
++ if (a_Url_cmp(history[i].url, url) == 0 && URL_STRCAMP_EQ(history[i].url->fragment,url->fragment))
+return i;
+
+idx = history_size;
+diff -ur dillo-0.6.6/src/nav.c dillo-0.6.6.fg/src/nav.c
+--- dillo-0.6.6/src/nav.c 2002-04-10 03:10:16.000000000 +0200
++++ dillo-0.6.6.fg/src/nav.c 2002-08-16 20:34:52.000000000 +0200
+@@ -176,7 +176,7 @@
+MustLoad = ForceReload || !old_url;
+if (old_url){
+MustLoad |= a_Url_cmp(old_url, url);
+- MustLoad |= strcmp(URL_STR(old_url), a_Interface_get_location_text(bw));
++ MustLoad |= strcmp(URL_STR_NOANCHOR(old_url), a_Interface_get_location_text(bw));
+}
+
+if ( MustLoad ) {
+@@ -195,9 +195,19 @@
+a_Interface_set_cursor(bw, GDK_LEFT_PTR);
+}
+
+- /* Jump to #anchor position */
++ /* Push on stack and jump to #anchor position */
+if (URL_FRAGMENT_(url)) {
+- /* todo: push on stack */
++ gint idx;
++ DilloUrl *hist_url=a_Url_dup(url);
++
++ /* unset E2EReload before adding this url to history */
++ a_Url_set_flags(hist_url, URL_FLAGS(hist_url) & ~URL_E2EReload);
++ idx = a_History_add_url(hist_url);
++ Nav_stack_add(bw, idx);
++ Nav_stack_clean(bw);
++ a_Interface_set_button_sens(bw);
++ a_Url_free(hist_url);
++
+a_Dw_gtk_scrolled_window_set_anchor(
+GTK_DW_SCROLLED_WINDOW(bw->docwin), URL_FRAGMENT_(url));
+}
+diff -ur dillo-0.6.6/src/url.c dillo-0.6.6.fg/src/url.c
+--- dillo-0.6.6/src/url.c 2002-04-10 03:10:28.000000000 +0200
++++ dillo-0.6.6.fg/src/url.c 2002-08-16 20:20:59.000000000 +0200
+@@ -56,19 +56,47 @@
+
+if (!url->url_string) {
+url->url_string = g_string_sized_new(60);
+- g_string_sprintf(
+- url->url_string, "%s%s%s%s%s%s%s%s%s%s",
+- url->scheme ? url->scheme : "",
+- url->scheme ? ":" : "",
+- url->authority ? "//" : "",
+- url->authority ? url->authority : "",
+- (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
+- url->path ? url->path : "",
+- url->query ? "?" : "",
+- url->query ? url->query : "",
+- url->fragment ? "#" : "",
+- url->fragment ? url->fragment : "");
+}
++ g_string_sprintf(
++ url->url_string, "%s%s%s%s%s%s%s%s%s%s",
++ url->scheme ? url->scheme : "",
++ url->scheme ? ":" : "",
++ url->authority ? "//" : "",
++ url->authority ? url->authority : "",
++ (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
++ url->path ? url->path : "",
++ url->query ? "?" : "",
++ url->query ? url->query : "",
++ url->fragment ? "#" : "",
++ url->fragment ? url->fragment : "");
++
++ return url->url_string->str;
++}
++
++/*
++ * Return the url as a string, without the anchor part.
++ * (initializing 'url_string' camp if necessary)
++ */
++gchar *a_Url_str_noanchor(const DilloUrl *u)
++{
++ /* Internal url handling IS transparent to the caller */
++ DilloUrl *url = (DilloUrl *) u;
++
++ g_return_val_if_fail (url != NULL, NULL);
++
++ if (!url->url_string) {
++ url->url_string = g_string_sized_new(60);
++ }
++ g_string_sprintf(
++ url->url_string, "%s%s%s%s%s%s%s%s",
++ url->scheme ? url->scheme : "",
++ url->scheme ? ":" : "",
++ url->authority ? "//" : "",
++ url->authority ? url->authority : "",
++ (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
++ url->path ? url->path : "",
++ url->query ? "?" : "",
++ url->query ? url->query : "");
+
+return url->url_string->str;
+}
+diff -ur dillo-0.6.6/src/url.h dillo-0.6.6.fg/src/url.h
+--- dillo-0.6.6/src/url.h 2002-04-10 03:05:43.000000000 +0200
++++ dillo-0.6.6.fg/src/url.h 2002-08-16 20:25:02.000000000 +0200
+@@ -56,6 +56,7 @@
+#define URL_ALT_(u) u->alt
+#define URL_POS_(u) u->scrolling_position
+#define URL_STR_(u) a_Url_str(u)
++#define URL_STR_NOANCHOR_(u) a_Url_str_noanchor(u)
+
+/*
+* Access methods that always return a string:
+@@ -75,6 +76,7 @@
+#define URL_ALT(u) NPTR2STR(URL_ALT_(u))
+#define URL_POS(u) URL_POS_(u)
+#define URL_STR(u) NPTR2STR(URL_STR_(u))
++#define URL_STR_NOANCHOR(u) NPTR2STR(URL_STR_NOANCHOR_(u))
+
+
+
+@@ -117,6 +119,7 @@
+gint flags, gint pos);
+void a_Url_free(DilloUrl *u);
+gchar *a_Url_str(const DilloUrl *url);
++gchar *a_Url_str_noanchor(const DilloUrl *url);
+const gchar *a_Url_hostname(const DilloUrl *u);
+DilloUrl* a_Url_dup(const DilloUrl *u);
+gint a_Url_cmp(const DilloUrl* A, const DilloUrl* B); 
+
+
+
+Re: [Dillo-dev]turning images off
+
+From: madis <madis@cy...> - 2002-08-15 22:09
+
+On Sat, 10 Aug 2002, Lex Hider wrote:
+
+> I have done a bit of a patch for my own use
+> that gives a preference option to
+> turn images on or off. 
+> check it out.
+
+Dillo does not draw alt text for images and image links without alt text 
+are quite uncomfortable to use, when image is not loaded. I read this 
+patch and seems that it would not add ability drawing alt text. Here is a 
+patch to do this:
+
+diff -pru -x CVS -x 'Makefile*' -x config.h.in dillo-cvs/src/dw_image.c 
+dillo/src/dw_image.c
+--- dillo-cvs/src/dw_image.c 2002-04-10 16:08:18.000000000 +0300
++++ dillo/src/dw_image.c 2002-08-16 00:48:50.000000000 +0300
+@@ -281,19 +281,19 @@ static void Dw_image_draw (DwWidget *wid
+
+p_Dw_widget_draw_widget_box (widget, area);
+
+- if (image->buffer) {
+- content.x = p_Dw_style_box_offset_x (widget->style);
+- content.y = p_Dw_style_box_offset_y (widget->style);
+- content.width =
+- widget->allocation.width - p_Dw_style_box_diff_width (widget->style);
+- content.height = widget->allocation.ascent + widget->allocation.descent -
+- p_Dw_style_box_diff_height (widget->style);
+-
+- if (p_Dw_rectangle_intersect (area, &content, &intersection)) {
+- vx = p_Dw_widget_x_world_to_viewport (widget, widget->allocation.x);
+- vy = p_Dw_widget_y_world_to_viewport (widget, widget->allocation.y);
+- gc = widget->style->color->gc;
++ content.x = p_Dw_style_box_offset_x (widget->style);
++ content.y = p_Dw_style_box_offset_y (widget->style);
++ content.width =
++ widget->allocation.width - p_Dw_style_box_diff_width (widget->style);
++ content.height = widget->allocation.ascent + widget->allocation.descent -
++ p_Dw_style_box_diff_height (widget->style);
++
++ if (p_Dw_rectangle_intersect (area, &content, &intersection)) {
++ vx = p_Dw_widget_x_world_to_viewport (widget, widget->allocation.x);
++ vy = p_Dw_widget_y_world_to_viewport (widget, widget->allocation.y);
++ gc = widget->style->color->gc;
+
++ if (image->buffer) {
+if (image->scaled_buffer)
+buffer = image->scaled_buffer;
+else
+@@ -309,6 +309,39 @@ static void Dw_image_draw (DwWidget *wid
+vx + intersection.x, vy + intersection.y,
+intersection.width, intersection.height, GDK_RGB_DITHER_MAX,
+bstart, content.width * 3);
++ } else if (image->alt_tooltip) {
++ GdkFont *font;
++ const gchar *s;
++ int width = 0;
++
++ font = widget->style->font->font;
++ if (content.width) {
++ for (s = image->alt_tooltip->text; *s && width < content.width; )
++ width += gdk_char_width(font, *(s++));
++ } else
++ s = image->alt_tooltip->text + strlen(image->alt_tooltip->text);
++ gdk_draw_text(DW_WIDGET_WINDOW (widget), font, gc, vx, vy +
++ (content.height + font->ascent - font->descent) / 2,
++ image->alt_tooltip->text, s - image->alt_tooltip->text);
++ } else if (content.width > 2 && content.height > 2) {
++ int lx, ly, cx, cy;
++ 
++ lx = vx + intersection.x + intersection.width - 1;
++ ly = vy + intersection.y + intersection.height - 1;
++ cx = vx + content.width - 1;
++ cy = vy + content.height - 1;
++ if (!intersection.x)
++ gdk_draw_line(DW_WIDGET_WINDOW (widget), gc,
++ vx, vy + intersection.y, vx, ly);
++ if (!intersection.y)
++ gdk_draw_line(DW_WIDGET_WINDOW (widget), gc,
++ vx + intersection.x, vy, lx, vy);
++ if (cx <= lx)
++ gdk_draw_line(DW_WIDGET_WINDOW (widget), gc,
++ cx, vy + intersection.y, cx, ly);
++ if (cy <= ly)
++ gdk_draw_line(DW_WIDGET_WINDOW (widget), gc,
++ vx + intersection.x, cy, lx, cy);
+}
+}
+}
+
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Hello
+
+From: higuita <higuita@GM...> - 2002-08-14 23:47
+
+Attachments: Message as HTML      
+
+On Fri, 9 Aug 2002 13:01:18 +0100 (BST), first last
+<prelude_2_murder@ya...> wrote:
+> This idea is to have a filtering proxy to enable disable images and/or 
+> cookies on a per-site basis.
+
+use the privoxy, the new version of junkbuster
+the new version, 3.0 is almost done, in some weeks will
+be released
+it was build to be portable, runs in almost all unix and win32
+
+just search in google, should be the first link
+
+> This proxy would be running on the computer when Dillo runs (if the 
+> option is set in the dillorc file) and Dillo would have an option in
+> one
+> of the menus (or maybe a button) to enable/disable images from the 
+> site, which communicates with the proxy (maybe the proxy accepts http 
+> get or post requests using a cgi interface, so no extra communication 
+> protocol has to be developed).
+
+privoxy talks with the user via some cgi to enable, disable, edit
+and other
+just bookmark the options or make a small patch to add a static
+bookmark in the right click
+
+> The proxy does not do html parsing, as this is too processor intensive,
+> but only filters files based on extension and/or mime type (or request 
+> type, I don't know that much of http yet).
+
+privoxy does html parsing in full mode, but you can configure it
+to the plain old junkbuster url&extension block
+
+privoxy use the html parsing to disable ads by size, pop-ups, 
+javascript cookies, web-bugs and many other things
+it can be used too to fix/change pages, like new theme for
+slashdot, fix bad html code that only work in IE to a more
+standard code that works in all browsers
+
+i run it in a old 486 in full filtering and never saw the cpu
+getting too high because of filtering
+
+> The reason for this is that for modem users like me, images are a 
+> nuisance most of the time and also we can enable ad-filtering. I know 
+> that i could use links or relatives, but the brower is the application 
+> that I think that it has to be graphical.
+
+you can use too lynx or links, this way you dont get any images,
+just stuff that matters
+lynx and links are still the faster browsers for modem users, 
+especially old/slow modems
+
+but a well tuned privoxy will make miracles too
+
+higuita
+-- 
+One Unix to rule them all, One Resolver to find them,
+One IP to bring them all and in the zone bind them. 
+
+
+
+[Dillo-dev]Current progress (14/Aug)
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-14 16:57
+
+Hi there!
+
+
+It's been a tough week of work here; I was squeezing my brains
+trying to get the extended CCC theory delineated. Now, I need a
+couple of days of rest before resuming.
+
+It has been very productive though!, maybe 70% of it is done,
+with _maybe_ just 20-30% of coding to reach the point that
+asserts that the whole theory can implement the dpi framework as
+thought.
+
+That's the twilight-zone between theory and practice.
+
+Full time dedication yields its gains, but as a side effect, a
+lot of other interesting, less prioritized ideas, have to wait.
+
+My first priority by now, is to get the dpi framework done,
+so please be patient.
+
+BTW, I have enough to-review patches and ideas, to build up a
+new release; but they need some work.
+
+To name a few:
+
+IPv6, auto{conf/make} fixes, push consistency, command line
+options (enabling integration with sylpheed), meta refresh
+warning message (in HTML) with a link, an some other ideas.
+
+Ah, before I forget, please read the nice article about FreeSW
+and UI from the links section of our site [Livio: please place a
+new-icon there. Obrigado!].
+
+With all that, plus a few dpi-programs we'll have more than
+enough for a full blown 0.7.0 release, but we need the dpi
+framework first...
+
+----
+
+We have been trying with Livio, to finish setting the CVS
+server and mailing lists from CIPSGA since more than a month, but
+none of us has been able to contact a sysadmin there! (?)
+
+Livio: please place note right in the front page of our site
+asking for a sysadmin from CIPSGA to contact us.
+
+[Lex wrote:]
+> Just thought people would be interested in the mention
+> in Linux Journal that dillo gets.
+>
+> http://www.linuxjournal.com/article.php?sid=6169
+
+Thanks a lot Lex.
+
+BTW, it'd be great to add it to our press section and also in
+the front page.
+
+(As you may have noticed, Livio and I maintain the site).
+
+
+Cheers
+Jorge.-
+
+
+PD: sorry for the "poutpourri" style, but there was a lot of
+little things to say ;) 
+
+
+
+Re: [Dillo-dev][patch] build dillo in a separate tree to the source code
+
+From: Matias Aguirre <yo_soy@fa...> - 2002-08-14 11:00
+
+On Wed, 14 Aug 2002 12:52:27 +0200
+Tomas Guemes <tomas@pa...> wrote:
+
+> Hi all,
+> 
+> I tried to build dillo in a separate tree to the source code
+> 
+> %mkdir dillo-build && cd dillo-build
+> %../dillo-0.6.6/configure
+> %make
+> 
+> <skip>
+> 
+> gcc -DHAVE_CONFIG_H -I. -I../../dillo-0.6.6/src -I.. 
+> -I/usr/local/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2
+> -I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT
+> -D_THREAD_SAFE -Wall -Waggregate-return -c ../../dillo-0.6.6/src/cache.c
+> In file included from ../../dillo-0.6.6/src/cache.c:27:
+> ../../dillo-0.6.6/src/IO/Url.h:5: ../../config.h: No such file or
+> directory
+> 
+> I just change all the #include "config.h" to <config.h>
+> 
+
+It is the same file?
+Maybe <config.h> call to other header...i dont know
+
+Greetings
+
+-- 
+Matias Aguirre
+Software Engineer
+Sinatec S.A.
+Linux User #: 78193
+
+Buenos Aires, Argentina 
+
+
+
+[Dillo-dev][patch] build dillo in a separate tree to the source code
+
+From: Tomas Guemes <tomas@pa...> - 2002-08-14 10:48
+
+Hi all,
+
+I tried to build dillo in a separate tree to the source code
+
+%mkdir dillo-build && cd dillo-build
+%../dillo-0.6.6/configure
+%make
+
+<skip>
+
+gcc -DHAVE_CONFIG_H -I. -I../../dillo-0.6.6/src -I.. 
+-I/usr/local/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2
+-I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT
+-D_THREAD_SAFE -Wall -Waggregate-return -c ../../dillo-0.6.6/src/cache.c
+In file included from ../../dillo-0.6.6/src/cache.c:27:
+../../dillo-0.6.6/src/IO/Url.h:5: ../../config.h: No such file or
+directory
+
+I just change all the #include "config.h" to <config.h>
+
+You can find the patch in http://pasky.dhs.org/tomas/dillo/
+
+greetings 
+
+tomas 
+
+
+
+[Dillo-dev]linux journal mention
+
+From: <lexxx_h@ya...> - 2002-08-14 03:02
+
+Just thought people would be interested in the mention
+in Linux Journal that dillo gets.
+
+http://www.linuxjournal.com/article.php?sid=6169
+
+It's an article about running linux without it hogging
+all your resources.
+
+Says that dillo's memory usage is "rather impressive".
+
+Lex.
+
+http://digital.yahoo.com.au - Yahoo! Digital How To
+- Get the best out of your PC! 
+
+
+
+[Dillo-dev]Patch: updated command line options
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-08-14 00:42
+
+Hi,
+
+Instead of posting the patch here, I have filed a bug concerning the command
+line options (is this what Jorge suggested in his last mail to the ML?). I
+updated the patch and it is 100% complete. It is available at:
+
+http://melvin.hadasht.free.fr/home/dillo/cli/index.html
+
+In short, it adds:
+- portable short and long options (without using get_opt_long)
+- options can have optional arguments
+- support of '--' as a separator between options and URL/FILEs arguments
+- automatic help text creation.
+
+Any comments and suggestions are welcome (especially that I could find any
+improvement possibilities.)
+
+I'll update my other patches to support this new CLI patch in the coming days,
+so they could act as a reference implementation for the CLI options.
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]sending patches
+
+From: <lexxx_h@ya...> - 2002-08-12 01:35
+
+Hi everyone,
+
+sorry about sending the patches I was unaware of this
+etiquette and I won't do it again.
+
+As far as the rules regarding patches made the patches
+for my own use and then realised someonelse might
+find them useful.
+
+Lex.
+
+http://digital.yahoo.com.au - Yahoo! Digital How To
+- Get the best out of your PC! 
+
+
+
+[Dillo-dev]cookies date format problem
+
+From: madis <madis@cy...> - 2002-08-11 20:04
+
+I found that cookies didn't work very well in dillo when speaking with 
+forum.zone.ee server starting from some dillo version and reason is:
+
+This is HTTP header sent by server:
+
+HTTP/1.1 200 OK
+Date: Sun, 11 Aug 2002 19:21:23 GMT
+Server: Apache/1.3.26 (Unix) mod_fastcgi/2.2.10 PHP/4.1.2
+X-Powered-By: PHP/4.1.2
+Set-Cookie: sessionhash=8a534d4b820feafd422ab005bd8bf74e; path=/; domain=forum.zone.ee
+Set-Cookie: bblastvisit=1029093683; expires=Mon, 11-Aug-03 19:21:23 GMT; path=/; domain=forum.zone.ee
+Content-Length: 49478
+Connection: close
+Content-Type: text/html
+
+
+The cookies timestamp is in format that is almost RFC-850, but the weekday 
+is Mon instead Monday, which you would expect from RFC-850 date.
+This is probably a bug in PHP or vBulletin forum software (I'm not sure 
+which one).
+
+Dillo looks it and tells that this is a crap:
+
+Parsing cookie string `bblastvisit=1029094010; expires=Mon, 11-Aug-03 19:26:50 GMT; path=/; domain=forum.zone.ee'
+Cookies: Expire date is malformed! Ignoring cookie...
+Removing cookie 'bblastvisit'
+
+And result is that cookies don't work.
+
+It is possible to allow this kind RFC-850 date with short weekday name 
+(dillo doesn't use the weekday anyway) using trivial modification in 
+cookies.c Cookies_create_timestamp function:
+
+--- dillo-cvs/src/cookies.c 2002-05-29 17:44:46.000000000 +0300
++++ dillo/src/cookies.c 2002-08-11 22:44:47.000000000 +0300
+@@ -386,8 +386,8 @@ static time_t Cookies_create_timestamp(c
+minutes = strtol(cp + 14, NULL, 10); /* minutes */
+seconds = strtol(cp + 17, NULL, 10); /* seconds */
+
+- } else if (cp && ((cp - expires == 3 && strlen(cp) == 26) ||
+- (cp - expires > 5 && strlen(cp) == 24))) {
++ } else if (cp && ((cp - expires > 5 && cp - expires <= 10) ||
++ cp - expires == 3) && (strlen(cp) == 24 || strlen(cp) == 26)) {
+/* RFC-1123 | RFC-850 format */
+day = strtol(cp + 2, NULL, 10);
+month = Cookies_get_month(cp + 5);
+
+
+But I suspect this would not met very well dillo's goal to not support 
+bugs.
+
+--
+mzz 
+
+
+
+Re: [Dillo-dev]check out these dodgy patches
+
+From: Jamin W. Collins <jcollins@as...> - 2002-08-10 18:59
+
+On Sat, 10 Aug 2002 12:26:56 -0400 (CLT) Jorge Arellano Cid
+<jcid@em...> wrote:
+
+> On Sat, 10 Aug 2002, Lex Hider wrote:
+> 
+> > I've done these few patches for my own use.
+> > Just wondering if anyone thought they were useful.
+> 
+> OK Lex, would you mind reading the mailing list etiquette and
+> the patching directions in our site?
+
+I just took a second look at the site and it's guidelines regarding the
+list, I don't see where Lex did anything wrong. According to the site:
+
+<quote>
+If your patch is small and you need to share it for advice, send it to the
+mailing list. 
+</quote>
+
+Seems to be right in line with what Lex did. I don't consider 9 KB for
+two patches to be _big_. Granted Lex might have gzip'd them prior to
+adding them, but we are still only talking about 9 KB.
+
+As far as ettiquette, his post was very clear and concise. Can't speak
+for the patching portition as I haven't devel'd that far into Dillo.
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev]check out these dodgy patches
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-10 16:30
+
+On Sat, 10 Aug 2002, Lex Hider wrote:
+
+> I've done these few patches for my own use.
+> Just wondering if anyone thought they were useful.
+
+OK Lex, would you mind reading the mailing list etiquette and
+the patching directions in our site?
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]check out these dodgy patches
+
+From: <lexxx_h@ya...> - 2002-08-10 12:54
+
+Attachments: keys.diff      menu.diff      
+
+I've done these few patches for my own use.
+Just wondering if anyone thought they were useful.
+
+menu.diff adds functionality to the right click menu.
+keys.diff adds vi-style movement keys.
+
+http://digital.yahoo.com.au - Yahoo! Digital How To
+- Get the best out of your PC! 
+
+
+
+[Dillo-dev]turning images off
+
+From: <lexxx_h@ya...> - 2002-08-10 12:45
+
+Attachments: images-new.diff      
+
+I have done a bit of a patch for my own use
+that gives a preference option to
+turn images on or off. 
+check it out.
+
+Lex.
+
+http://digital.yahoo.com.au - Yahoo! Digital How To
+- Get the best out of your PC! 
+
+
+
+[Dillo-dev]Re: Patch to use an external html source code viewer.
+
+From: Cyril Bouthors <cyril@bo...> - 2002-08-09 21:59
+
+Attachments: external_viewer_doc.patch      Bindings.txt      
+
+I've forgot to include the tiny documentation I've made about this
+source viewer patch and binding. I've described the "source_viewer"
+option in the sample dillo initialization file and described generic
+bindings into a new file called doc/Bindings.txt.
+
+I felt the need to write Bindings.txt when I discovered that the
+bindings for "backward" and "forward" functions (ALT+, and ALT+.) were
+documented nowhere else than in the source code. :) 
+
+
+
+[Dillo-dev]Patch to use an external html source code viewer.
+
+From: Cyril Bouthors <cyril@bo...> - 2002-08-09 21:30
+
+Attachments: external_viewer.patch      
+
+Hello,
+
+As discussed briefly with Livio on #dillo on OPN, I've made a patch to
+allow an external program to view the HTML source code in Dillo. The
+external viewer can be customized with the variable "source_viewer" in
+user and system wide configuration files. If "source_viewer" is
+different than "internal", Dillo will run the external viewer in the
+background. Otherwise, "source_viewer" is defined as "internal" by
+default and Dillo will use the standard "internal" GTK viewer.
+
+I've also added a keyboard binding for the "view source" function (C-u
+as in Galeon and Mozilla).
+
+I hope the code is clean enough to be included in the CVS branch,
+please do not hesitate to tell me what you think about that.
+
+The patch is attached to this email. 
+
+
+
+Re: [Dillo-dev]plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-09 20:06
+
+On 9 Aug 2002, Lars Clausen wrote:
+
+> [...]
+> > I want you to know that it wouldn't have been possible without
+> > the hourly consulting contract I got from metro-techs to help
+> > coding a feature they needed with dillo.
+> >
+> > In fact, I was looking for a job when they sprung-in. Now, as
+> > you read the technical parts, please think about it, because it
+> > could have not been there.
+>
+> This is very good news! I am so happy for you, and for Dillo.
+
+Thanks Lars.
+
+BTW, don't get me wrong, that contract is done. Nobody knows
+what will happen next month.
+
+
+> > After carefully reading the latest plugins' thread, I decided
+> > to answer it as a whole, telling you some news.
+> >
+> > It's been a long effort to get to dpi spec, mainly working with
+> > Eric, and at the latter time with Geoff. As you may know, the
+> > main point of dpi is to become a powerful extension framework for
+> > dillo.
+> [...]
+>
+> I don't remember if I talked about this yet or not, but I have this idea
+> for a system to handle unknown mime types, only slightly similar to my
+> external handlers patch. As far as I can read the dpi spec, my idea
+> wouldn't be workable by dpi unless you allow dpi to handle "mime types not
+> handled by anybody else".
+
+Well, I think a "last-resort" dpi should do it.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]plugins
+
+From: Lars Clausen <lrclause@cs...> - 2002-08-09 18:20
+
+On Fri, 9 Aug 2002, Jorge Arellano Cid wrote:
+>=20
+> Hi developers,
+>=20
+>=20
+> I'm breaking my silence to tell you some news:
+>=20
+> I know this is an excellent project, some of you also know, and
+> most of the people following our project wandering if they could
+> make use of it in their products, also know that.
+[...]
+> I want you to know that it wouldn't have been possible without
+> the hourly consulting contract I got from metro-techs to help
+> coding a feature they needed with dillo.
+>=20
+> In fact, I was looking for a job when they sprung-in. Now, as
+> you read the technical parts, please think about it, because it
+> could have not been there.
+
+This is very good news! I am so happy for you, and for Dillo.
+
+> After carefully reading the latest plugins' thread, I decided
+> to answer it as a whole, telling you some news.
+>=20
+> It's been a long effort to get to dpi spec, mainly working with
+> Eric, and at the latter time with Geoff. As you may know, the
+> main point of dpi is to become a powerful extension framework for
+> dillo.
+[...]
+
+I don't remember if I talked about this yet or not, but I have this idea
+for a system to handle unknown mime types, only slightly similar to my
+external handlers patch. As far as I can read the dpi spec, my idea
+wouldn't be workable by dpi unless you allow dpi to handle "mime types not
+handled by anybody else".
+
+The idea is to have a handler for unknown mime types that opens a dialog
+for the user. The dialog should allow as-text, save-to-disk,
+browse-for-app and most importantly a selection of appropriate handlers as
+found in /etc/mailcap and ~/.mailcap. This will give the user enough
+choice to find his or her preference (which the current external handlers
+patch doesn't) yet narrow the choice down to the sensible candidates.
+The users choice should of course be persistently saved.
+
+While I haven't had much time for Dillo since I became co-maintainer of
+Dia, I would like to do this, whether or not it can be done with dpi.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-08-09 17:48
+
+Hi developers,
+
+
+I'm breaking my silence to tell you some news:
+
+I know this is an excellent project, some of you also know, and
+most of the people following our project wandering if they could
+make use of it in their products, also know that.
+
+That makes a good point, because it signals recognition.
+
+Now, a project as complex as a web browser can't be developed
+in a spare time basis. I know that, and so I'm trying to get some
+funds to assemble a small team of core developers.
+
+It may be that we still don't get to the break point where
+everyone sees dillo as a very useful tool that's better to have
+and preserve.
+
+The good news is that dillo project is about to get to a new
+milestone that will prove it even better. That is: plugins.
+
+I want you to know that it wouldn't have been possible without
+the hourly consulting contract I got from metro-techs to help
+coding a feature they needed with dillo.
+
+In fact, I was looking for a job when they sprung-in. Now, as
+you read the technical parts, please think about it, because it
+could have not been there.
+
+Specially those of you working for a company that's evaluating
+or trying to decide whether to deploy dillo or not, this is the
+right time to help. A small consulting contract wouldn't hurt and
+it may keep the boat afloat.
+
+
+--------------
+Technical part
+--------------
+
+After carefully reading the latest plugins' thread, I decided
+to answer it as a whole, telling you some news.
+
+It's been a long effort to get to dpi spec, mainly working with
+Eric, and at the latter time with Geoff. As you may know, the
+main point of dpi is to become a powerful extension framework for
+dillo.
+
+This is by no means an easy task, as it involves core parts of
+dillo as the concomitant callback chain, IO engine and cache to
+name a few. So progress had been very slow.
+
+A month ago or so, an inspiring idea hit me bringing a somewhat
+different way of implementing dpi; as Geoff was working on the
+official dpi SPEC, I decided to give it a silent try and worked
+some prototype code, it went good, and I kept working changes on
+my dillo tree.
+
+At this moment it's not complete, but I have changes worth a
+70KB diff. That is, a new IO API, and an extension of the CCC
+theory to accomodate what Geoff accurately points as multi-phase
+exchanges vs. the single request-response scheme that dillo is
+happiest with.
+
+In other words, the CCC extensions were done to cope with the
+multi-phase exchanges.
+
+What do I have now?
+
+A new scheme that's potentially able to cope with:
+
+- One-request/One-response dpi
+- Multi-phase exchanges
+- dpis that exit when finished
+- dpis that keep resident when finished (servers)
+- message passing (back/forward)
+- special task requests (as setting preferences)
+- handling of FORM request data
+
+This is enough for:
+
+- Bookmarks, preferences, FTP, downloads, https, info, man, etc.
+- Being an API for embedded platforms
+
+Yes, dpi IS a powerful idea!
+
+
+Why do I say "potentially able"?
+
+Because it's not fully proven yet.
+I still have to properly code parsing of dpi protocol answers
+to be sure that the whole theory is implementation ready.
+
+So far, the exended CCC showed no problems to handle the old
+functionality, and I also have coded a resident bookmarks dpi
+server that shows/add bookmarks and also passes some messages to
+the status bar. So, it's very close!
+
+One of the best things of the dpi extension is that it will
+allow developing dillo applets (dpi programs) without having to
+know dillo internals, that is, just the dpi API.
+
+Another advantage is that you can use the dpi that best fits
+your needs. For instance, a full featured FTP or a light weight
+one.
+
+So, my advice is to wait until it's ready.
+
+(Well, unless you're confident enough to implement dpi from the
+spec and end with a solution that's better than mine! ;).
+
+But start coding your dpi program right now!
+
+Yes, if you think of FTP (for instance), a program that gets an
+FTP-URL at the command line, and then performs the whole FTPing
+to retrieve the URL (let's think of a directory), and translates
+it to HTML that's sent to stdout, would be a great advance.
+
+In fact, the only thing left to make it a real dpi, would be
+encapsulating it into dpi protocol.
+
+If you need an answer from the browser, as with https'
+allow/deny certificate, just assume you have the answer, and fake
+a routine to do it. When dpi is finished, it will be a matter of
+replacing it with the proper call.
+
+Well, you've got the idea.
+
+
+
+Sincerely
+Jorge.-
+
+
+PS: expect some news about it in a week or so. 
+
+
+
+[Dillo-dev]Hello
+
+From: <prelude_2_murder@ya...> - 2002-08-09 12:01
+
+Hello everyone. I just joined this list because Dillo really matches my
+
+ideas of what a useful browser should be and I would like to contribute
+
+to it.
+
+I have a couple of ideas that I would like to share with you.
+
+The first one is that I would like to have an option to not display
+images at all, but instead of doing it like Mozilla does (not
+displaying 
+anything), do it like Opera, displaying the "alt" text within a border 
+or "image" if there is no "alt" text.
+
+The way I thought of doing this was linking the code that renders the 
+image to check for a variable and then call the image renderer or a 
+table renderer instead, so it displays what I said before.
+
+This is an idea, and I am more than open to suggestions on how to do it
+
+correctly and in a way that would be accepted by the developers (no,
+I'm
+not keen on quick hacks and do agree that "properly written" code is 
+the most important thing for maintainability).
+
+The second one is something that I initially thought that it could be 
+added to Dillo itself, but I realised that it does not go well with the
+
+"do one thing and do it small" philosophy, so I thought of doing it 
+apart.
+
+This idea is to have a filtering proxy to enable disable images and/or 
+cookies on a per-site basis.
+
+This proxy would be running on the computer when Dillo runs (if the 
+option is set in the dillorc file) and Dillo would have an option in
+one
+of the menus (or maybe a button) to enable/disable images from the 
+site, which communicates with the proxy (maybe the proxy accepts http 
+get or post requests using a cgi interface, so no extra communication 
+protocol has to be developed).
+
+The proxy does not do html parsing, as this is too processor intensive,
+
+but only filters files based on extension and/or mime type (or request 
+type, I don't know that much of http yet).
+
+The reason for this is that for modem users like me, images are a 
+nuisance most of the time and also we can enable ad-filtering. I know 
+that i could use links or relatives, but the brower is the application 
+that I think that it has to be graphical.
+
+Sorry if this message is too long, but I wanted everyone to 
+understand what I want and to contribute with ideas on what/how should
+be done (or just convince me to forget about it if you're not
+interested).
+
+Thanks for reading this
+
+Gabriel
+
+__________________________________________________
+Do You Yahoo!?
+Everything you'll ever need on one web page
+from News and Sport to Email and Music Charts
+http://uk.my.yahoo.com 
+
+
+
+Re: [Dillo-dev]https
+
+From: madis <madis@cy...> - 2002-08-09 00:51
+
+On Tue, 6 Aug 2002, Lars Segerlund wrote:
+
+> 
+> Got any idea of how to do the https <-> dillo interaction ?
+> 
+> 1. quite easy to handle encryption.
+> 
+> 2. not so easy to handle certificates ?
+> 
+> If I got everyting right, a plugin must make dillo recognize its url 
+> type ? after this dillo will invoke it, thus it needs to be configured 
+> somewhere ... or have the ability to autoconfigure ( wich would be nicer 
+> ) but in this case this has to be able to be overrun ?
+> 
+
+Some thoughts (which may be wrong, of course) :
+
+Dillo must have knowledge about plugin existing, or it don't know that it 
+should start plugin (Dpi1 doc PI initialization paragraph has also remark 
+about pluginsrc file). When dillo sees url that matches one described in 
+pluginsrc and has no instance (process) of this plugin which is able to
+serve it, dillo should do fork-exec to create plugin process (i think 
+that there can be plugins which serve only one request and die after that 
+and such a plugin is not able to serve any request after receiveing first 
+request).
+
+Certificates - SSL plugin should be such a plugin, which serves all 
+requests within one process (and this process will not die before dillo 
+tells to it quit or quits by itself and closes pipe).
+Plugin gets other side's certificate with connection. Plugin may have a 
+some CA's public keys stored and if the certificate is signed by one of 
+these CA's check signatures validity. If it does not have public key it 
+would be nice to prompt to the user some choices: allow/deny certificate 
+or provide CA public key's URI. Prompting is possible in two ways:
+
+1. plugin talks with X.
+2. dpi protocol allows requesting dialog box from dillo.
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]plugins
+
+From: Geoff Lane <zzassgl@tw...> - 2002-08-07 08:53
+
+> Okie, are there any code for the plugins ? or only the proposal ?
+> If not I will get working on it.
+
+I'm supposed to be working on the plugin code but circumstances have meant
+I've had little time to work on it so far.
+
+If it's OK with the rest of the project, I'm happy to let someone else with
+more time available take over.
+
+I do have a some comments on the plugin concept I may as well share right
+now. 
+
+One of the first things I did when looking at implementing plugins was to
+add ftp: support directly into dillo as an internal facility. This is a
+total hack and currently breaks in "interesting" ways (ie ways I don't fully
+understand yet) under some conditions. Under Linux the stripped dillo+ftp
+binary increased in size by less than 6K.
+
+I did this by ignoring libraries such as cURL and libftp and coded the
+protocol directly. The basic ftp protocol is very simple. Within dillo the
+major implementation problem arises because ftp (as used within browsers) is
+a multi-phase exchange and dillo is happiest with a single request-response
+protocol as used by http. The multi-phase exchange was dealt with by
+running the protocol within a thread which communicates (via a pipe) with
+the dillo IO engine (which has no real idea where the data is actually
+coming from.)
+
+Using cURL results in a binary size increase of around 2Mb. For that you get
+a fuller implementation of the ftp protocol (active/passive transfers and
+proxy support for example) but you lose your small browser footprint _even_
+if the plugin is running as a seperate process. As a method of prototyping,
+using cURL is fine but if you care about size and performance you really
+have to hand craft the protocol code.
+
+Running protocols within threads is a powerful design concept for a browser
+as all kinds of protocol stuff can be hidden and all the IO engine sees is a
+simple datastream.
+
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\ 
+
+
+
+[Dillo-dev]about plug ins
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-08-07 08:40
+
+Is there any work done on the plugins at all ?
+
+I am thinking of starting an implementation by the spec. 
+
+
+
+Re: [Dillo-dev]Patch: command line options support
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-08-07 08:34
+
+Hi Andreas,
+
+on Wed, 7 Aug 2002 04:19:57 -0400
+Andreas Schweitzer <andy@ph...> wrote:
+
+> Hi,
+> 
+> > Having done a few patches that needed command line options, Jorge suggested
+to
+> > add a real command line options support to Dillo. 
+> 
+> > Any comments and ideas are welcome!
+> 
+> I have been thinking about command line options myself.
+> I was thinking about adding something like :
+> -o "dillorc-string"
+> which would allow to override settings in dillorc with the same
+> syntax. I think ssh has options like that, for example.
+> I have just moved, and, therefore, have not been able
+> to follow dillo very much but I may soon look into this.
+
+Yes, this will allow different profiles. This is another reason why I put the
+command line parsing before any serious initialisation. 
+
+
+
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Patch: command line options support
+
+From: Andreas Schweitzer <andy@ph...> - 2002-08-07 08:20
+
+Hi,
+
+> Having done a few patches that needed command line options, Jorge suggested to
+> add a real command line options support to Dillo. 
+
+> Any comments and ideas are welcome!
+
+I have been thinking about command line options myself.
+I was thinking about adding something like :
+-o "dillorc-string"
+which would allow to override settings in dillorc with the same
+syntax. I think ssh has options like that, for example.
+I have just moved, and, therefore, have not been able
+to follow dillo very much but I may soon look into this.
+
+Cheers
+Andreas
+
+-- 
+**************************** NEW ADDRESS ******************************
+Hamburger Sternwarte
+Gojenbergsweg 112
+D-21029 Hamburg, Germany 
+
+
+
+[Dillo-dev]Patch: command line options support
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-08-06 20:04
+
+Attachments: dillo-cvs-2002-08-06-cli.patch      
+
+[Jorge, I'm CCing to you for patch reviewing as advised on Dillo's home page.]
+
+Hi,
+
+Having done a few patches that needed command line options, Jorge suggested to
+add a real command line options support to Dillo. 
+This would provide a framework so developers won't have to add the command line
+option parsing every time.
+
+So here is my proposal:
+
+This patch is a proposal for a simple and extensible command line options
+support in Dillo. It is based on the getopt() function found in unistd.h. It
+supports only short options, as the long options function getopt_long() is a GNU
+extension and is thus not portable. Though, it could be easily added.
+
+The patch comes with two command line options -v and -h to display version
+number and a short help message. The options are to be passed before any URL or
+filename. As a by-product of this patch, it is now possible to call Dillo with
+more than one URL/filename. In that case, more than one window will be opened.
+
+The command line options are parsed before any serious initialisation (even
+before display initialisation). Two #defines define the help message and the
+string of all known options. Some other define a flag for each option. These
+flags will be ORed and stored in an integer to remember later all the options
+found. They are not really used in this patch, but they are included for
+consistency. (For reference, my other patches[1] use them.)
+
+So to add a new option, it is a matter to update the DILLO_CLI_HELP_MESSAGE and
+the DILLO_CLI_OPTIONS. If the option is to be processed outside of the option
+parsing loop, you may add a "#define DILLO_CLI_YOUR_OPTION 1 << x" (as I did in
+this patch, but they are actually not really used) and a cli_option |=
+DILLO_CLI_YOUR_OPTION in the classical switch-case.
+
+Any comments and ideas are welcome!
+
+[1] The patch is also available at:
+http://melvin.hadasht.free.fr/home/dillo/cli/index.html
+
+
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]https
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-08-06 17:51
+
+Got any idea of how to do the https <-> dillo interaction ?
+
+1. quite easy to handle encryption.
+
+2. not so easy to handle certificates ?
+
+If I got everyting right, a plugin must make dillo recognize its url 
+type ? after this dillo will invoke it, thus it needs to be configured 
+somewhere ... or have the ability to autoconfigure ( wich would be nicer 
+) but in this case this has to be able to be overrun ?
+
+/ Segerlund. 
+
+
+
+[Dillo-dev]plugins
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-08-06 17:33
+
+Okie, are there any code for the plugins ? or only the proposal ?
+
+If not I will get working on it. 
+
+
+
+RE: [Dillo-dev]makefiles
+
+From: Eric Gaudet <ericg@ta...> - 2002-08-06 16:53
+
+Hi Lars,
+
+About your makefile, I don't know. Png should be detected by the
+./configure. Did you see it?
+
+About hadling url type, this is actually what plugins are designed for. It
+might not be clear in the current proposal (there is an example with
+prefix=bm, though), but my original version stated it explicititly in "2)
+Prefixed call to a Dillo-plugin".
+
+I don't know what's the status of plugins implementation.
+
+References:
+Current DPI1: http://dillo.cipsga.org.br/dpi1.html
+Original DPI: http://www.rti-zone.org/dillo/Plugins.txt.gz
+
+> -----Original Message-----
+> From: Lars Segerlund [mailto:lars.segerlund@co...]
+> Sent: Tuesday, August 06, 2002 3:58 AM
+> To: dillo-dev@li...
+> Subject: [Dillo-dev]makefiles
+> 
+> 
+> 
+> Hmm ... I had to edit src/Makefile and add -lpng to compile ??
+> 
+> Also, I had a look at the handling of url types ( https: , 
+> mailto: ) 
+> and I am wondering if there is a way to handle this with the plugin 
+> interface ? And the specification for the plugins seems to be 
+> done, but 
+> I haven't been able to find this in the code ? could anyone send a 
+> reference ( file:lineno ? ).
+> 
+> / Lars Segerlund.
+> 
+> 
+> 
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Welcome to geek heaven.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]makefiles
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-08-06 10:58
+
+Hmm ... I had to edit src/Makefile and add -lpng to compile ??
+
+Also, I had a look at the handling of url types ( https: , mailto: ) 
+and I am wondering if there is a way to handle this with the plugin 
+interface ? And the specification for the plugins seems to be done, but 
+I haven't been able to find this in the code ? could anyone send a 
+reference ( file:lineno ? ).
+
+/ Lars Segerlund. 
+

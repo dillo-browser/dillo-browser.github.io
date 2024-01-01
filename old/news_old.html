@@ -1,0 +1,613 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Archived News
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/tip/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+  <h1> Archived News</h1>
+<div class=section>
+  <b>[23-Sep-2011]</b>
+  <p>
+   <b>Dillo-3.0.1</b> has been released!
+   <p>
+    Dillo-3.0.1 brings improved privacy, never sending or accepting
+    third-party cookies. Also, the <a href="screenshots/index.html">UI theme</a> can
+    be changed, keys can be set for paging left/right, and you can disable the
+    dialog that pops up when quitting with multiple tabs/windows open.
+   <p>
+  <b>[08-Sep-2011]</b>
+  <p>
+   <b>Dillo-3.0</b> has been released!
+   <p>
+   In Dillo3, we have shifted from fltk2 to the fltk-1.3 series. The
+   experimental status of fltk2 had kept Dillo2 out of a number of
+   distributions, but fltk-1.3 has already seen
+   <a href="http://fltk.org/articles.php?L1086">an official release</a>,
+   clearing the way for dillo to return to all of these distributions
+   and bring safe lightweight graphical browsing to those users.
+   <p>
+   Using fltk-1.3 also means that OSX users can run dillo3 on Cocoa.
+   <p>
+   Some other interesting changes:
+   <ul>
+   <li>Default binding for close-all changed from Alt-q to Ctrl-q.
+   <li>Default binding for close-tab changed from Ctrl-q to Ctrl-w.
+   <li>Default binding for left-tab changed to Shift-Ctrl-Tab.
+   <li>Rewrote the User Interface: much simpler design and event handling.
+   <li>Added on-the-fly panel resize (tiny/small/medium and normal/small icons).
+   <li>'hide-panels' key action now hides the findbar if present,
+        and toggles display of the control panels otherwise.
+   <li>Allow multiple search engines to be set in dillorc, with a menu
+       in the web search dialog to select between them.
+   <li>Added an optional label to dillorc's search_url.<br>
+       Format: "[&lt;label&gt; ]&lt;url&gt;"
+   <li>Add right_click_closes_tab preference (default is middle click).
+   <li>Allow binding to non-ASCII keys and multimedia keys.
+   <li>Avoid a certificate dialog storm on some HTTPS sites (BUG#868).
+   <li>Enable line wrapping for &lt;textarea&gt;. (BUG#903)
+   <li>Avoid double render after going Back or Forward
+       (it takes half the time now!)
+   <li>Implemented a custom tabs handler (to allow fine control of it).
+   <li>Rewrote dw's crossing-events dispatcher (avoids redundant events).
+   <li>Fixed a years old bug: stamped tooltips when scrolling with keyboard.
+   <li>Fixed a border case in URL resolver: empty path + {query|fragment}
+        (BUG#948)
+   <li>Cancel the expected URL after offering a download (BUG#982)
+   <li>Eliminated a pack of 22 compiler warnings (gcc-4.6.1 amd64)
+   <li>Removed 'large' option of panel_size preference.
+   <li>Removed --enable-ansi configure option.
+   <li>Limit saved cookie size.
+   <li>Wrap image alt text.
+   <li>Added support for CSS adjacent sibling selectors.
+   <li>Fix redraw loops and reenabled limit_text_width dillorc option.
+   <li>Collapse parent's and first child's top margin.
+   </ul>
+  <p>
+  <b>[26-Jul-2011]</b>
+  <p>
+   <b>Dillo-2.2.1</b> has been released!
+   <p>
+   This is the final release of Dillo2, which depends on the
+   <a href="http://fltk.org/articles.php?L825">moribund</a> FLTK2,
+   and the big news is that Dillo3, a port to FLTK-1.3, is expected to be
+   available in a matter of weeks! FLTK-1.3 is actively developed, and 1.3.0
+   was <a href="http://fltk.org/articles.php?L1086">released</a> last
+   month.
+   <p>
+   As for
+   <a href="dillo-2.x/ChangeLog.html">new features</a>,
+   some highlights are: more CSS properties, cookies changes, and handling
+   of page source now uses a DPI (plugin).
+  <p>
+  <b>[11-Feb-2010]</b>
+  <p>
+   <b>Dillo-2.2</b> has been released!
+   <p>
+   In this release, you will find: a major overhaul of the cookies subsystem
+   including important security fixes, a reimplementation of the Dillo Plugin
+   (DPI) API, a configurable HTTP connection limit, improved CSS, and
+   <a href="http://hg.dillo.org/dillo/file/tip/ChangeLog">plenty more</a>.
+  <p>
+  <b>[03-Jul-2009]</b>
+  <p>
+   <b>Dillo-2.1.1</b> has been released to provide a security fix for
+   malicious images. A few small
+   <a href="http://hg.dillo.org/dillo/file/tip/ChangeLog">improvements</a>
+   in CSS, key bindings, etc., found their way in as well.
+   <p>
+   Thanks go to oCERT for bringing the matter to our attention.
+  <p>
+  <b>[20-Jun-2009]</b>
+  <p>
+   <b>Dillo-2.1</b> has been released!
+   <p>
+   This release comes with a major improvement: <b>basic CSS!</b>
+   <p>
+   The assorted goodies (e.g. configurable keybindings)
+   are summarized in the splash page (about:splash),
+   and extensively detailed in the
+   <a href="http://hg.dillo.org/dillo/file/tip/ChangeLog">ChangeLog</a>.
+   <p>
+   If  you  like what you see in this release, and want to see the
+   Dillo project thrive, please help us. <b>We need developers</b>.
+  <p>
+  <b>[08-Jun-2009]</b>
+  <p>
+   Website appearance updated, plus new banner and palette idea by
+   <a href="http://solargun.com">Ken Lee</a>.
+  <p>
+  <b>[07-Dec-2008]</b>
+  <p>
+   Dillo-2.0 received a 115 EUR donation from
+   <a href="http://distrowatch.com/weekly.php?issue=20081201#donation">
+   distrowatch</a>!<br>
+   Thanks to the people who appreciate Dillo and help us to move it forward.
+  <p>
+  <b>[14-Oct-2008]</b>
+  <p>
+   Dillo-2.0 has been released!
+   Today, after a long period of inactivity, a new release was made.
+   It's been a <a href="https://www.dillo.org/8years.html">long way</a> and this
+   <b>dillo-2.0</b> release comes with a
+   boatload of <a href="http://hg.dillo.org/dillo/file/tip/ChangeLog">
+   improvements</a>.
+   <p>
+   In dillo2, you will find: tabbed browsing, antialiasing, different
+   character  sets,  accepting  compressed pages, control over image
+   loading,  smaller footprint, near 50% smaller memory usage, fewer
+   dependencies,  better  table  rendering,  bugfixes, improved GUI,
+   among others!
+  <p>
+  <b>[25-Feb-2007]</b>
+  <p>
+   The Dillo project is frozen:
+   <ul>
+    <li>Frozen, waiting for funds or sponsorship.
+    <li>Looking for interested developers that want to work steadily on it.
+    <li>Both core developers have regular jobs and have almost no spare time.
+    <li>We have a
+        <a href='Plans.html'>very advanced</a>
+        port of Dillo to
+        <a href='http://www.fltk.org'>FLTK2</a>.
+   </ul>
+   <p>
+   A web browser is too complex a task to develop on a part time basis, and it
+   also is a fast-moving target.
+   I dedicated seven years full-time
+   to it, and I'm willing to dedicate more. This doesn't depend on me anymore
+   as I had to take a job to pay the bills. We made great achievments with Dillo
+   and it would be easy to quickly push FLTK2-Dillo if we could have both core
+   developers working full time on it. This is a tiny deal for some sponsors (e.
+   Cell phone maker), and we wish it could happen soon. Through this time we've
+   been supported by individual's donations, and we thank them indeed for
+   believing in our project and to help make it grow to what it is.
+   <p>
+   If you as a reader, or user, or interested party have a good idea, sponsorship
+   or development time to devote, please don't hesitate to contact
+   <a href="authors/jcid-email.html">me</a> to
+   try to arrange for the future of Dillo.
+
+  <p> <b>[02-May-2006]</b>
+<p>
+ Dillo-0.8.6 was released. This is hopefully the last GTK1-based Dillo.
+  <p>
+ You'll find plenty of fixes and improvements in this tarball. Most
+ notably on downloads. Just check the Changelog.
+  <p>
+ OTOH, our FLTK2-based branch is advanced enough to aim on making our next
+ release with it.
+  <p>
+  When? This depends on funding.
+
+  <p> <b>[15-Jun-2005]</b>
+<p>
+ 0.8.5 was released with some minor fixes, most notably a couple of security 
+ fixes.  Upgrade if you haven't already! <br>
+ This release is one of the last on the GTK1-based Dillo series.
+ Currently the main development is focused on a FLTK2-based dillo prototype.
+ If everything goes as planned, and no critical bugs are found, this new branch
+ will become our next release! (stay tuned).
+
+  <p> <b>[11-Jan-2005]</b>
+<p>
+Today, two and a half months after the former release, the new
+<b><font color='purple'>dillo-0.8.4</font></b> was released!
+<p>
+It comes with several goodies. The most remarkable is the fix of
+a memory leak bug that can lead to reduced virtual size memory usage by
+a factor of 2 to 20 on average! (this depends on usage, pthreads
+library and OS).
+<p>
+The other big improvement is the ortogonalization of the parser. This
+brings several benefits detailed in the Changelog.
+<p>
+Finally, among the usual enhancements and improvements,
+a security bug was also fixed.
+<p>
+Our advice is to <b><font color='purple'>upgrade ASAP</font></b>.
+
+  <p> <b>[27-Oct-2004]</b>
+<p>
+After a long period of work, the new 
+<b><font color='purple'>dillo-0.8.3</font></b> was released today.
+<p>    
+It  comes  with  a parser that's able to use W3C's semantics plus
+some  heuristics.  This  improves  the  rendering  of  sites that
+deliver  non-valid  HTML.  It  is  expected to provide for better
+results  than the venerable dillo-0.7.3, while keeping the useful
+diagnostic messages of the
+<a href='help/bug_meter.html'>bug meter</a>.
+
+  <p> <b>[09-Jul-2004]</b>
+<p>
+Just out of popular demand, a
+<a href='donations.html'>donations</a> link
+was added. This may give us the opportunity to work full time on Dillo, and
+thus keep improving it at a much faster pace.
+<p>
+All the plans, required knowledge and will is there (i18n, antialiasing, better rendering,
+frames, https, FLTK, more plugins, ...), but we _need_ to be working on it
+full-time, to keep with the pace of the evolving technologies.
+
+  <p> <b>[06-Jul-2004]</b>
+  <p>
+The new <b><font color='purple'>dillo-0.8.2</font></b>
+was released today. C'mon, go get it!<br>
+Except from the usual bug-fixes and improvements, some new features snuck in.
+One nifty feature is the save and open file dialogs remembering the last directory opened. Also, a "start_page" option in the preferences so that you may override the splash screen. <br>
+
+<p> <b>[14-May-2004]</b>
+<p>    
+0.8.1 is finally here. After extensive testing on several platforms
+(see <a href='Compatibility.html'>compatibility</a>),
+it is no longer alpha SW but very
+<b><font color='purple'>stable beta!</font></b>.
+<p>    
+This release comes with better HTML rendering, mainly due
+to the improved html-parser.
+<p>
+The <a href='help/bug_meter.html'>bug meter</a> was
+also enhanced as a direct result from the improved parser.   
+We hope it will serve even better the already satisfied web
+authors that use it to check and correct the HTML in their
+sites. --Thanks for the feedback and for adhering the
+<a href='help/bug_meter.html#standards'>standards</a>.
+
+  <p> <b>[08-Feb-2004]</b>
+    <p>
+    0.8.0 has been released! A major milestone that comes with the largest
+    Changelog ever! It has lots of improvements and advances, and also
+    features the new <a href='help/bug_meter.html'>bug meter</a>.
+    <p>
+Did you know that the Yopy 3700 ships with dillo inside?
+
+  <p> <b>[07-Aug-2003]</b>
+    <p>
+    0.7.3 has been released! It comes with improved performance,
+    important bugfixes and a new set of toolbar Icons!
+  <p> <b>[25-Jun-2003]</b>
+    <p>
+    <a href='http://www.gnutec.com/~amonk/'>Kyle</a> gently prepared
+    a <a href='http://www.gnutec.com/~amonk/software/moz2dil.pl'>script</a>
+    to translate your mozilla bookmarks to dillo.
+  <p> <b>[29-Apr-2003]</b>    
+    <p>
+    The long awaited 0.7.2 release was made. It comes with 
+    Copy&amp;Paste!
+    <p>
+    Dillo is getting into a second stage in its development life.
+    We're very close to doing: HTTPS, FTP, downloads and more!
+    <p>
+    We only need to get some funds, settle the core working group,
+    organize the job, and quick results will feed the line!
+
+
+  <p> <b>[10-Mar-2003]</b>
+    <p>
+    A BugFix release was made (0.7.1.2). It solves the problem of
+dissapearing bookmarks among other things. Please upgrade ASAP.
+  <p> <b>[17-Feb-2003]</b>
+    <p>
+    Dillo 0.7.0 is finally out! Get it while it's hot!
+    <br>
+    This  release  is a major milestone. It features the new plugin
+    framework:  a gateway to extend dillo and to interface with external
+    programs. (It is not compatible with other browsers' plugins.)
+    <P>
+    Dillo plugins
+    (<a href='dpi1.html'>dpi</a>)
+    allow extending  the  browser without increasing its core size. It even
+    allows using dillo as a GUI!
+    <P>
+    We  also  made  this  dillo  embeddable!  All the rendering and
+    surfing  capabilities  can be used from another GTK+ application.
+    For instance, check this
+    <a href='http://melvin.hadasht.free.fr/dillo/sylpheed/spamsafe-0.7.0.png'>screenshot</a> from the
+    <a href='http://melvin.hadasht.free.fr/dillo/sylpheed/'>
+    sylpheed-claws</a> email client.
+    <P>
+    Now  dillo  does  IPv6, highlights found text and uses a plugin
+    program to manage its bookmarks.
+    <P>
+    Some other very nice features and improvements include:
+    <ul>
+       <li> Added a simple command line interface, and enabled some options.
+       <li> Improved alignment inside tables:
+       <ul>
+         <li> LEFT, RIGHT, CENTER, JUSTIFY, CHAR,
+         <li> TOP, BOTTOM, MIDDLE, BASELINE. </ul>
+       <li> Made dillo embeddable into other GTK+ applications.
+       <li> Concomitant Control Chain (CCC):
+       <ul>
+         <li> Extended the theory to allow bidirectional message passing.
+         <li> Reimplemented dillo's core with the new chains. </ul>
+       <li> Input/Output engine (IO):
+       <ul>
+         <li> Extended the functionallity with a threaded operation that
+              allows buffered writes of small chunks on the same FD.
+         <li> Created a new IO API, and adapted dillo to it. </ul>
+     <li> Used the new CCC and IO to implement dillo plugins! (dpi).
+     <li> Wrote a dpi-program for bookmarks.
+     <li> Added IPv6 support! [./configure --enable-ipv6]
+     <li> Rewrote findtext with highlighting and a case-sensitive option.
+     <li> Added a tiny warning/handler for meta refresh.
+     <li> <b>Lots</b> of other enhancement and fixes. Check out the Changelog!
+  </ul>
+
+  <p> <b>[19-Dec-2002]</b>
+  <p>
+  <a href="index.html">Dillo</a> has moved again, and
+  is now hosted at wearLab.
+
+  <p> <b>[8-Nov-2002]</b>
+  <p>
+  A  new,  updated  patch  for russian encodings was added to the
+Links section.
+
+  <p> <b>[1-Nov-2002]</b>
+  <p>
+  The first dpi-enabled dillo is available <b>for developers!</b>
+  Just follow the CVS link, grab the tarball, read the docs and get started.
+  
+  <p> <b>[15-Aug-2002]</b>
+  Extra! Extra! Read all about it! :-) 
+  <p>
+  Dillo has recently been mentioned in <a href="http://www.linuxjournal.com/article/6169">this arcticle</a> from
+  <a href="http://www.linuxjournal.com/">LinuxJournal</a>. Plus, we have been collecting other Dillo mentions,
+  articles and reviews. You can check them out in our <a href="press.html">Press</a> page.
+
+  <p> <b>[30-May-2002]</b>
+  <p>
+  A new bug-fix release is out. The main fixes were on cookies.
+  <p>
+  <small><font color=purple><b>Note:</b></font>
+  Dillo has cookies absolutely disabled by default,
+  so if you want to enable them, go to the help page.</small>
+
+  <p> <b> [26-Apr-2002] </b> Finally, after a lot of work, Dillo 0.6.5 has been released!
+        <p> Some of the nice changes include:
+        <ul>
+          <li> <b> <font color=purple>Support for Cookies! </font> </b>
+          <li> Improved *BSD detection/configuration code.
+          <li> Fixed some leaks and several segfault sources.
+          <li> Reimplemented the cache index with a hash.
+          <li> Allowed enterpress to submit single text-entry forms.
+          <li> Added support for missing Content-Type in HTTP headers (most
+               notable for ebay).
+          <li> Added support for rendering adjacent &lt;BR&gt;, Tabs in &lt;PRE&gt;,
+               and linebreak handling.
+          <li> Bound the space key to PgDn, and 'b' | 'B' to PgUp.
+          <li> Added the following options to dillorc:
+          <ul>
+            <li>Fontname selection
+            <li>Force submit on enterpress
+            <li>Generate missing submit buttons
+         </ul>
+         <li> <b>Lots</b> of other enhancement and fixes. Check out the Changelog!
+       </ul>
+
+  <p> <b> [19-Apr-2002] </b> We have put together some nice 
+        <b><font color="red">eye-candy</font></b> for you! 
+
+        <p> The <a href="screenshots/index.html">screenshots</a>
+        page was redone and there are some nice shots of varied <tt>~/.dillo/dillorc</tt> options. Also 
+        we have a <b>new</b> <a href="Icons/index.html">Icons section</a> where you can see different
+        Dillo toolbars, and download a <tt>pixmaps.h</tt> to add to your Dillo!
+
+  <p> <b> [04-Apr-2002] </b> Dillo has <b> left </b> Sourceforge.net 
+                              and won a <i><b>brand new</b></i> home page!
+         <p> For various reasons, the Dillo team has felt that Sourceforge.net is not a good place
+              for our development anymore. Now the people at CIPSGA has
+              offered to host our site, CVS and e-mail groups. We thank them!
+
+  <p> <b> [18-Mar-2002] </b> &nbsp;
+   Introducing the new patch: <b> <font color="red">Cookies!</font></b> in Dillo CVS!
+
+  <p> <b> [29-Jan-2002] </b> &nbsp;
+  Dillo 0.6.4  has been released! Changes include:
+  <ul>
+    <li> Implemented remembering of page-scrolling-position! </li>
+    <li> Implemented text alignments (except CHAR). </li>
+      <ul>
+        <li> Extension of DwStyle and DwPage. </li>
+        <li> Applied it on "ALIGN = {LEFT|RIGHT|CENTER}" for &lt;hr&gt;, and
+               "ALIGN = {LEFT|RIGHT|CENTER|JUSTIFY}" for &lt;p&gt;, &lt;hN&gt;, &lt;div&gt;, &lt;td&gt; and </li>
+        <li> Implemented &lt;center&gt;  </li>
+      </ul>
+    <li> Added 'force_visited_colors' to dillorc. It asserts a different color 
+         on visited links, regardless of the author's setting. </li>
+    <li> Added support for several domains in dillorc's 'no_proxy' variable. </li>
+    <li> <b> Lots </b> of bug fixes and improvements. Here the complete ChangeLog!
+  </ul>
+  <p> <b> [23-10-2001] </b> &nbsp;
+  Grigory Bakunov has created a site for non-official patches! If you have a non-official Dillo patch, you can insert it automatically.
+
+  <p> <b> [16-10-2001] </b> &nbsp;
+  Dillo 0.6.2 has just been released Changes include:
+  <ul>
+    <li>Added back and forward history popup menus!
+    <li>Temporary handler for frames! (lynx/w3m style)
+    <li>Support for <big>&lt;big&gt;</big> and <small>&lt;small&gt;</small> tags.
+    <li>Warning messages for unsupported protocols.
+    <li><b>Lots</b> of other enhancement and fixes. Check out the ChangeLog!
+  </ul>
+  <p>
+  <i>Aug 4, 2000</i>
+  <p>
+  * Released dillo-0.2.3.tar.gz<br>
+  * We have full documentation now!
+  <p>
+  <i>Jul 27, 2000</i>
+  <p>
+  * Added a screenshots link to the site
+  <p>
+  <i>Jul 9, 2000</i>
+  <p>
+  * Released dillo-0.2.2.tar.gz<br>
+  * Several improvements, most notably forms; upgrade ASAP! (please also read the Changelog)
+  <p>
+  <i>Jun 20, 2000</i>
+  <p>
+  * The ematic.com server has been down for three days, and I really hate to loose your emails, so please resend them to jcid@mailtag.com
+  <p>
+  <i>Jun 17, 2000</i>
+  <p>
+  * Released dillo-0.2.1.tar.gz<br>
+  * Updated the Web site and moved it to sourceforge<br>
+  * Added extensive documentation within the tarball (doc/ directory)<br>
+  * Made a freshmeat entry!<br>
+  * Announced to comp.os.linux.announce
+  <p>
+  <i>Jun 5, 2000</i>
+  <p>
+  * Updated the Web site
+  <p>
+  <i>Jun 2, 2000</i>
+  <p>
+  * Released a new tarball (dillo-0.2.0.tar.gz) --Just check the Changelog!
+  <p>
+  <i>Apr 20, 2000</i>
+  <p>
+  * Moved the site to a new server
+  <p>
+  <i>Apr 4, 2000</i>
+  <p>
+  * Updated the Curent plan<br>
+  * Added a download link<br>
+  * Announced Dillo to gtk-app-devel-list
+  <p>
+  <i>Mar 30, 2000</i>
+  <p>
+  * Released a new tarball (dillo-0.1.0.tar.gz)
+  <p>
+  <i>Mar 9, 2000</i>
+  <p>
+  * Released a new tarball (with developer documentation!).<br>
+  * Updated Current Plan
+  <p>
+  <i>Feb 3, 2000</i>
+  <p>
+  * Released a new tarball with several notorious improvements<br>
+  * Started documenting Dillo Widget (outside the source)
+  <p>
+  <i>Jan 13, 1999</i>
+  <p>
+  * Planning to add a third stage to the Naming&amp;Coding effort<br>
+  This one would be for function comments in the whole code --it's impressive how much help those litle tags provide.<br>
+  * Tested Dillo on a SparcLinux machine! (OK)<br>
+  * Fixed Dillo to run on glibc1 systems (Tested with Slackware 3.6)<br>
+  * Added a Plan to this page, see below
+  <p>
+  <i>Jan 4, 1999</i>
+  <p>
+  Released a new tarball
+  <p>
+  <i>Dec 30, 1999</i>
+  <p>
+  Updated the web site, wrote new patching directions, updated the bug-track engine, incorporated several patches, and currently planning a new tarball release.
+  <p>
+  <i>Dec 18, 1999</i>
+  <p>
+  Naming&amp;Coding, Stage 2, is finished, completely!!!
+  <br><br>
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

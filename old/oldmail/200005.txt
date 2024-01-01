@@ -1,0 +1,388 @@
+Re: [Dillo-dev]Bug 35... fixed! (I hope)
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-05-29 01:48
+
+Andrew,
+
+On Thu, 25 May 2000 andrew@ma... wrote:
+
+> I think I finally nailed that nasty bug 35. From extensive g_prints, I
+> discovered what was going on:
+> 
+> ...
+> 
+> Sorry, that wasn't very clear. I hope you can sort of follow what I'm
+> saying.
+
+Thank you very much for the explanation. Although I haven't got
+the time (yet) to analyze it in full detail, it is and will be of
+great help.
+
+When dealing with the new cache scheme (and formerly with the
+dicache and the image resize), I faced similar problems. It seems
+that a state machine is a good way to solve that nasty race
+conditions, but I prefer a flag scheme, just because it is more
+flexible and easier to implement. Maybe that'd become the final
+fix of it...
+
+> Hope the change works out.
+
+I've been stress testing the patch, it works nearly 95% of the
+time, not perfect, but definitively better than what we had.
+It *earned* its way into the code!
+
+Once again, thank you very much.
+
+
+Jorge.-
+
+
+Ps: Expect dillo-0.2.0 release near friday. 
+
+
+
+[Dillo-dev]Bug 35... fixed! (I hope)
+
+From: <andrew@ma...> - 2000-05-25 23:02
+
+Attachments: Message as HTML      
+
+I think I finally nailed that nasty bug 35. From extensive g_prints, I
+discovered what was going on:
+
+1) Dillo makes a new browser, and a GtkDwView structure some time later.
+This starts out with a visible region of (0,0) to (101,101) for its
+container.
+2) Shortly thereafter, dw_gtk_view_size_allocate is called to make the
+viewport the correct size. However, the container's visible region only
+gets updated if the widget is realized, which it is not (yet).
+3) Meanwhile, the first paint requests have been called, and dillo begins
+to start the drawing functions. All rectangles get clipped to the
+"visible" region of (0,0)-(101,101).
+4) Finally (a fraction of a second later), the window shows up and the
+viewport is realized. But it's too late. The drawing is done on the old
+visible rectangle.
+5) Right _after_ this happens, dw_gtk_view_size_allocate is called again,
+with a realized widget. The visible rectangle of the viewport's container
+is properly adjusted, and things work from here on out.
+
+Sorry, that wasn't very clear. I hope you can sort of follow what I'm
+saying.
+
+Anyway, the fix I came up with involves changing the code in
+Dw_gtk_view_size_allocate so that dw_view->dw_container->visible is
+updated regardless of whether the widget is realized or not. I don't think
+this should create any problem as there is already a check in place to
+make sure the widget isn't null. The diff is attached.
+
+The only other way around this that I saw was to change the structure of
+dillo so that the drawing functions only got called after the window was
+visible, but this might have taken a total rewrite of many of the
+functions.
+
+Hope the change works out.
+
+-Andrew 
+
+
+
+Re: [Dillo-dev]Very close to a new release
+
+From: <andrew@ma...> - 2000-05-24 23:03
+
+On Wed, 24 May 2000, Jorge Arellano Cid wrote:
+
+> 
+> Andrew: 
+> 
+> It would be very nice to integrate a fix for bug #35 in the new
+> release; Any progress with that?
+> 
+
+Well, progress but no fix. My time just sort of disappeared. (I joined the
+project during a time of low activity in my other projects, which
+subsequently picked up again. Figures.)
+
+Anyway, I'll look back at it. I think it could be as simple as setting the
+visible rectangle of the viewport to be the size of the window rather than
+the default 101x101. I just haven't nailed down the best way to do that.
+
+There will be a fix, but it might come after the initial release.
+
+-Andrew 
+
+
+
+[Dillo-dev]Very close to a new release
+
+From: Jorge Arellano Cid <jcid@hu...> - 2000-05-24 21:50
+
+Hi!
+
+The traffic here has been very low, but Dillo survived a major
+architecture change; the new release will be a half-new browser!
+
+In fact, all the IO engine and http stuff was rewritten from 
+scratch, and even the way data is passed to rendering routines 
+changed.
+Mainly this means that the cache integrates with the IO engine
+and that the rest of the browser deals with the cache part only
+(it works as an abstraction layer).
+
+Although the system remains very complex, it is much easier to
+understand, extend and change.
+
+THIS IS NOT VAPORWARE!!!
+It is running NOW!
+
+I'm just polishing raw edges to follow the "evolving" model we 
+use, and accordingly, to release a better browser.
+Primary tests had gone very well. (Except for a problem with 
+redhat and its socket handling --Don't worry, its OK now).
+
+
+
+Andrew: 
+
+It would be very nice to integrate a fix for bug #35 in the new
+release; Any progress with that?
+
+
+Mark:
+
+Please get a user account on sourceforge, and send me your login 
+(UID) to allow you workout the web site.
+
+
+James:
+
+Are you getting this message?
+You're email address seems not to be working...
+
+
+Everyone:
+
+Any feedback is welcome.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug 35 progess
+
+From: <andrew@ma...> - 2000-05-10 14:25
+
+On Tue, 9 May 2000, Jorge Arellano Cid wrote:
+
+> 
+> Andrew,
+> 
+> On Fri, 21 Sep 1956 andrew@ma... wrote:
+> Note the date!!!
+> I know I'm a little late answering this one! ;-)
+
+Sorry, that should be fixed now...
+
+> > I turned on verbose messaging and added a lot of g_print's of my own so I
+> > could get a feel for what's going on. First of all, on my Intel box
+> > running GTK+ 1.2.3, I noticed that creating the window never calls
+> > size_allocate, but it does show all the widgets, so the first time around,
+> > the sizes are things like (0,0) to (10, 65533), negative numbers, and
+> > other crazy stuff. This doesn't happen on GTK+ 1.2.6 on PowerPC. This is
+> > undoubtedly a GTK flaw, not a Dillo one, and I think it's unrelated to the
+> > problem.
+> 
+> Good! 
+> That's the kind of work we need.
+> 
+> > ... I think the fundamental problem is in
+> > dw_gtk_view.c in the a_Dw_gtk_view_new function. It sets the visible
+> > rectangle as (0,0)-(101,101) with a "todo"comment to make it reflect the
+> > widget size. (101,101) is coincidentally where the drawing gets cut off on
+> > the Power Mac.
+> > 
+> > When I hit reload, it gets updated, and I haven't traced the code to
+> > figure out where or how that happens.
+> 
+> Well, not having documentation about Dillo widget is one of our
+> problems. I'd very much like to have that written; but priorities
+> had kept me away from that...
+> 
+> > I figure that the best fix is to make the visible rectangle update right
+> > away (I don't know how I'll do that yet). Or is that just covering the
+> > symptoms without fixing the problem?
+> 
+> Sorry, but I can't tell you if that's THE right fix. Probably
+> what needs to be done is to find out how the update is triggered
+> (and carried out) after hitting the reload button. And noting why
+> sometimes a page renders and some others not; due to a race
+> condition on a gtk idle function? Bad init values?
+> ... and after that, to decide if that's the right patch.
+> 
+> Anyway, if it fixes the problem, we can make it into our code
+> with a "todo: assert this is the right way to do this" tag on it
+> :)
+> 
+> Any new or progress notice is welcomed
+
+I'll see what I can do. Maybe I'll post some sort of log here if I get
+stuck again. Right now I'm just fighting lack of time.
+
+I think the reason that sometimes it gets rendered and sometimes not has
+to do with the rect that gets sent to the draw function-- it gets clipped
+to the supposed "visible" region of the dillo widget, which, at least the
+first time, isn't correct.
+
+-Andrew 
+
+
+
+Re: [Dillo-dev]Bug 35 progess
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-05-10 03:15
+
+Andrew,
+
+On Fri, 21 Sep 1956 andrew@ma... wrote:
+Note the date!!!
+I know I'm a little late answering this one! ;-)
+
+
+> I turned on verbose messaging and added a lot of g_print's of my own so I
+> could get a feel for what's going on. First of all, on my Intel box
+> running GTK+ 1.2.3, I noticed that creating the window never calls
+> size_allocate, but it does show all the widgets, so the first time around,
+> the sizes are things like (0,0) to (10, 65533), negative numbers, and
+> other crazy stuff. This doesn't happen on GTK+ 1.2.6 on PowerPC. This is
+> undoubtedly a GTK flaw, not a Dillo one, and I think it's unrelated to the
+> problem.
+
+Good! 
+That's the kind of work we need.
+
+> ... I think the fundamental problem is in
+> dw_gtk_view.c in the a_Dw_gtk_view_new function. It sets the visible
+> rectangle as (0,0)-(101,101) with a "todo"comment to make it reflect the
+> widget size. (101,101) is coincidentally where the drawing gets cut off on
+> the Power Mac.
+> 
+> When I hit reload, it gets updated, and I haven't traced the code to
+> figure out where or how that happens.
+
+Well, not having documentation about Dillo widget is one of our
+problems. I'd very much like to have that written; but priorities
+had kept me away from that...
+
+> I figure that the best fix is to make the visible rectangle update right
+> away (I don't know how I'll do that yet). Or is that just covering the
+> symptoms without fixing the problem?
+
+Sorry, but I can't tell you if that's THE right fix. Probably
+what needs to be done is to find out how the update is triggered
+(and carried out) after hitting the reload button. And noting why
+sometimes a page renders and some others not; due to a race
+condition on a gtk idle function? Bad init values?
+... and after that, to decide if that's the right patch.
+
+Anyway, if it fixes the problem, we can make it into our code
+with a "todo: assert this is the right way to do this" tag on it
+:)
+
+Any new or progress notice is welcomed
+Good luck!
+Jorge.- 
+
+
+
+Re: [Dillo-dev]I need help :(
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-05-06 02:04
+
+Hi,
+
+On Wed, 3 May 2000, Luca Rota wrote:
+
+> I've some problem so I can't work on dillo awhile. 
+> I've the patch for a not yet working preferences gui, so if someone woulds work
+> on it, please let me know.
+
+I would like the preferences stuff to be worked out as a
+plugin. I mean something like "dillo:/preferences". It would be
+easier to maintain and that way we keep the core small.
+As a matter of fact, the bookmarks can also be implemented that
+way.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Bug 35 progess
+
+From: <andrew@ma...> - 2000-05-05 18:23
+
+OK, I'm busy trying to track down the source of bug 35 (screen not drawing
+properly the first time), and I've found some interesting things in the
+process.
+
+I turned on verbose messaging and added a lot of g_print's of my own so I
+could get a feel for what's going on. First of all, on my Intel box
+running GTK+ 1.2.3, I noticed that creating the window never calls
+size_allocate, but it does show all the widgets, so the first time around,
+the sizes are things like (0,0) to (10, 65533), negative numbers, and
+other crazy stuff. This doesn't happen on GTK+ 1.2.6 on PowerPC. This is
+undoubtedly a GTK flaw, not a Dillo one, and I think it's unrelated to the
+problem.
+
+On my Intel box, the page draws correctly except for the hr tags. I
+haven't figured that out yet. On the Power Mac, it only draws a part of
+the screen until I hit reload. I think the fundamental problem is in
+dw_gtk_view.c in the a_Dw_gtk_view_new function. It sets the visible
+rectangle as (0,0)-(101,101) with a "todo"comment to make it reflect the
+widget size. (101,101) is coincidentally where the drawing gets cut off on
+the Power Mac.
+
+When I hit reload, it gets updated, and I haven't traced the code to
+figure out where or how that happens.
+
+I figure that the best fix is to make the visible rectangle update right
+away (I don't know how I'll do that yet). Or is that just covering the
+symptoms without fixing the problem?
+
+-Andrew 
+
+
+
+[Dillo-dev]I need help :(
+
+From: Luca Rota <drake@fr...> - 2000-05-03 13:35
+
+Hi,
+
+I've some problem so I can't work on dillo awhile. 
+I've the patch for a not yet working preferences gui, so if someone woulds work
+on it, please let me know.
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]ematic mail
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-05-02 02:03
+
+Hi there!
+
+I received mail from Mark, Andrew, and some time ago from James
+in my ematic.com address. In fact I receive Ok from several other
+places, and will assume it works right unless someone here tells
+me it failed.
+
+Thanks
+Jorge.-
+
+
+Ps: Send failure notices to jcid@em... 
+
+

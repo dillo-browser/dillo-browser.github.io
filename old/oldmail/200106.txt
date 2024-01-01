@@ -1,0 +1,1433 @@
+[Dillo-dev]Dillo for the ipaq
+
+From: Eduardo Marcel Macan <macan@co...> - 2001-06-29 17:48
+
+Guys thank you for the *wonderful* work you are doing with dillo.
+I am working with the guys of the familiar distribution 
+(familiar.handhelds.org) and dillo is becoming the best choice for
+use in a limited storage device like the ipaq.
+
+I have just made a package for dillo out of today's snapshot,
+and I must say It is just *GREAT* .
+
+here is the .ipk package of dillo for the ipaq using 
+the familiar GNU/Linux distribution.
+
+http://www.metainfo.org/macan/ipaq/dillo_20010629-1_arm.ipk
+
+And here is the screenshot of dillo on an iPAQ displaying slashdot:
+http://www.metainfo.org/macan/ipaq/10-ipaq-dillo_slashdot.png
+
+I am leaving for a 10 day break now, but when I am back I
+hope to start contributing more to the dillo web browser! :)
+
+Thank you all!
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+[Dillo-dev]Feature
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-27 13:45
+
+Hi iPAQ users (and others).
+
+Since tables may be used to set the width at which words are wrapped
+(either explicitly by the "width" attribute, or implicitly by images
+and long words), the text may become unreadable on small screens.
+
+Dillo could change the rendering to prevent this, one simple
+possibility is new option, "limit_text_width", which limits the word
+wrap width (but not necessary the final page width) to the viewport
+width. I've implemented this, it is available via CVS.
+
+I've tested it a bit, browsing with a small window size. It is
+probably a bit better than before, but don't expect too much, you
+loose the overview over the page easily. There may be new options
+(e.g. factors for size specification and images), but they will not be
+part of the (soon released) version 0.6.0.
+
+Please post your comments. Does this feature make sense? Any further
+ideas? Should dillo try to render such pages at all in a "readable"
+way? Etc.
+
+Sebastian 
+
+
+
+[Dillo-dev]Dillo-ssl (patch)
+
+From: <torkel@ly...> - 2001-06-26 21:27
+
+Attachments: dillo-ssl.patch.gz      https.c.gz      
+
+Hi all.
+
+Nice work with dillo! About the only browser that is lightweight enough
+for my iPAQ. However... i kinda need cookies, https and auth for it to be
+really useable. I hacked together some kind of SSL support for it, and
+tested against apache/mod_ssl. Seems to be functional.
+
+Included are two files, a cvs diff against yesterdays cvs, and a new file
+"https.c" which goes in IO/. Add the -I's and -l's for openssl (in my case
+0.9.5a, yeah, it's old, i know ;)
+
+Since it's my first attempt at both dillo and ssl hacking, the approach
+might be a bit off. Basically it's a combination of about: and http:
+backends with some SSL inbetween.
+
+Now all i gotta do is to find a place in the GUI for a padlock ;)
+
+...and ofcourse implement cookies and auth.
+
+Best regards,
+T-Å 
+
+
+
+Re: [Dillo-dev]locale
+
+From: Martynas Jocius <atthis@de...> - 2001-06-23 16:50
+
+Hi, Sebastian
+
+On Sat, Jun 23, 2001 at 03:35:33PM +0200, Sebastian Geerken wrote:
+
+> gtk_set_locale is intended for the user interface, but it probably
+> works for this purpose, if your "system" language ($LANG and $LC_...)
+> and the language of the documents you are viewing are the same.
+>
+
+I am not talking about the documents.
+Bug 173 was inserted by me :). I am from Lithuania, small country in Europe
+near the Baltic Sea. Native charset is iso-8859-13. I have no problems on
+viewing any documents with lithuanian characters. But I was talking about
+Dillo. For example, I bookmark a page and set a title with lithuanian
+characters. I can't see them. 
+Or I have to type some text with my native characters into the entry in 
+the html page. I can't do that too...
+Well, now it's ok, I fixed this :)
+
+> BTW, there has been a discussion on the list, you can find it in the
+> archive at:
+[some addresses] 
+Yes, discussian was about documents with Korean/Russian characters. As I
+said, I have no problems at this point ;)
+
+> Perhaps we can already implement a simple scheme dealing with 8-bit
+> fonts, looking at what Gtk+ 1.2 already provides. Extending
+> DwStyleFont by an encoding attribute might works. (Sorry, I'm no
+> expert on this topic at all.)
+
+So what about gtk_set_locale()? I think it's a good way. Maybe someday we
+will make Dillo to understand i18n for the translations. 
+
+
+--
+Martynas 
+
+
+
+Re: [Dillo-dev]locale
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-23 13:30
+
+On Fri, Jun 22, Martynas Jocius wrote:
+> Bug #173. Can't see/write native characters. Insert gtk_set_locale() into
+> src/dillo.c line 80. :-)
+
+gtk_set_locale is intended for the user interface, but it probably
+works for this purpose, if your "system" language ($LANG and $LC_...)
+and the language of the documents you are viewing are the same.
+
+BTW, there has been a discussion on the list, you can find it in the
+archive at:
+
+http://www.geocrawler.com/archives/3/702/2001/5/0/5805536/
+http://www.geocrawler.com/archives/3/702/2001/5/0/5806440/
+http://www.geocrawler.com/archives/3/702/2001/5/0/5811325/
+http://www.geocrawler.com/archives/3/702/2001/5/0/5812833/
+http://www.geocrawler.com/archives/3/702/2001/5/0/5830229/
+http://www.geocrawler.com/archives/3/702/2001/5/0/5833416/
+
+Perhaps we can already implement a simple scheme dealing with 8-bit
+fonts, looking at what Gtk+ 1.2 already provides. Extending
+DwStyleFont by an encoding attribute might works. (Sorry, I'm no
+expert on this topic at all.)
+
+Sebastian 
+
+
+
+[Dillo-dev]DwStyle memory leaks
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-22 16:13
+
+Hi,
+
+just a hint on warnings like "** WARNING **: 1 styles left": It seems
+that the memory management works, except if the HTML parser is
+interrupted. In this case, Html_close is not called, which will
+normally unref all styles left in DilloHtml.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]HTML/CSS question
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-22 16:13
+
+On Fri, Jun 22, Jörgen Viksell wrote:
+> >does someone know how to replace the NOSHADE attribute of <hr> by CSS
+> >attributes? In HTML4, it's deprecated, but there is no hint how to get
+> >the same effect using CSS.
+> 
+> This would make it look similar:
+> border: none; background-color: grey
+
+I believe the ruler itself is the content, so it won't work.
+
+Test the following in Amaya (I've installed 3.1):
+
+<hr>
+<hr style="border-style: none; background-color: #808080">
+<hr style="border-style: none; background-color: #808080; padding: 5mm">
+
+The first two look equally, the third has a gray rectangle *around*
+the ruler.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]HTML/CSS question
+
+From: Viksell <jorgen.viksell@te...> - 2001-06-22 12:23
+
+>does someone know how to replace the NOSHADE attribute of <hr> by CSS
+>attributes? In HTML4, it's deprecated, but there is no hint how to get
+>the same effect using CSS.
+
+This would make it look similar:
+border: none; background-color: grey
+
+// J=F6rgen 
+
+
+
+[Dillo-dev]locale
+
+From: Martynas Jocius <atthis@de...> - 2001-06-22 12:07
+
+Hi,
+
+Bug #173. Can't see/write native characters. Insert gtk_set_locale() into
+src/dillo.c line 80. :-)
+
+--
+Martynas 
+
+
+
+[Dillo-dev]HTML/CSS question
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-22 11:29
+
+Hi,
+
+does someone know how to replace the NOSHADE attribute of <hr> by CSS
+attributes? In HTML4, it's deprecated, but there is no hint how to get
+the same effect using CSS.
+
+(I'm working on bug #168 (colors of <hr>'s), this could be solved
+simple by DwStyle boxes, but I thought of making it already compliant
+with a future CSS implementation, which will be based on DwStyle.)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Sam Dennis <sam@ma...> - 2001-06-21 16:12
+
+On Thu, Jun 21, 2001 at 02:04:48PM +0300, Martynas Jocius wrote:
+> I made another close window patch, maybe identical with last one. But I saw,
+> that the memory is freed when destroying the window. Interface_quit()
+> function is called when I do gtk_widget_destroy(). How does this work?
+
+There's this little line in interface.c which reads:
+
+gtk_signal_connect(GTK_OBJECT(bw->main_window), "destroy",
+GTK_SIGNAL_FUNC(Interface_quit), bw);
+
+So when the window is destroyed, gtk calls Interface_quit. 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Martynas Jocius <atthis@de...> - 2001-06-21 12:00
+
+Attachments: dillo-cvs-06-21-close_window.patch      
+
+On Mon, Jun 18, 2001 at 09:22:38AM -0400, Jorge Arellano Cid wrote:
+> Is very encouraging to see new people trying to get involved
+> into dillo development, please don't get discouraged if you fail
+> at your first attempts; it was the same for everyone of us ;-)
+
+Thanks Jorge :)
+I made another close window patch, maybe identical with last one. But I saw,
+that the memory is freed when destroying the window. Interface_quit()
+function is called when I do gtk_widget_destroy(). How does this work?
+
+--
+Martynas 
+
+
+
+[Dillo-dev]RGBA data (was: Misc)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-20 15:48
+
+On Tue, Jun 19, I wrote:
+> - Image transparency 2: If you have something like
+> 
+> <table>
+> <tr>
+> <td bgcolor=red><img src="foo.png">
+> <td bgcolor=green><img src="foo.png">
+> </table>
+> 
+> the first image will, correctly, have have a red background, but
+> the second, incorrectly, too, since they share the same dicache
+> buffer. So the transparency should somehow stored in the dicache
+> buffer, instead of replaced by a background color.
+
+If there are no objections, I'll start to modify the image code to use
+RGBA data instead of RGB.
+
+Sebastian 
+
+
+
+[Dillo-dev]Misc
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-19 16:45
+
+Hi all,
+
+I have been working on borders and colors, now they work for table
+(just uploaded), although a bit polishing is needed. However, some
+notes:
+
+- What happened to the <font> implementation? I've now activated
+<font color> (but not face), of course inside an "if
+(!prefs.force_my_colors)", since this makes some colored tables
+more readable.
+
+- Image transparency 1: I've modified Png_datarow_callback to use
+the background color passed to a_Image_new, by replacing
+prefs.bg_color by png->Image->bg_color. I don't know very much
+about image processing, but this seems the way this should be
+handled (?).
+
+- Image transparency 2: If you have something like
+
+<table>
+<tr>
+<td bgcolor=red><img src="foo.png">
+<td bgcolor=green><img src="foo.png">
+</table>
+
+the first image will, correctly, have have a red background, but
+the second, incorrectly, too, since they share the same dicache
+buffer. So the transparency should somehow stored in the dicache
+buffer, instead of replaced by a background color.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-06-18 13:52
+
+Martynas,
+
+
+> There was a bug #87 about closing window. There's a small patch which fixes
+> this.
+
+Is very encouraging to see new people trying to get involved
+into dillo development, please don't get discouraged if you fail
+at your first attempts; it was the same for everyone of us ;-)
+
+I ask, at the web page, to be sent information about personal
+skills, but I understand if they don't send any. That's just to
+know in which part of dillo their knowledge would fit better, and
+also to guide or hint their progress.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-14 22:58
+
+On Thu, Jun 14, Sam Dennis wrote:
+> On Thu, Jun 14, 2001 at 06:59:05PM +0200, Sebastian Geerken wrote:
+> [...]
+> > Fixed and committed.
+> >
+> > Sebastian
+>
+> I'm sorry but it doesn't look very fixed to me, I'm getting almost exactly the
+> same results here.
+
+What images do you use? I tested it with
+
+<table>
+<tr>
+<td colspan=2><img src="maj00s.gif" width=200 height=100>
+<td rowspan=2><img src="maj00s.gif" width=100 height=200>
+<tr>
+<td rowspan=2><img src="maj00s.gif" width=100 height=200>
+<td><img src="maj00s.gif" width=100 height=100>
+<tr>
+<td colspan=2><img src="maj00s.gif" width=200 height=100>
+</table>
+
+and got
+
++---------+ +---+
+| | | |
++---------+ | |
++---+ +---+ | |
+| | | | | |
+| | +---+ +---+
+| | +---------+
+| | | |
++---+ +---------+
+
+With some certain image sizes, the result is indeed not perfect, see
+example in doc/DwTable.txt.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sam Dennis <sam@ma...> - 2001-06-14 21:35
+
+On Thu, Jun 14, 2001 at 06:59:05PM +0200, Sebastian Geerken wrote:
+> On Wed, Jun 13, Sam Dennis wrote:
+> > It may have been a while since I wrote any real HTML, but I think I'd be
+> > correct in thinking that the following table shouldn't be rendered as
+> > illustrated:
+> > [...]
+> 
+> Fixed and committed.
+> 
+> Sebastian
+
+I'm sorry but it doesn't look very fixed to me, I'm getting almost exactly the
+same results here. 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-14 16:54
+
+On Wed, Jun 13, Sam Dennis wrote:
+> It may have been a while since I wrote any real HTML, but I think I'd be
+> correct in thinking that the following table shouldn't be rendered as
+> illustrated:
+> [...]
+
+Fixed and committed.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Sam Dennis <sam@ma...> - 2001-06-14 11:59
+
+On Thu, Jun 14, 2001 at 01:39:05PM +0300, Martynas Jocius wrote:
+> On Thu, Jun 14, 2001 at 11:56:38AM +0100, Sam Dennis wrote:
+> 
+> > When a window is closed, significantly more needs to be done than simply
+> > destroying the window. Interface_quit performs all the necessary actions and
+> > should almost certainly be called when the close window function is used.
+> 
+> Ok, sorry. I'll try to fix it. Just I'm very new in Dillo sources.
+> What about adding:
+> if (bw->main_window != NULL)
+> gtk_widget_destroy(bw->main_window);
+> 
+> into Interface_quit? And then call Interface_quit when the menu item is
+> clicked? This will require a lot more changes in sources. 
+
+Sorry about this, but ignore everything I said, I'm not at my sharpest today :)
+
+Interface_quit is the handler for destroying the main window, so you don't
+have to worry about calling it. 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Martynas Jocius <atthis@de...> - 2001-06-14 11:35
+
+On Thu, Jun 14, 2001 at 11:56:38AM +0100, Sam Dennis wrote:
+
+> When a window is closed, significantly more needs to be done than simply
+> destroying the window. Interface_quit performs all the necessary actions and
+> should almost certainly be called when the close window function is used.
+
+Ok, sorry. I'll try to fix it. Just I'm very new in Dillo sources.
+What about adding:
+if (bw->main_window != NULL)
+gtk_widget_destroy(bw->main_window);
+
+into Interface_quit? And then call Interface_quit when the menu item is
+clicked? This will require a lot more changes in sources. 
+
+--
+Martynas 
+
+
+
+Re: [Dillo-dev][patch] File -> Close Window
+
+From: Sam Dennis <sam@ma...> - 2001-06-14 10:47
+
+On Thu, Jun 14, 2001 at 12:28:57PM +0300, Martynas Jocius wrote:
+> Hi,
+> 
+> There was a bug #87 about closing window. There's a small patch which fixes
+> this. 
+> 
+> --
+> Martynas
+
+> /*
+> - * ?
+> + * Close single window. Exit Dillo if only one window is. 
+> */
+> void a_Commands_close_callback(GtkWidget *widget, gpointer client_data)
+> {
+> + BrowserWindow *bw = (BrowserWindow *)client_data;
+> + Interface_destroy_window(bw->main_window);
+> }
+
+When a window is closed, significantly more needs to be done than simply
+destroying the window. Interface_quit performs all the necessary actions and
+should almost certainly be called when the close window function is used. 
+
+
+
+[Dillo-dev][patch] File -> Close Window
+
+From: Martynas Jocius <atthis@de...> - 2001-06-14 10:25
+
+Attachments: dillo-cvs-close_window.atthis.patch      
+
+Hi,
+
+There was a bug #87 about closing window. There's a small patch which fixes
+this. 
+
+--
+Martynas 
+
+
+
+Re: [Dillo-dev]table algorithm (was: tables: COLSPAN)
+
+From: Sam Dennis <sam@ma...> - 2001-06-14 10:10
+
+On Fri, Jan 05, 1990 at 01:34:08AM -0900, Jon Bradley wrote:
+> 
+> It is impossible to access the CVS. I have done it before, back when
+> 0.3.0 was release. But it appears all information about the CVS is gone
+> from the website AND the knownledge base.
+> 
+> Have you closed down the CVS to the public? I would like to see how
+> dillo is looking with frames.
+
+AFAIK, anonymous CVS is working perfectly, and I'm afraid that you won't be
+seeing frames yet, only tables. Although my frames code should be ready in the
+not-so-distant future... 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-14 09:15
+
+On Wed, Jun 13, Sam Dennis wrote:
+> I was going to congratulate you on actually making that system work, but now,
+> having actually seen its output, I've decided that it needs a bit more work.
+
+This is what bug reports are for. :-)
+
+> It may have been a while since I wrote any real HTML, but I think I'd be
+> correct in thinking that the following table shouldn't be rendered as
+> illustrated:
+> [...]
+
+This one is fixed, but I've not yet uploaded the change, there are
+still a few more bugs.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]dillo CVS
+
+From: Jon Bradley <kreator@mo...> - 2001-06-13 21:58
+
+Please disgrad the last message I just sent about an impossible CVS.
+
+=-=-=-=-=-=-=-=-=-=-=-=
+Email: kreator@gc...
+bbs: telnet://toga.cx
+=-=-=-=-=-=-=-=-=-=-=-=
+
+
+On 13 Jun 2001, Sebastian Geerken wrote:
+
+> On Thu, Jan 04, Jon Bradley wrote:
+> >
+> > Hi,
+> >
+> > I am trying to login to the dillo CVS, so I searched the dillo website,
+> > where I found no info on the CVS. I then got to the knowledge base of
+> > Mail Archives, where I found a message showing how to login to the CVS,
+> > although, the knowledge base has some type of filter for email addresses?
+> > So again, I was not able to login.
+> >
+> > I am a novice at CVS, can someone please describe what I am suppose to do,
+> > or atleast what my CVSROOT var is suppose to be? Thanks.
+>
+> The commands are:
+>
+> cvs -d:pserver:anonymous@cv...:/cvsroot/dillo login
+> cvs -z8 -d:pserver:anonymous@cv...:/cvsroot/dillo co dillo
+>
+> There is also information at the SourceForge side, at
+> http://so....net/cvs/?group_id=603. Perhaps this should added to
+> home page, Jorge?
+>
+> Sebastian
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]table algorithm (was: tables: COLSPAN)
+
+From: Jon Bradley <kreator@mo...> - 2001-06-13 21:56
+
+It is impossible to access the CVS. I have done it before, back when
+0.3.0 was release. But it appears all information about the CVS is gone
+from the website AND the knownledge base.
+
+Have you closed down the CVS to the public? I would like to see how
+dillo is looking with frames.
+
+=-=-=-=-=-=-=-=-=-=-=-=
+Email: kreator@gc...
+bbs: telnet://toga.cx
+=-=-=-=-=-=-=-=-=-=-=-=
+
+
+On 13 Jun 2001, Sebastian Geerken wrote:
+
+> On Tue, Jun 12, I wrote:
+> > Optimal := what you would have as a result, according to the
+> > autolayout algorithm suggested in Appendix B of the HTML
+> > spec, for tables *without* COLSPAN.
+>
+> Well, sorry, I was a bit sloppy in reading the text. My code is (as
+> most other web browsers) based on an other definition:
+>
+> 1. All columns have have the same width W, except:
+>
+> - W is less than the minimal column width, or
+> - W is greater than the maximal column width.
+>
+> Furthermore, W is
+>
+> - less than all minimal widths of columns not having W as
+> width, and
+> - greater than all maximal widths of columns not having W as
+> width.
+>
+> 2. The table tries to use exactly the whole available width, except
+> if it is not possible, because the available width is
+> less/greater than the minimal/maximal table width.
+>
+> (BTW, there is a bug in the CVS, but I've fixed this, and will upload
+> it soon.)
+>
+> A simple example: The table
+>
+> <table>
+> <tr>
+> <td>
+> Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+> <td>
+> Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+> Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+> </table>
+>
+> would, by the W3C algorithm, rendered as:
+>
+> +------------+----------------------+
+> | Blah Blah | Blah Blah Blah Blah |
+> | Blah Blah | Blah Blah Blah Blah |
+> | Blah Blah | Blah Blah Blah Blah |
+> | Blah Blah | Blah Blah Blah Blah |
+> | Blah Blah | Blah Blah Blah Blah |
+> +------------+----------------------+
+>
+> while most browsers render this:
+>
+> +-----------------+-----------------+
+> | Blah Blah Blah | Blah Blah Blah |
+> | Blah Blah Blah | Blah Blah Blah |
+> | Blah Blah Blah | Blah Blah Blah |
+> | Blah | Blah Blah Blah |
+> | | Blah Blah Blah |
+> | | Blah Blah Blah |
+> | | Blah Blah |
+> +-----------------+-----------------+
+>
+> Note that the W3C algorithm may have very "unaesthetical" results when
+> the columns differ quite much in there maximal length, while having
+> comparable content length (number of characters), e.g. if one column
+> consists of many small paragraphs, whereas another consists of few
+> long paragraphs.
+>
+> I think we should follow the common implementations, which authors may
+> have in mind, instead of the W3C recommendation. Different opinions?
+>
+>
+> Sebastian
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sam Dennis <sam@ma...> - 2001-06-13 19:33
+
+On Wed, Jun 13, 2001 at 08:29:08PM +0200, Sebastian Geerken wrote:
+> > Currently, I'm working on COLSPAN. [...]
+> 
+> Just uploaded, together with some bugfixes.
+> 
+> Sebastian
+
+I was going to congratulate you on actually making that system work, but now,
+having actually seen its output, I've decided that it needs a bit more work.
+
+It may have been a while since I wrote any real HTML, but I think I'd be
+correct in thinking that the following table shouldn't be rendered as
+illustrated:
+
+<table>
+<tr>
+<td colspan=2><img src=1.png></td>
+<td rowspan=2><img src=2.png></td>
+</tr>
+<tr>
+<td rowspan=2><img src=3.png></td>
+<td><img src=4.png></td>
+</tr>
+<tr>
+<td colspan=2><img src=5.png></td>
+</tr>
+</table>
+
++-------+ +---+
+| | | |
++-------+ | |
++---++---+ | |
+| || | +---+
+| |+---+
+| |+-------+
++---+| |
++-------+
+
+But don't take this the wrong way, I'm impressed that you managed to get that
+approach working at all! 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-13 18:22
+
+> Currently, I'm working on COLSPAN. [...]
+
+Just uploaded, together with some bugfixes.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]dillo CVS
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-06-13 14:27
+
+Hi!
+
+> [CVS]
+> The commands are:
+>
+> cvs -d:pserver:anonymous@cv...:/cvsroot/dillo login
+> cvs -z8 -d:pserver:anonymous@cv...:/cvsroot/dillo co dillo
+>
+> There is also information at the SourceForge side, at
+> http://so....net/cvs/?group_id=603. Perhaps this should added to
+> home page, Jorge?
+
+Done, in [Links] section.
+
+
+Jorge. 
+
+
+
+[Dillo-dev]table algorithm (was: tables: COLSPAN)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-13 13:34
+
+On Tue, Jun 12, I wrote:
+> Optimal := what you would have as a result, according to the
+> autolayout algorithm suggested in Appendix B of the HTML
+> spec, for tables *without* COLSPAN.
+
+Well, sorry, I was a bit sloppy in reading the text. My code is (as
+most other web browsers) based on an other definition:
+
+1. All columns have have the same width W, except:
+
+- W is less than the minimal column width, or
+- W is greater than the maximal column width.
+
+Furthermore, W is
+
+- less than all minimal widths of columns not having W as
+width, and
+- greater than all maximal widths of columns not having W as
+width.
+
+2. The table tries to use exactly the whole available width, except
+if it is not possible, because the available width is
+less/greater than the minimal/maximal table width.
+
+(BTW, there is a bug in the CVS, but I've fixed this, and will upload
+it soon.)
+
+A simple example: The table
+
+<table>
+<tr>
+<td>
+Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+<td>
+Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah
+</table>
+
+would, by the W3C algorithm, rendered as:
+
++------------+----------------------+
+| Blah Blah | Blah Blah Blah Blah |
+| Blah Blah | Blah Blah Blah Blah |
+| Blah Blah | Blah Blah Blah Blah |
+| Blah Blah | Blah Blah Blah Blah |
+| Blah Blah | Blah Blah Blah Blah |
++------------+----------------------+
+
+while most browsers render this:
+
++-----------------+-----------------+
+| Blah Blah Blah | Blah Blah Blah |
+| Blah Blah Blah | Blah Blah Blah |
+| Blah Blah Blah | Blah Blah Blah |
+| Blah | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah Blah |
++-----------------+-----------------+
+
+Note that the W3C algorithm may have very "unaesthetical" results when
+the columns differ quite much in there maximal length, while having
+comparable content length (number of characters), e.g. if one column
+consists of many small paragraphs, whereas another consists of few
+long paragraphs.
+
+I think we should follow the common implementations, which authors may
+have in mind, instead of the W3C recommendation. Different opinions?
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]dillo CVS
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-13 13:34
+
+On Thu, Jan 04, Jon Bradley wrote:
+> 
+> Hi,
+> 
+> I am trying to login to the dillo CVS, so I searched the dillo website,
+> where I found no info on the CVS. I then got to the knowledge base of
+> Mail Archives, where I found a message showing how to login to the CVS,
+> although, the knowledge base has some type of filter for email addresses?
+> So again, I was not able to login.
+> 
+> I am a novice at CVS, can someone please describe what I am suppose to do,
+> or atleast what my CVSROOT var is suppose to be? Thanks.
+
+The commands are:
+
+cvs -d:pserver:anonymous@cv...:/cvsroot/dillo login
+cvs -z8 -d:pserver:anonymous@cv...:/cvsroot/dillo co dillo
+
+There is also information at the SourceForge side, at
+http://so....net/cvs/?group_id=603. Perhaps this should added to
+home page, Jorge?
+
+Sebastian 
+
+
+
+[Dillo-dev]dillo CVS
+
+From: Jon Bradley <kreator@mo...> - 2001-06-13 01:38
+
+Hi,
+
+I am trying to login to the dillo CVS, so I searched the dillo website,
+where I found no info on the CVS. I then got to the knowledge base of
+Mail Archives, where I found a message showing how to login to the CVS,
+although, the knowledge base has some type of filter for email addresses?
+So again, I was not able to login.
+
+I am a novice at CVS, can someone please describe what I am suppose to do,
+or atleast what my CVSROOT var is suppose to be? Thanks.
+
+=-=-=-=-=-=-=-=-=-=-=-=
+Email: kreator@gc...
+bbs: telnet://toga.cx
+=-=-=-=-=-=-=-=-=-=-=-= 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-12 18:49
+
+On Tue, Jun 12, Sam Dennis wrote:
+> It seems to me that your algorithm may have some problems with tables using
+> combinations of ROWSPAN and COLSPAN, to take an extreme example:
+> 
+> +-------+---+
+> | A | |
+> +---+---+ B +
+> | | D | |
+> | C +---+---+
+> | | E |
+> +---+-------+
+> 
+> Would your algorithm handle this well? The description you've given doesn't
+> suggest so.
+
+Tested ... works. :-)
+
+Table rendering is (in both implementations) done in three steps:
+
+1. Calculating minimal and maximal column widths,
+2. calculating the column widths, and
+3. calculating the column heights.
+
+Only step 1 and 2 (which are changed) deal with COLSPAN, and only step
+3 deals with ROWSPAN, so there is no problem. Note that when rendering
+documents (as opposed to GUIs), both dimensions are not symmetric,
+most is determined by the viewport width, the height plays a much less
+important role.
+
+> Also, there is perhaps the issue of what `optimal' means in table layout
+> anyhow.
+
+Optimal := what you would have as a result, according to the
+autolayout algorithm suggested in Appendix B of the HTML
+spec, for tables *without* COLSPAN.
+
+(BTW, this is what led me to the idea of recursive tables: if COLSPAN
+is a problem, try to find subtables and so eliminate COLSPAN.)
+
+E.g., the following layout is optimal:
+
++------+-------------------------------+
+| Blah | Blah Blah Blah Blah Blah Blah |
+| | Blah Blah Blah Blah |
++------+-------------------------------+
+
+|------------ viewport width ------------|
+
+while the following, trivial, is not:
+
++------------------+-------------------+
+| Blah | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah |
++------------------+-------------------+
+
+This should also work for COLSPAN:
+
++--------------------------------------+
+|BlahBlahBlahBlahBlahBlahBlahBlahBlah |
++------+-------------------------------+
+| Blah | Blah Blah Blah Blah Blah Blah |
+| | Blah Blah Blah Blah |
++------+-------------------------------+
+
+instead of:
+
++--------------------------------------+
+|BlahBlahBlahBlahBlahBlahBlahBlahBlah |
++------------------+-------------------+
+| Blah | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah Blah Blah |
+| | Blah |
++------------------+-------------------+
+
+Note that my algorithm isn't optimal in some cases, an alternative
+would be "real" optimization, but this will be even more complicated
+and slow.
+
+> Finally, your solution looks _very_ awkward to code. I don't like the idea of
+> a recursive algorithm for table layout in the first place and it might present
+> more problems than it solves, mightn't a little thought go towards a simpler
+> algorithm? (Not that I've got one...)
+
+I don't think that recursion is complex per se, often problems can
+solved much simpler that way. In this case, the code (it is nearly
+complete) isn't much more complex than before (and not slower),
+although I must admit that the idea might be a bit strange.
+
+Maybe a look at other browsers might be useful, but I'll complete it
+now, it can anyway changed in the future.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sam Dennis <sam@ma...> - 2001-06-12 15:03
+
+It seems to me that your algorithm may have some problems with tables using
+combinations of ROWSPAN and COLSPAN, to take an extreme example:
+
++-------+---+
+| A | |
++---+---+ B +
+| | D | |
+| C +---+---+
+| | E |
++---+-------+
+
+Would your algorithm handle this well? The description you've given doesn't
+suggest so.
+
+Also, there is perhaps the issue of what `optimal' means in table layout
+anyhow.
+
+Finally, your solution looks _very_ awkward to code. I don't like the idea of
+a recursive algorithm for table layout in the first place and it might present
+more problems than it solves, mightn't a little thought go towards a simpler
+algorithm? (Not that I've got one...) 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-11 18:02
+
+On Mon, Jun 11, Sam Dennis wrote:
+> Sorry if this may mean that a lot of time has been wasted in reinventing the
+> wheel, but there are quite extensive notes on tables in general and layout algorithms in
+> particular in the HTML specs.
+
+I use, more or less, the algorithm described in the spec, but I handle
+cells spanning several columns in a different way, since the described
+algorithm is sufficient for tabled data, but not for "layout tables".
+Not that that tables are the best way for page layout, but some pages
+would be unreadable otherwise.
+
+This is the part in the spec about the problem:
+
+For cells that span multiple columns, a simple approach consists of
+apportioning the min/max widths evenly to each of the constituent
+columns. A slightly more complex approach is to use the min/max
+widths of unspanned cells to weight how spanned widths are
+apportioned. Experiments suggest that a blend of the two approaches
+gives good results for a wide range of tables.
+
+But I'm aiming towards perfect, not just good, results. ;-)
+
+Suppose the following table:
+
+<table>
+<tr>
+<td colspan="2"><img src="banner.gif" width="500" height="50">
+<tr>
+<td>
+Links:<br>
+...
+<td>
+A long text over several lines blah blah blah ...
+</table>
+
+An optimal layout (what my algorithm does indeed :-) would result in:
+
+,----------------------------------------.
+| Banner |
+`----------------------------------------'
+
+Links: A long text over several lines blah blah blah
+... blah blah ...
+|--------------------- viewport width ---------------------|
+
+
+The result of the simple algorithm in the spec:
+
+,--------------------------------------------------.
+| Banner |
+`--------------------------------------------------'
+
+Links: A long text over several lines blah
+... blah blah ...
+|--------------------- viewport width ---------------------|
+
+
+The complex approach would have a similar effect, since the minimal
+widths of both text cells are quite similar, this would make both
+weights for the minimum nearly equal, and so (in this case) determine
+the same column widths.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sam Dennis <sam@ma...> - 2001-06-11 14:41
+
+On Fri, Jun 08, 2001 at 02:14:47PM +0200, Sebastian Geerken wrote:
+> Hi,
+> 
+> first, FYI: there have been some updates of the table implementation,
+> image maps and COLSPAN now work. For finding text, the best solution
+> is probably to add a new method DwWidget::find_text, which searches
+> recursively in DwContainer's.
+> 
+> Currently, I'm working on COLSPAN. As you may have noticed, the
+> current implementation does not work well for large spanning
+> columns. The approach I'm using is to divide the table recursively
+> into subtables. This is not always possible, so sometimes the cells
+> have to be "divided", which makes the rendering not optimal, but
+> reasonable, the effect should be small in most cases. An optimal
+> solution would otherwise be complicated and slow.
+
+Sorry if this may mean that a lot of time has been wasted in reinventing the
+wheel, but there are quite extensive notes on tables in general and layout algorithms in
+particular in the HTML specs.
+
+http://www.w3.org/TR/html4/appendix/notes.html#notes-table might be worth a
+look. 
+
+
+
+Re: [Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-08 12:43
+
+On Fri, Jun 08, I wrote:
+> first, FYI: there have been some updates of the table implementation,
+> image maps and COLSPAN now work.
+^^^^^^^
+Of course, I meant ROWSPAN.
+
+Sebastian 
+
+
+
+[Dillo-dev]tables: COLSPAN
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-06-08 12:13
+
+Hi,
+
+first, FYI: there have been some updates of the table implementation,
+image maps and COLSPAN now work. For finding text, the best solution
+is probably to add a new method DwWidget::find_text, which searches
+recursively in DwContainer's.
+
+Currently, I'm working on COLSPAN. As you may have noticed, the
+current implementation does not work well for large spanning
+columns. The approach I'm using is to divide the table recursively
+into subtables. This is not always possible, so sometimes the cells
+have to be "divided", which makes the rendering not optimal, but
+reasonable, the effect should be small in most cases. An optimal
+solution would otherwise be complicated and slow.
+
+I'm not sure if this is the simplest approach, I've also had other
+ideas, but did not succeed in developing them further to an algorithm.
+I've appended an extract of the new documentation, I'm now working on
+the implementation. If someone knows a better approach, let me know
+it!
+
+Sebastian
+
+----------------------------------------------------------------------
+
+A table is divided into subtables, until single columns are
+left. Cells spanning the whole width are removed before dividing
+further. Example:
+
++---+-------+---+
+| A | B | C |
++---+-------+---+
+| D | E |
++---+-------+---+
+| F | G | H |
++---+-------+---+
+' ' ` `
+' ' ` `
++---+-------+ +---+
+| A | B | | C |
++---+-------+ +---+
+removed --> | D | | E |
++---+-------+ +---+
+| F | G | | H |
++---+-------+ +---+
+' ' ` ` final
+' ' ` `
++---+ +-------+
+| A | | B | <-.
++---+ +-------+ >- removed
+| F | | G | <-' 
++---+ +-------+
+final ' ' ` `
+' ' ` `
+[empty] [empty]
+final final
+
+If table cells overlap horizontally, they are (virtually) divided
+(resulting in a non optimal layout):
+
++-------+---+---+
+| A | B | C |
++---+---+---+---+
+| D | E |
++---+-----------+
+' ' ` `
+' ' ` `
++-------+ +---+---+
+| A | | B | C |
++---+---+ +---+---+
+| D |1/3| | 2/3 E |
+| | E | | |
++---+---+ +-------+
+
+Calculating extremes
+--------------------
+minimal/maximal width (sub table) =
+- for single column: maximum of all minimal/maximal widths
+- otherwise: maximum of
+- all minimal/maximal widths of cells spanning
+the whole width, and
+- the sum of the minimal/maximal widths of the sub
+tables
+
+Calculating column widths
+-------------------------
+The calculation is based on an available width, which is, at the top,
+the width set by a_Dw_widget_set_width, corrected by the minimal and
+maximal width of the whole table. At each level, the available width
+is always between the minimal and the maximal width of the subtable.
+
+For single columns, the width is the available width. Otherwise, use
+the simple iteration [described in the old DwTable.txt] on the
+subtables, excluding the columns spanning the whole subtable width, to
+get the width of the subtables. After this, apply this recursively on
+all subtables, with the subtable width as available width. 
+
+
+
+Re: [Dillo-dev]can not visit dillo.so....net
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-06-04 19:05
+
+Li,
+
+> [...]
+> Why can I not visit http://dillo.so....net now?
+
+You SHOULD be able to see it!!! (I can)
+
+If you can't visit it for an extended period, you can blame
+your Internet Service Provider (ISP). Just as Livio said, source
+forge has been under some troubles lately, but AFAIK that's over.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]can not visit dillo.so....net
+
+From: Livio Baldini Soares <livio@li...> - 2001-06-04 14:31
+
+Hi liqx!
+
+Qiaoxia,Li writes:
+> Hi,
+> Where can I download dillo-0.5.1,Why can I not visit http://
+> dillo.so....net now?
+
+Sourceforge is sometimes down... specially nowadays... But when
+it's not you can get dillo-0.5.1 at:
+
+http://download.so....net/dillo/dillo-0.5.1.tar.gz
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]can not visit dillo.so....net
+
+From: Qiaoxia,Li <liqx@st...> - 2001-06-04 00:46
+
+Attachments: Message as HTML      
+
+SGksDQpXaGVyZSBjYW4gSSBkb3dubG9hZCBkaWxsby0wLjUuMSxXaHkgY2FuIEkgbm90IHZpc2l0
+IGh0dHA6Ly9kaWxsby5zb3VyY2Vmb3JnZS5uZXQgbm93Pw0KcmVnYXJkcywNCmxpcXgNCg0K 
+
+
+
+[Dillo-dev]File selection patch (again :)
+
+From: Livio Baldini Soares <livio@li...> - 2001-06-03 04:54
+
+Hello!
+
+I'm sending (again) my updated patch for file selection while saving
+pages or links. As Holger Rapp suggested, I have removed the modal
+type windows, now they're like any dialog window.
+
+The patch is simple (against 02-Jun CVS), and it's at:
+http://www.linux.ime.usp.br/~livio/dillo/file_select_new.diff
+
+Also, I think I'm willing to implement the Downloads scheme
+described in [Project Notes], becasue in my opinion it's another great
+TODO... Has anybody started anything on this?
+
+PS: Sebastian, nice work on the tables! I was really happy when I saw
+sourforge.net being rendered in a "readable way! I know it's still a
+it buggy, but we'll work it out with time... Thanks!
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]authentification
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-06-01 09:44
+
+Hi!
+
+
+On Thu, 31 May 2001, Didier Bretin wrote:
+
+> Hello,
+>
+> Dillo looks good :o). Go on !!!!
+
+Thanks!
+
+> Have you planned to deal with authentification ?
+
+Sure, I have an ancient patch from Marcos Ram=EDrez that was
+waiting for DilloUrl... If you're willing to work on it, I can
+send you the patch so you can start from there.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]authentification
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-06-01 04:22
+
+Hi!
+
+On Thu, 31 May 2001, Alexey F. Bekish wrote:
+
+> How from all it nsubscribe????
+
+???
+
+How to unsubscribe?
+
+Go to dillo's home page, follow the [Mailing List] link, click
+on the "Visit subscribers list" button, click your entry, enter
+your password and click "unsubscribe" button!
+
+Maybe sending an email with "unsubscribe" as subject could also
+do the trick.
+
+
+Jorge.- 
+

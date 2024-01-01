@@ -1,0 +1,4243 @@
+[Dillo-dev]Faces
+
+From: Chris Hawks <chrish@sy...> - 2002-04-30 22:43
+
+Just a question for a new (and very impressed) user...
+
+
+Why is the font face code commented out in html.c (about line 1720). I
+un-commented it and it seems to work correctly...
+
+Chris
+
+Christopher R. Hawks Software Engineer
+Syscon Plantstar a Division of Syscon International
+-------------------------------------------------------------------------
+Red meat is not bad for you. Blue-green fuzzy meat is bad for you. 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: John Utz <john@ut...> - 2002-04-30 21:08
+
+On Sat, 27 Apr 2002, madis wrote:
+
+> On Sat, 27 Apr 2002, Ivo van Poorten wrote:
+> 
+> > Furthermore, I added two lines to menu.c at line 172:
+> > 
+> > Menu_add(menu, "Back", NULL, bw, a_Commands_back_callback, bw);
+> > Menu_add(menu, "Forward", NULL, bw, a_Commands_forw_callback, bw);
+> > 
+> > It makes browsing more convenient this way, IMHO.
+> > I have not thoroughly examined all the sourcecode and I have no serious 
+> > plans to start coding on dillo, so maybe somebody could look into this and 
+> > maybe make a patch to the CVS code. One question though, is there a reason 
+> > why the icons in pixmap.h use so little colours?
+> 
+> you have been at least 3th person reinventing exactly this patch :)
+> imho it should go into main dillo tree.
+
+somebodies patch. anybodies patch! plz!
+
+i'll write it again and send it anywhere, it's even been mentioned in some 
+documentation, but it never shows up.
+
+> --
+> mzz
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Error
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-30 17:12
+
+Hi,
+
+On Sat, Apr 27, 2002 at 08:29:35PM +0300, Armish wrote:
+> when i write the command "dillo" to the command,the dillo opens and closes in 
+> a minute and gives this error messages to the terminal ;
+> dillo_dns_init: Here we go!
+> Loading bookmarks...
+> a_Cache_open_url: file:/root/.dillo/splash024.html
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Are you using version 0.2.4??? There was once a problem with other
+charsets than iso8859-1, but AFAIK, this has been solved halfway some
+time ago. (Sorry, I'm always using iso8859-1, so I don't have any
+experiences.) Try to use a more recent version of dillo.
+
+Sebastian 
+
+
+
+[Dillo-dev]CSS
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-30 17:06
+
+Hi!
+
+Below are some notes on how CSS may be implemented in dillo. It mainly
+focusses on how the different parts "play together", many details for
+the single modules are left out, there should be enough room for
+different implementations. There are also some simplifications,
+e.g. the user-agent defined style sheet may be implemented in a
+different way. I've left out XML/CSS parsing, which should be possible
+by this design, but makes many changes of the HTML parser necessary.
+
+Please post comments, bugs, anticipated problems, ambiguities etc.
+
+Sebastian
+
+======================================================================
+
+-------------------------------------------
+A Possible Implementation of CSS in Dillo
+-------------------------------------------
+
+The User's View
+===============
+
+An important goal is asynchronous HTML/CSS parsing: when the HTML
+parser reads a <LINK> tag referring to an external style sheet, it
+continues to render the document _without_ the style sheet, while the
+style sheet (if it is not already in the cache) is retrieved and
+parsed parallel to this, and then applied on the current rendered part
+of the document. If the time difference is large enough, the user will
+notice a sudden change of colors, fonts, etc., but will be able to
+read the content with less delay time (which may be several seconds).
+
+
+Overview
+========
+
+The following diagram shows the associations between the data
+structures, and there multiplicities. Worth to notice is that for
+every document (represented currently by DilloHtmlLB), there is one
+document tree (Document) and one CSS cascade. The details are
+described below.
+
++-----------+
+| DilloHTML |
++-----------+
+0..1 | | 1
+,-------' `------.
+| |
+1 V V *
++-------------+ +----------------+ 0..1 +---------+
+| DilloHtmlLB | | DilloHtmlState |------>| Element |
++-------------+ +----------------+ 1 +---------+
+1 | | 1 |
+| | |
+| | 1 +----------+
+| `------------------------------->| Document |
+| +----------+
+| ^ 1
+| +-------------+ |
+`----------------->| CSS cascade |------'
+1 +-------------+ 1
+
+
+
+The Role of DwStyle
+===================
+
+The DwStyle structure will represent style attributes in one of the
+following ways (for the exact terminology, see [CSS2] chapter 6.1):
+
+1. Absolute values are represented directly. Examples are absolute
+lengths. The value "auto" is handled the same way.
+
+2. Some relative values are immediately computed, this may depend
+on attributes of the parent element. Examples are relative line
+heights, i.e. "line-height: 150%" will be computed into an
+absolute (pixel) value.
+
+3. Other relative sizes are represented this way in DwStyle,
+examples are relative widths and heights.
+
+Whether 2 or 3 applies to a specific attribute is determined by two
+factors:
+
+1. If the attribute value is independent of certain values, which
+changes affect only the level of Dw (important: window size),
+they can, for simplicity, put into category 2. Otherwise, they
+must belong to 3. The latter may not be inherited, for the
+reason, see next point.
+
+2. Since only *computed* values may be inherited, attributes,
+which values are inherited, may not be part of category 2,
+since Dw will not be able to handle them correctly.
+
+
+The Document Tree
+=================
+
+The document tree has two purposes:
+
+1. representation of the document structure, needed for the
+evaluation of CSS selectors, and
+2. near-complete encapsulation of the dillo widget.
+
+The HTML parser accesses for most elements only the document tree, and
+not anymore Dw. The interface is similar to a small subset of the
+Document Object Model (see [DOM2]), and provides methods for the
+following purposes:
+
+1. construction of nodes (mainly elements and text), adding them to
+other nodes,
+2. examining the structure (e.g. for evaluating CSS selectors),
+3. assigning style attributes,
+4. drawing, and
+5. changing the state.
+
+Some notes about the latter three points: The document tree is in most
+cases able to construct and access the Dw structures simply by style
+attributes. E.g., if the attribute "display" has the value "table", it
+"knows" that it must create a DwTable and add it to the DwPage
+associated with the parent node. This way, the HTML parser may be
+simplified, much functionality can be replaced by a user-agent-defined
+style sheet, as in [CSS2] appendix A.
+
+Since this is not in all cases possible, two back-doors are kept open:
+
+1. It is possible to add a special type of element to the tree,
+with a specified DwWidget. The <img> tag will processed this
+way.
+
+2. DwStyle will be extended by non-standard attributes, when
+necessary. For better distinction, they will be preceded by
+"x_". Examples are "x_link" and "x_colspan".
+
+An element may have a state, which is used as pseudo-element in the
+style evaluation (see below). This is how the dynamic pseudo-classes
+([CSS2] chapter 5.11.3) are handled. Changing this is e.g. done when
+the user clicks on a not yet visited link, the state then switches
+from "link" to "visited".
+
+
+The CSS Cascade
+===============
+
+"CSS cascade" is a module, which is responsible for evaluating CSS
+selectors ([CSS2] chapter 5). The evaluation function gets the element
+node, the default attributes (DwStyle), and a "pseudo-element" as
+argument, and returns a DwStyle with the values described in the
+section "DwStyle". The caller is responsible to determine the default
+attributes (those which are not changed, if no rule is found), either
+by setting them to default values, or copying them from the parent
+element.
+
+About the "pseudo-element": An evaluation with this argument set to
+non-NULL must only evaluate the rules containing this
+"pseudo-element".
+
+Of course, there is the need of a CSS parser. A "cascade" may combine
+several style documents, from different origins (see [CSS2] chapter
+6.4), so that the parser always adds rules to a cascade. There is no
+need for an incremental parser, instead, a document is always parsed
+as a whole (see below).
+
+In some cases, it is necessary to add element-specific rules to the
+cascade, either for evaluating the "style" attribute, or to process
+(mostly deprecated) HTML elements and attributes.
+
+
+Pseudo Elements and Generated Content
+=====================================
+
+Content is generated in two cases:
+
+1. if the ":before" and ":after" pseudo elements are used ([CSS2]
+chapter 5.12.3), and
+2. for list items.
+
+Content generation is the task of the document tree. For dealing with
+":before" and ":after", one document element refers to three DwStyle:
+
+(i) two from the evaluation of ":before" and ":after", and
+(ii) one actual style.
+
+The actual style may be affected by the state of the element.
+
+(There are many things missing for pseudo elements, they have to be
+specified, and some may not be implemented in dillo).
+
+
+What Actually Happens in Different Situations
+=============================================
+
+Adding Elements to the Tree
+---------------------------
+This happens after the parser has read an opening tag:
+
+1. The HTML parser evaluates the element attributes to create one
+or two new, element-specific rules, and inserts them into the
+CSS cascade.
+
+2. The HTML parser adds a new element to the current document
+element.
+
+3. The CSS cascade determines the style, based on the style of the
+parent, where some attributes are set to default values.
+
+4. This style is attached to the new element, and the element is
+drawn (e.g. the appropiate DwWidget methods are called).
+
+Handling the <STYLE> Element
+----------------------------
+The content of <STYLE> is written into the stash. When </STYLE> is
+written, following is done:
+
+1. The HTML parser passes the stash content to the CSS parser,
+which inserts the new rules into the CSS cascade.
+
+2. The styles for the whole document are recalculated, and the
+document is redrawn.
+
+Handling the <LINK> Element
+---------------------------
+An external style sheet is read by a special cache client, which
+writes the content into the buffer, and is associated with the
+document tree and the CSS cascade. If the data has been fully
+retrieved, the process is similar to <STYLE>, described above.
+
+What is important is to preserve the order the documents have been
+specified in the document, e.g. for
+
+<link href="style1.css" rel="stylesheet" type="text/css">
+<style>
+/* style sheet 2 */
+</style>
+
+it is likely that the content of <style> will be processed earlier,
+although it has been specified later in the HTML document. This may be
+done by assigning numbers to the style sheet documents, which are
+increased each time <link> or <style> is processed.
+
+
+References
+==========
+
+[CSS2] Cascading Style Sheets, level 2, CSS2 Specification
+http://www.w3.org/TR/1998/REC-CSS2-19980512
+
+[DOM2] Document Object Model (DOM) Level 2 Core Specification
+http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113 
+
+
+
+[Dillo-dev]parsing of "file:" URLS
+
+From: Arvind Narayanan <arvindn@my...> - 2002-04-30 17:06
+
+Hi,
+
+Typing file://foo/bar/ into the location bar takes you to /bar .
+The function doing this (Url_object_new in url.c) says it's according
+to rfc 2396. But the behavior is confusing, taken in conjunction
+with the fact that file://foo takes you to the home directory (or
+is it the current directory?). All this doesn't happen when there's
+1 or 3 slashes after "file:" (the token following // is parsed
+as "authority" and the path starts with the word after that).
+
+Here's a browser-wise description
+
+Dillo
+file: , file:// , file://foo ==> current dir
+file://foo/ ==> /
+file://foo/bar ==> /bar
+
+Moz
+file: , file:// , file://foo ==> /
+file://foo/bar ==> /bar
+
+Konq
+file: ==> home dir
+file:// ==> /
+file://foo ==> /foo
+
+NS 4.7
+file:// ==> /
+file: , file://foo , file://foo/bar ==> "can't find host"
+
+Opera
+file: ==> /
+file:// ==> "can't open"
+file://foo ==> /foo
+
+Nautilus
+file: , file:// ==> "error"
+file://foo ==> /foo
+
+No two are identical :-)
+(Can't get galeon to compile on my machine)
+
+Of the lot I think Konq is the most intuitive from the average Joe's
+POV. At least file://foo/bar ==> /bar should be avoided. Any thoughts?
+
+Arvind
+-- 
+Its all GNU to me 
+
+
+
+Re: [Dillo-dev]PgUp (was: 0.6.5 release)
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-30 15:16
+
+On Tue, Apr 30, 2002 at 12:04:16PM -0300, Livio Baldini Soares wrote:
+> [...]
+> See a post I've sent a few weeks ago about this issue:
+> http://www.geocrawler.com/lists/3/SourceForge/702/50/8334149/
+
+Sorry. There was much traffic on the list in the last time.
+
+> In my case what triggers it is NumLock (but read the post for full
+> explanation).
+[...]
+> > But META-B (Bookmark menu) should not work anymore (that's what is is
+> > supposed :-). Anyway, I've just comitted a small change, please test
+> > it and report the result.
+> 
+> I haven't seen your change yet, but the mail I've posted contained a
+> small patch which solved my issue (and should be a clean fix). I'll
+> check your changes to see if their something like mine (or better ;-)
+
+They're nearly the same :-) (I've no opinion whether or not to leave
+GDK_MOD2_MASK.)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]PgUp (was: 0.6.5 release)
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-30 15:04
+
+Hello!
+
+Sebastian Geerken writes:
+> Hi,
+> 
+> On Sat, Apr 27, 2002 at 02:39:31AM +0200, Ivo van Poorten wrote:
+> > I tried out dillo 0.6.5 today and I noticed that the page-up key didn't 
+> > work (anymore?).
+> 
+> I cannot reproduce it, but see below. 
+
+See a post I've sent a few weeks ago about this issue:
+http://www.geocrawler.com/lists/3/SourceForge/702/50/8334149/
+
+In my case what triggers it is NumLock (but read the post for full
+explanation). 
+
+> > I localized the problem. In dw_gtk_scrolled_frame.c at 
+> > line 480 it says:
+> > 
+> > if (event->state & (GDK_MOD1_MASK | GDK_MOD2_MASK))
+> > return FALSE;
+> > 
+> > I don't know what this is supposed to do (it's not in the pagedown 
+> > section), but when I comment it out, pageup is working again.
+> 
+> But META-B (Bookmark menu) should not work anymore (that's what is is
+> supposed :-). Anyway, I've just comitted a small change, please test
+> it and report the result.
+
+I haven't seen your change yet, but the mail I've posted contained a
+small patch which solved my issue (and should be a clean fix). I'll
+check your changes to see if their something like mine (or better ;-)
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]PgUp (was: 0.6.5 release)
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-30 14:00
+
+Hi,
+
+On Sat, Apr 27, 2002 at 02:39:31AM +0200, Ivo van Poorten wrote:
+> I tried out dillo 0.6.5 today and I noticed that the page-up key didn't 
+> work (anymore?).
+
+I cannot reproduce it, but see below.
+
+> I localized the problem. In dw_gtk_scrolled_frame.c at 
+> line 480 it says:
+> 
+> if (event->state & (GDK_MOD1_MASK | GDK_MOD2_MASK))
+> return FALSE;
+> 
+> I don't know what this is supposed to do (it's not in the pagedown 
+> section), but when I comment it out, pageup is working again.
+
+But META-B (Bookmark menu) should not work anymore (that's what is is
+supposed :-). Anyway, I've just comitted a small change, please test
+it and report the result.
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-30 13:16
+
+Hi there,
+
+On Thu, 11 Apr 2002, Eric GAUDET wrote:
+
+Hmmmm, some time ago, but after the site move, presentation,
+release and regular duties, here's a time slice to answer. :)
+
+
+> Hi Jorge,
+
+Hi.
+
+> I think we can agree that according to the dpi1 proposal, the initial pat=
+ch
+> will include the following parts:
+> - init code
+> - plugin forking and pipe registration
+> - url indirection to plugin pipes and rendering.
+
+Could and couldn't!
+
+The current draft really needs more abstract work, specially on
+design and particularly in design validation...
+
+After that phase, the first prototype may be different (not
+forked for intance, but more on this in the next post).
+
+And yes, it may end having what you listed.
+
+
+> There will also be a minimal reference implementation plugin, that will
+> probably be a script or a small C program.
+
+Sure.
+
+> I=B4d like to know what code you already have, what code you have needs r=
+ework,
+> and if you plan to integrate any code soon or you prefer to discuss about=
+it a
+> little bit.
+
+I only have an ancient prototype we worked with Holger. Most
+probably the new dpi1 design will require something different,
+and as I wrote above, and as you suggest, it certainly needs more
+work.
+
+It's a matter of deeply understanding the draft, considering
+dillo internals and other implementation possibilities, then
+probing the design (validating what's OK and fixing/modifying
+what's wrong), then making a few pre-prototypes to test the
+implemetation choices, and finally building a prototype.
+
+
+Cheers
+Jorge.-
+
+
+> PS: Jorge, I wanted to ask you this for a long time: what text editor do =
+you
+> use, with that justify in plain text?
+
+It's and old companion of mine that I coded a long-long time
+ago; I've shown it to a few fellows, that use it regularly and
+that say to really miss when working without!
+
+As dillo, it's very simple, small, fast and stays out of the
+way. I never dared to make it public, because although very
+stable, I never had the time to clean its code! (and there're
+hundred of other editors out there). 
+
+
+
+[Dillo-dev]Simple plugins (dpi1)
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-30 13:15
+
+Hi there!
+
+... the good news are:
+
+
+Geoff Lane will be leading the work on dpi1 extensions!
+
+
+My advice: please cooperate with him with well tought/reasoned
+ideas only. That is, proposals that at least answer what, why and
+how.
+
+
+Sincerely
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-30 13:15
+
+Hi again!
+
+On Fri, 12 Apr 2002, Eric GAUDET wrote:
+
+> Hi,
+>
+> Tow things I=B4d like to see changed in the dpi1 proposal:
+>
+> - D1 and D2 fields being 2 bytes long, the endianness can be an issu=
+e. I
+> think it will be better to have 1 byte fields D1, D2, D3, D4 instead.
+
+Is not an issue. It's sent as text (guchar *), just as with
+files and http.
+
+>
+> - Along with the client ID, I think a request ID is needed too, to ensure
+> multiple windows calling the same PI concurently don=B4t get confused in =
+their
+> connections.
+
+You seem to have misunderstood the draft...
+
+The client ID is generated by the cache (inside dillo), so the
+client ID serves as what you call "request ID"!
+
+Later on, the same client ID is sent back by the PI (in the
+respective datagrams), so it serves as a kind of request-key.
+
+> [...]
+
+> I=B4d also want to make sure multiple connection are not made simultaneou=
+sly in
+> stdin/stdout. For that, dillo will need to have a pipe lock mecanism to b=
+e set
+> every time a datagram is transmited, until the transmission of this parti=
+cular
+> datagram is completed.
+
+Yes, this is an issue. I'll quote here what I answered to Geoff
+about a very similar question:
+
+>>
+> [Geoff wrote:]
+> ...
+> However, if there is a persistent plugin process running it may be used t=
+o
+> allow dillo to re-connect with the plugin - I don't know, I don't know
+> sufficient about dillo internals yet.
+
+Good point.
+
+But it's not of current dillo internals, but of of a choice of
+which communication channel we'll use to communicate (and launch)
+the plugin.
+
+I mean, maybe the PI can be started with a fork, or from a
+pthread, or from another fancy mechanism (as an ad-hoc launcher
+for instance; a helper program that forks itself and launches the
+PI, and acts as intermediary between PIs and dillo). Those
+are possibilities.
+
+And as for how they will communicate, it could be stdin/stdout
+(with fork for instance), in which case I can't see clearly how
+resident PIs could be implemented :) (as its stdin/stdout would
+be already in use).
+
+But, on a fine grained basis, it can be argued that such a
+resident PI could work if it were to remain resident but not
+accept any new connection until finished with the one in
+course...
+
+...but the point is that if they were to communicate trough a
+socket, or named pipe, or who knows, it could be possible to
+handle them in the more general case.
+
+
+Those are pending design issues...
+>>
+
+
+And that's the main point. Dpi1 needs some heavy work on design
+and validation. Some other techniques need to be evaluated (as
+the above mentioned), and tested.
+
+
+The good news are:
+
+<see next post> :)
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo (in the) News!
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-29 18:12
+
+its not just the news value the kiosk article looks like it could be an 
+excellent educational resource.
+
+I've yet to start compiling stuff for the ipaq, and would like a few 
+projects to run through as trials.
+
+I ran a small thread at w3c/wai about how fast dillo is.
+
+A few bods agreed, but could not get a thread running as to why the 
+others are so slow.
+
+jonathan 
+
+
+
+RE: [Dillo-dev]Dillo (in the) News!
+
+From: Eric Gaudet <ericg@ta...> - 2002-04-29 17:21
+
+> I'm resending my earlier posts about Dillo in articles for those who
+> have missed any. And I am considering opening a new page at our home
+> with links to these... something like "Press". Is such a page
+> interesting at all?
+> 
+
+Definitely needed! (especially with the 'funding' initiative). Should be
+called "Articles"
+
+Eric 
+
+
+
+Re: [Dillo-dev]Dillo (in the) News!
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-29 17:14
+
+Hello folks!
+
+I've found a "new" (25-Apr-2002) article which mentions Dillo, at
+http://www.linuxdevices.com, written by Patrick Glennon:
+
+http://www.linuxdevices.com/articles/AT2869412121.html
+
+It's about building a kiosk with embedded Linux, and they seem to
+use Dillo as their main GUI. Looks pretty cool, huh?
+
+(BTW: I'm still making efforts to make the cache_size_limit patch work
+100%. Pekka and I have both made different patches, but both are
+wrong, and the few small issues that are left are really hard to get
+around. I think that I'll probably have the patch ready for the next
+release).
+
+I'm resending my earlier posts about Dillo in articles for those who
+have missed any. And I am considering opening a new page at our home
+with links to these... something like "Press". Is such a page
+interesting at all?
+
+Has anyone seen any other articles which review/use/mention Dillo? I
+would like to know to get the material ready.
+
+best regards!
+
+Livio Baldini Soares writes:
+> Hello everyone,
+> 
+> I guess Dillo is more famous then I had imagined! We are making
+> headlines! ;-)
+> 
+> There is an article published yesterday on the Linux Journal about
+> Dillo! It's a review by a Ralph Krause, made yesterday (26/02/2002):
+> http://www.linuxjournal.com/article.php?sid=5847
+> 
+> I caught this link from the front page of NewsForge (newsforge.net):
+> http://www.newsforge.com/article.pl?sid=02/02/26/2358247&mode=thread
+> 
+> And another article mentions Dillo, made by Kevin Reichard at
+> BrowserWatch:
+> http://browserwatch.internet.com/news/stories2002/news-20020122-4.html
+> 
+> I don't know if Dillo is still too "ripe" for this kind of
+> attention, but, as the saying goes: "Bad press is better then no
+> press"! ;-)
+> 
+> Congratulations to all Dillo developers! Hope we grow a lot more
+> this year and make more users (and headlines ;).
+> 
+> -- 
+> Livio <livio@im...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Useful patches from the OpenBSD folks
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-29 16:35
+
+Hi,
+
+On Sun, 28 Apr 2002, Andreas Schweitzer wrote:
+
+> Hi everybody
+> While notifying the OpenBSD folks that they can upgrade
+> their dillo entry I noticed the patches they apply to
+> it before allowing a compile :
+> http://www.openbsd.org/cgi-bin/cvsweb/ports/www/dillo/patches/
+> The 64bit issues certainly seem reasonable. As of this
+> writing the patches are against 0.6.4 and patches/patch-src_dns_c
+> and parts of patches/patch-src_IO_http_c are no longer necessary.
+> But the rest of the 64bit issues deserve consideration.
+
+Done!
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-29 14:17
+
+Hi there!
+
+On Mon, 29 Apr 2002, Livio Baldini Soares wrote:
+
+> > > This page http://dillo.cipsga.org.br/funding/ is not rendering properly
+> > > in anything except dillo :-)
+> >
+> > Hmmm, strange thing.
+> >
+> > I reviewed the code several times but havent't found anything
+> > non-standard there. Netscape simply "eats" a big part of the
+> > page, and tweaking the page by hand, I was able to isolate a case
+> > where adding the simplest of the subtables in a row triggered the
+> > problem (on Netscape). Mozilla, OTOH, renders the main part at
+> > the bottom.
+>
+> In the objective to temporarily aliviate this issue, I've done a few
+> modifications to the referred page. Now the page renders "correctly"
+> in Dillo, w3m, lynx, Mozilla (0.9.9), and Konqueror (2.2). It is
+> totally ignored by Netscape (4.77).
+>
+> I haven't tried any others (I have no Windows to try IE), but for
+> now I guess it's better than it was before.
+
+Ok, I gave some time to it, and as someone pointed out, there
+were some missing <td> tags (but this wasn't the main problem).
+It was fixed though.
+
+As the funding page is generated by a script, and its results
+are rendered perfectly by Netscape, Mozilla, Dillo, etc,
+wrapping it within our main site-frame shouldn't be a problem
+(it's done with another script, and there're plenty of working
+pages already).
+
+The point was: (ta ta ta taaaaaaaaaaannnn!.....)
+
+That when adapting the script, the last </table> was commented
+out!!!
+
+So netscape thought there was a lot yet to come and as it needs
+the whole table to start rendering, it did what you saw!
+
+Ah, and as there were some lacking tags, you can imagine the
+algorithmic hell in there.
+
+---
+
+Ahhhh, lots of times I've been thinking whether it would be a
+good idea to construct some malformed pages with a view to
+illustrate some people, that it is _very easy_ to pollute the web
+in an effort to try to push one browser over another.
+
+The ignorant thinks:
+
+"Ah this browser is more powerful (or advanced) because it can
+render this page."
+
+or
+
+"This browser is bad because I can't see this page, and it
+renders Ok with *"
+
+
+The right path though, is to try to keep it to the standards,
+and not to pullute the informative space where we all benefit
+form having access to.
+
+My apologies for the mistake, it wasn't intended, we even tested
+with several other browsers while developing it.
+
+
+Please test the new HTML code, and report back how it went.
+
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Can you help me?
+
+From: Armish <armish@li...> - 2002-04-29 13:35
+
+when i write the command "dillo" to the command line,the dillo opens and 
+closes in a minute and gives this error messages to the terminal ;
+(I use dillo-0.6.5)
+
+--------------------------------------------------------------------------------
+dillo_dns_init: Here we go!
+Loading bookmarks...
+a_Cache_open_url: file:/root/.dillo/splash024.html
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+
+Gdk-CRITICAL **: file gdkfont.c: line 318 (gdk_string_width): assertion `font 
+!= NULL' failed.
+Segmentation fault
+------------------------------------------------------------------------------------------
+
+what can i do?(I use the iso8859-9 fonts [Turkish]) 
+
+
+
+Re: [Dillo-dev]web page crash
+
+From: higuita <higuita@GM...> - 2002-04-29 09:35
+
+Attachments: Message as HTML      
+
+Ola' Livio
+
+On Fri, 26 Apr 2002 08:46:30 -0300, Livio Baldini Soares <livio@im...> wrote:
+> > i was using dillo 0.6.4 and found that it crash every time in
+> > this web page
+> > http://www.landoverbaptist.com
+> Humm, that's strange. I can't seem to reproduce the crash. I've
+
+me too 8)
+i have reboot the system since then and now works fine
+i dont know what happend, but at the time is crashed all the
+time (i deleted all the core dumps in my system this weekend, so
+we cant even check that )8
+
+> Oh, and instead of using 0.6.4, try reproducing the crash with 0.6.5
+
+already update and still dont crash... so maybe was a problem
+with my system
+
+Thanks for dillo
+abraços
+
+higuita
+-- 
+One Unix to rule them all, One Resolver to find them,
+One IP to bring them all and in the zone bind them. 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-29 06:14
+
+seems about right in ie6 now
+
+jonathan 
+
+
+
+[Dillo-dev]Useful patches from the OpenBSD folks
+
+From: Andreas Schweitzer <andy@ph...> - 2002-04-29 03:42
+
+Hi everybody
+While notifying the OpenBSD folks that they can upgrade
+their dillo entry I noticed the patches they apply to
+it before allowing a compile :
+http://www.openbsd.org/cgi-bin/cvsweb/ports/www/dillo/patches/
+The 64bit issues certainly seem reasonable. As of this
+writing the patches are against 0.6.4 and patches/patch-src_dns_c
+and parts of patches/patch-src_IO_http_c are no longer necessary.
+But the rest of the 64bit issues deserve consideration.
+
+I also told them about our efforts to make it compile out of the
+box on OpenBSD, therefore some other stuff will simplyfy as well.
+
+The other BSD's have currently no relevant patches.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-29 03:07
+
+Hello,
+
+Jorge Arellano Cid writes:
+> 
+> Doug,
+> 
+> > On Fri, Apr 26, 2002 at 10:13:26AM -0400, Jorge Arellano Cid wrote:
+> >
+> > <snip>
+> >
+> > > Ah, there's also some very interesting new material in the
+> > > site, so take your time and read it...
+> >
+> > This page http://dillo.cipsga.org.br/funding/ is not rendering properly
+> > in anything except dillo :-)
+> 
+> Hmmm, strange thing.
+> 
+> I reviewed the code several times but havent't found anything
+> non-standard there. Netscape simply "eats" a big part of the
+> page, and tweaking the page by hand, I was able to isolate a case
+> where adding the simplest of the subtables in a row triggered the
+> problem (on Netscape). Mozilla, OTOH, renders the main part at
+> the bottom.
+
+In the objective to temporarily aliviate this issue, I've done a few
+modifications to the referred page. Now the page renders "correctly"
+in Dillo, w3m, lynx, Mozilla (0.9.9), and Konqueror (2.2). It is
+totally ignored by Netscape (4.77).
+
+I haven't tried any others (I have no Windows to try IE), but for
+now I guess it's better than it was before.
+
+Jorge, sorry for the sudden intrusion. You can revert my changes if
+you like.
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]image rendering
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-28 21:03
+
+following on from the funding thread..
+
+I have reported a possible bug.
+
+pages I maintain http://www.peepo.com/alfi/c.html
+
+images 2 and 3 are not rendered by dillo but are by practically any 
+other browser...
+
+any ideas welcome.
+
+there are numerous other jpegs, and links using the same scripts around 
+the site, but these two images are the only ones I've found that won't 
+render in dillo.
+
+thanks
+
+jonathan chetwynd 
+
+
+
+Re: Re: [Dillo-dev]0.6.5 release
+
+From: Daniel Fairhead <ralphtheraccoon@uk...> - 2002-04-28 21:00
+
+Hi,
+
+> I reviewed the code several times but havent't found anything
+> non-standard there. Netscape simply "eats" a big part of the
+> page, and tweaking the page by hand, I was able to isolate a case
+> where adding the simplest of the subtables in a row triggered the
+> problem (on Netscape). Mozilla, OTOH, renders the main part at
+> the bottom.
+
+I looked at the code just now (even though I'm not Sebastian), and I
+think the problem is that within a lot of <tr> tags there aren't <td>s.
+Line 126 is one instance. This would explain why Netscape and
+moz both have problems with it, netscape would just say "argh! problem!
+ignore this bit!" and moz would say "argh! problem! render this somewhere 
+else!" like with the geocities addbox.
+
+http://validator.w3.org/check?uri=http://dillo.cipsga.org.br/funding/
+
+shows a lot of other stuff too.
+
+Hope this is useful,
+
+Dan 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-28 20:59
+
+I think the problem may relate to using tables within tables.
+This is not to be encouraged, I've heard.
+
+try http://validator.w3.org, there are numerous 'errors' most relate to 
+the use of tables.
+I had spotted this potential problem before validating.
+
+i can also say that mozilla and ie6 fail to show the content which dillo 
+does for the funding page.
+
+thanks
+
+jonathan chetwynd 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-28 19:41
+
+Doug,
+
+> On Fri, Apr 26, 2002 at 10:13:26AM -0400, Jorge Arellano Cid wrote:
+>
+> <snip>
+>
+> > Ah, there's also some very interesting new material in the
+> > site, so take your time and read it...
+>
+> This page http://dillo.cipsga.org.br/funding/ is not rendering properly
+> in anything except dillo :-)
+
+Hmmm, strange thing.
+
+I reviewed the code several times but havent't found anything
+non-standard there. Netscape simply "eats" a big part of the
+page, and tweaking the page by hand, I was able to isolate a case
+where adding the simplest of the subtables in a row triggered the
+problem (on Netscape). Mozilla, OTOH, renders the main part at
+the bottom.
+
+Well AFAIK, there's no problem with the HTML (that's generated
+by a couple of scripts BTW). I may be wrong, or my knowledge of
+the HTML table SPEC may not be perfect, so, the best that I can
+do is to ask "our" tables expert: Sebastian.
+
+Sebastian: Do you see anything wrong with the HTML of the
+presentation, or is just a simultaneous fault on a couple of big
+browsers? (certainly a rare case, although plausible).
+
+
+Greetings
+Jorge.- 
+
+
+
+[Dillo-dev]Error
+
+From: Armish <armish@li...> - 2002-04-27 17:33
+
+when i write the command "dillo" to the command,the dillo opens and closes in 
+a minute and gives this error messages to the terminal ;
+dillo_dns_init: Here we go!
+Loading bookmarks...
+a_Cache_open_url: file:/root/.dillo/splash024.html
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+Can't load any fonts!
+
+Gdk-CRITICAL **: file gdkfont.c: line 452 (gdk_char_width): assertion `font 
+!= NULL' failed.
+
+Gdk-CRITICAL **: file gdkfont.c: line 318 (gdk_string_width): assertion `font 
+!= NULL' failed.
+Segmentation fault
+
+
+what can i do?(I use the iso8859-9 fonts [Turkish]) 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Doug Kearns <djkea2@mu...> - 2002-04-27 08:24
+
+On Sat, Apr 27, 2002 at 11:16:13AM +0300, madis wrote:
+> On Sat, 27 Apr 2002, Ivo van Poorten wrote:
+> 
+> > Furthermore, I added two lines to menu.c at line 172:
+> > 
+> > Menu_add(menu, "Back", NULL, bw, a_Commands_back_callback, bw);
+> > Menu_add(menu, "Forward", NULL, bw, a_Commands_forw_callback, bw);
+
+<snip>
+
+> you have been at least 3th person reinventing exactly this patch :)
+> imho it should go into main dillo tree.
+
+Yes, and I'm sure there are countless others running there own variants.
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: madis <madis.janson@ma...> - 2002-04-27 08:11
+
+On Sat, 27 Apr 2002, Ivo van Poorten wrote:
+
+> Furthermore, I added two lines to menu.c at line 172:
+> 
+> Menu_add(menu, "Back", NULL, bw, a_Commands_back_callback, bw);
+> Menu_add(menu, "Forward", NULL, bw, a_Commands_forw_callback, bw);
+> 
+> It makes browsing more convenient this way, IMHO.
+> I have not thoroughly examined all the sourcecode and I have no serious 
+> plans to start coding on dillo, so maybe somebody could look into this and 
+> maybe make a patch to the CVS code. One question though, is there a reason 
+> why the icons in pixmap.h use so little colours?
+
+you have been at least 3th person reinventing exactly this patch :)
+imho it should go into main dillo tree.
+
+--
+mzz 
+
+
+
+RE: [Dillo-dev]quick question
+
+From: Patrick Glennon <pglennon@me...> - 2002-04-27 04:55
+
+Attachments: Message as HTML      
+
+Thanks for the reply, although I think you misunderstood. The
+meta-refresh patch and cache size limit patch were not mine, they were
+written by others, and they were good code patches, just created against
+earlier versions of dillo then we were using. My attempts to merge them
+in with 0.6.4 are what caused the problems, although they are working...
+
+I'm hoping that the solutions they created will get merged, not my
+hacked up attempts to mix them with 0.6.4... things are working now,
+there are just some weird complaints undoubtedly due to my bad merge...
+
+Hope that's more clear ;)
+
+-P
+
+On Fri, 2002-04-26 at 15:21, Eric Gaudet wrote:
+
+Hi,
+
+> Couple of quick things: 
+> 
+> 1) what is the priority of getting the meta-refresh
+> tag and the cache management patches in? I'm working
+> on an ongoing project with hotel survey kiosks using 
+> dillo in an embedded system ( intrinsyc cerfpod ). 
+> i've managed to staple and hot-glue a patch against 
+> an earlier version into 6.4 ( I think it was Pekka's 
+> patch, but I don't remember... ), but it is still 
+> pretty messy and complaining about things ( it's 
+> working though ;) It would be nice to have those 
+> in the stable or at least in the CVS tree to work 
+> against? My client is about to start pushing this 
+> in the sales channel, but when it is sold, we will 
+> need to be a bit more stable.. 
+
+There is several things you can do.
+- First, you can work against the cvs instead of a tarball. That way you can
+keep you own version up to date (by doing 'cvs update -dP' regularly) and
+still work on it.
+- I understand there is two different features here. The best thing is
+probably to use one cvs checkout for each of them, produce two patches when
+you're happy, and apply the patches on your own "release" version.
+- Make you patches available: post the url on the list. This way, people can
+try them and fix them (while keeping you informed, of course). This will
+speed-up *a*lot* the inclusion in the release, 'cause you can be sure Jorge
+will never even look at a patch that's "pretty messy and complaining about
+things" ;-) Let people help, open source rules.
+
+> 2) wrote a quick article for linuxdevices.com on how we got rapidly to
+phase 1 with almost no coding using dillo and > familiar:
+http://www.linuxdevices.com/articles/AT2869412121.html 
+
+Nice.
+
+> Thanks! 
+> -Patrick 
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Ivo van Poorten <ivop@eu...> - 2002-04-27 00:37
+
+Hello all,
+
+I tried out dillo 0.6.5 today and I noticed that the page-up key didn't 
+work (anymore?). I localized the problem. In dw_gtk_scrolled_frame.c at 
+line 480 it says:
+
+if (event->state & (GDK_MOD1_MASK | GDK_MOD2_MASK))
+return FALSE;
+
+I don't know what this is supposed to do (it's not in the pagedown 
+section), but when I comment it out, pageup is working again.
+
+Furthermore, I added two lines to menu.c at line 172:
+
+Menu_add(menu, "Back", NULL, bw, a_Commands_back_callback, bw);
+Menu_add(menu, "Forward", NULL, bw, a_Commands_forw_callback, bw);
+
+It makes browsing more convenient this way, IMHO.
+I have not thoroughly examined all the sourcecode and I have no serious 
+plans to start coding on dillo, so maybe somebody could look into this and 
+maybe make a patch to the CVS code. One question though, is there a reason 
+why the icons in pixmap.h use so little colours?
+
+Greetings,
+--Ivo 
+
+
+
+RE: [Dillo-dev]quick question
+
+From: Eric Gaudet <ericg@ta...> - 2002-04-26 20:19
+
+Hi,
+
+> Couple of quick things: 
+> 
+> 1) what is the priority of getting the meta-refresh
+> tag and the cache management patches in? I'm working
+> on an ongoing project with hotel survey kiosks using 
+> dillo in an embedded system ( intrinsyc cerfpod ). 
+> i've managed to staple and hot-glue a patch against 
+> an earlier version into 6.4 ( I think it was Pekka's 
+> patch, but I don't remember... ), but it is still 
+> pretty messy and complaining about things ( it's 
+> working though ;) It would be nice to have those 
+> in the stable or at least in the CVS tree to work 
+> against? My client is about to start pushing this 
+> in the sales channel, but when it is sold, we will 
+> need to be a bit more stable.. 
+
+There is several things you can do.
+- First, you can work against the cvs instead of a tarball. That way you can
+keep you own version up to date (by doing 'cvs update -dP' regularly) and
+still work on it.
+- I understand there is two different features here. The best thing is
+probably to use one cvs checkout for each of them, produce two patches when
+you're happy, and apply the patches on your own "release" version.
+- Make you patches available: post the url on the list. This way, people can
+try them and fix them (while keeping you informed, of course). This will
+speed-up *a*lot* the inclusion in the release, 'cause you can be sure Jorge
+will never even look at a patch that's "pretty messy and complaining about
+things" ;-) Let people help, open source rules.
+
+> 2) wrote a quick article for linuxdevices.com on how we got rapidly to
+phase 1 with almost no coding using dillo and > familiar:
+http://www.linuxdevices.com/articles/AT2869412121.html 
+
+Nice.
+
+> Thanks! 
+> -Patrick 
+
+
+
+[Dillo-dev]quick question
+
+From: Patrick Glennon <pglennon@me...> - 2002-04-26 19:48
+
+Attachments: Message as HTML      
+
+Couple of quick things: 
+
+1) what is the priority of getting the meta-refresh tag and the cache
+management patches in? I'm working on an ongoing project with hotel
+survey kiosks using dillo in an embedded system ( intrinsyc cerfpod ). 
+i've managed to staple and hot-glue a patch against an earlier version
+into 6.4 ( I think it was Pekka's patch, but I don't remember... ), but
+it is still pretty messy and complaining about things ( it's working
+though ;) It would be nice to have those in the stable or at least in
+the CVS tree to work against? My client is about to start pushing this
+in the sales channel, but when it is sold, we will need to be a bit more
+stable.. 
+
+2) wrote a quick article for linuxdevices.com on how we got rapidly to
+phase 1 with almost no coding using dillo and familiar: 
+http://www.linuxdevices.com/articles/AT2869412121.html
+
+Thanks! 
+
+-Patrick 
+
+
+
+RE: [Dillo-dev]Oops, cancel that bug...
+
+From: Eric Gaudet <ericg@ta...> - 2002-04-26 19:44
+
+Actually there is a trick to add a comment: go head and volunteer for this
+bug, and add a comment in place of the email address. Keep it short, though.
+
+Eric
+
+> -----Original Message-----
+> From: dillo-dev-admin@li...
+> [mailto:dillo-dev-admin@li...]On Behalf Of Paul
+> Chamberlain
+> Sent: Friday, April 26, 2002 12:17 PM
+> To: Dillo mailing list
+> Subject: [Dillo-dev]Oops, cancel that bug...
+> 
+> 
+> I guess there's no way to cancel your own bug submission.
+> In fact, there's no way to even add a comment.
+> 
+> I just submitted a bug about cookies not working on
+> slashdot.org. I guess you have to set up cookiesrc
+> to accept the cookies. It works now despite dumping
+> slashdot's headers onto the screen (They use 302
+> rather than 301).
+> 
+> Perhaps the bug should read "why do I have to enable
+> cookies"?
+> --
+> Paul Chamberlain, tif@ti...
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]Oops, cancel that bug...
+
+From: Paul Chamberlain <tif@ti...> - 2002-04-26 19:17
+
+I guess there's no way to cancel your own bug submission.
+In fact, there's no way to even add a comment.
+
+I just submitted a bug about cookies not working on
+slashdot.org. I guess you have to set up cookiesrc
+to accept the cookies. It works now despite dumping
+slashdot's headers onto the screen (They use 302
+rather than 301).
+
+Perhaps the bug should read "why do I have to enable
+cookies"?
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+RE: [Dillo-dev]Content Access (was: Simple plugins)
+
+From: Eric Gaudet <ericg@ta...> - 2002-04-26 16:57
+
+> On Wed, Apr 24, 2002 at 06:00:42PM -0700, Eric Gaudet wrote:
+> [...]
+> > The tough point is when selected text goes accross 
+> containers (which happen
+> > very often since almost every non-text, non-image dw is 
+> likely to be an
+> > invisible containter containing another dw).
+> > Here's what I think the set of features that would give a 
+> nice DOM-like
+> > feeling:
+> > - a struct that would be used as a return value for all the 
+> functions,
+> > containing only a pointer to the widget (castable to 
+> dw_widget) and its type
+> > (one of WORD, IMAGE, TABLE_CELL, and some others like line 
+> breaks, bullets
+> > or list, form widgets, etc.)
+> > - a get_next function (whatever you want to name it), that 
+> would accept as
+> > parameters a pointer on the current widget, a mask for the 
+> type, and a
+> > direction (next, next_sibling, previous, previous sibling, 
+> first_child).
+> > - get_parent(pointer).
+> > 
+> > I am open to any suggestion for the implementation.
+> > This could be done by having the functions walk the 
+> structure at run-time,
+> > or add the relevant fields (type, next, previous, first 
+> child, parent) to
+> > the dw struct at (page) build time (no need for get_* 
+> functions here, only
+> > access the dw struct).
+> 
+> A solution would be to have abstract iterators, like in STL or
+> java.util.Iterator. Having static methods (with a state within the
+> widget) has the disadvantage of restricting the number of "running"
+> iterations at the same time to one.
+> 
+
+Sounds like an overkill. But if you think it's doable, why not.
+I like it better if the dw_widget class provides the information.
+
+> BTW, do you need to represent the positions of the words (where the
+> selection starts and where it ends)? How do you plan to solve this
+> problem? This must be considered, too.
+> 
+
+I am currently keeping a pointer to the first and last selected child
+widget, and descending the tree if the child widget has childs. (because the
+de/selection calls happen more often than copy/paste, so de/linking is the
+part to be optimized)
+
+[...]
+> > I am affraid Dw insertion and deletion is mandatory for 
+> > that long-term "vision".
+> 
+> Focus on construction, only because this is what is needed for
+> CSS. Full DOM (or something equivalent) could be an extension for the
+> future.
+> 
+
+Depending on how you build the <div> elements in the page, you can
+link/unlink a set of widgets to the link's container afterwards and that
+would nicely replace insertion/deletion.
+
+> 
+> Sebastian
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Using Dillo on a 4bits per pixel device
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-26 16:45
+
+Attachments: testrgb.c      
+
+Hi,
+
+On Mon, Apr 22, 2002 at 03:08:31PM +0530, Samyeer Metrani wrote:
+> I am trying to get Dillo running on the Simputer, a monochrome
+> strongarm Sa1110 based device.
+> 
+> Dillo works fine when viewing text pages, when trying to view a gif
+> or jpeg it crashes. Is this something that somebody else has faced
+> before. I believe the problem is linked to the 16color display. If I
+> run Dillo (the same executable file) on an iPAQ it runs fine with
+> the same libraries (jpeg etc.).
+> 
+> Any suggestions, pointers...
+
+Dillo depends on GdkRGB, which may not work with all displays. I've
+attached a simple test, taken from the Gtk+ distribution. Please
+compile (cc `gtk-config --cflags --libs` testrgb.c) and test it, and
+report the results.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]pango
+
+From: Tobin Fricke <tobin@sp...> - 2002-04-26 16:40
+
+On Fri, 26 Apr 2002, Sebastian Geerken wrote:
+
+> Pango will be used, but no one has yet started with it, this is an
+> open task.
+
+Since it sounds like using Pango is a slightly complicated task (since
+apparently it is wrapped up into the GTK 2.0 conversion?), I was thinking
+recently that perhaps a convenient temporary measure would be to just use
+a library like iconv to convert whatever character set a webpage uses into
+ISO-8859-1 (since "stock" Dillo currently supports only that character
+set). That way, pages encoded in UTF-8 but using only characters
+appearing in Latin1 could still be displayed correctly.
+
+Any comments on this idea before I put any time into it? It's kind of a
+hack, but the lack of support for unicode is pretty annoying, and in fact
+prevents me from using Dillo to view my own web pages, so I might be
+willing to put in some effort on this.
+
+http://www.gnu.org/software/libiconv/
+
+--tobin 
+
+
+
+Re: [Dillo-dev]pango
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-26 16:30
+
+On Thu, Apr 25, 2002 at 10:26:08PM -0700, L Parthipan wrote:
+> Is there an effort to use pango in dillo?
+
+Read the web site:
+
+http://dillo.cipsga.org.br/Notes.html
+
+Pango will be used, but no one has yet started with it, this is an
+open task.
+
+Sebastian 
+
+
+
+[Dillo-dev]Content Access (was: Simple plugins)
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-26 16:26
+
+On Wed, Apr 24, 2002 at 06:00:42PM -0700, Eric Gaudet wrote:
+[...]
+> The tough point is when selected text goes accross containers (which happen
+> very often since almost every non-text, non-image dw is likely to be an
+> invisible containter containing another dw).
+> Here's what I think the set of features that would give a nice DOM-like
+> feeling:
+> - a struct that would be used as a return value for all the functions,
+> containing only a pointer to the widget (castable to dw_widget) and its type
+> (one of WORD, IMAGE, TABLE_CELL, and some others like line breaks, bullets
+> or list, form widgets, etc.)
+> - a get_next function (whatever you want to name it), that would accept as
+> parameters a pointer on the current widget, a mask for the type, and a
+> direction (next, next_sibling, previous, previous sibling, first_child).
+> - get_parent(pointer).
+> 
+> I am open to any suggestion for the implementation.
+> This could be done by having the functions walk the structure at run-time,
+> or add the relevant fields (type, next, previous, first child, parent) to
+> the dw struct at (page) build time (no need for get_* functions here, only
+> access the dw struct).
+
+A solution would be to have abstract iterators, like in STL or
+java.util.Iterator. Having static methods (with a state within the
+widget) has the disadvantage of restricting the number of "running"
+iterations at the same time to one.
+
+BTW, do you need to represent the positions of the words (where the
+selection starts and where it ends)? How do you plan to solve this
+problem? This must be considered, too.
+
+[...]
+> > There will be a subset of DOM for CSS, with a focus on simple
+> > construction (appending nodes, no insertion), and especially changing
+> > style attributes (asynchronous HTML/CSS processing). Especially for
+> > the latter, an extended Dw interface is needed, but I haven't yet done
+> > any work on this area.
+> > 
+> 
+> You might want to merge the concept of css "class" with the current
+> dw_style, then.
+
+Yes, the DOM should hide Dw as far as possible, DwStyle will play an
+important role.
+
+[...]
+> > (Of course, text selection could copy HTML code into the cut buffer 
+> > -- why not, at least as an option?)
+> 
+> Nice idea. Can we find where in the html is located a word/widget from a
+> dw_page?
+
+Has to be thought of. This whole DOM thing will probably evolve over
+the time.
+
+[...]
+> > What is a "generic-application client"? ;-)
+> > 
+> 
+> That would be an application using the dillo's BrowserWindows for rendering
+> purpose (dillo's IO/http/web engine being one of the possible
+> applications).
+
+Well, personally, I hate web based applications (read: their user
+interface), or (even worse) classic applications trying to immitate
+web pages. I'd rather see dillo to be able to integrate classical
+(widget based) GUI's, to assist the user on document-centric
+applications (e.g. a help browser, based on dillo and a plugin, which
+shows a tree on the left side).
+
+Just MHO, I don't want any replies on this :-)
+
+> This makes sens when you understand that most javascript "applications"
+> mainly try to mimic the behavior of more powerfull GUI toolkits (gtk/qt). Tk
+> almost had it right with Wish, but too much script-oriented.
+> I am affraid Dw insertion and deletion is mandatory for that long-term
+> "vision".
+
+Focus on construction, only because this is what is needed for
+CSS. Full DOM (or something equivalent) could be an extension for the
+future.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]0.6.5 release
+
+From: Doug Kearns <djkea2@mu...> - 2002-04-26 15:31
+
+On Fri, Apr 26, 2002 at 10:13:26AM -0400, Jorge Arellano Cid wrote:
+
+<snip>
+
+> Ah, there's also some very interesting new material in the
+> site, so take your time and read it...
+
+This page http://dillo.cipsga.org.br/funding/ is not rendering properly
+in anything except dillo :-)
+
+Sorry, I haven't the time to look at it at the moment.
+
+<snip>
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]Using Dillo on a 4bits per pixel device
+
+From: Andreas Schweitzer <andy@ph...> - 2002-04-26 15:03
+
+Hi,
+
+(I'm back online ...)
+
+Here is an issue that is somehow related :
+
+> > I am trying to get Dillo running on the Simputer, a monochrome strong=
+arm Sa1110
+> > based device.
+> > =A0
+> > Dillo works fine when viewing text pages, when trying to view a gif o=
+r jpeg it
+> > crashes. Is this something that somebody else has faced before.=20
+>=20
+> Yes, I believe someone has already complained about Dillo crashing
+> on low depth displays (or was it black&white too?) I don't remember
+> exactly.
+
+When displaying dillo on the 24bit display of my AIX box (which can handl=
+e
+8bit, 16bit and 24bit) it dies with
+
+Gdk-ERROR **: BadMatch (invalid parameter attributes)
+serial 3120 error_code 8 request_code 130 minor_code 3
+
+As soon as any image is displayed - text works fine.
+
+I dug through archives and found this post :
+
+http://mail.gnome.org/archives/gnome-list/2000-June/msg00702.html
+
+However, I could not use that info to fix the problem due
+to my limited understanding of dillo's image handling :-)
+
+Oh - and I inserted this into the bug-tracking engine.
+
+Cheers,
+Andreas
+
+--=20
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]0.6.5 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-26 14:16
+
+Hi there,
+
+
+Ok guys, the wait is over! dillo-0.6.5 is there ready for
+download (finally we decided to revert to the old EAGAIN handler
+in order to make the release, so don't hesitate).
+
+I also made the freshmeat announcement (with dillo this time
+--haaaaaa, what a pleasure! --just hope it works ;).
+
+Ah, there's also some very interesting new material in the
+site, so take your time and read it...
+
+Clebration time!
+
+Best regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]web page crash
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-26 11:46
+
+Hello Higuita!
+
+higuita writes:
+> hi
+> 
+> i was using dillo 0.6.4 and found that it crash every time in
+> this web page
+> 
+> http://www.landoverbaptist.com
+
+
+Humm, that's strange. I can't seem to reproduce the crash. I've
+tried Dillo 0.6.4 and the lastest CVS. Both worked out ok.
+Could you try to get a stack trace from the crash? Maybe we'll have a
+better idea of why Dillo is crashing.
+
+Oh, and instead of using 0.6.4, try reproducing the crash with 0.6.5
+(which should be out some time today or tomorrow), or CVS (which will
+be almost the same as 0.6.5, anyway).
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]pango
+
+From: L Parthipan <lparth@ya...> - 2002-04-26 05:26
+
+Hi,
+
+Is there an effort to use pango in dillo?
+
+cheers
+
+~logan
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Games - play chess, backgammon, pool and more
+http://games.yahoo.com/ 
+
+
+
+[Dillo-dev]web page crash
+
+From: higuita <higuita@GM...> - 2002-04-25 17:38
+
+Attachments: Message as HTML      
+
+hi
+
+i was using dillo 0.6.4 and found that it crash every time in
+this web page
+
+http://www.landoverbaptist.com
+
+higuita
+-- 
+Try not to have a good time ... This is supposed to be educational.
+-- Charles Schulz
+Caravela.homelinux.net:
+6:37pm up 3 days, 23:32, 10 users, load average: 0.68, 0.46, 0.52 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Eric Gaudet <ericg@ta...> - 2002-04-25 00:58
+
+Hi Sebastian,
+
+> Hi Eric,
+> 
+> On Tue, Apr 02, 2002 at 06:34:08PM -0800, Eric GAUDET wrote:
+> [...]
+> > If we choose to go to a full dpi2 right away, (which can take some time,
+> > this is why I propose to keep the early dpi1 for now), we will need more
+> > interaction with the rendering engine, which calls for the two following
+> > features:
+> > - the ability to walk the internal representation of the page: for now,
+it?s a
+> > pain in the ass to find which dw ?children? are actually rendered, which
+are
+> > words, which are containers, etc. The find_text code talks by itself,
+and I am
+> > postponing the text copy-paste until I find a good solution.
+> 
+> Yes, find-text is ugly, and I'll try to find a cleaner, abstract
+> solution; please send me also what kind of interface you need (more or
+> less) exactly for text selection. I do not plan to make this too
+> complicated, just a simple way to access the text content of widgets
+> (see below).
+> 
+
+The tough point is when selected text goes accross containers (which happen
+very often since almost every non-text, non-image dw is likely to be an
+invisible containter containing another dw).
+Here's what I think the set of features that would give a nice DOM-like
+feeling:
+- a struct that would be used as a return value for all the functions,
+containing only a pointer to the widget (castable to dw_widget) and its type
+(one of WORD, IMAGE, TABLE_CELL, and some others like line breaks, bullets
+or list, form widgets, etc.)
+- a get_next function (whatever you want to name it), that would accept as
+parameters a pointer on the current widget, a mask for the type, and a
+direction (next, next_sibling, previous, previous sibling, first_child).
+- get_parent(pointer).
+
+I am open to any suggestion for the implementation.
+This could be done by having the functions walk the structure at run-time,
+or add the relevant fields (type, next, previous, first child, parent) to
+the dw struct at (page) build time (no need for get_* functions here, only
+access the dw struct).
+
+> > - the ability to dynamically change the tree structure, not only be
+altering
+> > the content of it, but by inserting and removing words and widgets.
+Right now,
+> > the result when trying that is guaranteed to be ?unknown?.
+> >
+> > This means we have to come with some sort of DOM interface on top of the
+> > internal dw representation.
+> 
+> There will be a subset of DOM for CSS, with a focus on simple
+> construction (appending nodes, no insertion), and especially changing
+> style attributes (asynchronous HTML/CSS processing). Especially for
+> the latter, an extended Dw interface is needed, but I haven't yet done
+> any work on this area.
+> 
+
+You might want to merge the concept of css "class" with the current
+dw_style, then.
+
+> If plugins will be able to access the document tree, they should IMO
+> do this by the DOM interface (except graphical plugins as described in
+> my post before).
+> 
+> I'm not sure if *this* DOM makes sense for text search and selection,
+> this could probably better handled by an extended Dw. DOM is more for
+> handling the *document* structure (as opposed to the widget
+> structure), which is crucial for CSS. 
+
+No matter how you do it, the ability to easily go to the next WORD will make
+my life better.
+
+> (Of course, text selection could copy HTML code into the cut buffer 
+> -- why not, at least as an option?)
+
+Nice idea. Can we find where in the html is located a word/widget from a
+dw_page?
+
+> 
+> > A lot of good could come from it, including the
+> > ability for dillo to become a generic-application client as well as a
+better
+> > browser, at almost no cost in development and no ?bloat?.
+> 
+> What is a "generic-application client"? ;-)
+> 
+
+That would be an application using the dillo's BrowserWindows for rendering
+purpose (dillo's IO/http/web engine being one of the possible
+applications).
+This makes sens when you understand that most javascript "applications"
+mainly try to mimic the behavior of more powerfull GUI toolkits (gtk/qt). Tk
+almost had it right with Wish, but too much script-oriented.
+I am affraid Dw insertion and deletion is mandatory for that long-term
+"vision".
+
+> Sebastian
+> 
+
+Eric 
+
+
+
+Re: [Dillo-dev]Re: Dillo: Bug in new EGAIN code
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-24 14:03
+
+Hi there!
+
+On Mon, 22 Apr 2002, Pekka Lampila wrote:
+
+> On Sun, 21 Apr 2002 17:51:22 -0400 (CLT)
+> Jorge Arellano Cid <jcid@em...> wrote:
+>
+> > After reviewing the patch and giving some thought on it,
+> > there's a new patch that solves the problem without the need of
+> > the extra parameter to IO_write().
+> >
+> > Pekka, please chack what efence has to say about it! :)
+>
+> No problems as far as I can see.
+
+I'm a bit hesitant with this subject. This is the story: I've
+been working on presentation material for the site, and testing
+its rendering with dillo; that is, small html files that are
+re-created by a script very often, and then reloaded into dillo.
+The sad new is that I've caught this problem twice:
+
+>>
+Nav_open_url: Url=>file:/tmp/funding/advantages.html#eff<
+[New Thread 31776 (LWP 413)]
+Delayed SIGSTOP caught for LWP 413.
+LWP 413 exited.
+Nav_open_url: Url=>file:/tmp/funding/advantages.html#eff<
+Cannot find thread 33: invalid thread handle
+(gdb) bt
+#0 0x40083881 in __linuxthreads_create_event () at events.c:26
+#1 0x4007d4da in pthread_handle_create (thread=0x40088e90, attr=0x0,
+start_routine=0x8075a38 <File_transfer_file>, arg=0x80eda08,
+mask=0x80f9dfc, father_pid=276, report_events=1, event_maskp=0x40088fec)
+at manager.c:615
+#2 0x4007ce78 in __pthread_manager (arg=0xd) at manager.c:157
+#3 0x4007cf80 in pthread_start_thread (arg=0xd) at manager.c:221
+>>
+
+When it continues, a SEGFAULT pops...
+
+I haven't given it much thought (that's the purpose of this
+email :), so please give some work to it.
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]a way to have the toolbar disabled
+
+From: CLOTILDE Guy Daniel <guy.clotilde@wa...> - 2002-04-24 10:15
+
+Hi all
+Maybe I lost my last post, so I post it once again.
+Is there a way to disable the toolbars in dillo in dillorc?
+If not is it in the list of things to be implemented?
+For now, double-cliking in the page makes the toolbars appear/disappear .
+
+Thanks for answers.
+
+BTW, it seems quite quiet here since last weeks. 
+
+
+
+Re: [Dillo-dev]Using Dillo on a 4bits per pixel device
+
+From: Samyeer Metrani <sam@nc...> - 2002-04-23 03:39
+
+Hello Livio,
+
+Thank you for your email.
+
+I tried out the patch but it does not solve my problem. I dont have a debugger on
+the arm device that I am trying to run it on so I need to dig some more to find out
+where the problem is coming from.
+
+I will also try it out on a pc with a 16 color display and see what happens.
+
+I know that bitmap(gif/jpeg) display is working fine because I have a program that
+uses libjpeg and displays them fine. I have another browser (chimera) that is able
+to display the gifs/jpeg's fine.
+
+Is there anybody who has tried dillo on the mono compaq iPaq? I know that the color
+compaq has a 12bit display I assume that the mono one would use a 4bit.
+
+Warm Regards,
+
+Samyeer
+
+Livio Baldini Soares wrote:
+
+> Hello Samyeer!
+>
+> Samyeer Metrani writes:
+> > Hello,
+> >
+> > I am trying to get Dillo running on the Simputer, a monochrome strongarm Sa1110
+> > based device.
+> >
+> > Dillo works fine when viewing text pages, when trying to view a gif or jpeg it
+> > crashes. Is this something that somebody else has faced before.
+>
+> Yes, I believe someone has already complained about Dillo crashing
+> on low depth displays (or was it black&white too?) I don't remember
+> exactly.
+>
+> > I believe the
+> > problem is linked to the 16color display. If I run Dillo (the same executable
+> > file) on an iPAQ it runs fine with the same libraries (jpeg etc.).
+> >
+> > Any suggestions, pointers...
+>
+> I don't know exactly _what_ is making your Dillo crash. Maybe you
+> could try compiling it yourself and run under gdb... :
+>
+> gdb ./dillo
+>
+> (gdb) r
+>:
+>: Here Dillo will run and you can do your stuff to make it crash
+>:
+> CRASH!
+> (gdb) bt
+>
+> Then you get a backtrace from Dillo's calls. You can either
+> interpret them yourself or post them here for help.
+>
+> I've also made a patch so that Dillo uses a private colormap, maybe
+> it'll do something for you (I'm not promising anything ;-):
+>
+> (against current CVS):
+> http://www.ime.usp.br/~livio/dillo/patches/private_colormap.diff
+>
+> hopes this help,
+>
+> --
+> Livio <livio@im...> 
+
+
+
+RE: [Dillo-dev]Dillo on Solaris 8..y
+
+From: Yu-Fong Cho <yfcho@ms...> - 2002-04-22 14:19
+
+Sadly, there is no Solaris x86 on the list, but only Solaris SPARC.
+
+I was just wondering how much difference between Solaris x86 and Solaris
+SPARC?
+According to Sun, they are code compatible...
+If a program is ok in Solaris SPARC, it should be no problem in Solaris x86
+after recompiling it.
+
+
+Yu-Fong
+
+-----Original Message-----
+From: Jorge Arellano Cid [mailto:jcid@em...]
+Sent: Wednesday, March 20, 2002 5:50 PM
+To: Yu-Fong Cho
+Subject: RE: [Dillo-dev]Dillo on Solaris 8..y
+
+
+
+Yu-Fong,
+
+> Please give me some information about this.
+>
+> I know this is not a development problem, but I am trying install Dillo on
+> different platforms for interest. I have done on FreeBSD 4.5 and now are
+> trying on Solaris 8 x86. Just give me some information about this and I'll
+> appreciate it.
+>
+> Thank you.
+
+Please go to the [Links] page, Compatibility section. There's a
+big list there. If it doesn't work for you on one of the listed
+machines/OS it's probably a local configuration error.
+
+Cheers
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Dillo on Solaris 8..
+
+From: Yu-Fong Cho <yfcho@ms...> - 2002-04-22 14:19
+
+SunOS 5.8 is Solaris 8.
+Solaris 8 is the package name and SunOS 5.8 is the kernel name.
+
+I guess you have to use GNU make, Sun make seems don't understand dillo
+Makefile.
+
+
+-----Original Message-----
+From: Mark Schreiber [mailto:mark7@an...]
+Sent: Saturday, March 23, 2002 1:28 PM
+To: Yu-Fong Cho
+Subject: Re: [Dillo-dev]Dillo on Solaris 8..
+
+
+I don't know whether the problem is that people aren't responding. It
+may just be that not many people have Solaris.
+
+I tried, but the lastest Sun thing I have access to is SunOS 5.8, and
+the dillo Makefile won't even run on that thing. <shrug>
+
+On Wed, Mar 20, 2002 at 05:10:52PM -0500, Yu-Fong Cho wrote:
+> Please give me some information about this.
+>
+> I know this is not a development problem, but I am trying install Dillo on
+> different platforms for interest. I have done on FreeBSD 4.5 and now are
+> trying on Solaris 8 x86. Just give me some information about this and I'll
+> appreciate it.
+>
+> Thank you.
+>
+>
+> -----Original Message-----
+> From: dillo-dev-admin@li...
+> [mailto:dillo-dev-admin@li...]On Behalf Of Yu-Fong Cho
+> Sent: Tuesday, March 19, 2002 12:46 PM
+> To: Dillo Dev
+> Subject: [Dillo-dev]Dillo on Solaris 8..
+>
+>
+> Hi,
+>
+> Has anyone tried run Dillo 0.6.4 on Solaris 8 before?
+>
+> I compiled and installed it. It seems be ok except the way it handle jpeg
+> image.
+> The jpeg image shows only black and while mode and has some vertical line
+on
+> it. It isn't right.
+>
+> I have GNU jpeg and zlib installed. Does anyone know what is going on?
+> I tried Dillo on FreeBSD 4.5 before and it was ok.
+>
+> Appreciate any information. Thank you.
+>
+>
+> Yu-Fong Cho
+>
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+--
+Best of luck,
+Mark Schreiber 
+
+
+
+[Dillo-dev]When will dillo 0.6.5 be released?
+
+From: robbie chen <sandy_21@si...> - 2002-04-22 14:00
+
+V2hhdCBmZWF0dXJlIGltcHJvdmVkP0knbSB3YWl0aW5nIGZvciBpdA0KLS0tLS0gT3JpZ2luYWwg
+TWVzc2FnZSAtLS0tLSANCkZyb206ICJKb3JnZSBBcmVsbGFubyBDaWQiIDxqY2lkQGVtYXRpYy5j
+b20+DQpUbzogIkRpbGxvIG1haWxpbmcgbGlzdCIgPGRpbGxvLWRldkBsaXN0cy5zb3VyY2Vmb3Jn
+ZS5uZXQ+DQpTZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDAyIDU6NTEgQU0NClN1YmplY3Q6IFtE
+aWxsby1kZXZdUmU6IERpbGxvOiBCdWcgaW4gbmV3IEVHQUlOIGNvZGUNCg0KDQo+IA0KPiBIaSB0
+aGVyZSENCj4gDQo+IA0KPiBPbiBTdW4sIDE0IEFwciAyMDAyLCBMaXZpbyBCYWxkaW5pIFNvYXJl
+cyB3cm90ZToNCj4gDQo+ID4gSGVsbG8gUGVra2EhDQo+ID4NCj4gPiBQZWtrYSBMYW1waWxhIHdy
+aXRlczoNCj4gPiA+IEhpLA0KPiA+ID4NCj4gPiA+IFdoZW4gcnVubmluZyB3aXRoIGVmZW5jZSBl
+bmFibGVkIERpbGxvIGNyYXNoZXMgYmVmb3JlIGRpc3BsYXlpbmcgYW55DQo+ID4gPiBwYWdlLg0K
+PiA+ID4NCj4gPiA+IElPX2NhbGxiYWNrIChzcmM9MHg0MzVhYWZmMCwgY29uZD1HX0lPX09VVCwg
+ZGF0YT0weDEpIGF0IElPLmM6MjQwDQo+ID4gPiAyNDAgICAgICAgICAgIGlmIChpby0+U3RhdHVz
+ID09IC1FQUdBSU4pDQo+ID4NCj4gPiAgIEFoISBHb29kIGV5ZSEgSSBmb3VuZCB0aGUgcHJvYmxl
+bS4uLg0KPiA+DQo+ID4gPiBJIHRoaW5rIGlvLT5TdGF0dXMgaXMgbm90IGRlZmluZWQuDQo+ID4g
+Pg0KPiA+ID4gRG9uJ3Qga25vdyBlbm91Z2ggYWJvdXQgSU8tc3lzdGVtIHRvIGNvbWUgdXAgd2l0
+aCBwcm9wZXIgZml4LiBCdXQgSSdsbA0KPiA+ID4gaW1hZ2luZSBpdCB3b24ndCBiZSB0b28gZGlm
+ZnVjdWx0IHByb2JsZW0uIDopDQo+ID4NCj4gPiAgIFdlbGwsIGl0J3Mgbm90IGlvLT5TdGF0dXMg
+d2hpY2ggaXMgbm90IGRlZmluZWQgYnV0IHRoZSBgaW9gDQo+ID4gaXRzZWxmLi4gRXZlcnl0aW1l
+IHRoZSBJTyBmaW5pc2hlcywgSU9fd3JpdGUoKSBjYWxscw0KPiA+IGFfSU9fY2NjKE9wRW5kLC4u
+LiksIHdoaWNoIGNvbnNlcXVlbnRseSBmcmVlcyB0aGUgYGlvYC4gIDotKA0KPiA+DQo+ID4gICBB
+bmQgZWxlZ2FudCBmaXggZm9yIHRoaXMgaXMga2luZCBvZiBoYXJkLiBGaXJzdCBJIHRob3VnaHQg
+b2YNCj4gPiBkZWxheWluZyB0aGUgYV9JT19jY2MoKSBjYWxsLCBhbmQgZG9pbmcgaXQgaW5zaWRl
+IElPX2NhbGxiYWNrKCkuLiBidXQNCj4gPiB0aGF0IGxvb2tlZCBraW5kIG9mIGRpcnR5LiBUaGVu
+IEkgdGhvdWdodCBvZiB0cnlpbmcgdG8gc2V0IGBpb2AgdG8NCj4gPiBOVUxMIGFmdGVyIGl0IGhh
+ZCBiZWVuIGZyZWVkIHNvIHRoYXQgd2UgY291bGQgY2hlY2sgZm9yIE5VTEwNCj4gPiB2YWx1ZS4u
+LiBidXQgdGhhdCB3b3VsZCByZXF1aXJlIGNoYW5nZXMgdG8gdGhlIENDQyBBUEkgKHdlIHdvdWxk
+IGhhdmUNCj4gPiB0byBwYXNzIHZvaWQgKipEYXRhLCBpbnN0ZWFkIG9mIHZvaWQgKkRhdGEpLg0K
+PiA+DQo+ID4gICBJJ3ZlIG1hZGUgYSBzb2x1dGlvbiB3aGljaCBtaWdodCBub3QgYmUgZ29vZCBl
+aXRoZXIsIGJ1dCBhdCBsZWFzdA0KPiA+IHRoZSBjaGFuZ2VzIGFyZSBzbWFsbCwgYW5kIHRoZSBw
+cm9ibGVtIGdldHMgZml4ZWQuLi4gbWF5YmUgeW91IGd1eXMNCj4gPiBjYW4gdGhpbmsgb2Ygc29t
+ZXRoaW5nIGJldHRlci4gVGhlIHBhdGNoIGZvbGxvd3M6DQo+IA0KPiAgIEFmdGVyICByZXZpZXdp
+bmcgIHRoZSAgcGF0Y2ggIGFuZCAgZ2l2aW5nICBzb21lICB0aG91Z2h0IG9uIGl0LA0KPiB0aGVy
+ZSdzICBhICBuZXcgcGF0Y2ggdGhhdCBzb2x2ZXMgdGhlIHByb2JsZW0gd2l0aG91dCB0aGUgbmVl
+ZCBvZg0KPiB0aGUgZXh0cmEgcGFyYW1ldGVyIHRvIElPX3dyaXRlKCkuDQo+IA0KPiAgIFBla2th
+LCBwbGVhc2UgY2hhY2sgd2hhdCBlZmVuY2UgaGFzIHRvIHNheSBhYm91dCBpdCEgOikNCj4gDQo+
+ICAgQ2hlZXJzDQo+ICAgSm9yZ2UuLQ0KPiANCj4gDQo+IFBTOiAgMC42LjUgIGlzIGEgYml0IGRl
+bGF5ZWQsIGJ1dCBpdCdzIGp1c3QgYSBmZXcgZGF5cyBhaGVhZCwgYW5kDQo+IG1vc3QgIHByb2Jh
+Ymx5IHdpbGwgYmUgY3VycmVudCBDVlMuIEl0IG5lZWRzIHNvbWUgdGVzdGluZyBvZiB0aGlzDQo+
+IHBhdGNoLg0KPiANCj4gDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0KPiBEaWxsby1kZXYgbWFpbGluZyBsaXN0DQo+IERpbGxvLWRldkBsaXN0
+cy5zb3VyY2Vmb3JnZS5uZXQNCj4gaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMv
+bGlzdGluZm8vZGlsbG8tZGV2DQo+IA0KPiANCg== 
+
+
+
+Re: [Dillo-dev]Using Dillo on a 4bits per pixel device
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-22 11:38
+
+Hello Samyeer!
+
+Samyeer Metrani writes:
+> Hello,
+>  
+> I am trying to get Dillo running on the Simputer, a monochrome strongarm Sa1110
+> based device.
+>  
+> Dillo works fine when viewing text pages, when trying to view a gif or jpeg it
+> crashes. Is this something that somebody else has faced before. 
+
+Yes, I believe someone has already complained about Dillo crashing
+on low depth displays (or was it black&white too?) I don't remember
+exactly.
+
+> I believe the
+> problem is linked to the 16color display. If I run Dillo (the same executable
+> file) on an iPAQ it runs fine with the same libraries (jpeg etc.).
+>  
+> Any suggestions, pointers...
+
+I don't know exactly _what_ is making your Dillo crash. Maybe you
+could try compiling it yourself and run under gdb... :
+
+gdb ./dillo
+
+(gdb) r
+:
+: Here Dillo will run and you can do your stuff to make it crash
+:
+CRASH!
+(gdb) bt
+
+Then you get a backtrace from Dillo's calls. You can either
+interpret them yourself or post them here for help.
+
+I've also made a patch so that Dillo uses a private colormap, maybe
+it'll do something for you (I'm not promising anything ;-):
+
+(against current CVS):
+http://www.ime.usp.br/~livio/dillo/patches/private_colormap.diff
+
+
+hopes this help,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Re: Dillo: Bug in new EGAIN code
+
+From: Pekka Lampila <medar@ka...> - 2002-04-22 11:23
+
+On Sun, 21 Apr 2002 17:51:22 -0400 (CLT)
+Jorge Arellano Cid <jcid@em...> wrote:
+
+> After reviewing the patch and giving some thought on it,
+> there's a new patch that solves the problem without the need of
+> the extra parameter to IO_write().
+> 
+> Pekka, please chack what efence has to say about it! :)
+
+No problems as far as I can see.
+
+> PS: 0.6.5 is a bit delayed, but it's just a few days ahead, and
+> most probably will be current CVS. It needs some testing of this
+> patch.
+
+And it has 34 ChangeLog items. Big thanks everyone :)
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+[Dillo-dev]Using Dillo on a 4bits per pixel device
+
+From: Samyeer Metrani <sam@nc...> - 2002-04-22 09:36
+
+Attachments: Message as HTML      
+
+Hello,
+
+I am trying to get Dillo running on the Simputer, a monochrome strongarm =
+Sa1110 based device.
+
+Dillo works fine when viewing text pages, when trying to view a gif or =
+jpeg it crashes. Is this something that somebody else has faced before. =
+I believe the problem is linked to the 16color display. If I run Dillo =
+(the same executable file) on an iPAQ it runs fine with the same =
+libraries (jpeg etc.).
+
+Any suggestions, pointers...
+
+Warm Regards,
+
+Samyeer 
+
+
+
+[Dillo-dev]Re: Dillo: Bug in new EGAIN code
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-21 22:04
+
+Hi there!
+
+
+On Sun, 14 Apr 2002, Livio Baldini Soares wrote:
+
+> Hello Pekka!
+>
+> Pekka Lampila writes:
+> > Hi,
+> >
+> > When running with efence enabled Dillo crashes before displaying any
+> > page.
+> >
+> > IO_callback (src=0x435aaff0, cond=G_IO_OUT, data=0x1) at IO.c:240
+> > 240 if (io->Status == -EAGAIN)
+>
+> Ah! Good eye! I found the problem...
+>
+> > I think io->Status is not defined.
+> >
+> > Don't know enough about IO-system to come up with proper fix. But I'll
+> > imagine it won't be too diffucult problem. :)
+>
+> Well, it's not io->Status which is not defined but the `io`
+> itself.. Everytime the IO finishes, IO_write() calls
+> a_IO_ccc(OpEnd,...), which consequently frees the `io`. :-(
+>
+> And elegant fix for this is kind of hard. First I thought of
+> delaying the a_IO_ccc() call, and doing it inside IO_callback().. but
+> that looked kind of dirty. Then I thought of trying to set `io` to
+> NULL after it had been freed so that we could check for NULL
+> value... but that would require changes to the CCC API (we would have
+> to pass void **Data, instead of void *Data).
+>
+> I've made a solution which might not be good either, but at least
+> the changes are small, and the problem gets fixed... maybe you guys
+> can think of something better. The patch follows:
+
+After reviewing the patch and giving some thought on it,
+there's a new patch that solves the problem without the need of
+the extra parameter to IO_write().
+
+Pekka, please chack what efence has to say about it! :)
+
+Cheers
+Jorge.-
+
+
+PS: 0.6.5 is a bit delayed, but it's just a few days ahead, and
+most probably will be current CVS. It needs some testing of this
+patch. 
+
+
+
+[Dillo-dev]Great Little Browser!!!!
+
+From: Chris Hawks <chrish@sy...> - 2002-04-19 20:31
+
+My company is looking for a browser to use as a UI for some of our
+products, so, I've looked at several recently.
+
+Until I found dillo, they were all big/slow/bloated/leaky of some
+combination there-of.
+
+Dillo is fast, clean, and robust. Really great!!
+
+The first thing I missed was setting the font sizes thru HTML. I
+uncommented the code in html.c to set the "face" and added code to set the
+"size" and it works great!!!
+
+I also added code to set the font and size for the gtk widgets. I can
+send a diff if there is interest.
+
+
+Thanks again!!!
+
+Chris
+
+Christopher R. Hawks Software Engineer
+Syscon Plantstar a Division of Syscon International
+-------------------------------------------------------------------------
+Ignorance is no excuse for not thinking! 
+
+
+
+Re: [Dillo-dev]Simple plugins
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-17 17:23
+
+Hi Eric,
+
+On Tue, Apr 02, 2002 at 06:34:08PM -0800, Eric GAUDET wrote:
+[...]
+> If we choose to go to a full dpi2 right away, (which can take some time,
+> this is why I propose to keep the early dpi1 for now), we will need more
+> interaction with the rendering engine, which calls for the two following
+> features:
+> 
+> - the ability to walk the internal representation of the page: for now, it?s a
+> pain in the ass to find which dw ?children? are actually rendered, which are
+> words, which are containers, etc. The find_text code talks by itself, and I am
+> postponing the text copy-paste until I find a good solution.
+
+Yes, find-text is ugly, and I'll try to find a cleaner, abstract
+solution; please send me also what kind of interface you need (more or
+less) exactly for text selection. I do not plan to make this too
+complicated, just a simple way to access the text content of widgets
+(see below).
+
+> - the ability to dynamically change the tree structure, not only be altering
+> the content of it, but by inserting and removing words and widgets. Right now,
+> the result when trying that is guaranteed to be ?unknown?.
+>
+> This means we have to come with some sort of DOM interface on top of the
+> internal dw representation.
+
+There will be a subset of DOM for CSS, with a focus on simple
+construction (appending nodes, no insertion), and especially changing
+style attributes (asynchronous HTML/CSS processing). Especially for
+the latter, an extended Dw interface is needed, but I haven't yet done
+any work on this area.
+
+If plugins will be able to access the document tree, they should IMO
+do this by the DOM interface (except graphical plugins as described in
+my post before).
+
+I'm not sure if *this* DOM makes sense for text search and selection,
+this could probably better handled by an extended Dw. DOM is more for
+handling the *document* structure (as opposed to the widget
+structure), which is crucial for CSS. (Of course, text selection could
+copy HTML code into the cut buffer -- why not, at least as an option?)
+
+> A lot of good could come from it, including the
+> ability for dillo to become a generic-application client as well as a better
+> browser, at almost no cost in development and no ?bloat?.
+
+What is a "generic-application client"? ;-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Simple plugins
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-17 16:37
+
+Hi!
+
+Just some notes on graphical plugins. An idea I plan to test, is to
+base this on GtkPlug and GtkSocket, which will be extended to support
+the additional features in the size model of Dw. Extensions will be
+implemented by using ICC (inter client communication) methods (like
+window properties) instead of IPC. The only data which has to be
+passed is the id of the socket window, this should be done via DPI1.
+
+This is (aside from a new command) fully compatible with the current
+DPI1 specification, so that the focus should now remain on
+non-graphical aspects.
+
+The way how dillo deals e.g. with <OBJECT>s, could be:
+
+1. From the TYPE attribute (and the "imaginary" plugin registration
+file), dillo knows what plugin to start (when necessary). If
+this type is not supported, the alternative content is displayed.
+
+2. The HTML parser creates a DwSocket (Dw's analogum to GtkSocket),
+adds it to the current DwPage, and then sends the command
+DpiCreateDwPlug, with a window id as data. Dillo does *not* have
+to wait, until the plugin creates the plug window.
+
+3. The plugin then receives and processes the data in a way already
+specified.
+
+Some points are missing:
+
+1. For toplevel plugins, the "Content-Type" field of the HTTP
+response (or perhaps only the "URL suffix") has to be evaluated.
+
+2. In case of an error, after the DpiCreatePlugWindow has been
+sent, dillo should somehow render the alternative content. This
+is a pure rendering issue, Dw (or perhaps an other level above)
+has to be extended for this.
+
+The code for the plugin will be similar to plugins using the Gtk+
+plug/socket mechanism, perhaps it will even be backward-compatible, so
+that simple graphical plugins may be implemented by creating a
+GtkPlug.
+
+Aside from that, perhaps GtkPlug and GtkSocket could also used for
+some more complex GUI extensions, for which dillo could reserve some
+space for. I thought of something like the sidebar steps in Mozilla.
+
+
+Sebastian 
+
+
+
+[Dillo-dev]Re: Dillo feedback
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-04-17 15:50
+
+On Sun, Apr 14, 2002 at 10:15:54AM +0200, Tels wrote:
+> Moin,
+
+Tach Tels,
+
+> I just tried dillo on my iPAQ and it is great! Cool! ;)
+> 
+> Three things as suggestions:
+> 
+> I emits things on the console, I guess that is debug stuff you forgot to
+> remove:
+> 
+> bash-2.03# Html_submit_form form->action=http://www.google.de/search
+> Nav_open_url:
+> Url=>http://www.google.de/search?q=&hl=de&btnI=Auf+gut+Gl%FCck!&meta=<
+> border width: 0
+> border width: 0
+
+$ grep -n -e "^#define DEBUG_LEVEL" *.c
+cache.c:37:#define DEBUG_LEVEL 5
+colors.c:7:#define DEBUG_LEVEL 5
+cookies.c:33:#define DEBUG_LEVEL 8
+dns.c:33:#define DEBUG_LEVEL 5
+interface.c:45:#define DEBUG_LEVEL 0
+web.c:28:#define DEBUG_LEVEL 5
+
+These are sources Jorge is responsible for ...
+
+> I tried google, and it is just cool ;) Dillo even respected my local proxy
+> environment variable. Unfortunately, the logo is too big and and the entry
+> box too long.
+> 
+> Suggestion: How about an automatic down-scaling of images (anything that is
+> larger than lets say 20x30 pixel) by a predefined factor? This way googles
+> logo would automatically fit. Entry box drawing-lengths could be restricted
+> to something sensible automatically.
+
+A global image scaling factor is planned. Scaling only images above a
+certain size may be an option. (Or non-linear scaling?)
+
+> I am also contacting Google in the hope that they make a special handhelds
+> interface ;)
+> 
+> Suggestion three: How about a local (fake) page that shows you your actuall
+> settings? I can write a Perl script which generates it on the fly from the
+> setttings file, but then Dillo would need to know to call this script.
+> Alternatively, it could construct this page on the fly.
+
+This will in future be possible with plugins. See
+
+http://so....net/mailarchive/forum.php?thread_id=605248&forum_id=6557
+
+for more.
+
+> Thank you for all your work,
+> 
+> Tels
+> 
+> 
+> - --
+> "Why do you go so slowly? Do you think this is some kind of game?"
+> PGP key available on http://bloodgate.com/tels.asc or via email.
+> perl -MDev::Bollocks -e'print Dev::Bollocks->rand(),"\n"'
+> evangelistically build clicks-and-mortar functionalities
+
+Sebastian 
+
+
+
+[Dillo-dev]toolbar pixmaps
+
+From: CLOTILDE Guy Daniel <guy.clotilde@wa...> - 2002-04-14 11:33
+
+Attachments: pixmaps.h      
+
+Hi
+I'm very happy to send you this pixmap.h file with gnome icons ( from tigert homepage, these icons are GPL ) .
+A screenshot is available here 
+perso.wanadoo.fr/guy.clotilde/GPL/dillo_toolbar_screenshot.png
+
+Hope you like it. 
+
+
+
+[Dillo-dev]plugins
+
+From: Madis Janson <madis@cy...> - 2002-04-12 11:32
+
+maybe it should be possible to use plugins for implementating scripting
+languages (like javascript) in future? its just an idea... 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Eric GAUDET <eric.gaudet@vn...> - 2002-04-12 07:04
+
+Hi,
+
+Tow things I=B4d like to see changed in the dpi1 proposal:
+
+- D1 and D2 fields being 2 bytes long, the endianness can be an issue. I =
+think
+it will be better to have 1 byte fields D1, D2, D3, D4 instead.
+
+- Along with the client ID, I think a request ID is needed too, to ensure
+multiple windows calling the same PI concurently don=B4t get confused in =
+their
+connections.
+There is several ways to do that, depending on if we want dillo or the PI=
+to
+generate those IDs. IMHO it would be easier for everyone if the PI took c=
+are
+of the communications its involved in.
+What I propose is to add the dillo->dpi command DpiNewRequest generating =
+a
+unique request ID in an atomic fashion (by incrementing an index for a st=
+ruct
+table, for instance), and returning the request ID to the client. This me=
+ans
+that dillo must use this command every time it wants to do a DpiUri. We=B4=
+ll also
+need a DpiFreeRequest for dillo to tell the PI its closing the communicat=
+ion,
+so the PI can reuse the slot for futher requests.
+For dpi-initiated communication, the dpi generates a request ID by itself=
+, and
+dillo must reuse the request ID to answer.=20
+
+The way I see the implementation from a plugin standpoint, is to have a
+MyParamStruct containing all variables needed for one single request.
+
+int myParamMax =3D 4;
+int myParamNumber =3D 0;
+
+MyParamStruct *myParam;
+
+and malloc it with an a_List_ like macro, then for each request find the =
+first
+available slot in *myParam and using the index as the request ID.
+Every time a command is received or issued, all the data needed are in
+myParam[requestID].
+
+I=B4d also want to make sure multiple connection are not made simultaneou=
+sly in
+stdin/stdout. For that, dillo will need to have a pipe lock mecanism to b=
+e set
+every time a datagram is transmited, until the transmission of this parti=
+cular
+datagram is completed.
+
+Best,
+Eric
+
+-- En reponse de "RE: [Dillo-dev]Simple plugins" de Jorge Arellano Cid, l=
+e
+11-Apr-2002 :
+>=20
+> Hi there!
+>=20
+> I just reviewed the dpi1 draft once more, and updated it with
+> some information found in some old emails, and some new ideas. In
+> brief, is just a few changes:
+>=20
+> * ClientIDs
+> * Initialization proposal
+> * PI options note
+>=20
+>=20
+> Cheers
+> Jorge.-
+>=20
+>=20
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------------------------------------------
+Eric GAUDET <eric.gaudet@vn...>
+Le 11-Apr-2002 a 23:25:08
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Eric GAUDET <eric.gaudet@vn...> - 2002-04-12 02:02
+
+Hi Jorge,
+
+I think we can agree that according to the dpi1 proposal, the initial pat=
+ch
+will include the following parts:
+- init code
+- plugin forking and pipe registration
+- url indirection to plugin pipes and rendering.
+
+There will also be a minimal reference implementation plugin, that will
+probably be a script or a small C program.
+
+I=B4d like to know what code you already have, what code you have needs r=
+ework,
+and if you plan to integrate any code soon or you prefer to discuss about=
+it a
+little bit.
+
+Best,
+Eric
+
+
+-- En reponse de "RE: [Dillo-dev]Simple plugins" de Jorge Arellano Cid, l=
+e
+11-Apr-2002 :
+>=20
+> Hi there!
+>=20
+> I just reviewed the dpi1 draft once more, and updated it with
+> some information found in some old emails, and some new ideas. In
+> brief, is just a few changes:
+>=20
+> * ClientIDs
+> * Initialization proposal
+> * PI options note
+>=20
+>=20
+> Cheers
+> Jorge.-
+>=20
+>=20
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------------------------------------------
+Eric GAUDET <eric.gaudet@vn...>
+Le 11-Apr-2002 a 18:54:34
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+Re: [Dillo-dev]netscape4 icons
+
+From: Adam Sampson <azz@gn...> - 2002-04-11 21:33
+
+Jorge Arellano Cid <jcid@em...> writes:
+
+> Hmmmm, those are netscape's icons.
+> What about the copyrights?
+
+The Netscape 4 icons are included in one of Mozilla's default themes,
+so I'd guess they can be used under the terms of the GPL with the
+proper copyright attribution.
+
+-- 
+Adam Sampson <azz@gn...> <URL:http://azz.us-lot.org/> 
+
+
+
+Re: [Dillo-dev]Page saving and POST-generated pages
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-11 20:58
+
+Nikita,
+
+> Hi, All !
+
+Hi!
+
+> There is one problem with saving a page:
+> if curent page is generated as result of POST then saving it
+> gives you the page (cahed or reloaded) with that url and no POST-data.
+>
+> This patch makes dillo to save exactly the page currently shown:
+>
+> [...]
+>
+
+Done! (I also removed the now unused 'url_str' code).
+
+
+Cheers
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-11 19:26
+
+Hi there!
+
+I just reviewed the dpi1 draft once more, and updated it with
+some information found in some old emails, and some new ideas. In
+brief, is just a few changes:
+
+* ClientIDs
+* Initialization proposal
+* PI options note
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]BugTrack
+
+From: Lars Clausen <lrclause@cs...> - 2002-04-10 17:45
+
+On Wed, 10 Apr 2002, Jorge Arellano Cid wrote:
+>=20
+> Hi there,
+>=20
+> Please review the entries before making new ones!
+>=20
+> I just remove #320 (valign) repeated with #297 --second time :(.
+> and also #323 (no way out of find text with keyboard). C'mon, just
+> press TAB or down arrow.
+
+I for one would like all dialogs to at least have Esc be Cancel. I find
+using TAB or down arrow to be quite cumbersome.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]BugTrack
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-10 17:10
+
+Hi there,
+
+Please review the entries before making new ones!
+
+I just remove #320 (valign) repeated with #297 --second time :(.
+and also #323 (no way out of find text with keyboard). C'mon, just
+press TAB or down arrow.
+
+That's all
+Jorge.- 
+
+
+
+[Dillo-dev]Looking for Patches...
+
+From: Patrick Glennon <pglennon@me...> - 2002-04-10 12:32
+
+Attachments: Message as HTML      
+
+Howdy, 
+
+I'm testing Dillo for an embedded systems project, and am desperately
+looking for patches against 0.6.4 or the cvs version for meta-refresh
+support as well as for the 0 cache-size support.
+
+We have seen some weirdness on the dillo-cache regarding posting form
+results. It seems to cache result sets even when we add cache-busting
+random ids in the POST URL. If anyone knows a simple way to disable the
+cache, that would be delightful as well!
+
+Thanks,
+Patrick 
+
+
+
+Re: [Dillo-dev][PATCH] Private colormap
+
+From: Imad <magius@pu...> - 2002-04-10 04:19
+
+On Tue, 9 Apr 2002, Livio Baldini Soares wrote:
+
+>(Am I the only one with measly
+> 8 bit per pixel ? :(
+
+No, my main box is a Sparc 5 with a 256 color adaptor, so I'm in a
+similiar situation. However, as long as I start Dillo up early and use a
+window manager that handles colors well (e.g., Icewm), I don't have any
+problems with the colormap.
+
+On Blackbox, if I started Dillo 6.3 after other programs, Dillo would
+absolutely ruin images -- even the old Dillo title (on the old site's
+main page) would be all brown and gray. Switching to Icewm, GTK-only
+apps, and starting Dillo early in a session fixed all that.
+
+I'll try out the patch when I get back home, but I'm not expecting a
+huge change. I will point out that QT seems to deal with 8bpp displays
+quite a bit better than GTK does -- poor colormap support is a known
+defect. Not that I'd want Dillo to be QT-based -- speed is of the
+essence. =)
+
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+Re: [Dillo-dev]netscape4 icons
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-10 02:56
+
+On Thu, 4 Apr 2002, HORVATH Szabolcs wrote:
+
+> http://fi.inf.elte.hu/~horvaths/pixmaps.h
+>
+> enjoy :-)
+
+Hmmmm, those are netscape's icons.
+What about the copyrights?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev][PATCH] Private colormap
+
+From: Lars Clausen <lrclause@cs...> - 2002-04-10 02:22
+
+On Tue, 9 Apr 2002, Livio Baldini Soares wrote:
+> Hello,
+>=20
+[...]
+> Does anyone need this? Any comments? (Am I the only one with measly
+> 8 bit per pixel ? :(
+
+Yes. Upgrade. :)
+
+Seriously, I wish X had done a virtual full-colour screen and a conversion
+in the server like Mac does. Would have way reduced these problems. Would
+also have made multi-screen displays much easier. We will need to support
+8bpp, though.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev][PATCH] Private colormap
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-10 01:06
+
+Hello,
+
+recently I've been using Dillo on a system with only 8bpp. X runs
+out of colors pretty quickly, and specially when Dillo is showing
+images, the colormap gets pretty ugly.
+
+To solve this we have to, basically, add this to the initialization
+(in dillo.c):
+
++ gtk_widget_set_default_colormap (gdk_rgb_get_cmap());
+
+With this, Dillo grabs a "private" colormap. This makes the X
+colormap "flip" when focusing on-to/out-of Dillo. (Similar to
+Netscape's `-install` option).
+
+My patch not only adds this, but also adds a preference in dillorc
+called `use_private_colormap`. The patch is at:
+
+http://www.ime.usp.br/~livio/dillo/patches/private_colormap.diff
+
+Does anyone need this? Any comments? (Am I the only one with measly
+8 bit per pixel ? :(
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Page saving and POST-generated pages
+
+From: Nikita V. Borodikhin <eliterr@tk...> - 2002-04-09 19:49
+
+Hi, All !
+
+There is one problem with saving a page:
+if curent page is generated as result of POST then saving it
+gives you the page (cahed or reloaded) with that url and no POST-data.
+
+This patch makes dillo to save exactly the page currently shown:
+
+
+diff -urN dillo.old/src/interface.c dillo/src/interface.c
+--- dillo.old/src/interface.c Mon Mar 4 19:42:24 2002
++++ dillo/src/interface.c Tue Apr 9 17:37:29 2002
+@@ -1163,7 +1163,7 @@
+entry_url = GTK_ENTRY(bw->location);
+name = gtk_file_selection_get_filename(choosefile);
+url_str = gtk_entry_get_text(entry_url);
+- url = a_Url_new(url_str, NULL, 0, 0);
++ url = a_Url_dup(a_History_get_url(NAV_TOP(bw)));
+
+if ( strlen(name) && (out = fopen(name, "w")) != NULL ) {
+DilloWeb *Web = a_Web_new(url); 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-04-09 17:35
+
+Hi,
+
+on Tue, 9 Apr 2002 18:17:53 +0100
+mallum <breakfast@10.am> wrote:
+
+> on Mon, Apr 08, 2002 at 12:34:46AM +0200, Melvin Hadasht wrote:
+> > (With other (available) patches to allow
+> > full-window mode and offline browsing at startup, this is an
+> > excellent choice for rendering html in mail user agents, or manual
+> > browsers)
+> > 
+> ooo, where are these patches ?
+
+http://melvin.hadasht.free.fr/dillo/
+or 
+http://freefluid.dyndns.org/dillo/ (not 24/24)
+
+dillo-embed-cvs-27-03-2002.patch:
+
+a gtkplug must be created by another application, then it runs 'dillo
+-xid XXXX' where XXXX is the XID of the window created by gtkplug (more
+info by request)
+
+dillo-local-cvs-30-03-2002.patch:
+
+start dillo with '-l' option, and all non 127.*.*.* http requests are
+reported as 'can't solve ...'
+
+The full window (not full screen) patch is not there, but I can put it
+if requested.
+
+I don't think both patches are compatibles. If you want, I'll put a
+patch having all 3 features (xid, local browsing, and full window
+startup)
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: mallum <breakfast@10...> - 2002-04-09 17:17
+
+on Mon, Apr 08, 2002 at 12:34:46AM +0200, Melvin Hadasht wrote:
+> (With other (available) patches to allow
+> full-window mode and offline browsing at startup, this is an excellent
+> choice for rendering html in mail user agents, or manual browsers)
+> 
+ooo, where are these patches ?
+
+-- mallum 
+
+
+
+Re: [Dillo-dev]Mouse-Wheel not working anymore
+
+From: Ralph Slooten <ralph@de...> - 2002-04-09 05:32
+
+I just tried the CVS from yesterday, and it's working again :-) Since the
+20020327 version I had tried for several days (almost each day) to get it
+working with new CVS versions , but each day it didn't. Newer versions just
+scrolled down, but as I said, not up.
+
+But that seems to be fixed now. No idea how or what though :-) I didn't use 
+your patch (thanks for the effort though).
+
+Many thanks,
+
+Greetings
+Ralph
+
+
+On Mon, 8 Apr 2002, Livio Baldini Soares wrote:
+
+> Hello Ralph!
+> 
+> Ralph Slooten writes:
+> > Hi there guys,
+> > 
+> > I'm not sure if I am the only one to get this problem, however as from the
+> > CVS version on 27/03 my mouse-wheel only pages down, and not up. I have
+> > tried several versions since then, and they all do not work here.
+> 
+> Hum.. now that you mention it, I _do_ have a similar problem. Except
+> it happens not only with the mouse wheel, but with PageUp as well.
+> 
+> > Any ideas?
+> 
+> Yup... I think Jorge made some additions to the interface to allow
+> SPACE to PageDown and 'b' or 'B' to PageUp. But he also added a
+> additional check to see if those 'b's had an additional modifier (like
+> Alt-B, which should actually access the Bookmarks menu).
+> 
+> In my case GDK_MOD2_MASK is the Num Lock... so it kind of took a
+> while to understand why sometimes it worked, and why sometimes it
+> didn't... 
+> 
+> Ralph, does the mouse-wheel going up issue disappear with your
+> NumLock off? Is your keyboard a 101-US? (Does the following patch help
+> at all?)
+> 
+> I have a patch here... I does only two things:
+> 
+> [1] Doesn't check modifier upon normal PageUp button.
+> 
+> [2] When 'b' or 'B' are pressed only check for GDK_MOD1_MASK
+> 
+> Item 2 is "optional" (in the sense that item 1 should solve your
+> mouse problem, and my PageUp problem, but would still have a problem
+> with 'b' and NumLock on).
+> 
+> Getting the modifiers right is kind of tricky, because it depends on
+> the X keyboard mappings... check here for more info:
+> 
+> http://developer.gnome.org/doc/API/2.0/gdk/gdk-windows.html#GDKMODIFIERTYPE
+> 
+> Here is the 3 liner (against CVS from 08-Apr-2002):
+> 
+> *****************************************************************************
+> diff -pru dillo/src/dw_gtk_scrolled_frame.c
+> dillo.my/src/dw_gtk_scrolled_frame.c
+> --- dillo/src/dw_gtk_scrolled_frame.c Fri Mar 29 01:37:25 2002
+> +++ dillo.my/src/dw_gtk_scrolled_frame.c Mon Apr 8 22:22:25 2002
+> @@ -475,10 +475,10 @@ static gint Dw_gtk_scrolled_frame_key_pr
+> else
+> return gtk_container_focus (container, GTK_DIR_TAB_FORWARD);
+> 
+> - case GDK_Page_Up:
+> case GDK_b: case GDK_B:
+> - if (event->state & (GDK_MOD1_MASK | GDK_MOD2_MASK))
+> - return FALSE;
+> + if (event->state & GDK_MOD1_MASK)
+> + return FALSE;
+> + case GDK_Page_Up:
+> if (event->state & GDK_CONTROL_MASK)
+> Dw_gtk_scrolled_frame_move_by(frame,
+> - frame->hadjustment->page_increment, 0);
+> *******************************************************************************
+> 
+> best regards to all!
+> 
+> -- 
+> Livio <livio@im...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+Re: [Dillo-dev]sourceforge: why the move?
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-09 02:37
+
+Hello Jonathan!
+
+jonathan chetwynd writes:
+> sorceforge has so many great projects, why the move?
+
+Well, this has been discussed here at the end of the last year (2001):
+http://so....net/mailarchive/message.php?msg_id=878753
+
+That was my first message about the subject, but at the bottom,
+you'll see links to some more thoughts from others (specially Jorge,
+the maintainer). My first post was rather "euforic" (with lots of
+English mistakes ;), but if you read my second post and some of the
+others, you'll see that we have reached a "consensus" about leaving
+sourceforge.
+
+> will the mailing list stay at sourceforge?
+
+Probably not. The goal is to take everything away from
+SourceForge. We are still trying to get the mailing lists up at
+CIPSGA, CVS should follow.
+
+But please, don't worry. The move should ease developers to keep
+contributing to the project. Plus, _everything_ will be announced
+ahead of time! We will (probably) leave notices at the out SF site,
+redirecting the home page, CVS and mailing lists.
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Mouse-Wheel not working anymore
+
+From: Livio Baldini Soares <livio@im...> - 2002-04-09 02:14
+
+Hello Ralph!
+
+Ralph Slooten writes:
+> Hi there guys,
+> 
+> I'm not sure if I am the only one to get this problem, however as from the
+> CVS version on 27/03 my mouse-wheel only pages down, and not up. I have
+> tried several versions since then, and they all do not work here.
+
+Hum.. now that you mention it, I _do_ have a similar problem. Except
+it happens not only with the mouse wheel, but with PageUp as well.
+
+> Any ideas?
+
+Yup... I think Jorge made some additions to the interface to allow
+SPACE to PageDown and 'b' or 'B' to PageUp. But he also added a
+additional check to see if those 'b's had an additional modifier (like
+Alt-B, which should actually access the Bookmarks menu).
+
+In my case GDK_MOD2_MASK is the Num Lock... so it kind of took a
+while to understand why sometimes it worked, and why sometimes it
+didn't... 
+
+Ralph, does the mouse-wheel going up issue disappear with your
+NumLock off? Is your keyboard a 101-US? (Does the following patch help
+at all?)
+
+I have a patch here... I does only two things:
+
+[1] Doesn't check modifier upon normal PageUp button.
+
+[2] When 'b' or 'B' are pressed only check for GDK_MOD1_MASK
+
+Item 2 is "optional" (in the sense that item 1 should solve your
+mouse problem, and my PageUp problem, but would still have a problem
+with 'b' and NumLock on).
+
+Getting the modifiers right is kind of tricky, because it depends on
+the X keyboard mappings... check here for more info:
+
+http://developer.gnome.org/doc/API/2.0/gdk/gdk-windows.html#GDKMODIFIERTYPE
+
+Here is the 3 liner (against CVS from 08-Apr-2002):
+
+*****************************************************************************
+diff -pru dillo/src/dw_gtk_scrolled_frame.c
+dillo.my/src/dw_gtk_scrolled_frame.c
+--- dillo/src/dw_gtk_scrolled_frame.c Fri Mar 29 01:37:25 2002
++++ dillo.my/src/dw_gtk_scrolled_frame.c Mon Apr 8 22:22:25 2002
+@@ -475,10 +475,10 @@ static gint Dw_gtk_scrolled_frame_key_pr
+else
+return gtk_container_focus (container, GTK_DIR_TAB_FORWARD);
+
+- case GDK_Page_Up:
+case GDK_b: case GDK_B:
+- if (event->state & (GDK_MOD1_MASK | GDK_MOD2_MASK))
+- return FALSE;
++ if (event->state & GDK_MOD1_MASK)
++ return FALSE;
++ case GDK_Page_Up:
+if (event->state & GDK_CONTROL_MASK)
+Dw_gtk_scrolled_frame_move_by(frame,
+- frame->hadjustment->page_increment, 0);
+*******************************************************************************
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: Bo Lorentsen <bl@ne...> - 2002-04-08 08:36
+
+On Mon, 2002-04-08 at 09:18, Melvin Hadasht wrote:
+
+> I think this is not possible via gtksocket/gtkplug. 
+Ups --- sorry, you are right :-)
+
+/BL 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-04-08 07:24
+
+Hi,
+
+on 08 Apr 2002 08:57:29 +0200
+Bo Lorentsen <bl@ne...> wrote:
+> > Then, how
+> > about accessing the gui elements inside the HTML dokument via, the
+> > gtk C interface ? That way this could be a new way of making custom
+> > user interface.
+
+I think this is not possible via gtksocket/gtkplug. 
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: Bo Lorentsen <bl@ne...> - 2002-04-08 06:57
+
+On Mon, 2002-04-08 at 00:34, Melvin Hadasht wrote:
+> I made a patch to embed the X window of dillo using gtk_plug/gtk_socket.
+> Works like a charm. See dillo mail archive, subject '[Dillo-dev]patch:
+> embedding dillo'. That means, dillo is run as an external program, only
+> its window is embedded in an application. Although, I don't think this
+> is sufficient for you. (With other (available) patches to allow
+> full-window mode and offline browsing at startup, this is an excellent
+> choice for rendering html in mail user agents, or manual browsers)
+Then, how about accessing the gui elements inside the HTML dokument via,
+the gtk C interface ? That way this could be a new way of making custom
+user interface.
+
+/BL 
+
+
+
+Re: [Dillo-dev]Abstraction to user interface
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-04-07 22:40
+
+Hi,
+
+on Mon, 8 Apr 2002 00:00:49 +0200
+Erich Schubert <erich@de...> wrote:
+
+> I'd like to see dillo as html renderer for upcomding galeon2.
+> Galeon2 tries to become mozilla-independant, so it possibly could use
+> gtkhtml2 or dillo as alternative renderers...
+> 
+> Does dillo support this? Is there some dillo-embed wiget i could use
+> in own programs? I just looked at the source and it did not seem to
+> me as if this is possible right now :-(
+> 
+> mozilla is so slow and needs so much memory, but i just love the
+> galeon user interface...
+
+I made a patch to embed the X window of dillo using gtk_plug/gtk_socket.
+Works like a charm. See dillo mail archive, subject '[Dillo-dev]patch:
+embedding dillo'. That means, dillo is run as an external program, only
+its window is embedded in an application. Although, I don't think this
+is sufficient for you. (With other (available) patches to allow
+full-window mode and offline browsing at startup, this is an excellent
+choice for rendering html in mail user agents, or manual browsers)
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]Abstraction to user interface
+
+From: Erich Schubert <erich@de...> - 2002-04-07 22:07
+
+I'd like to see dillo as html renderer for upcomding galeon2.
+Galeon2 tries to become mozilla-independant, so it possibly could use
+gtkhtml2 or dillo as alternative renderers...
+
+Does dillo support this? Is there some dillo-embed wiget i could use in
+own programs? I just looked at the source and it did not seem to me as
+if this is possible right now :-(
+
+mozilla is so slow and needs so much memory, but i just love the galeon
+user interface...
+
+Greetings,
+Erich 
+
+
+
+[Dillo-dev]Speed: and the wheely mouse
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-06 15:26
+
+I'm just beginning to use dillo on my laptop, having been stunned by how 
+fast it is on the ipaq.
+I'm certain there is a need for a visual lynx, though the 'dillo' name 
+is somewhat wanting...
+
+How will animated gifs, css, javascript bookmarklets, impact on speed.
+You may not have answers, but please don't sacrifice speed, its a niche 
+you fit very well
+
+Is it possible that a wheely mouse could be used to scroll thru the 
+history file?
+
+thanks
+
+jonathan 
+
+
+
+[Dillo-dev]Thank you Dillo developers
+
+From: grump old <grumpyold_man@ya...> - 2002-04-05 20:55
+
+You guys are making a fantastic browser! 
+John Andrews
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Tax Center - online filing with TurboTax
+http://taxes.yahoo.com/ 
+
+
+
+[Dillo-dev]sourceforge: why the move?
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-04-05 20:07
+
+sorceforge has so many great projects, why the move?
+
+will the mailing list stay at sourceforge?
+
+thanks 
+
+
+
+[Dillo-dev]Mouse-Wheel not working anymore
+
+From: Ralph Slooten <ralph@de...> - 2002-04-05 16:43
+
+Hi there guys,
+
+I'm not sure if I am the only one to get this problem, however as from the
+CVS version on 27/03 my mouse-wheel only pages down, and not up. I have
+tried several versions since then, and they all do not work here.
+
+Any ideas?
+
+Greetings
+Ralph
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Gustavo Noronha Silva <kov@de...> - 2002-04-05 16:21
+
+Em Fri, 5 Apr 2002 08:43:14 -0300, Eduardo Marcel Maçan <macan@de...>
+escreveu:
+
+> On Thu, 4 Apr 2002 11:01:12 -0400 (CLT) Jorge Arellano Cid <jcid@em...>
+> wrote:
+> > OK, I just received the extra couple success-notes, so now it's
+> > official, we've moved to http://dillo.cipsga.org.br/ !!!
+> 
+> Wow, Congratulations to both Jorge, Livio (which by the way
+> we had the pleasure to have in our IRC channel :) ) the dillo contributors,
+> and the folks in the Debian-br team who do the admin at cipsga, and of 
+> course cipsga itself for the great job in promoting the use and development
+> of free software in Brazil and abroad.
+congrats =D, I just called Djalma about the lists, I'm sorry for the delay
+
+
+> I am very happy this could happen, it would only be better if the
+> former dillo maintainer in debian remembered that I e-mailed him saying
+> that if he was ever to abandon dillo, he should handle it to me... he
+> orphaned it during my "forced vacations" and I lost it :( Well... that's life
+> :)
+well, I tried, but you can still discuss with the one who took it =D
+
+[]s!
+
+-- 
+kov@de...: Gustavo Noronha <http://people.debian.org/~kov>
+Debian: <http://www.debian.org> * <http://debian-br.cipsga.org.br> 
+
+
+
+Re: [Dillo-dev]Re: CSS
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-05 15:21
+
+Jonathan,
+
+> connected fine, comments please on CSS1 and CSS2 which do not seem to be
+> supported at present...
+>
+> will they be?
+
+Probably.
+
+> and if so when-ish?
+
+That depends on how much knowledgeable people is willing to
+help with that!
+
+> really its a fabulous browser - good stuff
+>
+> thanks again
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Eduardo Marcel <macan@co...> - 2002-04-05 11:53
+
+On Fri, 5 Apr 2002 08:43:14 -0300 Eduardo Marcel Ma=E7an <macan@de...=
+g> wrote:
+> Wow, Congratulations to both Jorge, Livio (which by the way
+> we had the pleasure to have in our IRC channel :) ) the dillo contribut=
+ors,
+> and the folks in the Debian-br team who do the admin at cipsga, and of
+> course cipsga itself for the great job in promoting the use and develop=
+ment
+> of free software in Brazil and abroad.
+
+Hah, "both" overflow :)
+It just happened I remembered "on the fly" that I had to thank more than
+two groups of people :)
+
+--=20
+Eduardo Marcel Ma=E7an Gerente de Redes / Network Manager
+macan@co... Col=E9gio Bandeirantes 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Eduardo Marcel <macan@de...> - 2002-04-05 11:43
+
+On Thu, 4 Apr 2002 11:01:12 -0400 (CLT) Jorge Arellano Cid <jcid@em...=
+om> wrote:
+> OK, I just received the extra couple success-notes, so now it's
+> official, we've moved to http://dillo.cipsga.org.br/ !!!
+
+Wow, Congratulations to both Jorge, Livio (which by the way
+we had the pleasure to have in our IRC channel :) ) the dillo contributor=
+s,
+and the folks in the Debian-br team who do the admin at cipsga, and of=20
+course cipsga itself for the great job in promoting the use and developme=
+nt
+of free software in Brazil and abroad.
+
+I am very happy this could happen, it would only be better if the
+former dillo maintainer in debian remembered that I e-mailed him saying
+that if he was ever to abandon dillo, he should handle it to me... he
+orphaned it during my "forced vacations" and I lost it :( Well... that's =
+life :)
+
+At least I am still the "dillo for ipaq" maintainer in the familiar=20
+distribution :)
+
+> Note that the CVS still remains at SF, but hopefully that'll
+> change soon.
+>=20
+> Ah, I also adviced you to keep the BugTrack at SF, until we
+> moved. Well, not IS time to switch to using the one at CIPSGA!
+> (Yes, it's updated).
+
+--=20
+Eduardo Marcel Ma=E7an Gerente de Redes / Network Manager
+macan@co... Col=E9gio Bandeirantes 
+
+
+
+[Dillo-dev]netscape4 icons
+
+From: HORVATH Szabolcs <horvaths@fi...> - 2002-04-04 21:21
+
+http://fi.inf.elte.hu/~horvaths/pixmaps.h
+
+enjoy :-)
+
+
+-- 
+Horváth Szabolcs, <horvaths@fi.inf.elte.hu> 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-04 17:03
+
+Hi there!
+
+
+On Wed, 3 Apr 2002, Bjoern Weber wrote:
+
+> Jorge Arellano Cid <jcid@em...> schrieb am 02.04.02:
+> > Hi there!
+> > > > The new site's at: http://dillo.cipsga.org.br/
+> > > > It hasn't yet been blessed as our official site, but please go
+> > > > there and test it, specially those of you from Europe, so we can
+> > > > get a feel of how the connection behaves.
+> > > i've tried it now multiple times, and it has always worked fine and fast
+> > > (i'm in estonia, which is in europa).
+> > Thanks a lot Madis. A couple more successful reports and I'll
+> > turn it our official site. It's much better!
+>
+> Then add my voice to the list of successful reports. I prefer the
+> new site as well. Design is nice and usable, bugtracking works fine
+> too - at least the few things I tested =)
+
+OK, I just received the extra couple success-notes, so now it's
+official, we've moved to http://dillo.cipsga.org.br/ !!!
+
+Note that the CVS still remains at SF, but hopefully that'll
+change soon.
+
+Ah, I also adviced you to keep the BugTrack at SF, until we
+moved. Well, not IS time to switch to using the one at CIPSGA!
+(Yes, it's updated).
+
+
+> Yet the compatibility page seems incomplete, if you don't mind
+> occasional memory faults out of the gtk you may as well use dillo
+> on QNX RTP 6.1/x86 as well =)
+
+I'll add that one.
+
+
+Cheers+ :)
+Jorge.- 
+
+
+
+[Dillo-dev]question about html parser
+
+From: Madis Janson <madis@cy...> - 2002-04-03 17:02
+
+does nested tags use parent tag data structures? i mean, whether it is
+safe to delete parent tag from tag stack and move its children down to its
+place, when closing a tag. for example html like this:
+
+<form>
+...
+<table>
+
+</form>
+
+...
+</table>
+
+currently dillo just kills the table, when it founds </form> tag.
+i've thought about modifing parser to search matching tag and close only
+the matching tag in Html_pop_tag function. 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Bjoern Weber <foxbow@we...> - 2002-04-03 07:20
+
+Jorge Arellano Cid <jcid@em...> schrieb am 02.04.02:
+> Hi there!
+> > > The new site's at: http://dillo.cipsga.org.br/
+> > > It hasn't yet been blessed as our official site, but please go
+> > > there and test it, specially those of you from Europe, so we can
+> > > get a feel of how the connection behaves.
+> > i've tried it now multiple times, and it has always worked fine and fast
+> > (i'm in estonia, which is in europa).
+> Thanks a lot Madis. A couple more successful reports and I'll
+> turn it our official site. It's much better!
+
+Then add my voice to the list of successful reports. I prefer the
+new site as well. Design is nice and usable, bugtracking works fine
+too - at least the few things I tested =)
+
+Yet the compatibility page seems incomplete, if you don't mind 
+occasional memory faults out of the gtk you may as well use dillo
+on QNX RTP 6.1/x86 as well =)
+
+Greetings,
+Bjoern
+-- 
+A nuclear bomb is really funny but when it comes your way
+Falling on your breakfast table can disturb your day!
+(Off - Bad News) 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: <SirVer@gm...> - 2002-04-03 13:16
+
+On Tue, Apr 02, 2002 at 12:00:51PM -0600, Jamin W. Collins wrote:
+> On Tue, 2 Apr 2002 11:46:35 -0400 (CLT)
+> "Jorge Arellano Cid" <jcid@em...> wrote:
+> 
+> > Thanks a lot Madis. A couple more successful reports and I'll
+> > turn it our official site. It's much better!
+> 
+> Worked fine when I tested it. Like the layout too.
+yep, works fine and fast from here in germany
+
+Holger 
+
+
+
+Re: [Dillo-dev]Simple plugins
+
+From: Lars Clausen <lrclause@cs...> - 2002-04-03 03:14
+
+On Tue, 2 Apr 2002, Jorge Arellano Cid wrote:
+>=20
+> Hi there!
+>=20
+[...]
+> This is the opportunity to discuss, design, improve, correct,
+> etc. (is far better to correct the design than trying to mend an
+> unsuitable piece of code.)
+
+I have to wonder, why the two data fields and then 'length' amount of data?
+Why not have any data fields be a part of the data?
+
+I'd like to see things like page info (date, size, server, cache-info etc)
+being passed to plugins.
+
+I'm not sure how actual data download works with this. How would, say, an
+external viewer plugin get the data to feed to the external program (not
+all external programs understand URI's)? Dillo already handles download,
+so it seems we should take advantage of that. Perhaps the plugin can tell
+Dillo to save the data to a file, or pass it into a socket, or something?
+
+I like the idea of prefs being a plugin, but there's some work to be done
+to make Dillo actually use new prefs internally. Not too hard, probably.
+
+I've been thinking about a better version of the external viewer program,
+and of course I'd like to do it with plugins, when they are available.
+Here's my idea:
+
+At startup, parse either ~/.mailcap or ~/.dillo/viewers to set up known
+viewers. Also parse /etc/mailcap, but store the associations separately.
+
+The default viewer for unknown mime types should be a handler that asks
+the users what to do: Either save to disk, specify a program directly,
+or pick one of the associated programs found in /etc/mailcap. Optionally
+store this in either ~/.mailcap or ~/.dillo/viewers, if it is to be
+permanent.=20
+
+This makes for a nice intermediate between 'one fixed viewer' and 'select
+any program', and fits well into the current mime system. As for
+~/.mailcap vs. ~/.dillo/viewers, using ~/.mailcap may interfere with other
+programs, but it may also be seen as the users preferred general settings.
+
+> Finally, dillo-0.6.5 release is planned for mid April, from the
+> new site!!!
+
+Could you put a link to the new site up on the old site, perhaps?
+
+-Lars
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+RE: [Dillo-dev]Simple plugins
+
+From: Eric GAUDET <eric.gaudet@vn...> - 2002-04-03 02:36
+
+Hi Jorge,
+
+I am so glad you finally gave the dpi some priority! I can=B4t help notic=
+ing that
+you came back to most of my initial design, even if you gave me a hard ti=
+me
+back then because you found it too complicated :-)
+
+I still have to review it in detail, though. I=B4d also want to know how =
+much
+code you have have for it and for what feature, since a lot of people see=
+m to
+have sent you a contribution.
+
+Now I had almost a year of reflection about it, I think that there is a m=
+ajor
+flaw to this dpi1-plus plugin: re-entrance will be very difficult to main=
+tain
+with the proposed design, basically leaving it up to the plugin=B4s devel=
+oper.
+That=B4s because most plugins will be kept alive. This half-baked dpi1-al=
+most2
+propostion does not satisfy me.
+
+Since it seems to be a good time for discussing about it, here=B4s what I=
+think.
+
+1) revert to dpi1 with one simple request-answer scheme without keeping i=
+t alive
+(perhaps by using the implementation I did before), or simply abandon it.
+
+2) push the current proposition up to a full dpi2, where each plugin will=
+be
+loaded and kept alive a staring time. A lot of simplification can be done=
+here:
+no more stdin-stdout, but use dlopen with a clean interface of calling
+functions to implement; all relevant data for each request would be maint=
+ained
+by a session struct passed as a pointer to each of these functions.
+
+If we choose to go to a full dpi2 right away, (which can take some time,
+this is why I propose to keep the early dpi1 for now), we will need more
+interaction with the rendering engine, which calls for the two following
+features:
+
+- the ability to walk the internal representation of the page: for now, i=
+t=B4s a
+pain in the ass to find which dw =A8children=A8 are actually rendered, wh=
+ich are
+words, which are containers, etc. The find_text code talks by itself, and=
+I am
+postponing the text copy-paste until I find a good solution.
+
+- the ability to dynamically change the tree structure, not only be alter=
+ing
+the content of it, but by inserting and removing words and widgets. Right=
+now,
+the result when trying that is guaranteed to be =A8unknown=A8.
+
+This means we have to come with some sort of DOM interface on top of the
+internal dw representation. A lot of good could come from it, including t=
+he
+ability for dillo to become a generic-application client as well as a bet=
+ter
+browser, at almost no cost in development and no =A8bloat=A8.
+
+Mozilla=B4s gecko rendering engine is successful amongst developers becau=
+se it=B4s
+mimic-ing the MSIE=B4s poor internal representation they know, let=B4s de=
+sign
+something better.
+
+Best,
+Eric
+
+PS: Jorge, I wanted to ask you this for a long time: what text editor do =
+you
+use, with that =A8justify=A8 in plain text?
+
+-- En reponse de "[Dillo-dev]Simple plugins" de Jorge Arellano Cid, le
+02-Apr-2002 :
+>=20
+> Hi there!
+>=20
+> Those of you that read my "Dillo plans for 2002" post should
+> have a good overview of what's currently going on:
+>=20
+> http://www.geocrawler.com/archives/3/702/2002/1/0/7681591/
+>=20
+> As you may see there, my first priority now is getting some
+> funds to keep rolling dillo project; it's a tough situation, so
+> I'm currently making some presentation material to show to
+> potential contributors... (Please re-read the post for details).
+>=20
+>=20
+>=20
+> I've noticed special interest for what we agred to call "simple
+> plugins". At least, Russell, Paul, Johnatan, Bruce, Ralph, Geoff,
+> Tomas, Imad, Mark, Stephen and Eric have wrote something directly
+> or closely related to them. Considering the situation, I decided
+> to give some time to it, and prepared a new draft of the dpi1
+> spec. The document is several pages long, so I put it under the
+> "Developers" section of the new site.
+>=20
+> Please read it as it's the generic answer to all of those
+> posts that seemed forgoten, but that were not!
+>=20
+> The doc is somewhat dense and will surely require some time to
+> study, digest and comprehend. Well, with that interest showing, I
+> think it's a good time to give it some thought.
+>=20
+> This is the opportunity to discuss, design, improve, correct,
+> etc. (is far better to correct the design than trying to mend an
+> unsuitable piece of code.)
+>=20
+> Best of luck with it!
+>=20
+>=20
+> Ah, passing to another subject, I have a couple of SSL
+> implementations to review here, but I'll get into them later
+> (maybe in a month or more). I'd love to have some more feedback
+> from the authors, just to know how they behave and why they
+> decided to implement it that way.
+>=20
+> Finally, dillo-0.6.5 release is planned for mid April, from the
+> new site!!!
+>=20
+>=20
+> Stay tuned!
+> Jorge.-
+>=20
+>=20
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------------------------------------------
+Eric GAUDET <eric.gaudet@vn...>
+Le 02-Apr-2002 a 17:48:39
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+[Dillo-dev]Simple plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-02 23:19
+
+Hi there!
+
+Those of you that read my "Dillo plans for 2002" post should
+have a good overview of what's currently going on:
+
+http://www.geocrawler.com/archives/3/702/2002/1/0/7681591/
+
+As you may see there, my first priority now is getting some
+funds to keep rolling dillo project; it's a tough situation, so
+I'm currently making some presentation material to show to
+potential contributors... (Please re-read the post for details).
+
+
+
+I've noticed special interest for what we agred to call "simple
+plugins". At least, Russell, Paul, Johnatan, Bruce, Ralph, Geoff,
+Tomas, Imad, Mark, Stephen and Eric have wrote something directly
+or closely related to them. Considering the situation, I decided
+to give some time to it, and prepared a new draft of the dpi1
+spec. The document is several pages long, so I put it under the
+"Developers" section of the new site.
+
+Please read it as it's the generic answer to all of those
+posts that seemed forgoten, but that were not!
+
+The doc is somewhat dense and will surely require some time to
+study, digest and comprehend. Well, with that interest showing, I
+think it's a good time to give it some thought.
+
+This is the opportunity to discuss, design, improve, correct,
+etc. (is far better to correct the design than trying to mend an
+unsuitable piece of code.)
+
+Best of luck with it!
+
+
+Ah, passing to another subject, I have a couple of SSL
+implementations to review here, but I'll get into them later
+(maybe in a month or more). I'd love to have some more feedback
+from the authors, just to know how they behave and why they
+decided to implement it that way.
+
+Finally, dillo-0.6.5 release is planned for mid April, from the
+new site!!!
+
+
+Stay tuned!
+Jorge.- 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Jamin W. Collins <jcollins@as...> - 2002-04-02 18:02
+
+On Tue, 2 Apr 2002 11:46:35 -0400 (CLT)
+"Jorge Arellano Cid" <jcid@em...> wrote:
+
+> Thanks a lot Madis. A couple more successful reports and I'll
+> turn it our official site. It's much better!
+
+Worked fine when I tested it. Like the layout too.
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev]CIPSGA
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-04-02 17:49
+
+Hi there!
+
+On Mon, 1 Apr 2002, Madis Janson wrote:
+
+> On Wed, 20 Mar 2002, Jorge Arellano Cid wrote:
+>
+> >
+> > The new site's at: http://dillo.cipsga.org.br/
+> >
+> > It hasn't yet been blessed as our official site, but please go
+> > there and test it, specially those of you from Europe, so we can
+> > get a feel of how the connection behaves.
+>
+> i've tried it now multiple times, and it has always worked fine and fast
+> (i'm in estonia, which is in europa).
+
+
+Thanks a lot Madis. A couple more successful reports and I'll
+turn it our official site. It's much better!
+
+
+Cheers
+Jorge.- 
+

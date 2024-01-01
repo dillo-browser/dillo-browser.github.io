@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Funding Presentation :: Advantages
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="../db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="../db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="../index.html">Home</a><br>
+      <a href="../screenshots/index.html">Screenshots</a><br>
+      <a href="../download.html">Download</a><br>
+      <a href="../FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="../Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="../Plans.html">Current Plans</a><br>
+      <a href="../MList.html">Mailing List</a><br>
+      <a href="../conferences.html">Conferences</a><br>
+      <a href="../donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="../dillo3-help.html">Help</a><br>
+      <a href="../Icons/index.html">Icons</a><br>
+      <a href="../help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="../developer.html">New Developer</a><br>
+      <a href="../documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="../NC_design.html">Naming&amp;Coding</a><br>
+      <a href="../source.html">Source&nbsp;repository</a><br>
+      <a href="../dpi1.html">Dpi1 Spec</a><br>
+      <a href="../CSS.html">CSS Spec</a><br>
+      <a href="../D_authors.html">Authors</a><br>
+      <a href="../authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="../press.html">Dillo in the Press!</a><br>
+        <a href="../interview.html">Interview</a><br>
+        <a href="../interview.es.html">Entrevista</a>
+         <img src="../chile.png" alt="*"><br>
+        <a href="../Links.html">Links</a><br>
+        <a href="../logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="../authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="../abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<table width="100%" bgcolor="#70A0C0">
+
+<tr><td>
+ <table width="100%" bgcolor="#70A0C0">
+  <tr>
+    <td><a href="funding.html">
+     <img src="logo1s.png" title="Top page" alt="Index"></a></td>
+    <td width="90%" align="center">
+     <b><big><big><big>Advantages</big></big></big></b>
+    </td>
+    <td><small>[Page&nbsp;3&nbsp;of&nbsp;6]</small></td>
+  </tr>
+ </table>
+</td></tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b>Security</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ <b>[Please note that the funding presentation is currently considered
+ historical and is not updated &mdash;corvid]</b>
+ <p>
+ As it was stated in the introductory item, "Personal security and privacy"
+<a href="objectives.html#sec"><img src="more.png" alt="more..."></a>
+(objectives section), security has several defense lines. Besides
+those stated there, another interesting weakness worth examining is
+local inspection of cache and history files.
+ <p> In fact, one of the common browser "subproducts" is an extensive
+cache record, that takes the form of a directory structure with local files,
+and  another  that keeps track of the visited URLs
+(or at least the most recent ones).
+ <p> As personal computers are seldom used by a single person, peer
+inspection of those files can tap a huge load of information about
+browsing habits, visited places, images viewed etc.
+ <p> Worse yet, if those files are inspected by a "trojan program", the
+whole contents can be sent outside and recorded in an external server that
+accurately profiles personal interests.
+ <p> Dillo avoids these problems by keeping the whole cache in memory,
+so that after finishing a session, there're no saved files, nor a
+visited URLs history.
+ <br><br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b><a name="eff"></a>High SW efficiency</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ Dillo already has:
+ <ul>
+  <li>Extraordinary <u>speed</u>, both on rendering and networking.</li>
+  <li><u>Innovative</u> concurrency handling that allows for a user interface
+      that's always responsive and that lacks busy-clock locks!</li>
+  <li>Minimal HW requirements (both on CPU and memory), that let
+      it run on <u>several platforms</u> including some handhelds!</li>
+  <li>Graphical user interface.</li>
+  <li>Support for HTML, XHTML, plain text, and image formats
+      (GIF, JPEG and PNG).</li>
+  <li>Tiny startup time (around 2 seconds!)</li>
+  <li>Minimal <u>size</u>:
+   <ul>
+    <li> Source is around 300 Kilobytes </li>
+    <li> Binary is less than 250 Kilobytes </li>
+   </ul>
+   That is around 40 times less than a big browser.
+  </li>
+ </ul>
+ <p>
+ Note that efficiency not only means gains for minimalistic HW, it also
+allows better exploitation of desktops and servers. For instance:
+ <ul>
+  <li>An administrator can gather web information from the same server
+      he's working on without affecting its performance.</li>
+  <li>There's no problem with running dillo on a working database server
+      (browsing its manual for tunning information for instance).</li>
+  <li>Playing mp3 music while surfing the net.</li>
+  <li>Working with the GIMP, but also having an open dillo with the manual.</li>
+  <li>etc.</li>
+ </ul>
+ <br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b><a name="com"></a>Compatibility</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ <p>
+ <hr>
+ Dillo has been reported to run on the following operating 
+ systems / architectures:
+ <hr>
+ 
+ <h4>Linux:</h4>
+ <ul type="circle">
+ <LI> Intel x86 CPU-family with any
+  <A href="http://www.gnu.org/gnu/why-gnu-linux.html"> GNU/Linux </A>
+  (libc5 and glibc2) </LI>
+ <LI> GNU/Linux on a DEC <cite>Alpha</cite> (glibc 2.0)</LI>
+ <LI> GNU/Linux for PPC (YellowDogLinux 2.1) </LI>
+ <LI> Sparc 5 (32 bits) GNU/Linux, glibc 2.1.3, gcc 2.95.3 </LI>
+ <LI> Sparc ultra 1 (64 bits kernel, 32 bits userspace) GNU/Linux,
+  glibc 2.1.3, gcc 2.95.3</LI>
+ </ul>
+ 
+ <h4>*BSD</h4>
+ <ul type="circle">
+ <LI> NetBSD (in pkgsrc)
+ <li> FreeBSD (in the ports)
+ <li> OpenBSD (in the ports)
+ </li>
+ </ul>
+ 
+ <h4> OS X:</h4>
+ <ul type="circle">
+ <LI> MAC OS X </LI>
+ <LI> GNU Darwin! (Power PC and x86) Look
+   <A HREF="http://gnu-darwin.org/">here</A></LI> 
+ </ul>
+ 
+ <h4>Solaris:</h4>
+ <ul type="circle">
+ <LI> Sun Blade 100 (Ultra SPARC III), <cite>Solaris 8</cite>, gcc 3.0</LI>
+ <li> SunOS jaca 5.7 Generic_106541-04 sun4u sparc </li>
+ <LI> Sparc ultra 10 (64 bits) <cite>solaris 8</cite>, gcc 2.95.2 </LI>
+ </ul>
+ 
+ <h4>Handhelds:</h4>
+ <ul type="circle">
+ <LI> iPAQ handheld!
+  (<a href="http://familiar.handhelds.org/releases/v0.5/">familiar</a>
+  distribution) 
+  --<a href="https://www.dillo.org/screenshots/ipaq.html">screenshots</a></LI>
+ <LI> Psion handheld 5MX/5MXPro (CPU: 32bit ARM 710T, 37MHz) --Debian
+ ARM linux</li>
+ <LI> Intel's StrongArm CPUs!</LI>
+ <li> GMATE's Yopy </li>
+ <li> <a href="http://netbsd.org">NetBSD</a>, which includes dillo,
+      has been ported to several StrongARM and MIPS based handhelds.
+ </ul>
+ 
+ <h4>Miscellaneous:</h4>
+ <ul type="circle">
+ <LI> SGI O2 running IRIX</LI>
+ <LI> Tru64 (OSF1) 4.0 on Alpha </LI>
+ <LI> HP 9000 715/80 with Debian hppa </LI>
+ <LI> 68k Linux on Q40 and Q60 (sinclair QL compatible machines) </LI>
+ <LI> QNX RTP 6.1/x86 (with occasional memory faults out of GTK+) </LI>
+ <LI> AIX 4.3 (with some tweaks) </LI>
+ <LI> SONY PlayStation2 (Linux)</LI>
+ <LI> Atari-based 68k-systems running MiNT as OS!
+      (<a href='http://membres.lycos.fr/pmandin/en/ports.html#Dillo'>see</a>)
+      </LI>
+ </ul>
+
+ <br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+</table>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

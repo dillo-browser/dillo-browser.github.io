@@ -1,0 +1,48 @@
+
+/* Default body format */
+body
+{
+   background: rgb(200,200,230);
+   color: rgb(0,0,0);
+   font-family: Vera-sans,Sans-serif;
+   font-size: 100%;
+   margin: 2em;
+}
+
+
+/* Headlines */
+h1
+{
+   font-size: 250%;
+}
+
+h2
+{
+   font-size: 150%;
+}
+
+
+/* Element class formats */
+
+.top, .content
+{
+   font-size: 1em;
+   padding: 0.5em 1.5em;
+   border: 1px solid rgb(0,0,0);
+   margin: 0em;
+}
+
+.top
+{
+   background-color: rgb(210,250,210);
+}
+
+.content
+{
+   background-color: rgb(240,240,240);
+   border-top-width: 0em;
+   margin-bottom: 1em;
+}
+
+
+/* EOF */

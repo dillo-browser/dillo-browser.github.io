@@ -1,0 +1,295 @@
+Re: [Dillo-dev]New release & documentation
+
+From: nightstalker <nstaaalkie@tv...> - 2000-02-09 23:53
+
+jcid@ma... wrote:
+
+> Sammy,
+>
+> Glad to see you again!
+>
+
+Glad to be back too :) (although work is keeping me busy)
+
+>
+> > can anyone from the mailing list give me the url to the webpage?
+>
+> Yes! :)
+>
+> > i reinstalled my system but i forgot to copy my netscape
+> > bookmarks :)
+>
+> Deja vu (Did I spelled it right?)
+>
+> Ok Sammy, we're at:
+>
+> http://academico.inf.utfsm.cl:81/~jcid/Dillo/project.html
+>
+> and you'd surely want to download:
+>
+> http://academico.inf.utfsm.cl:81/~jcid/Dillo/dillo-0.0.5.tar.gz
+>
+> enjoy!
+>
+> Jorge.-
+>
+> Pd: Feedback welcome
+>
+
+it compiled like a breeze over here (running slackware 7 with newest
+version of glib &
+gtk )
+ran very well too .. allthough a bug that i fixed back when dillo was
+gzilla is back :)
+(as your first action : select bookmarks -> add bookmark ...
+'segmentation fault' )
+i'll see if i can fix it again (it shouldn't be so hard)
+
+i still notice that sometimes dillo starts taking a lot of cpu power (it
+doesn't appear to be
+doing anything though). I've noticed this with other versions of dillo
+too.
+
+congratulations on fixing the image code .. i could now surf to
+http://www.tuxedo.org/~esr/ and
+see all jpgs and png's :) 
+
+
+
+Re: [Dillo-dev]New release & documentation
+
+From: <jcid@ma...> - 2000-02-08 14:47
+
+Sammy,
+
+Glad to see you again!
+
+> can anyone from the mailing list give me the url to the webpage?
+
+Yes! :)
+
+> i reinstalled my system but i forgot to copy my netscape
+> bookmarks :)
+
+Deja vu (Did I spelled it right?)
+
+Ok Sammy, we're at:
+
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/project.html
+
+and you'd surely want to download:
+
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/dillo-0.0.5.tar.gz
+
+enjoy!
+
+
+Jorge.-
+
+
+Pd: Feedback welcome 
+
+
+
+Re: [Dillo-dev]New release & documentation
+
+From: nightstalker <nstalkie@tv...> - 2000-02-06 15:56
+
+hi,
+
+can anyone from the mailing list give me the url to the webpage ?
+i reinstalled my system but i forgot to copy my netscape
+bookmarks :)
+
+sammy 
+
+
+
+[Dillo-dev]New release & documentation
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-02-04 02:59
+
+Hi!
+
+Fresh news for you:
+
++ Just released dillo-0.0.5.tar.gz (DL. from website)
++ There're several improvements (read the Changelog)
++ Made minor updates to the web site
++ Wrote some documentation (attached with this mail)
+
+
+Well, before you download the source, let me tell you that
+this release features a couple of progress bars, but *don't
+expect them to work*, that will be fixed later. The problem is
+that they were developed while I was changing the image fetching
+routines... When I finish that, they'll get right.
+
+The second thing you should be aware of, is that although
+rendering is significatively improved, stability is very fragile.
+No, that's not due to rendering, but to socket abort handling. As
+a matter of fact, Dillo-0.0.5 is very stable on local networks.
+
+Needless to say, I'll focus on finishing the image fetching
+stuff, write some more docs, and then get to the sockets part.
+
+Finally, here I quote the notes I took while reviewing Dillo
+widget code, they are to be completed, corrected and improved.
+They were useful for me, so let's share them! 
+
+
+Sicerely
+Jorge.-
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------
+DILLO WIDGET
+------------
+
+------
+Resize
+------
+
+Widget resizing and repainting can be initiated by
+Dw_gtk_view_request_resize and Dw_gtk_view_request_paint
+functions. The resizing process is carried by an idle function
+(Dw_gtk_view_idle_func) that's launched upon request.
+
+Using an idle function to do it ensures good performance,
+as long as the resizing stuff gets done when the browser is not
+doing anything else.
+
+To start the resizing, a_Dw_request_parent_resize must be
+called, but beware, this routine is not a straightforward
+invocation of the widget method. Rather, it uses a resize flag
+mechanism; if the widget's resize flag was already set, nothing
+happens but, if not, the flag is set and the request_resize
+method on the widget parent is called.
+The actual resize is done later, by an idle function that
+discriminates upon those flags.
+The resize flag is cleared later by a_Dw_size_nego_y.
+
+The horizontal and vertical size methods are a_Dw_size_nego_x
+and a_Dw_size_nego_y. They call the appropriate widget-class
+method. For instance: if you call a_Dw_size_nego_x(wdg) and wdg
+is of type DwPage, then Dw_page_size_nego_x will be called.
+
+a_Dw_size_nego_x is called with the widget and requested width
+as parameters. a_Dw_size_nego_y is called with the widget and,
+width & height inside an allocation structure (that's why
+size_nego_x method isn't implemented sometimes). Anyway, the size
+negotiation sequence calls a_Dw_size_nego_x first, and after that
+it calls a_Dw_size_nego_y. If size_nego_x is NULL, there's no
+problem, but size_nego_y must be defined.
+
+
+Some vars:
+
+y_ascent = image height
+y_descent = 0 (for images)
+x_size = gdk_string_width(gdkfont, text) | widget width
+
+
+-------
+Repaint
+-------
+
+Dw_gtk_view_request_paint gets called whenever a child widget
+needs a repaint (generally issued as the request_paint method of
+the container class). The repaint rectangle is added to the
+request repaint region, and an idle process is started to repaint
+it if necessary (Dw_gtk_view_idle_func).
+
+The interesting fact is that Dw_gtk_view_idle_func performs
+both, resizing and repainting.
+
+
+------------------
+Rewrap (new stuff)
+------------------
+
+The rewrap stuff is not completely designed yet. What I
+implemented is a workaround that's somewhere between a hack and a
+clean patch; Yes, it's a tradeoff that lets the browser handle
+image resizes, and is tuned enough to be very fast.
+
+The rewrap function is set in Dw_page_request_resize as an
+idle function; that way, a single rewrap is done, instead of one
+per image resize. Even more, if the image is cached, there's no
+rewrap call cause the image size is already known.
+
+How is it done?
+a_Dw_image_size function requests a parent resize. When the
+resize-request reaches the top class, resize methods are called;
+that way, Dw_page_request_resize is run (at its turn). Inside
+Dw_page_request_resize, the page's rewrap-request-flag is set and
+an idle rewrap is launched.
+
+
+----------- O ----------- 
+
+
+
+Re: [Dillo-dev]Progress
+
+From: Luca Rota <drake@fr...> - 2000-02-01 21:20
+
+On Mon, 31 Jan 2000, Jorge Arellano Cid wrote:
+
+> Hi!
+> Is there anybody out there? :-)
+
+I'm always here. :)
+
+> Tomorrow will be testing time, and you can expect a new release
+> soon (maybe three or four days, gimme' some feedback).
+
+I'll wait ;)
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]Progress
+
+From: Jorge Arellano Cid <jcid@ma...> - 2000-02-01 01:37
+
+Hi!
+Is there anybody out there? :-)
+
+
+Well, finally the image rendering bug is fixed; that made a big
+change in Dillo (and a lot of work and changes in the inside).
+Tomorrow will be testing time, and you can expect a new release
+soon (maybe three or four days, gimme' some feedback).
+
+
+Current changelog looks like this:
+
+- * Added progress bars (to be improved)
+Patch: James McCollough, Jorge Arellano Cid
+- * Rearranged, changed and commented the decompressed image cache code
+* Fixed autoconf stuff to include zlib
+* Added memory deallocating functions to cache, dicache, socket, http & dns
+* Fixed memory leaks in jpeg.c, png.c and gif.c
+* Made several changes in dw_page.c
+* Made several "standarizing" changes all over the code.
+* Introduced ist.hsource
+* Fixed image rendering (Fixed algorithms and data structures)
+Patches: Jorge Arellano Cid <jcid@ma...>
+- * Added support for extand inkcolors inside <BODY> tags
+* Standarized all memory management to glib functions
+* Fixed the plugin API to work again (forked)
+* Removed a warning (remove not implemented for Dw_view and Dw_scroller)
+* Solved the page-without-title bug in bookmarks.
+Patches: Luca Rota <drake@fr...>
+
+
+
+Best regards
+Jorge.- 
+
+

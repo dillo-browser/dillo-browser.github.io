@@ -1,0 +1,2106 @@
+RE: [Dillo-dev]Re: About bug #60 (transparency in PNG's) 
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-29 10:46
+
+-- En reponse de "[Dillo-dev]Re: About bug #60 (transparency in PNG's)"
+de Livio Baldini Soares, le 29-Nov-2000 :
+> Does anybody know a better/faster solution to turn an guint32 into
+> to three int's representing red, green and blue parts of the color?
+> The solution I've implemented doesn't look too good :-(
+> Tomorrow, after getting some sleep I'll look up my algebra and see if
+> I can do some decent bit manipulation instead of calling strtol(). If
+> anyone has any ideas please send them in.
+> 
+
+IMHO there's several problem with your calculations :
+
+1) the strol part is very inefficient, but that's not a real problem
+because this code is _outside_ the loop. Anyway, here's how to do it :
+(strip all the sprintf)
+bg_blue = (prefs.bg_color0 & 0xFF;
+bg_green = (prefs.bg_color>>8) & 0xFF;
+bg_red = (prefs.bg_color>>16) & 0xFF;
+
+2) The loop is _always_ the sensible part ! You _never_ want to allocate
+local variables like you did : 
+for (...) { 
+gint p,a; 
+(some compiler may optimize this, but you never know)
+As a rule of thumb, it's better to allocate local variables at the
+begining of a function.
+
+3) If you really want to improve speed, do all calculation only once in
+local variables : i*3 is computed three times, it would be better to
+have calculated i3 = i*3 and use i3. (same with i*4 used twice).
+You could also have done i3 += 3 each loop, but on pentium-generation
+cpu (whatever the brand, ppc, arm, ...) multiplications and additions
+cost the same so it doesn't matter, and using i*3 is often more
+readable and more robust (not sensible to initiallisation).
+
+4) Even better : look into a table is a calculation. png->linebuf[3*i]
+is actually *(png + linebuf + 3*i).
+You could have declared 
+guchar *pl = png->linebuf;
+and in the loop :
+if (!a){
+*(pl++) = bg_red;
+*(pl++) = bg_green;
+*(pl++) = bg_blue;
+}
+
+The else part is basically the same, if a little more trickier, and you
+can get rid of the costy for() : I let it to you as an exercise ;-)
+(hint : row_num*png->rowbytes is ugly)
+
+5) Last : if(!a) is more complex than if(a) : invert the if/else.
+
+Hope this helps.
+
+So long Livio :-)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 29-Nov-2000 a 19:19:52
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Re: About bug #60 (transparency in PNG's) (sending patch)
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-29 03:36
+
+Attachments: png_transparent.diff      
+
+Sebastian Geerken writes:
+> Livio Baldini Soares writes:
+> > Hi all,
+> > 
+> > I've been looking into the PNG transparency bug (#60). 
+<snip> 
+
+Ok, so I got a working patch that gets the user preference bg_color
+and sets that as transparent. Since it might take a while before
+`a_Dw_widget_get_bg_color` or mask clipping gets done, this might be a
+good thing to put it for now. The only thing is that this patch didn't
+turn out as good as I'd like it to be...
+
+Does anybody know a better/faster solution to turn an guint32 into
+to three int's representing red, green and blue parts of the color?
+The solution I've implemented doesn't look too good :-(
+Tomorrow, after getting some sleep I'll look up my algebra and see if
+I can do some decent bit manipulation instead of calling strtol(). If
+anyone has any ideas please send them in.
+
+I'm sending the patch as an attachment and should be applyied
+against src/png.c from CVS.
+
+
+bye all, best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Still some problems with the bugtrack engine
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-29 01:37
+
+-- En reponse de "Re: [Dillo-dev]Still some problems with the bugtrack
+engine" de Livio Baldini Soares, le 28-Nov-2000 :
+> Hi Eric, how you doing?
+> 
+
+Hi Livio, nice to see you again in the list (I was afraid you left ;-)
+
+> Eric GAUDET writes:
+>> I have Internal Server errors every time I try.
+>> 
+> 
+> I added the bug for you. It's bug number *102*, check out the
+> bug-track. I think that the problem appears when you leave out one of
+> the fields in blank. I was getting an Internal Error too, but had
+> left
+> in blank the HTReproduce. When I filled it in with `Nothing`, the bug
+> was submitted.
+> 
+
+Hmmm... I just tried it and I think you're right.
+
+Thanks
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 29-Nov-2000 a 10:34:35
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]About bug #60 (transparency in PNG's)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-28 22:11
+
+Livio Baldini Soares writes:
+> Hi all,
+> 
+> I've been looking into the PNG transparency bug (#60). After an
+> hour of searches along src/png.c and libpng-dev thinking that it was
+> an initilization issue I found out it had nothing to do with
+> that. Later I found out that the problem was in
+> `Png_datarow_callback`, in the `case 4:` the alpha channel wasn't
+> being activated (there was even a `todo`, which I missed!). I've made
+> a sketch that works, but I've come to a problem:
+> 
+> Where do I find the current window (page) background color?
+
+Better: the background color of the parent of the image widget. This 
+will be different from the page background color, when tables are 
+implemented.
+
+> I guess
+> this is the same problem with GIF transparency. When you have a
+> transparent GIF and open it with the standard dillorc file, it'll look
+> alright, but if you change the bg_color in your dillorc then the GIF
+> will have in the transparent pixels NOT your background color, but the
+> color for the standard bg_color that was in the original dillorc...
+> 
+> So I guess that's a problem with GIF's and PNG's. Sebastian, is this
+> bg_color integrated to the new Dw your making up? Should I wait for it
+> to sent in the patch for PNG transparency, or should I make it
+> already? (Actually, it's already done and working, but I didn't want
+> to sent it in with this background color issue).
+
+I haven't done much on colors yet, currently there is only a function 
+a_Dw_widget_set_bg_color (which does nothing, but will soon work for 
+top-level widgets), and there will probably (when needed) a function 
+a_Dw_widget_get_bg_color (I'd prefer a function instead of a direct 
+access on structure members). Meanwhile, you may use dummy function 
+with that name (returning DW_PAINT_DEFAULT_BGND or so).
+
+However, I already suggested to Jorge to use clipping masks instead 
+of the parent's background color, since the latter would cause 
+problems with background images (this could be solved, but only 
+complicated and slow). Real alpha (more than 1 bit depth), as 
+supported by pgn (afaik) is not supported by X, but may be 
+implemented by dithered clipping masks (will look a bit ugly, but I 
+did never see a png in a web page which uses this feature).
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Still some problems with the bugtrack engine
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-28 21:10
+
+Hi Eric, how you doing?
+
+Eric GAUDET writes:
+> I have Internal Server errors every time I try.
+> 
+> I wanted to make this entry :
+> - There's no "Copy Link Location" being worked by "egaudet@fr...
+> 100%"
+> 
+> :-/
+
+I added the bug for you. It's bug number *102*, check out the
+bug-track. I think that the problem appears when you leave out one of
+the fields in blank. I was getting an Internal Error too, but had left
+in blank the HTReproduce. When I filled it in with `Nothing`, the bug
+was submitted.
+
+Jorge are you the one who take cares of the dillo's bug-track CGI's?
+Could it be that in Dillo_insert.cgi a blank field could cause an
+error? Maybe it should be tuned for errors and such, and give a
+warning like: "X field left in blank, please fill it in..."... Just a
+guess. 
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Still some problems with the bugtrack engine
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-28 16:40
+
+I have Internal Server errors every time I try.
+
+I wanted to make this entry :
+- There's no "Copy Link Location" being worked by "egaudet@fr...
+100%"
+
+:-/
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 29-Nov-2000 a 01:38:01
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]About bug #60 (transparency in PNG's)
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-28 15:59
+
+Hi all,
+
+I've been looking into the PNG transparency bug (#60). After an
+hour of searches along src/png.c and libpng-dev thinking that it was
+an initilization issue I found out it had nothing to do with
+that. Later I found out that the problem was in
+`Png_datarow_callback`, in the `case 4:` the alpha channel wasn't
+being activated (there was even a `todo`, which I missed!). I've made
+a sketch that works, but I've come to a problem:
+
+Where do I find the current window (page) background color? I guess
+this is the same problem with GIF transparency. When you have a
+transparent GIF and open it with the standard dillorc file, it'll look
+alright, but if you change the bg_color in your dillorc then the GIF
+will have in the transparent pixels NOT your background color, but the
+color for the standard bg_color that was in the original dillorc...
+
+So I guess that's a problem with GIF's and PNG's. Sebastian, is this
+bg_color integrated to the new Dw your making up? Should I wait for it
+to sent in the patch for PNG transparency, or should I make it
+already? (Actually, it's already done and working, but I didn't want
+to sent it in with this background color issue).
+
+best regards to all, 
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-28 13:34
+
+Hi again,
+
+
+I forgot something important, read below.
+
+Livio Baldini Soares writes:
+> Hi again,
+> 
+> think I fixed bug 100 already, read below.
+> 
+> Livio Baldini Soares writes:
+> <snip>
+> > 
+> > > - There's a small bug within a_Url_squeeze. When there're too
+> > > much "/.." sequences in the URL, it removes the server!
+> <snip>
+> 
+> I got to it, and I think I fixed it ok. I thought the original code
+> kind of confusing, but I've done little changes (3 lines). Basically
+> here is my diff (against src/IO/Url.c from CVS, but I think 0.3.0 will
+> be ok too since this hasn't changed, I think):
+
+<snip>
+
+The a_Url_squeeze seems to work fine, but that never gets called for
+user typed URL's. Im my opinion this is wrong, so I have another patch
+which changes a_Nav_push to change the user specified URL to the
+squeezed one. Then you'll be able to see how the a_Url_squeeze changes
+the URL (using the previous patch I sent). Here is the patch against
+src/nav.c, I changed only the a_Nav_push funtion:
+
+*****************************************************
+--- dillo/src/nav.c Mon Nov 13 10:01:55 2000
++++ dillo.new/src/nav.c Tue Nov 28 10:38:20 2000
+@@ -203,20 +203,22 @@ void a_Nav_remove_top_url(BrowserWindow 
+*/
+void a_Nav_push(BrowserWindow *bw, const char *Url)
+{
+- char *p, *url;
++ char *p, *url, *sUrl;
+
+g_return_if_fail (bw != NULL);
+
+- url = g_strdup(Url);
++ sUrl = a_Url_squeeze(g_strdup(Url)); /* get the squeezed Url */
++ url = g_strdup(sUrl);
+if ( (p = strstr(url, "?!POST")) != NULL )
+*p = '\0';
+
+a_Nav_cancel_expect(bw);
+- bw->nav_expect.url = g_strdup(url);
++ bw->nav_expect.url = g_strdup(sUrl);
+bw->nav_expect.title = NULL;
+bw->nav_expecting = TRUE;
+- Nav_open_url(bw, Url, FALSE);
++ Nav_open_url(bw, sUrl, FALSE);
+g_free(url);
++ g_free(sUrl);
+}
+
+/* 
+****************************************
+
+
+that's all, bye,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-28 11:13
+
+Hi again,
+
+think I fixed bug 100 already, read below.
+
+Livio Baldini Soares writes:
+<snip>
+> 
+> > - There's a small bug within a_Url_squeeze. When there're too
+> > much "/.." sequences in the URL, it removes the server!
+<snip>
+
+I got to it, and I think I fixed it ok. I thought the original code
+kind of confusing, but I've done little changes (3 lines). Basically
+here is my diff (against src/IO/Url.c from CVS, but I think 0.3.0 will
+be ok too since this hasn't changed, I think):
+
+************************************************************
+diff -pru dillo/src/IO/Url.c dillo.new/src/IO/Url.c
+--- dillo/src/IO/Url.c Sat Nov 11 01:54:45 2000
++++ dillo.new/src/IO/Url.c Mon Nov 27 23:43:33 2000
+@@ -252,7 +252,10 @@ char *a_Url_squeeze(char *str)
+str[ni++] = s[i];
+if ( nc && ni )
+--ni;
++ nc = ni;
+while ( ni && str[--ni] != '/');
++ if (!ni || (!strncmp(str, ") && ni == 6))
++ ni = nc+1; /* if we couldn't find a parent direcory, restore value */
+s = p = p + 3;
+} else if ( p[2] == '/' || !p[2] ) { /* "/./" or "/." */
+nc = p - s;
+@@ -264,6 +267,8 @@ char *a_Url_squeeze(char *str)
+p += 2;
+}
+}
++
++ if (ni && str[ni-1] == '/') ni--;
+/* Append the rest of 'str' */
+if ( ni == 0 && !*s ) str[ni++] = '/';
+while ( (str[ni++] = *s++) );
+*****************************************************
+
+What I do is when trying to look for a parent directory, prevent it
+from eating up the hostname. That is done in the `if` I inserted. If
+the variable `ni` got back to the beginning of the hostname (==0) or
+found a '/' expect it's the one from " then restore it's
+value... Umm, guess I'm not very good at explaining this.. is any body
+understanding what the hell am I saying? If anybody wants me to
+explain this again, just ask, I won't complain!
+
+I'll change the status to 100% in the bug-track when I get back net
+connection. Oh, and I'm NOT suppossed to put `done`, this is done by
+Jorge when he inserts the patch in the code (IF we agree the code is
+worth putting in), is this correct Jorge?
+
+Another thing, there was a comment in the header of a_Url_squeeze
+made by Jorge, saying the he wasn't sure that it was necessary. Well I
+checked APACHE and it's NOT necessary to squeeze the URL. I sent in a
+request with a telnet to port 80, and sent an `GET /./FAQ/../ HTTP/1.0`,
+and got the /index.html. Seems to work fine with both /../ and /./,
+but I'm not sure if this is true to all HTTP servers. The only time
+APACHE complains is when we send in a request for /FAQ/../../, APACHE
+claims this is a BAD REQUEST, but the new a_Url_squeeze prevents
+this. 
+
+that's enough for now!, any doubts or flames, don't hesitate to
+send,
+
+bye yall,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Re:
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-28 08:48
+
+-- En reponse de "[Dillo-dev]Re:" de Jorge Arellano Cid, le 27-Nov-2000
+:
+>> A friend of mine as access to several sparc stations (both 32 and 64
+>> bits, under linux and solaris 8). I asked him to test Dillo.
+> 
+> Thanks.
+> Actually dillo works perfectly on a Sparc 32, but the Sparc 64
+> and Solaris architectures haven't been tested. I'll be expecting
+> that info.
+> 
+
+Dillo has been successfully tested under :
+- sparc 5 (32 bits) linux, glibc 2.1.3, gcc 2.95.3
+- sparc ultra 1 (64 bits kernel, 32 bits userspace) linux, glibc 2.1.3,
+gcc 2.95.3
+- sparc ultra 10 (64 bits) solaris 8, gcc 2.95.2
+
+No problem at all : just compile and run :-))))
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Nov-2000 a 17:44:57
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Re:
+
+From: Jörgen Viksell <vsksga@ho...> - 2000-11-28 07:12
+
+>GtkHSeparator doesn't seem to have all the features needed for painting
+>a HR tag with attributes : no line thickness (-> no SIZE attribute),
+>only 3d-rendering (-> no NOSHADE attribute).
+>Will it be a problem ?
+
+If the new Dw handles GTK widget as GTK does itself (resizing and stuff) 
+then it should only be the matter of writing a new function for
+widget->style->klass->draw_hline
+
+I did a quick experiment with that and there were no problems with those 
+attributes.
+I guess reality will prove me to be wrong though... ;-)
+
+// Jörgen Viksell
+_____________________________________________________________________________________
+Get more from the Web. FREE MSN Explorer download : http://explorer.msn.com 
+
+
+
+RE: [Dillo-dev]Re:
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-28 02:22
+
+-- En reponse de "[Dillo-dev]Re:" de Sebastian Geerken, le 27-Nov-2000 :
+> Jorge Arellano Cid writes:
+> > Hrulers
+> > 
+> > I considered patches from Allan, Eric and some progress by
+> > Sebastian.
+> > 
+> > Hrulers will have to be reimplemented for the new Dw, and as
+> > both patches implemented a resize mechanism that's not the one
+> > that current-Dw uses, and because both showed several problems
+> > (incompletness or fails) I'd prefer to wait for the new Dw and
+> > try to construct the hruler based upon the good ideas that both
+> > patches showed.
+> 
+> Both patches will be obsolete, this is already working (very 
+> different) in the new Dw with embedded GtkHSeparator's (but for 
+> support of all attributes of <hr> there is still the need for a new 
+> DwHRuler).
+> 
+> Sebastian
+
+GtkHSeparator doesn't seem to have all the features needed for painting
+a HR tag with attributes : no line thickness (-> no SIZE attribute),
+only 3d-rendering (-> no NOSHADE attribute).
+Will it be a problem ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Nov-2000 a 11:17:54
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Re:
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-28 01:58
+
+-- En reponse de "[Dillo-dev]Re:" de Jorge Arellano Cid, le 27-Nov-2000
+:
+> Pagemarks: This must be moved to the rightmost-button menu and
+> set insensitive when there're no headings in the page.
+> 
+
+I'll do it soon.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Nov-2000 a 10:58:23
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Re:
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-27 23:34
+
+Jorge Arellano Cid writes:
+> Hrulers
+> 
+> I considered patches from Allan, Eric and some progress by
+> Sebastian.
+> 
+> Hrulers will have to be reimplemented for the new Dw, and as
+> both patches implemented a resize mechanism that's not the one
+> that current-Dw uses, and because both showed several problems
+> (incompletness or fails) I'd prefer to wait for the new Dw and
+> try to construct the hruler based upon the good ideas that both
+> patches showed.
+
+Both patches will be obsolete, this is already working (very 
+different) in the new Dw with embedded GtkHSeparator's (but for 
+support of all attributes of <hr> there is still the need for a new 
+DwHRuler).
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-27 18:33
+
+Livio Baldini Soares writes:
+
+<big snip>
+
+> I put in a patch for this, it's bug number is 100. I put in that I
+> was going to work on it.... but I guess I did something wrong and only
+> my name appeared, is it possible for me to change the `Being worked:`
+> field? If not, Jorge could you change it to livio@li..., I
+> think it's much more informative than just `Livio`.
+
+Nevermind, just changed it to show my e-mail, sorry about that...
+
+bye yall,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Livio Baldini Soares <livio@li...> - 2000-11-27 18:17
+
+Jorge Arellano Cid writes:
+> 
+> Hi there!
+> 
+
+Hi Jorge,
+
+I liked the new version (0.3.0) a lot. Nice work. By the way,
+if by any chance I get the chance to patch anything, then I should
+probably patch against CVS, right? Another thing, do you (or anybody
+else) have anything against sending patches to the list, so everyone
+can "pitch" in, and publically(?) discuss them. If not do you want me
+to CC: them to you, Jorge?
+
+> - There's a small bug within a_Url_squeeze. When there're too
+> much "/.." sequences in the URL, it removes the server!
+
+<snip>
+
+> 
+> Patches for these BUGs, and their bug-track-entries, would be
+> appreciated.
+> 
+
+I put in a patch for this, it's bug number is 100. I put in that I
+was going to work on it.... but I guess I did something wrong and only
+my name appeared, is it possible for me to change the `Being worked:`
+field? If not, Jorge could you change it to livio@li..., I
+think it's much more informative than just `Livio`.
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Re:
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-27 16:25
+
+Hi!
+
+
+The code with the Findtext and Pagemarks is in the CVS. The
+server reported no problems when uplading, so I hope its working
+(there were several BUG reports at sourceforge for this; Ah, and
+sourceforge's download counters had gone carzy too!!! Dillo shows
+a negative download rate the day with the highest peak of page
+visits!!! :-)
+
+Back to Findtext: this implementation is a basic one, there's
+still work to do. Most notably stripping of '\n\r\t' and spaces
+when adding to the Text buffer, feedback messages and finally a
+port to the new Dw when it's ready.
+
+Pagemarks: This must be moved to the rightmost-button menu and
+set insensitive when there're no headings in the page.
+
+-----
+Dillo in a 64bit machine:
+
+> Actually it does work on 64-bit systems. I currently run it on an Alpha
+> It isn't my main browser (yet), but it is slowly getting there. FYI I
+> also maintain the Debian dillo package.
+
+I'm very happy to know it works!!! (my efforts haven't been
+wasted!).
+
+In regard to the slow progress, I agree with you, and its
+mostly due to an effort to clean and implement design solutions
+in the code that serve as framework for future enhancement:
+networking has been rewritten, Dw is getting a new design and
+plugins are being developed to simplify several tasks. If we
+succeed with them, I hope we can see faster improvement in the
+future. bear with us and let's get there!
+
+> A friend of mine as access to several sparc stations (both 32 and 64
+> bits, under linux and solaris 8). I asked him to test Dillo.
+
+Thanks.
+Actually dillo works perfectly on a Sparc 32, but the Sparc 64
+and Solaris architectures haven't been tested. I'll be expecting
+that info.
+
+---
+Hrulers
+
+I considered patches from Allan, Eric and some progress by
+Sebastian.
+
+Hrulers will have to be reimplemented for the new Dw, and as
+both patches implemented a resize mechanism that's not the one
+that current-Dw uses, and because both showed several problems
+(incompletness or fails) I'd prefer to wait for the new Dw and
+try to construct the hruler based upon the good ideas that both
+patches showed.
+
+slangley:
+I saw your entry (BUG#62) and I'd prefer you to work it with
+the new Dw (just not to waste your efforts).
+
+---
+
+>> - There a small bug within a_Url_squeeze. When there're too
+>> much "/.." sequences in the URL, it removes the server!
+>
+> How-to reproduce it ... ?
+
+Try something like:
+
+http://some.site.org/../main.html or
+http://some.site.org/../main.html
+
+they should resolve to http://some.site.org/main.html
+
+---
+
+> I'm having the hardest time making bug-track-entries : 99% of the time
+> I'm getting :
+>
+> Internal Server Error ...
+
+I just made an entry from other network, for Find Text (BUG#99).
+If someone else has problems please tell me.
+
+
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Misc.
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-27 14:44
+
+-- En reponse de "[Dillo-dev]Misc." de Jorge Arellano Cid, le
+25-Nov-2000 :
+> Patches for these BUGs, and their bug-track-entries, would be
+> appreciated.
+> 
+
+I'm having the hardest time making bug-track-entries : 99% of the time
+I'm getting :
+<<
+Internal Server Error
+
+The server encountered an internal error or misconfiguration and was
+unable to complete your request.
+
+Please contact the server administrator, root@localhost and inform
+them of the time the error occurred, and anything you
+might have done that may have caused the error.
+
+More information about this error may be available in the server error
+log.
+
+Apache/1.3.12 Server at huallepen.inf.utfsm.cl Port 80
+>>
+
+BTW: if comment and howto-reproduce lines are limited to 256 chars, it
+would be easier for everbody to ask for :
+ROWS=4 COLS=64
+instead of the stupid :
+ROWS=5 COLS=80
+('see what I mean ? ;-)
+
+... And since I'm talking about the bug-track engine, it would be nice
+to have a "Wish insertion page" : all unimplemented features are not
+"bugs", and I'm not sure I want to see "I'd like to have SSL", "I'd
+like a single download window" pollute the bug list. 
+I don't want them forgotten when we'll be looking for new features
+implementation and long term projects. 
+(would a poll be hard to implement, for most-wanted features ?)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 27-Nov-2000 a 23:18:12
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Misc.
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-27 01:36
+
+-- En reponse de "[Dillo-dev]Misc." de Jorge Arellano Cid, le
+25-Nov-2000 :
+> - A "Copy link location" item (to allow pasting)
+
+I'm going to try that, but I can't promise anything.
+
+> - There's a small bug within a_Url_squeeze. When there're too
+> much "/.." sequences in the URL, it removes the server!
+
+How-to reproduce it ... ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 27-Nov-2000 a 10:35:44
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Ron Farrer <rbf@fa...> - 2000-11-26 16:30
+
+Attachments: Message as HTML      
+
+Eric GAUDET (egaudet@in...) wrote:
+
+> If you know some C, would you mind investigating and trying to fix
+> alpha-specific bug#89 and 90 ? (since you're the only alpha-guy around
+> ;-)
+
+Is there a way of contacting whoever submitted bug#89? I am unable to
+get dillo to segfault on lwn.net. Also, bug#90 is using a non-free
+compiler.. I can't help with that.
+
+Ron
+--=20
+Email: <mailto:rbf@fa...>, <mailto:rbf@de...>
+Home: <http://www.farrer.net/~rbf/>
+Alpha Linux Powered: <http://www.alphalinux.org> 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-26 12:30
+
+-- En reponse de "Re: [Dillo-dev]Misc." de Ron Farrer, le 26-Nov-2000 :
+> Actually it does work on 64-bit systems. I currently run it on an
+> Alpha
+> It isn't my main browser (yet), but it is slowly getting there. FYI I
+> also maintain the Debian dillo package. 
+> 
+
+If you know some C, would you mind investigating and trying to fix
+alpha-specific bug#89 and 90 ? (since you're the only alpha-guy around
+;-)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Nov-2000 a 21:27:05
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev][ANN]Preferences plugin !
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-26 12:24
+
+Hi,
+I just published my Preferences Dillo-plugin at my now usual address
+(http://www.rti-zone.org/dillo/)
+Fully working : it writes dillorc ! (provided your dillo's patched for
+"dpi" ;-)
+With a screenshot !
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Nov-2000 a 21:19:18
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Ron Farrer <rbf@fa...> - 2000-11-26 05:24
+
+Attachments: Message as HTML      
+
+Eric GAUDET (egaudet@in...) wrote:
+
+> -- En reponse de "[Dillo-dev]Misc." de Jorge Arellano Cid, le
+> 25-Nov-2000 :
+> > - Make Dillo work in a 64bit machine! (I worked on this a lot,
+> > but I no longer have access to the machine I was using).
+> >=20
+>=20
+> A friend of mine as access to several sparc stations (both 32 and 64
+> bits, under linux and solaris 8). I asked him to test Dillo.
+
+Actually it does work on 64-bit systems. I currently run it on an Alpha
+It isn't my main browser (yet), but it is slowly getting there. FYI I=20
+also maintain the Debian dillo package.=20
+
+Ron
+--=20
+Email: <mailto:rbf@fa...>, <mailto:rbf@de...>
+Home: <http://www.farrer.net/~rbf/>
+Debian on Alpha: <http://www.debian.org/ports/alpha> 
+
+
+
+[Dillo-dev]Tiny bug in FORM checkboxes
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-26 03:04
+
+Hi,
+There's a tiny bug in the CHECKBOX handling : if no VALUE attribute is
+specified, the checked-box value is an empty string ; the default value
+should be "on" so one can differentiate a checked box with an empty
+TEXT input.
+If it's not a bug, it's definitely annoying for POST parsing.
+
+Here's how to fix it : (dillo v0.3.0)
+in html.c : line 1645
+- init_str = "";
++ init_str = "on";
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Nov-2000 a 11:57:59
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Misc.
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-26 01:29
+
+-- En reponse de "[Dillo-dev]Misc." de Jorge Arellano Cid, le
+25-Nov-2000 :
+> - Make Dillo work in a 64bit machine! (I worked on this a lot,
+> but I no longer have access to the machine I was using).
+> 
+
+A friend of mine as access to several sparc stations (both 32 and 64
+bits, under linux and solaris 8). I asked him to test Dillo.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Nov-2000 a 10:28:01
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Will Newton <will@mi...> - 2000-11-25 14:57
+
+On Sat, 25 Nov 2000, Jorge Arellano Cid wrote:
+
+> Although a bit outdated, there's a "project notes" link that
+> has some hints on this subject. If you want to work on it, let me
+> know, cause I'll have to tune the networking part in order to
+> make it functional.
+
+Have you considered using w3c libwww for networking? It's part of GNOME
+now and is available for most ditros.
+(It does HTTP/1.1, SSL and lots of other nice things) 
+
+
+
+[Dillo-dev]Misc.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-25 14:18
+
+Hi there!
+
+When reading the mailing-list, there were several topics so,
+here go my comments and answers:
+
+> If I hit a slow site, I get no visual clue that dillo is doing
+> anything. To see this first hand, go to bugs.debian.org, and look
+> up the package lintian. dillo seems to hang, then magically load
+> the page.
+
+The Stop button may suggest some activity, but that's certainly
+not enough...
+I thought that a small panel to the left of the progress bars
+can be a good solution. I mean a table like this:
+
+,--------------.
+| Dns | Send | [Image progress bar]
+| Retr | Close | [Text progress bar ]
+`--------------'
+
+Those words in the panel can be highlighted when the
+correspondent activities are taking place.
+
+
+> Robert investigated the problem (bug#97) a little more. It appears to
+> be a gcc 2.95.2 bug for K6 with -O2 option. I heard about that for
+> non-i386 cpu (SH4, ARM). It seems -O2 is not reliable for now, except
+> for intel processors.
+>
+> We should put a warning in the README about this.
+
+OK, that'll be in the README file of our next release.
+
+
+> * Downloads
+> Rather than having loads of dialogs like in Netscape, a single
+> window with a list of downloads and status would be cool (imagine
+> a more simple GetRight style window).
+
+Although a bit outdated, there's a "project notes" link that
+has some hints on this subject. If you want to work on it, let me
+know, cause I'll have to tune the networking part in order to
+make it functional.
+
+---
+
+Some patching suggestions:
+
+- A "Copy link location" item (to allow pasting)
+- There's a small bug within a_Url_squeeze. When there're too
+much "/.." sequences in the URL, it removes the server!
+- Make Dillo work in a 64bit machine! (I worked on this a lot,
+but I no longer have access to the machine I was using).
+
+Patches for these BUGs, and their bug-track-entries, would be
+appreciated.
+
+
+---
+
+Finally, when integrating the Find-text patch, I noticed that
+it only works for the first match, so I got into it and now I
+have a Find-text that does it. I'll send a note to the list when
+I upload the code to the CVS.
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Suggestions
+
+From: Will Newton <will@mi...> - 2000-11-24 15:50
+
+On Thu, 23 Nov 2000, Sean 'Shaleh' Perry wrote:
+
+> I have suggested this. Jorge is not 100% convinced. Plus dillo needs some
+> rework to handle css. html items have no storage of names. So you can't do
+> <div name="foo">.
+
+I'll write a CSS parser if you want (a quick search on google says the
+only C CSS parser is in Amaya... I advise any children watching to avert
+their eyes from that code...). 
+
+
+
+RE: [Dillo-dev]Suggestions
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-24 13:26
+
+-- En reponse de "[Dillo-dev]Suggestions" de Will Newton, le
+24-Nov-2000 :
+> 
+> Here are a few ideas/suggestions I have:
+> 
+> * Errors
+...
+> Also, an error log window would be cool (it could be global so all
+> browser windows could output to it). Then I can see why the image
+> didn't load or get more verbose error messages. You could use
+> simple printfs to the console for this, but I think this way is
+> better.
+> 
+
+Warnings an errors are reported to stderr, so you can read them on
+there term where you launched dillo.
+However, that's true dillo's status indications needs some work.
+
+> * Images
+> Is alpha handled properly on images? I have seen some black borders
+> round icons.
+> 
+
+See bug-track engine : transparency is supported for GIF images, but
+not for PNG.
+
+> * Downloads
+> Rather than having loads of dialogs like in Netscape, a single window
+> with a list of downloads and status would be cool (imagine a more
+> simple GetRight style window).
+> 
+
+There's no download at all for now : where're all thinking about it,
+but the feature and the actual implementation have yet to but discussed.
+Your suggestion seem to be what most people want, though. Netscape
+for macintosh does this.
+
+> * CSS
+> CSS can be used well like in Mozilla for preferences e.g. you store
+> default font/colors in a user.css file and these settings "cascade"
+> down.
+> 
+
+This have been discussed before, and rejected for now for two reasons :
+- CSS support seems very far to be implemented ;
+- CSS can't handle every option we want (page-rendering only).
+
+> There's also no "About" dialog. :)
+> 
+
+Right ! Why don't you make one, just to train your skills on Dillo ? :-)
+
+> Anyway, these are just a few ideas I have, although some of them
+> would obviously be in the future. I'm going to look at adding CSS
+> support as soon as I untangle the source code a little. :)
+> 
+
+You're welcome. Don't hesitate to ask any (stupid or not ;-) question
+to the list, but make sure you've read everything on dillo's homepage,
+documentation and mail list archive.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Nov-2000 a 22:13:29
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev][patch] Dillo-plugins final
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-24 12:12
+
+Hi all,
+I just released the final version of my patch for Dillo-plugins for you
+"I-want-the-last-patch" freaks, and also for those who want to give it
+a try and send me some comments or bug repports.
+
+Visit my dedicated web page, now permanent at :
+http://www.rti-zone.org/dillo/
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Nov-2000 a 21:09:42
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Suggestions
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-24 06:28
+
+> 
+> * CSS
+> CSS can be used well like in Mozilla for preferences e.g. you store
+> default font/colors in a user.css file and these settings "cascade" down.
+> 
+
+I have suggested this. Jorge is not 100% convinced. Plus dillo needs some
+rework to handle css. html items have no storage of names. So you can't do
+<div name="foo">. 
+
+
+
+[Dillo-dev]Suggestions
+
+From: Will Newton <will@mi...> - 2000-11-24 03:31
+
+Here are a few ideas/suggestions I have:
+
+* Errors
+Errors IMO should appear in the main window and not in any dialogs like in
+Nestcape. Dillo does this, I know, but I wanted to make sure it stays like
+that. :)
+Also, an error log window would be cool (it could be global so all browser
+windows could output to it). Then I can see why the image didn't load or
+get more verbose error messages. You could use simple printfs to the
+console for this, but I think this way is better.
+
+* Images
+Is alpha handled properly on images? I have seen some black borders round
+icons.
+
+* Downloads
+Rather than having loads of dialogs like in Netscape, a single window with
+a list of downloads and status would be cool (imagine a more simple
+GetRight style window).
+
+* CSS
+CSS can be used well like in Mozilla for preferences e.g. you store
+default font/colors in a user.css file and these settings "cascade" down.
+
+There's also no "About" dialog. :)
+
+Anyway, these are just a few ideas I have, although some of them would
+obviously be in the future. I'm going to look at adding CSS support as
+soon as I untangle the source code a little. :) 
+
+
+
+RE: [Dillo-dev]Status
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-24 03:17
+
+On 24-Nov-2000 Will Newton wrote:
+> 
+> I got the latest beta of Dillo (0.3.0) and it seems pretty fast, but no
+> tables means it can't render much. Is tables the next feature to be added?
+> CSS support would also be cool. I'm currently looking through the source
+> to see where I can help out.
+> 
+
+Once the new Dw widget appers, I will begin integrating my work on html.c. I
+have nearly all font affecting tags working. All that is left is tables and
+frames, and tags that do not directly affect rendering like abbr. If I recall,
+someone else is working on div.
+
+If you would like to make a css parser, that would be handy. CSS support will
+be a while, there are more pressing issues. 
+
+
+
+FW: RE: [Dillo-dev]dillo 0.3.0 crashes at startup
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-24 01:26
+
+Robert investigated the problem (bug#97) a little more. It appears to
+be a gcc 2.95.2 bug for K6 with -O2 option. I heard about that for
+non-i386 cpu (SH4, ARM). It seems -O2 is not reliable for now, except
+for intel processors.
+
+We should put a warning in the README about this.
+
+-------------------------- FW --------------------------------
+Program received signal SIGSEGV, Segmentation fault.
+Dw_border_size_nego_y (dw=0x8054290, allocation=0x80b0a18) at
+dw_border.c:64
+64 dw->allocation = *allocation;
+</snip>
+
+locals:
+dw = (Dw *) 0x8054290
+allocation = (DwRect *) 0x80b0a18
+
+> -O2 seems to pose problems in 2.95.2. Can you try -O or -O0 (O-zero)
+> with k6 ?
+
+"-O2 -mcpu=pentium" works fine.
+"-O0 -mcpu=k6 -march=pentium -g3" works fine also.
+"-O -mcpu=k6 -march=pentium -g3" works fine as well, but
+"-O2 -mcpu=k6 -march=pentium -g3" doesn't work. Then again
+"-O6 -mcpu=pentium -march=pentium -g3" DOES work.
+
+I think setting -cpu=k6, or ever worse, -march=k6 (had problems with
+this one before..) causes some type of code to be miscompiled in some
+cases when you use -O2. If -O2 fails at compile-time (for me) it starts
+to loop infinitly. In these cases only -O0 works, so 2.95.x is kinda
+buggy. I hope the 3.0 series will be better.
+
+> -g is always a good idea for debugging ;-)
+
+Yes, and you can always strip the binary when your'e done.
+By the way, "-W -Wall" is a LOT better at catching dirty code than just
+-Wall. Try it and see for yourself :).
+
+Put a note of this in some FAQ somewhere so that you can tell the next
+victim of this gcc bug to "read the friendly manual" :).
+
+Thanks, Robert.
+
+--------------End of forwarded message-------------------------
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Nov-2000 a 10:17:57
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Status
+
+From: Will Newton <will@mi...> - 2000-11-24 00:52
+
+I got the latest beta of Dillo (0.3.0) and it seems pretty fast, but no
+tables means it can't render much. Is tables the next feature to be added?
+CSS support would also be cool. I'm currently looking through the source
+to see where I can help out. 
+
+
+
+RE: [Dillo-dev]dillo 0.3.0 crashes at startup
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-23 01:21
+
+What version of dillo ?
+Can you send a stack dump after the crash ? 
+Are you on a i386 arch ? if so, can you send me your dillo binary ?
+
+PS: the list is very low traffic, if you register you won't be annoyed
+by more than 3 or 4 messages a week.
+
+-- En reponse de "[Dillo-dev]dillo 0.3.0 crashes at startup" de Robert
+Holmberg, le 22-Nov-2000 :
+> Ahh..CRAP! Just submitted bug #97 with too many characters and only
+> half the bug description was submitted.. here we go:
+> 
+> Dillo crashes on startup (gcc 2.95.2, glibc 2.1.2) after showing an
+> empty
+> window. It does show contents (menu, toolbar..) in the window if run
+> through gdb:
+> 
+> (gdb) run
+> Starting program: /usr/local/bin/dillo 
+> dillo_dns_init: Here we go!
+> Loading bookmarks...
+> [New Thread 3591 (manager thread)]
+> [New Thread 3590 (initial thread)]
+> [New Thread 3592]
+> 
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x8061c00 in Dw_border_size_nego_y ()
+> 
+> Please CC questions to me, I'm not on the list.
+> 
+> Robert.
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Nov-2000 a 10:17:40
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Dillo 0.3.0 crash on starup.
+
+From: Robert Holmberg <robert.holmberg@he...> - 2000-11-22 21:22
+
+Hust submitted bug #97 w. more than 256 characters in description in the
+bugtarcker. Here's the whole deal:
+
+Dillo 0.3.0, gcc 2.95.2, glibc 2.1.2, linux 2.4-test11:
+
+(gdb) run
+Starting program: /usr/local/bin/dillo 
+dillo_dns_init: Here we go!
+Loading bookmarks...
+[New Thread 3621 (manager thread)]
+[New Thread 3620 (initial thread)]
+[New Thread 3622]
+
+Program received signal SIGSEGV, Segmentation fault.
+0x8061c00 in Dw_border_size_nego_y ()
+
+Dillo does draw it's window first.
+
+I'm NOT suscribed to the list.
+
+Robert. 
+
+
+
+[Dillo-dev]dillo 0.3.0 crashes at startup
+
+From: Robert Holmberg <robert.holmberg@he...> - 2000-11-22 21:17
+
+Ahh..CRAP! Just submitted bug #97 with too many characters and only half
+the bug description was submitted.. here we go:
+
+Dillo crashes on startup (gcc 2.95.2, glibc 2.1.2) after showing an empty
+window. It does show contents (menu, toolbar..) in the window if run
+through gdb:
+
+(gdb) run
+Starting program: /usr/local/bin/dillo 
+dillo_dns_init: Here we go!
+Loading bookmarks...
+[New Thread 3591 (manager thread)]
+[New Thread 3590 (initial thread)]
+[New Thread 3592]
+
+Program received signal SIGSEGV, Segmentation fault.
+0x8061c00 in Dw_border_size_nego_y ()
+
+Please CC questions to me, I'm not on the list.
+
+Robert. 
+
+
+
+[Dillo-dev]BUG#95
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-22 01:27
+
+Hi!
+
+
+I hope you're enjoying the 0.3.0 release!
+(I haven't received complaints)
+
+There're still several things to do, and I'll try them one by
+one...
+
+I'm still concerned with BUG#95, and followed an interesting
+thread at http://www.flora.org/lynx-dev/lynx-dev/9608/0278.html
+
+Even more, further research showed me that this issue is far
+from being easy to solve, but the "trend" seems to use what Fote
+suggested in the previous thread (0283.html).
+
+The page suggested in the bugtrack engine has changed to this
+standard, so now its browsable with dillo without any change! And
+I also remember that some time ago, sourceforge included
+directions for displaying their logo with an image URL that
+included a &amp; sequence, but not anymore!
+
+So it seems that things are getting straight in an attempt to
+keep CGI functionality working ('&' in that context is a reserved
+character to separate name=value pairs, and any use of it for
+other purpose should be hex escaped).
+
+
+Please send me any comments, specially if you can prove it
+MUST be handled in another way, otherwise I'll delete the entry
+within a few days.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Font issues
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-16 01:59
+
+Eric GAUDET wrote:
+> 
+> I've just upgraded Netscape to 4.75 (mandrake RPM) which _needs_ the
+> package mozilla-fonts. These fonts seem to be buggy : the
+> -helvetica-medium-italic- is a bitmap 18pts font looking bold, and it's
+> ugly when resized in 12 by Dillo for regular italic.
+> One way around is to change Dillo to use "oblique" instead of "italic":
+> 
+> in dw_page.c (v0.3.0)
+> in static GdkFont *Dw_page_realize_font(DwPageFont *font)
+> line 1115:
+> - font->italic ? "i" : "r",
+> + font->italic ? "o" : "r",
+
+And a few lines below:
+if (font->font == NULL && font->italic) {
+- /* Some italic fonts (e.g. Courier) use "o" instead of "i". */
+- sprintf(fontname, "-*-%s-%s-o-*-*-%d-*-75-75-*-*-*-*",
++ /* Some italic fonts (e.g. Courier) use "i" instead of "o". */
++ sprintf(fontname, "-*-%s-%s-i-*-*-%d-*-75-75-*-*-*-*",
+font->name,
+font->bold ? "bold" : "medium",
+font->size);
+font->font = gdk_font_load(fontname);
+}
+
+> That looks like an extreme solution to change Dillo when a font is
+> buggy, but it works. (BTW, my adode and urw helvetica don't have italic
+> face, only oblique : X must be switching to oblique when italic's not
+> found ; does any distri have helvetica-oblique ?)
+
+It's dillo, which switches to oblique.
+
+> A better way would be to make that an option in dillorc.
+> Perhaps Sean has something better with his fonts handling (or a better
+> ideas) ?
+
+Oblique and italics are two different variants, actually you get an
+oblique variant by shearing a font, but an italic variant is a totally
+new font. Helvetica Italics is quite unusual, as well as e.g. Times
+Oblique. On my system, only Adobe Courier provides both variants.
+
+However, HTML does not distinguish between these variants, but CSS
+does. Personally I prefer oblique variants, since they are more
+readable at low resolutions. A option letting the user decide which
+variant dillo should prefer, when both are available, would imho be a
+good possibility.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]where did view source go?
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-15 09:20
+
+-- En reponse de "Re: [Dillo-dev]where did view source go?" de
+Sebastian Geerken, le 14-Nov-2000 :
+>> aaarrggghhh, where did view source go? how can I tell why dillo
+>> chose to
+>> render a web page like it did if I can not see the html?
+> 
+> Yes, somehow a complete menu got lost ... commented in
+> a_Menu_mainbar_new.
+
+It's in the popup menu now.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Nov-2000 a 18:19:45
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]where did view source go?
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-15 07:13
+
+> 
+> BTW, never wondered about the term "View Source"? Actually, there
+> *aren't* sources for html documents (except pl, php, asp ...), the
+> menu entry should be named "View As Plain Text".
+>
+
+"source" as an abstraction. It may be cgi generated, static, etc. Perhaps
+"View Markup"? 
+
+
+
+Re: [Dillo-dev]where did view source go?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-14 20:49
+
+Sean 'Shaleh' Perry wrote:
+> 
+> aaarrggghhh, where did view source go? how can I tell why dillo chose to
+> render a web page like it did if I can not see the html?
+
+Yes, somehow a complete menu got lost ... commented in
+a_Menu_mainbar_new.
+
+BTW, never wondered about the term "View Source"? Actually, there
+*aren't* sources for html documents (except pl, php, asp ...), the
+menu entry should be named "View As Plain Text".
+
+Sebastian 
+
+
+
+[Dillo-dev]Bug#95 : not a bug !
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-14 13:07
+
+I just parsed the bugtrack engine, and bug#95 puzzled me : I never
+heard of entities in URLs before, even in the RFC. The only official
+escape mecanism for URLs is %XX where X is hexadecimal ;
+non escaped characters are UTF-8 (which is very close to ISO8859-1 ?).
+HTML4 specs has a note about that : some old browsers accept this
+undocumented URL parsing, and some bad pages rely on that. 
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 14-Nov-2000 a 21:55:49
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]where did view source go?
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-14 12:15
+
+-- En reponse de "[Dillo-dev]where did view source go?" de Sean
+'Shaleh' Perry, le 14-Nov-2000 :
+> aaarrggghhh, where did view source go? how can I tell why dillo
+> chose to render a web page like it did if I can not see the html?
+
+Would somebody be see a problem make view source a Dillo-plugin ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 14-Nov-2000 a 20:21:20
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]where did view source go?
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-14 08:13
+
+aaarrggghhh, where did view source go? how can I tell why dillo chose to
+render a web page like it did if I can not see the html? 
+
+
+
+[Dillo-dev]dillo does not give enough user feedback
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-14 08:07
+
+If I hit a slow site, I get no visual clue that dillo is doing anything. To
+see this first hand, go to bugs.debian.org, and look up the package lintian. 
+dillo seems to hang, then magically load the page. 
+
+
+
+Re: [Dillo-dev]New 0.3.0 release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-14 07:42
+
+> I downloaded it a few hours ago, and patched the changes into my
+> version (a bit "handwork" was necessary). I already tested
+> third-button-menus and some new tags implemented by Jörgen (<u>,
+> <strike> and <s>), and that seems to work.
+> 
+
+awesome, those were the last three tags. I thing once my changes are merged
+into dillo the only tags not supported are the non display tags (like abbr or
+address) and sub and sup. 
+
+
+
+RE: [Dillo-dev]Font issues
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-14 07:41
+
+> A better way would be to make that an option in dillorc.
+> Perhaps Sean has something better with his fonts handling (or a better
+> ideas) ?
+> 
+
+font handling is actually the next thing on my list. Hmm, I have Xfree 4.0.1
+and all still seems well. 
+
+
+
+[Dillo-dev]Font issues
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-14 02:01
+
+I've just upgraded Netscape to 4.75 (mandrake RPM) which _needs_ the
+package mozilla-fonts. These fonts seem to be buggy : the
+-helvetica-medium-italic- is a bitmap 18pts font looking bold, and it's
+ugly when resized in 12 by Dillo for regular italic.
+One way around is to change Dillo to use "oblique" instead of "italic":
+
+in dw_page.c (v0.3.0)
+in static GdkFont *Dw_page_realize_font(DwPageFont *font)
+line 1115:
+- font->italic ? "i" : "r",
++ font->italic ? "o" : "r",
+
+That looks like an extreme solution to change Dillo when a font is
+buggy, but it works. (BTW, my adode and urw helvetica don't have italic
+face, only oblique : X must be switching to oblique when italic's not
+found ; does any distri have helvetica-oblique ?)
+A better way would be to make that an option in dillorc.
+Perhaps Sean has something better with his fonts handling (or a better
+ideas) ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 14-Nov-2000 a 10:47:37
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]New 0.3.0 release
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-13 14:38
+
+Jorge Arellano Cid wrote:
+> 
+> Hi!
+> 
+> The sourceforge shell acccount server is back and dillo-0.3.0
+> is there, ready for download.
+> 
+> Note that there're still some patches in my queue and they'll
+> have to wait until 0.3.1 (This release is a long delayed one and
+> I didn't wanted to procrastinate it even more).
+> 
+> I hope you enjoy this release, but bear in mind that 0.3.0
+> is an intermediate release before 0.3.1.
+> 
+> Jorge.-
+> 
+> Ps: I'll be expecting some feedback!
+
+I downloaded it a few hours ago, and patched the changes into my
+version (a bit "handwork" was necessary). I already tested
+third-button-menus and some new tags implemented by Jörgen (<u>,
+<strike> and <s>), and that seems to work.
+
+I hope I'll be able to "release" a slow, buggy, but basicly working
+Dw, integrated in dillo 0.3.0, within the next few days.
+
+Sebastian 
+
+
+
+[Dillo-dev]New 0.3.0 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-13 13:01
+
+Hi!
+
+The sourceforge shell acccount server is back and dillo-0.3.0
+is there, ready for download.
+
+Note that there're still some patches in my queue and they'll
+have to wait until 0.3.1 (This release is a long delayed one and
+I didn't wanted to procrastinate it even more).
+
+I hope you enjoy this release, but bear in mind that 0.3.0
+is an intermediate release before 0.3.1.
+
+
+Jorge.-
+
+Ps: I'll be expecting some feedback! 
+
+
+
+[Dillo-dev]dillo-0.3.0
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-12 18:07
+
+Hi!
+
+
+The dillo-0.3.0 version is ready and waiting for release. The
+funny thing is that the sourceforge server (shell accounts)
+refuses foreign connections! I've been trying for a couple of
+days and also wrote the support staff there asking for some news.
+When the server comes up, 0.3.0 will be there.
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]CVS update
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-10 02:51
+
+-- En reponse de "[Dillo-dev]CVS update" de Jorge Arellano Cid, le
+09-Nov-2000 :
+> 
+> Hi!
+> 
+> We're getting closer to 0.3.0 release. I just updated the CVS
+> server (and bug-track engine) with the newest version.
+> 
+
+I'll post the complete/clean Dillo-plugins patch against v0.3.0 then
+(this should make it easier for you)
+
+> - The horizontal rulers patch (worked by Eric and Allan). Which
+> one is the latest patch? Allan says its patch takes into
+> account feedback from Jörgen and Eric. And I also have a
+> patch from Eric :-)
+> Please tell me which one to apply or send me a new one
+> against the CVS code.
+> 
+
+I know nothing about Allan's patch. Mine is dated Aug 26 and I haven't
+touched it since. Mine is complete though : all attributes are
+recognized and redendered, <br> before and after the <hr> (see more
+details on my page). 
+
+> - Bug#80 worked by Eric. The Web site doesn't contain a valid
+> diff file for it (please send me that patch Eric).
+> 
+
+Oops, sorry. Site updated. As it's a tiny patch, it's also in this mail.
+
+> - For BUG#27. Which test pages did you use Eric? Please send me
+> some URLs.
+> 
+
+It's in the Html.testsuite. (There was no link from the index to the
+page, but the page was here along with the images, sorry : updated on
+my page). Link : Image Maps
+
+PS: patch for bug #80: (my mailer is puting some \n in the way,
+prefer my page's version :-/)
+
+diff -pur dillo-0.2.4/src/dw_page.c dillo-0.2.4.bug80/src/dw_page.c
+--- dillo-0.2.4/src/dw_page.c Tue Aug 22 00:54:09 2000
++++ dillo-0.2.4.bug80/src/dw_page.c Sun Aug 27 22:15:18 2000
+@@ -34,7 +34,7 @@
+#include "prefs.h"
+#include "commands.h"
+
+-#define DW_GET_BW(page) (BrowserWindow *)((page)->status_data)
++#define DW_GET_BW(page) (page->status?(BrowserWindow
+*)((page)->status_data):NULL)
+
+/*
+* Set GtkDwScroller::anchor_pos value.
+@@ -670,9 +670,9 @@ static void Dw_page_handle_event(Dw *dw,
+menu_popup.info.url = page->links[link_pressed].url;
+gtk_menu_popup(GTK_MENU(menu_popup.menu_over_link), NULL,
+NULL,
+NULL, NULL, button->button, button->time);
+- } else {
+- if (bw->nav_stack_size == 0)
+- return;
++ } else if (bw) {
++ if (bw->nav_stack_size == 0)
++ return;
+
+menu_popup.info.title =
+bw->nav_stack[bw->nav_stack_ptr].title;
+menu_popup.info.url = bw->nav_stack[bw->nav_stack_ptr].url;
+
+
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Nov-2000 a 11:34:29
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]CVS update
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-09 16:45
+
+Hi!
+
+We're getting closer to 0.3.0 release. I just updated the CVS
+server (and bug-track engine) with the newest version.
+
+Please note how important is to use the bug-track engine and
+not to do silent patching. The new Changelog (in CVS) shows a lot
+of small patches some of whom were not recorded in the bug-track.
+Please avoid this kind of situation.
+
+On the progress side, the new code hasn't solved all the
+problems related with link-following before the page arrives, but
+certainly will not crash if you follow a different link while
+still downloading the referer page! (I hope to finish that in
+0.3.1 release).
+
+I also started moving the patch queue, and I have a few doubts:
+
+- The horizontal rulers patch (worked by Eric and Allan). Which
+one is the latest patch? Allan says its patch takes into
+account feedback from Jörgen and Eric. And I also have a
+patch from Eric :-)
+Please tell me which one to apply or send me a new one
+against the CVS code.
+
+- Bug#80 worked by Eric. The Web site doesn't contain a valid
+diff file for it (please send me that patch Eric).
+
+- The Find text patch (originally from Sam, patched by
+Sebastian and repatched by Allan). Allan, is your final
+version a stable feature. I ask because Sam warned us of some
+bugs in the patch. I guess they were worked out by following
+patches, and you being the last one to work out the code, and
+most probably the one who has tested it more extensively,
+may have the best informed answer.
+
+- For BUG#27. Which test pages did you use Eric? Please send me
+some URLs.
+
+
+Jorge.-
+
+
+PS1: Having a user manual (an HTML page) has started to be
+necessary. A very concise guide. Volunteers?
+
+PS2: There's a small bug within a_Url_squeeze. When there're
+too much "/.." sequences in the URL, it removes the server!
+(a patch for this BUG, and its bug-track-entry would, be highly
+appreciated too).
+
+PS3: If someone takes the time to update the bug-track with the
+missing entries (found in the CVS-Changelog) that'd be very
+helpful too. 
+
+
+
+[Dillo-dev]Dillo Weekly News
+
+From: Allan Clark <shark@bl...> - 2000-11-05 15:45
+
+Just posted you can view it here
+http://www.shark.pwp.blueyonder.co.uk/news/news051100.html
+
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+[Dillo-dev]Internal release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-03 22:49
+
+Hi!
+
+The internal release has a new code layer that's expected to
+ease the fix of the reloading, double clicking and every related
+problem. Those fixes are not there yet!
+
+I just wanted to give this prototype a little testing before
+adopting it. It was a 100Kb diff file!
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Internal release
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-02 14:48
+
+Hi!
+
+I finished a first version of dillo, with the new Dw integrated. It
+compiles, and runs halfway, with thousands of warnings and criticals
+(but no crash), furthermore some features are still missing (mouse
+events, colors etc).
+
+Eric GAUDET wrote:
+> I can't say I found it more stable yet on the multiple click on links
+> side : still crashing. Wasn't it supposed to fix this ? (or is it that
+> it's suppose to _ease_ the fixing of this ?)
+
+I wrote a test php3 page (I'll send it Eric, if you wish to), which
+prints the current time (to check wheater reloading works), and has a
+few delays in it (to simulate a slow connection), and tested it with
+three versions: 0.2.4, 0.3.0-pre1, and 0.3.0-pre1 with the new Dw
+integrated. Testing results have been always the same.
+
+Reloading after transmission is complete, works perfectly for all
+versions, interrupting transmission by reloading didn't work correctly
+in any version: 0.3.0-pre1 crashed, and 0.2.4 as well as 0.3.0-pre1 +
+new Dw *both* did not crash, but displayed the old page (with the old
+time).
+
+When debugging 0.3.0pre1, I found that the segmentation fault happens
+in a_Dw_page_update_begin, with argument page == NULL. I wasn't able
+to examine it more, since the stack was destroyed, but this reminds me
+somehow of bug #77 (where there was somewhere a NULL pointer, and the
+crash could be prevented by a simple check). When anchors work in the
+new Dw, it could be a good idea to check whether bug #77 still arises.
+
+BTW, I tried to insert a few checks, but didn't get it run neither.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Internal release
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-11-02 10:36
+
+Jorge Arellano Cid wrote:
+> [...]
+> Sebastian: you can use this version in your effort to integrate
+> the new Dw (or if you prefer, you can wait the testing news).
+> Anyway, from Dw's perspective, changes to the interface are
+> pretty minimal!)
+
+Ok, I'll integrate it into 0.3.0. (Should not be too hard to patch it
+into any version.)
+
+> --
+> 
+> Sean:
+> 
+> > Jorge, would you like for this to happen after Sebastian's
+> > Dw changes?
+> 
+> Yes, please wait until Sebastian integrates the new Dw.
+> An entry in dillorc to disable FONT processing looks OK to
+> me. (FONT tag is still a tricky issue: please be careful).
+
+I suppose, Sean's changes are mainly in the Html module, and since
+there aren't much changes in the interface of DwPage, that should not
+matter.
+
+Anyway, after integration, there will be still much to do, my current
+plan is:
+1. integration (will not take too much time), then
+2. add missing features, and 
+3. bugs fixing, optimization, comments etc.
+
+I could send you a unfinished version after 2, which will be stable,
+with defined interfaces, but still a bit buggy and slow.
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Internal release
+
+From: Eric GAUDET <egaudet@in...> - 2000-11-02 03:53
+
+-- En reponse de "[Dillo-dev]Internal release" de Jorge Arellano Cid,
+le 01-Nov-2000 :
+> 
+> Hi!
+> 
+> I just uploaded dillo-0.3.0-pre1 to the sourceforge server.
+> This internal release is mainly intended for testing. If it
+> proves to be at least as stable as 0.2.4, it will be the base for
+> 0.3.0 release.
+> 
+
+I can't say I found it more stable yet on the multiple click on links
+side : still crashing. Wasn't it supposed to fix this ? (or is it that
+it's suppose to _ease_ the fixing of this ?)
+
+> Those of you that feel interested, please download it and let
+> me know what you think about it (compared with 0.2.4). I'd
+> appreciate your comments, specially if new BUGs arise.
+> 
+> Most probably 0.3.0 will be this code-base plus a few patches,
+> and a couple of weeks later 0.3.1 will integrate the rest of the
+> patch queue.
+> 
+
+I'll update the Html.testsuite indications when 0.3.1 comes out then.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 02-Nov-2000 a 12:44:29
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Internal release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-11-02 02:48
+
+> 
+> Sean:
+> 
+> > Jorge, would you like for this to happen after Sebastian's
+> > Dw changes?
+> 
+> Yes, please wait until Sebastian integrates the new Dw.
+> An entry in dillorc to disable FONT processing looks OK to
+> me. (FONT tag is still a tricky issue: please be careful).
+> 
+
+will wait for Sebastian then. Gives me some time for some other touch ups. 
+
+
+
+[Dillo-dev]Internal release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-11-01 16:43
+
+Hi!
+
+
+I just uploaded dillo-0.3.0-pre1 to the sourceforge server.
+This internal release is mainly intended for testing. If it
+proves to be at least as stable as 0.2.4, it will be the base for
+0.3.0 release.
+
+Those of you that feel interested, please download it and let
+me know what you think about it (compared with 0.2.4). I'd
+appreciate your comments, specially if new BUGs arise.
+
+Most probably 0.3.0 will be this code-base plus a few patches,
+and a couple of weeks later 0.3.1 will integrate the rest of the
+patch queue.
+
+Source code location: 
+
+http://dillo.so....net/dillo-0.3.0-pre1.tgz
+
+--
+
+Sebastian: you can use this version in your effort to integrate
+the new Dw (or if you prefer, you can wait the testing news).
+Anyway, from Dw's perspective, changes to the interface are
+pretty minimal!)
+
+--
+
+Sean:
+
+> Jorge, would you like for this to happen after Sebastian's
+> Dw changes?
+
+Yes, please wait until Sebastian integrates the new Dw.
+An entry in dillorc to disable FONT processing looks OK to
+me. (FONT tag is still a tricky issue: please be careful).
+
+
+Jorge.- 
+
+

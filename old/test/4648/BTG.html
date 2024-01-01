@@ -1,0 +1,1874 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	<!-- Script for statistics - Remove -->
+	<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+	<!-- Script for statistics - Remove -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        		<meta name="description" content="Mercados en Linea - BTG Pactual Chile. Accede a la mejor página financiera en tiempo real de Chile y Perú. Visitanos." />
+        <title>Mercados en L&iacute;nea - BTG Pactual Chile</title>
+                <link href="http://www.btgpactual.mdgms.com/css/celfinStyle.css" rel="stylesheet" type="text/css" />
+                
+        <link href="http://www.btgpactual.mdgms.com/css/jquery-ui-1.8.13.custom.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript" language="javascript" src="http://www.btgpactual.mdgms.com/js/jquery.1.6.1.js"></script>
+        
+        <!-- CALENDAR -->
+        <link href="http://www.btgpactual.mdgms.com/css/calendar.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="http://www.btgpactual.mdgms.com/js/calendar.js"></script>
+        <script type="text/javascript" src="http://www.btgpactual.mdgms.com/js/calendar-es.js"></script>
+        <script type="text/javascript" src="http://www.btgpactual.mdgms.com/js/calendar-setup.js"></script>
+        <!-- FIN CALENDAR -->
+        
+        <script type="text/javascript" language="javascript" src="http://www.btgpactual.mdgms.com/js/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" language="javascript" src="http://www.btgpactual.mdgms.com/js/jquery.ui.autocomplete.js"></script>
+        
+        <script type="text/javascript" language="javascript" src="http://www.btgpactual.mdgms.com/js/functions.js"></script>
+        
+        <script type='text/javascript'>
+        //Initialisation of the JS API in the general page
+	    var d=document.domain.split('.'); if (d.length>2) {document.domain = d[d.length-2]+'.'+d[d.length-1];}
+	    </script>
+	    	    	        <script type="text/javascript" src="http://push2.mdgms.com/files/js-api/1.6.x/mdg_js_api.js"></script>
+	        <script type="text/javascript">
+MDG.PageProperties["AUTH_ID_NAME"]="AZID";
+MDG.PageProperties["AUTH_ID_VALUE"]="10510,1468030125,VsiRGGHc8rDpA1xcY7qB0Q==,jo6ar9E9SNWvL1Imr76ep+66AdyTFkPhSj3H3FNFe2s=,axiTvTt6vydBgu6lFBxkE7T/CyExOri6v9+r0S7/YKIcviBappFALV2ypCgGRHGa4H1hzKt7MLMACpXj0hFzOw==";
+MDG.PageProperties["MDG_HOST"]="*.push2.mdgms.com";
+MDG.PageProperties["POLL_INTERVAL"]="3000";
+MDG.PageProperties["PUSH_SERVER_DELAY"]="500";
+var domhandler;
+$(document).ready(function(){domhandler = new MDG.MdgJsDomHandler()});
+$(window).unload(function(){if(typeof(domhandler) != "undefined") domhandler.destroy()});
+</script>
+	            
+        <script type="text/javascript">
+        
+	        function ConsumerMarket() {};
+            function ConsumerStatusMarket() {};
+            
+	        ConsumerMarket.prototype.consume = function(obj, subscription) {
+	            var value = "n.a.";
+	            var performance_pct = "n.a.";
+	            var prev_performance_pct = "n.a.";
+	            
+	            if (obj.isValid()) {
+	                
+	                __iIDNotation = obj.getValue("ID_NOTATION");
+	                
+	                value = obj.getFormattedValue("PRICE");
+	                performance_pct = obj.getRawValue("PERFORMANCE_PCT");
+	                prev_performance_pct = obj.getPrevRawValue("PERFORMANCE_PCT");
+
+	                var statusMarket    = $('#market_open_'+__iIDNotation).html();
+	                var statusTradeable = $('#market_tradeable_'+__iIDNotation).html();
+
+                    var classPrice = "txtSome";
+
+	                if (statusMarket == 0 || statusTradeable == 0){
+	                	classPrice = "gris";
+                        clase = "gris";
+	                }else if (performance_pct>0){
+	                    if (performance_pct>prev_performance_pct){
+	                        clase = "txtBackGreen";
+	                    }else if(performance_pct<prev_performance_pct){
+	    	                clase = "txtBackRed";
+	                    }else{
+	                        clase = "txtBackYel";
+	                    }
+	                }else if(performance_pct<0){
+	                    if (performance_pct>prev_performance_pct){
+	                        clase = "txtBackRed";
+	                    }else if(performance_pct<prev_performance_pct){
+	                        clase = "txtBackGreen";
+	                    }else{
+	                        clase = "txtBackYel";
+	                    }
+	                }
+	    	
+	    	            
+	    	        $('#market_performancepct_'+__iIDNotation).html(formatNumPCT(performance_pct)).removeClass().addClass(clase);
+	    	        setTimeout('tickMarket("'+__iIDNotation+'",'+performance_pct+')',500);
+	    	        $('#market_price_'+__iIDNotation).html(value).removeClass().addClass(classPrice);
+	               
+	            }
+	         
+	            // return true for further updates,
+	            // false for a passive unsubscription
+	            return true;
+	            
+	        };
+
+	        ConsumerStatusMarket.prototype.consume = function(obj, subscription) {
+	            var iOpenMarket = "";
+	            var iTradeable = "";
+	            	            
+	            if (obj.isValid()) {
+	                
+	                __iIDNotation = obj.getValue("ID_NOTATION");
+	                
+	                iOpenMarket = obj.getFormattedValue("IS_MARKET_OPEN");
+	                iTradeable = obj.getRawValue("IS_TRADEABLE");
+	    	            
+	    	        $('#market_tradeable_'+__iIDNotation).html(iTradeable);
+	    	        $('#market_open_'+__iIDNotation).html(iTradeable);
+	            }
+	         
+	            // return true for further updates,
+	            // false for a passive unsubscription
+	            return true;
+	        };
+
+            var today='2016-07-07';
+            var sYear = '2016';
+            var pathChart = '/relaunch_chart/chart.html?';
+            var iIDNotation = '17242077';
+            var mdgSession;
+            var TimeZone    = 42;
+            
+            $(document).ready(function(){
+                
+            	//settingChart();
+                /**
+                * Take IdNotation for Push
+                */
+                nId = "17242077";
+                /**
+                * Function click on Name
+                */
+                $(".name").click(function(){
+                     
+                    nIdnotation   = this.id;
+                    sName         = $(this).attr("title");
+                    periodo       = "1D";
+                   
+                    nIdnotations=nIdnotation.split("_");
+                    nIdnotation=nIdnotations[1];
+                    if(!isNaN(nIdnotation))
+                    {
+                    	nIdnotation=nIdnotations[1];
+                    }
+                    else
+                    {
+                        if(!isNaN(nIdnotations[2])){
+                        	nIdnotation=$("#"+nIdnotations[0]+"_notation_"+nIdnotations[2]).html();
+                        }else{
+                        	nIdnotation=$("#"+nIdnotations[0]+"_"+nIdnotations[1]+"_notation_"+nIdnotations[3]).html();
+                        }
+                    }
+                    
+                    iIDNotation = nIdnotation;
+                    detalle(nIdnotation);
+                    grafico(nIdnotation,periodo,TimeZone);
+                    zeroRange();
+                    $("#search").val("Buscar");
+                });
+
+                /**
+                * Function click on range
+                */
+                $('.navPeriodo').hover(function() {
+                    $(this).addClass('listhover');
+                }, function() {
+                    $(this).removeClass('listhover');
+                });
+                $('.navPeriodo').click(function() {
+                	$('.navPeriodo').removeClass('listclick').addClass('list');
+                	$(this).removeClass('list').addClass('listclick');
+                    periodo       = this.id;
+				    nIdnotation   = iIDNotation;
+				    grafico(nIdnotation,periodo,TimeZone);
+                });
+                
+                /**
+                * Calendar
+                */
+                Calendar.setup({
+					inputField  : "desde",
+					ifFormat    : "%d/%m/%Y",
+					button      : "trigger"
+				});
+
+				Calendar.setup({
+					inputField  : "hasta",
+					ifFormat    : "%d/%m/%Y",
+					button      : "trigger"
+				});
+                /**
+                * Change Details
+                */
+				$(".btn").click(function(){
+					link=$(this).html();
+					if(link=='Detalle Mercados'){
+					   location.href="http://www.btgpactual.mdgms.com/www/chile/detail.html";
+					}
+				});
+
+                /**
+                 * Click Flag Peru
+                 */
+					$(".flagPe").click(function(){
+                     location.href="http://www.btgpactual.mdgms.com/www/peru/resume.html";
+                 });
+                /**
+                * Calculation Period
+                */
+				$(".btnGo").click(function(){
+				   var desde       = $("#desde").val();
+				   var hasta       = $("#hasta").val();
+				   var hoy         = $("#hoy").val();
+				   var nIdnotation = iIDNotation;
+				
+				   var fecha1      = desde.split("/");
+				   var dia1        = fecha1[0];
+				   var mes1        = fecha1[1];
+				   var ano1        = fecha1[2];
+				        
+				   var fecha2      = hasta.split("/");
+				   var dia2        = fecha2[0];
+				   var mes2        = fecha2[1];
+				   var ano2        = fecha2[2];
+				
+				   var fecha       = hoy.split("/");
+				   var dia         = fecha[0];
+				   var mes         = fecha[1];
+				   var ano         = fecha[2];
+				        
+				    if(new Date(ano1,mes1-1,dia1) > new Date(ano,mes-1,dia) || new Date(ano1,mes1-1,dia1) > new Date(ano2,mes2-1,dia2) || new Date(ano2,mes2-1,dia2) > new Date(ano,mes-1,dia)){
+				        alert("ATENCION: Verifique la fecha");
+				        desde   = $("#desde").val(hoy);
+				        hasta   = $("#hasta").val(hoy);
+				    }
+				    else if(new Date(ano1,mes1-1,dia1) <= new Date(ano,mes-1,dia) && new Date(ano1,mes1-1,dia1) <= new Date(ano,mes-1,dia)){
+				        grafico(nIdnotation,'RANGE',TimeZone,mes1+'/'+dia1+'/'+ano1,mes2+'/'+dia2+'/'+ano2);
+				    }else{
+				        grafico(nIdnotation,'RANGE',TimeZone,mes1+'/'+dia1+'/'+ano1,mes2+'/'+dia2+'/'+ano2);
+				    }
+				});
+                
+                /**
+                * Load Indices PUSH
+                */
+                loadIndices();
+                /**
+                * MDG_Refresh called every two seconds
+                */
+                mdgSession = domhandler.getSession();
+
+                makeRequest("SGO","TOP","CN_DIFF_REL_RANGE_DESC","20");
+                makeRequest("SGO","FLOP","CN_DIFF_REL_RANGE","20");
+                makeRequest("SGO","TOP_FLOP","MONEY_RANGE_DESC","20");
+
+                /**
+                * Display Alert
+                */
+                //$('.alerta').show();
+                /**
+                * Click to hide Alert
+                */
+                $('.btnCancelar').click(function(){
+                	$('.alerta').hide();
+                });
+
+                $( "#search" ).catcomplete({
+        			delay: 0,
+        			minLength: 2,
+                    width: 300,
+                    position: { my: "right top", at:"right bottom"},
+        			source: function( request, response ) {
+    					$.getJSON( "search.html", {
+    						SEARCH_VALUE: extractLast( request.term )
+    					}, response );
+    				},
+        			select: function( event, ui ) {
+        				$( "#search" ).val( ui.item.name_security );
+        				$( "#idnotation" ).val( ui.item.notation );
+        				clickSelectSearch(ui.item.notation);
+                        $(this).blur();
+        				return false;
+        			}
+        		});
+				
+				$("#search").bind({
+					click: function(){
+						$(this).val('');
+					},
+					blur: function(){
+						if (this.value == ''){
+							$('#search').removeClass('ui-autocomplete-loading');
+                            this.value = 'Buscar';
+                        }else{
+                        	$('#search').removeClass('ui-autocomplete-loading');
+                        }
+					}
+				});
+            });//Fin ready
+
+            /**
+             *
+             * Function for request TOP, FLOP, TOP_FLOP
+             *
+             */
+            function makeRequest(__idExchange,__type,__sort,__size)
+            {
+                var mdgUrl = new MDG.URL("/stocks/top_flop_list?VERSION=1");
+                mdgUrl.addParam("ID_EXCHANGE", __idExchange);
+                mdgUrl.addParam("TYPE", __type);
+                mdgUrl.addParam("SORT", __sort);
+                mdgUrl.addParam("BLOCKSIZE", __size);
+                mdgUrl.addParam("QUALITY", "BST");
+
+                var oTopFlop = new priceHandler();
+                oTopFlop.__type = __type;
+                oTopFlop.__size = __size;
+                oTopFlop.__sort = __sort;
+                
+                var mdgRequest = new MDG.Request(mdgUrl, oTopFlop);
+                mdgSession.request(mdgRequest);
+            }
+            /*
+             * Function for Clean Fields for TOP, Flop, TOP_FLOP
+             */
+            function cleanTopFlopFields(__type,__count){
+
+                for (i=__count;i<=10;i++){
+                    document.getElementById( __type+'_notation_' + i ).innerHTML = '';
+                    document.getElementById( __type+'_name_' + i ).innerHTML = '';
+                    document.getElementById( __type+'_price_' + i ).innerHTML = '';
+                    document.getElementById( __type+'_pct_' + i ).innerHTML = '';
+                    document.getElementById( __type+'_performance_' + i ).innerHTML = '';
+
+                    $('#' +  __type + '_name_' + i).attr('title','');
+                }
+            }
+            /*
+             * Function for change class to Close
+             */
+            function MDGMarketClose(row,type){
+
+                $('#' + type + '_name_'+row).removeClass().addClass('gris');
+                $('#' + type + '_price_'+row).removeClass().addClass('gris');
+                $('#' + type + '_pct_'+row).removeClass().addClass('gris');
+            }
+            /**
+            * Filter for status market and class for price and performance
+            */
+            function tickTopFlop(type,row,performancepct,date){
+                             
+                if(date != today){
+                    MDGMarketClose(row,type);
+                }else{
+                    if (performancepct>0.0){
+                        $('#'+type+'_pct_'+row).removeClass().addClass("txtGreen");
+                    }else if(performancepct<0.0){
+                        $('#'+type+'_pct_'+row).removeClass().addClass("txtRed");
+                    }else{
+                        $('#'+type+'_pct_'+row).removeClass().addClass("txtSome");
+                    }
+                }
+            }
+            /**
+             * Function for parse Date for Request TOP, FLOP, TOP_FLOP
+             */
+            function parseDate(__date){
+            	
+                var date = new Date(__date);
+                var month = (date.getMonth().length == 1 ) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                var day = (date.getDay().length == 1 ) ? '0' + (date.getDay() + 1) : (date.getDay() + 1);
+                var year = date.getFullYear();
+                
+                return year + '-' + month + '-' + day;
+            }
+            /*
+             * Function Handler for TOP, FLOP, TOP_FLOP
+             */
+            function priceHandler(mdgObject)
+            {
+                var __type = null;
+                var __size = null;
+                var __sort = null;
+                
+                this.consume = function(mdgObject)
+                {
+                    var price;
+                    var name_security;
+                    var home_symbol;
+                    var pct;
+                    var performance;
+                    var prev_performance;
+                    var notation;
+                    var tabNotation;
+                    var classPct;
+
+                    
+                    if (mdgObject.isValid()){
+
+                        var iContaTable = 1
+                        
+                        for (var i = 1; i <= mdgObject.getValue('AMOUNT'); i++){
+
+                            if (iContaTable>10) break;
+
+                            if (mdgObject.getValue('ID_CURRENCY', i) == "CLP"){
+
+                                notation = mdgObject.getValue('ID_NOTATION', i);
+                                tabNotation = $( '#' + this.__type + '_notation_' +  iContaTable).html();
+                                // console.log(i + " " +mdgObject.getValue('AMOUNT') + " " + notation+ " => "+ mdgObject.getValue('HOME_SYMBOL', i) + " - TABLA " + tabNotation);
+
+                                // verificando que el id_notation exista en la tabla
+                                if ( tabNotation != null ){
+
+                                    if ( notation != tabNotation ){
+                                        // console.log("DISTINTOS");
+
+                                        name_security = mdgObject.getValue('NAME_SECURITY', i);
+                                        home_symbol = mdgObject.getValue('HOME_SYMBOL', i);
+                                        if (home_symbol == ''){
+                                            home_symbol = name_security;
+                                        }
+                                        price = mdgObject.getFormattedValue('BASE_QUOTE_RANGE', i);
+                                        pct = formato_numero(mdgObject.getRawValue('CN_DIFF_REL_RANGE', i),2);
+                                        pct_r = mdgObject.getRawValue('CN_DIFF_REL_RANGE', i);
+                                        performance = mdgObject.getValue('CN_DIFF_ABS_RANGE', i);
+                                        date = mdgObject.getRawValue('DATE_BASE_QUOTE', i);
+            
+                                        document.getElementById( this.__type + '_notation_' + iContaTable ).innerHTML = notation;
+                                        document.getElementById( this.__type + '_name_' + iContaTable ).innerHTML = home_symbol.replace('\\',' ');
+                                        document.getElementById( this.__type + '_price_' + iContaTable ).innerHTML = price;
+                                        document.getElementById( this.__type + '_pct_' + iContaTable ).innerHTML = pct;
+                                        document.getElementById( this.__type + '_performance_' + iContaTable ).innerHTML = performance;
+
+                                        $('#' +  this.__type + '_name_' + iContaTable).attr('title',name_security);
+                                        
+                                        if (date != today){
+                                            MDGMarketClose(iContaTable, this.__type);
+                                        }else{
+
+                                            $('#' + this.__type + '_name_' + iContaTable).removeClass().addClass("txtSome");
+                                            $('#' + this.__type + '_price_' + iContaTable).removeClass().addClass("txtSome");
+                                            
+                                            if (performance > 0.0){
+                                                classPct = 'txtBackGreen';
+                                            }else if(performance < 0.0){
+                                                classPct = 'txtBackRed';
+                                            }
+                                            $('#' + this.__type + '_pct_' + iContaTable ).removeClass().addClass(classPct);
+                                        }
+
+                                        // console.log("antes del setTimeout");
+                                            
+                                        setTimeout('tickTopFlop("' + this.__type + '",'+iContaTable+','+pct_r+',"'+date+'")',1000);
+                                    
+                                    }else{
+
+                                        // console.log("IGUALES");
+
+                                        performance = mdgObject.getValue('CN_DIFF_ABS_RANGE', i);
+                                        price = mdgObject.getFormattedValue('BASE_QUOTE_RANGE', i);
+                                        pct = formato_numero(mdgObject.getRawValue('CN_DIFF_REL_RANGE', i),2);
+                                        pct_r = mdgObject.getRawValue('CN_DIFF_REL_RANGE', i);
+                                        date = mdgObject.getRawValue('DATE_BASE_QUOTE', i);
+                                        
+                                        prev_performance = $('#' + this.__type + '_performance_' + iContaTable ).html();
+                                                                        
+                                        if (date != today){
+
+                                            MDGMarketClose(iContaTable, this.__type);
+
+                                        }else{
+                                        
+                                            if (performance != prev_performance){
+
+                                                document.getElementById( this.__type + '_price_' + iContaTable ).innerHTML = price;
+                                                document.getElementById( this.__type + '_pct_' + iContaTable ).innerHTML = pct;
+                                                document.getElementById( this.__type + '_performance_' + iContaTable ).innerHTML = performance;
+
+                                                $('#' + this.__type + '_name_' + iContaTable).removeClass().addClass("txtSome");
+                                                $('#' + this.__type + '_price_' + iContaTable).removeClass().addClass("txtSome");
+                                       
+                                                if (performance > prev_performance){
+                                                    classPct = 'txtBackGreen';
+                                                }else if(performance < prev_performance){
+                                                    classPct = 'txtBackRed';
+                                                }
+            
+
+                                                $('#' + this.__type + '_pct_' + iContaTable ).removeClass().addClass(classPct);
+                                                setTimeout('tickTopFlop("' + this.__type + '",'+iContaTable+','+pct_r+',"'+date+'")',1000);
+
+                                            }//endif
+                                            
+                                        }//endif
+                                        
+                                    }//endif
+
+                                    
+
+                                }// endif null
+
+                                iContaTable++;
+
+                            } // end if solo CLP
+                            
+                        }//endfor
+                        
+                    }//endif
+
+                    cleanTopFlopFields(this.__type,iContaTable);
+
+                    // Get expiry time of MDG object in milliseconds (since 1970/01/01)
+                    var expiryTime = mdgObject.getExpiryTime();
+
+                    // Difference Client - MDG in seconds, * 1000 to get milliseconds
+                    var timeDifference = mdgSession.getTimeDifference() * 1000;
+                    
+                    // add time difference and + 10 sec. This is the client time to request the object again
+                    var requestTime = expiryTime + timeDifference;
+                    
+                    // We need the number of milliseconds from now till the object shall be requested again
+                    // Get current timestamp (milliseconds since 1970/01/01)
+                    var timestamp = new Date();
+                    var timeout = requestTime - timestamp;
+
+                    //console.log("timeout => " + timeout)
+                    //Alberto -> set Timeout to 20 sec
+		    timeout = 20000;
+                    window.setTimeout('makeRequest("SGO","' + this.__type + '","' + this.__sort + '","20")',timeout);
+                    
+                    //Important, has to return true to be re-invoked
+                    return true;
+                };
+            }
+            /**
+            * Function for Click TopFlop
+            */
+            function clickTopFlop(__this){
+            	nIdnotation   = $(__this).attr("id");
+                sName         = $(__this).attr("title");
+                periodo       = "1M";
+               
+                nIdnotations=nIdnotation.split("_");
+                nIdnotation=nIdnotations[1];
+                if(!isNaN(nIdnotation))
+                {
+                	nIdnotation=nIdnotations[1];
+                }
+                else
+                {
+                	nIdnotation=nIdnotations[2];
+                }
+
+                iIDNotation = nIdnotation;
+                
+                detalle(nIdnotation);
+                grafico(nIdnotation,periodo,TimeZone);
+                //loadData(periodo,nIdnotation);
+                //loadGraph(periodo,nIdnotation);
+                zeroRange();
+
+                $("#search").val("Buscar");
+                
+            }
+
+            /**
+            * Function for Indices PUSH
+            */
+            function loadIndices(){
+
+            	if (typeof MDG == "undefined") return false;
+            	if (typeof domhandler == "undefined") return false;
+
+                //$('#debug').html('CARGO INDICES');
+
+                var sessionOfDomHandler = domhandler.getSession();
+                
+                aRequestIndices = new Array();
+                var url = "";
+                var consumerPricePerformancePCT = new ConsumerMarket();
+                var consumerStatus = new ConsumerStatusMarket();
+                var filter = "";
+                
+        		
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=17242077");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[0] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=17242077");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[1] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=50947616");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[2] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=50947616");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[3] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=1335248");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[4] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=1335248");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[5] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=324977");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[6] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=324977");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[7] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=325104");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[8] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=325104");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[9] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=4359526");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[10] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=4359526");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[11] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=60972397");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[12] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=60972397");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[13] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=10583965");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[14] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=10583965");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[15] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=1918069");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[16] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=1918069");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[17] = new MDG.Subscription(url,consumerStatus);
+
+                
+                url = new MDG.URL("prices/quote?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=20735");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_ALL,['PRICE','PERFORMANCE_PCT']);
+                aRequestIndices[18] = new MDG.Subscription(url,consumerPricePerformancePCT,filter);
+
+                url = new MDG.URL("prices/status?VERSION=2&ID_QUALITY_PRICE=4&ID_NOTATION=20735");
+                filter = new MDG.SubscriptionFilter(MDG.Event.TYPE_CHANGE,['IS_TRADEABLE','IS_MARKET_OPEN']);
+                aRequestIndices[19] = new MDG.Subscription(url,consumerStatus);
+
+                                sessionOfDomHandler.subscribe(aRequestIndices);
+            }
+            
+            /**
+            * Filter for status market and class for price and performance
+            */
+            function tickMarket(__iIDNotation,performancepct){
+
+                var statusMarket    = $('#market_open_'+__iIDNotation).html();
+                var statusTradeable = $('#market_tradeable_'+__iIDNotation).html();
+
+                if (statusMarket == 0 || statusTradeable == 0){
+                    $('#market_performancepct_'+__iIDNotation).removeClass().addClass("gris");
+                }else if (performancepct>0.0){
+                    $('#market_performancepct_'+__iIDNotation).removeClass().addClass("txtGreen");
+                }else if(performancepct<0.0){
+                    $('#market_performancepct_'+__iIDNotation).removeClass().addClass("txtRed");
+                }else{
+                    $('#market_performancepct_'+__iIDNotation).removeClass().addClass("txtSome");
+                }
+                 
+            }
+
+            filterPrice = function(object, subscription, value, row){
+            	if (object.isValid()){
+
+                    value = object.getRaw('PRICE');
+                    
+                    return formato_numero(value, 2, ',', '.');
+            	}
+            };
+            
+            classFilterPerformancePCT = function(object, subscription, classValue, row){
+
+            	if (object.isValid()){
+                
+                    var __classValue = "";
+            		var iIDNotation    = object.getValue("ID_NOTATION");
+            		
+                    var is_tradeable =0;
+                    var is_market_open = 0;
+                    if (is_tradeable == 0 || is_market_open == 0){
+                        $('#debug').append(row + " - " + iIDNotation + " - " + is_tradeable + " - " + is_market_open + " - GRIS <br>");
+                        __classValue = "gris";
+                    }else{
+                    	$('#debug').append(row + " - " + iIDNotation + " - " +is_tradeable + " - " + is_market_open + " - " + classValue + "<br>" );
+                    	__classValue = classValue;
+                    }
+                    return __classValue;
+            	}
+            	$('#debug').append(row + " - " + classValue + "<br>");
+            };
+            /**
+            * Filter for PerformancePCT
+            */
+            FilterPerformancePCT = function(object,subscription,value,row){
+
+                if (object.isValid()){
+                    return formatNumPCT(object.getRawValue("PERFORMANCE_PCT"));
+                }
+            };
+            
+            /**
+             * Filter for Volume
+             */
+             /*
+            filterVolume = function(object,subscription,value,row){
+
+    	        if (object.isValid()){
+
+    	        	var fTotalMoney = object.getRawValue("TOTAL_MONEY");
+    	            var fTotalVolume = object.getRawValue("TOTAL_VOLUME");
+    	            var fResult = 0;
+    	            if (fTotalMoney != "_NA_"){
+                        fTotalMoney = fTotalMoney/1000000;
+                        fResult = formato_numero(fTotalMoney,2,',','.');
+    	            }else{
+    	            	fTotalVolume = fTotalVolume/1000000;
+                        fResult = formato_numero(fTotalVolume,2,',','.');
+    	            }
+    	            return fResult;
+    	        }
+            };
+            */
+    </script>
+</head>
+<body>
+<div id="wrapper">
+	<div class="btn">Detalle Mercados</div><!--btn-->
+    <div class="line_der"></div><!--line_der-->
+	<div class="btn btn_on">Resumen</div><!--btn-->
+        <div id="__top">
+                        <div class="brand"><img src="http://www.btgpactual.mdgms.com/images/logo_btgPactual_cl.png" border="0" height="35" width="144" alt="BTG Pactual Chile" /></div>
+                        
+            <div class="buscador">
+                <div class="loopa"></div><!--loopa-->
+                <input name="search" type="text" id="search" size="30" class="txtfld" value="Buscar"/>
+                <input type="hidden" id="idnotation" name="idnotation" value="" />
+                <div class="clos"></div><!--clos-->
+            </div><!--buscador-->
+            <div class="flagCl"></div><!--flagCl-->
+            <div class="flagPe" title="Ir a Mercados en Línea Perú"></div><!--flagPe-->
+        </div><!--__top-->
+    
+	<div class="midTop">
+		<div class="left">
+            <div id="datos">
+            
+            <div class="charTop">
+                <div class="merc">IPSA, CHILE</div>
+            </div><!--charTop-->
+                    
+                    <div class="charSubTop">
+                        <div class="valores">
+                            <table cellpadding="0" cellspacing="2" border="0" class="tab" width="100%">
+                                <tr>
+                                    <td align="left"><span style="margin-left: 3px;">Valor Actual</span></td>
+                                    <td><div class="green" id="domhandler:1.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:CLASS.params:ID_NOTATION-3D17242077-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:gray.gt:green.lt:red.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:gray.resetGt:green.resetLt:red"></div></td>
+                                    <td>
+                                        <span class="valor" id="domhandler:2.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D17242077-26ID_QUALITY_PRICE-3D4.attr:PRICE">
+					                    	3.997,71                                        </span></td>
+                                    <td>Var.% Actual</td>
+                                    <td>
+                                        <span class="headGraphGreen" id="domhandler:3.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17242077-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:headGraphBackSome.gt:headGraphBackGreen.lt:headGraphBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:headGraphSome.resetGt:headGraphGreen.resetLt:headGraphRed">
+					                    	+0,07%                                        </span></td>
+                                    <td>Var. Puntos Actual</td>
+                                    <td>
+                                        <span class="headGraphGreen" id="domhandler:4.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17242077-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE.comp:PREV.eq:headGraphBackSome.gt:headGraphBackGreen.lt:headGraphBackRed.resetAttr:PERFORMANCE.resetComp:ZERO.resetEq:headGraphSome.resetGt:headGraphGreen.resetLt:headGraphRed">
+                                            +2,75                                            
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div><!--valores-->
+                    </div><!--charSubTop-->
+                </div><!--Datos-->
+
+				<div class="chart"><iframe src="https://www.dillo.org/relaunch_chart/chart.html?ID_NOTATION=17242077&amp;TIME_SPAN=1D&amp;TIMEZONE=42&amp;WIDTH=700&amp;HEIGHT=175" id="graf" height="195" width="710" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" ></iframe></div>
+                <div class="clear"></div><!--clear-->
+                <div class="nav">
+					<input type="hidden" name="idnotation" id="idnotation" value="17242077"/>
+					<input type="hidden" name="hoy" id="hoy" value="07/07/2016"/>
+                    <input type="hidden" name="today" id="today" value="2016-07-07"/>
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tr>
+							<td width="55" class="navPeriodo listclick" id="1D">1 d&iacute;a</td>
+							<td width="55" class="navPeriodo list" id="5D">1 semana</td>
+							<td width="55" class="navPeriodo list" id="1M">1 mes</td>
+							<td width="55" class="navPeriodo list" id="3M">3 meses</td>
+							<td width="55" class="navPeriodo list" id="6M">6 meses</td>
+							<td width="55" class="navPeriodo list" id="1Y">1 a&ntilde;o</td>
+							<td width="55" class="navPeriodo list" id="5Y">5 a&ntilde;os</td>
+                            <td>
+							    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+							        <tr>
+							            <td width="20" class="tdDerDays">Desde</td>
+							            <td width="27"><input name="desde" id="desde" type="text" class="txtfld2" readonly="readonly" value="07/07/2016" /></td>
+							            <td width="20" class="tdDerDays">Hasta</td>
+							            <td width="27"><input name="hasta" id="hasta" type="text" class="txtfld2" readonly="readonly" value="07/07/2016" /></td>
+							            <td width="6"><div class="btnGo"></div></td>
+							        </tr>
+							    </table>
+							</td>
+						</tr>
+					</table>
+				</div><!--nav-->
+		</div><!--left-->
+        
+		<div class="right">
+			<div class="combo" style="margin-top:0px">
+				<div class="topCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td class="tdDer" width="45%">Mayores Alzas</td>
+            <td class="tdCent" width="30%">Precio</td>
+            <td width="25%">%</td>
+        </tr>
+    </table>
+</div><!--topCombo-->
+<div class="medCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" id="top">
+        <tbody>
+                        <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_1" style="display: none;">81846693</span>
+                    <span id="TOP_performance_1" style="display: none;">0.079</span>
+                    <span id="TOP_name_1" class="name " title="NITRATOS DE CHILE SA COM NPV" style="cursor:pointer;">NITRATOS</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_1" class="">0,75</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_1" class="txtGreen ">+11,77</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_2" style="display: none;">56167215</span>
+                    <span id="TOP_performance_2" style="display: none;">3</span>
+                    <span id="TOP_name_2" class="name " title="POTASIOS DE CHILE SA COM NPV SER'A'" style="cursor:pointer;">POTASIOS-A</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_2" class="">55,00</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_2" class="txtGreen ">+5,77</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_3" style="display: none;">17241993</span>
+                    <span id="TOP_performance_3" style="display: none;">1.16</span>
+                    <span id="TOP_name_3" class="name " title="MASISA S.A. COM NPV" style="cursor:pointer;">MASISA</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_3" class="">25,63</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_3" class="txtGreen ">+4,74</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_4" style="display: none;">6946349</span>
+                    <span id="TOP_performance_4" style="display: none;">71.3</span>
+                    <span id="TOP_name_4" class="name " title="EMBOTELLADORA ANDINA SA PRF'B'NPV" style="cursor:pointer;">ANDINA-B</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_4" class="">2.399,10</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_4" class="txtGreen ">+3,06</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_5" style="display: none;">66804079</span>
+                    <span id="TOP_performance_5" style="display: none;">25.6</span>
+                    <span id="TOP_name_5" class="name " title="HORTIFRUT S.A. COM NPV" style="cursor:pointer;">HF</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_5" class="">880,00</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_5" class="txtGreen ">+3,00</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_6" style="display: none;">17241969</span>
+                    <span id="TOP_performance_6" style="display: none;">110.5</span>
+                    <span id="TOP_name_6" class="name " title="INSTITUTO DE DIAGNOSTICO SA COM NPV" style="cursor:pointer;">INDISA</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_6" class="">3.805,50</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_6" class="txtGreen ">+2,99</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_7" style="display: none;">17242001</span>
+                    <span id="TOP_performance_7" style="display: none;">0.11</span>
+                    <span id="TOP_name_7" class="name " title="INVERSIONES NORTE GRANDE SA" style="cursor:pointer;">NORTEGRAN</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_7" class="">3,80</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_7" class="txtGreen ">+2,98</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_8" style="display: none;">17241852</span>
+                    <span id="TOP_performance_8" style="display: none;">12.34</span>
+                    <span id="TOP_name_8" class="name " title="PAMPA CALICHERA SOCIEDAD DE INVERSI COM NPV SER'A'" style="cursor:pointer;">CALICHERAA</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_8" class="">497,34</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_8" class="txtGreen ">+2,54</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_9" style="display: none;">31760748</span>
+                    <span id="TOP_performance_9" style="display: none;">7</span>
+                    <span id="TOP_name_9" class="name " title="EMPRESAS HITES SA" style="cursor:pointer;">HITES</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_9" class="">298,00</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_9" class="txtGreen ">+2,41</span></td>
+
+            </tr>
+                    <tr>
+                <td align="left" width="45%">
+                    <span id="TOP_notation_10" style="display: none;">47233677</span>
+                    <span id="TOP_performance_10" style="display: none;">0.5</span>
+                    <span id="TOP_name_10" class="name " title="AUSTRALIS SEAFOODS SA" style="cursor:pointer;">AUSTRALIS</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_price_10" class="">21,50</span></td>
+                <td align="right" width="25%"><span id="TOP_pct_10" class="txtGreen ">+2,38</span></td>
+
+            </tr>
+                </tbody>
+    </table>
+</div><!--medCombo-->			</div><!--combo-->
+			<div class="combo">
+				<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="45%">Mayores Bajas</td>
+			<td class="tdCent" width="30%">Precio</td>
+			<td width="25%">%</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" id="flop">
+	    <tbody>
+	                    <tr style='display: none;'>
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_1" style="display: none;">17241970</span>
+                    <span id="FLOP_performance_1" style="display: none;">-13</span>
+                    <span id="FLOP_name_1" class="name " title="INDIVER S.A. NPV" style="cursor:pointer;">INDIVER</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_1" class="">16,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_1" class="txtRed ">-44,83</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_2" style="display: none;">17242054</span>
+                    <span id="FLOP_performance_2" style="display: none;">-200000</span>
+                    <span id="FLOP_name_2" class="name " title="INMOBILIARIA SPORT FRANCALS NPV" style="cursor:pointer;">SPORTFRAN</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_2" class="">2.100.000,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_2" class="txtRed ">-8,70</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_3" style="display: none;">17241977</span>
+                    <span id="FLOP_performance_3" style="display: none;">-2</span>
+                    <span id="FLOP_name_3" class="name " title="INVERMAR S.A. COM NPV" style="cursor:pointer;">INVERMAR</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_3" class="">47,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_3" class="txtRed ">-4,08</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_4" style="display: none;">164032162</span>
+                    <span id="FLOP_performance_4" style="display: none;">-24.26</span>
+                    <span id="FLOP_name_4" class="name " title="ENTEL TELECOMUNICATION(EMPRESA NAC) COM NPV (S/R 22/07/2016)" style="cursor:pointer;">ENTEL-OSA</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_4" class="">575,74</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_4" class="txtRed ">-4,04</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_5" style="display: none;">17241988</span>
+                    <span id="FLOP_performance_5" style="display: none;">-0.99</span>
+                    <span id="FLOP_name_5" class="name " title="EMPRESAS LA POLAR S.A. COM NPV" style="cursor:pointer;">NUEVAPOLAR</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_5" class="">31,71</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_5" class="txtRed ">-3,03</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_6" style="display: none;">17241917</span>
+                    <span id="FLOP_performance_6" style="display: none;">-200</span>
+                    <span id="FLOP_name_6" class="name " title="CIA ELECTRO METALURGICA NPV" style="cursor:pointer;">ELECMETAL</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_6" class="">8.500,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_6" class="txtRed ">-2,30</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_7" style="display: none;">17241903</span>
+                    <span id="FLOP_performance_7" style="display: none;">-100</span>
+                    <span id="FLOP_name_7" class="name " title="CRISTALERIAS DE CHILE SA NPV" style="cursor:pointer;">CRISTALES</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_7" class="">5.600,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_7" class="txtRed ">-1,75</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_8" style="display: none;">17242050</span>
+                    <span id="FLOP_performance_8" style="display: none;">-19.5</span>
+                    <span id="FLOP_name_8" class="name " title="SONDA S.A. COM NPV" style="cursor:pointer;">SONDA</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_8" class="">1.205,50</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_8" class="txtRed ">-1,59</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_9" style="display: none;">17241849</span>
+                    <span id="FLOP_performance_9" style="display: none;">-3.57</span>
+                    <span id="FLOP_name_9" class="name " title="BESALCO SA COM NPV" style="cursor:pointer;">BESALCO</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_9" class="">230,00</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_9" class="txtRed ">-1,53</span></td>
+            </tr>
+	                    <tr >
+               <td align="left" width="45%">
+                    <span id="FLOP_notation_10" style="display: none;">141483479</span>
+                    <span id="FLOP_performance_10" style="display: none;">-0.1</span>
+                    <span id="FLOP_name_10" class="name " title="VSPT" style="cursor:pointer;">VSPT</span>
+                </td>
+                <td align="right" width="30%"><span id="FLOP_price_10" class="">6,70</span></td>
+                <td align="right" width="25%"><span id="FLOP_pct_10" class="txtRed ">-1,47</span></td>
+            </tr>
+	        	    </tbody>
+    </table>
+</div><!--medCombo-->			</div><!--combo-->
+		</div><!--right-->
+	</div><!--midTop-->
+    
+	<div class="midBot">
+		<div class="comboMar sepTop">
+			<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="50%">Fondo Mutuos</td>
+			<td class="tdCent" width="27%">Precio</td>
+			<td width="23%">% 30 d</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+	                <tr>
+                    <td align="left" width="46%"><span id="name_25812362" class="name" title="A. Chilenas">A. Chilenas</span></td>
+                    <td align="right" width="29%"><span id="value_25812362">2.617,32</span></td>
+                    <td align="right" width="25%"><span id="performance_25812362" class="txtGreen">+0,84</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_55850879" class="name" title="Chile Accion">Chile Accion</span></td>
+                    <td align="right" width="29%"><span id="value_55850879">885,51</span></td>
+                    <td align="right" width="25%"><span id="performance_55850879" class="txtGreen">+1,07</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_25812363" class="name" title="A. Latinoamericanas">A. Latinoame...</span></td>
+                    <td align="right" width="29%"><span id="value_25812363">2.083,37</span></td>
+                    <td align="right" width="25%"><span id="performance_25812363" class="txtGreen">+0,68</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_25812373" class="name" title="Brasil">Brasil</span></td>
+                    <td align="right" width="29%"><span id="value_25812373">1.305,88</span></td>
+                    <td align="right" width="25%"><span id="performance_25812373" class="txtGreen">+3,51</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_84168493" class="name" title="Andino">Andino</span></td>
+                    <td align="right" width="29%"><span id="value_84168493">914,96</span></td>
+                    <td align="right" width="25%"><span id="performance_84168493" class="txtRed">-1,26</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_25812365" class="name" title="A. USA">A. USA</span></td>
+                    <td align="right" width="29%"><span id="value_25812365">1.414,82</span></td>
+                    <td align="right" width="25%"><span id="performance_25812365" class="txtRed">-3,54</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_85141992" class="name" title="Global Desarrollo">Global Desar...</span></td>
+                    <td align="right" width="29%"><span id="value_85141992">1.298,66</span></td>
+                    <td align="right" width="25%"><span id="performance_85141992" class="txtRed">-5,05</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_89600349" class="name" title="Global Emergente">Global Emerg...</span></td>
+                    <td align="right" width="29%"><span id="value_89600349">1.014,46</span></td>
+                    <td align="right" width="25%"><span id="performance_89600349" class="txtRed">-2,70</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_25880981" class="name" title="A. Asia Emergente">A. Asia Emer...</span></td>
+                    <td align="right" width="29%"><span id="value_25880981">971,91</span></td>
+                    <td align="right" width="25%"><span id="performance_25880981" class="txtRed">-2,38</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_85141997" class="name" title="Gestion Activa">Gestion Activa</span></td>
+                    <td align="right" width="29%"><span id="value_85141997">1.144,69</span></td>
+                    <td align="right" width="25%"><span id="performance_85141997" class="txtRed">-1,74</span></td>
+                </tr>
+                            <tr>
+                    <td align="left" width="46%"><span id="name_121238543" class="name" title="Gestion Conservadora">Gestion Cons...</span></td>
+                    <td align="right" width="29%"><span id="value_121238543">1.001,86</span></td>
+                    <td align="right" width="25%"><span id="performance_121238543" class="txtRed">-0,66</span></td>
+                </tr>
+                        </table>
+        </div><!--medCombo-->		</div><!--combo-->
+		<div class="comboMar sepTop">
+			<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="46%">Tasa de Interés</td>
+			<td class="tdCent" width="29%">Tasa</td>
+			<td width="25%">Var</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    			<tr>
+			<td align="left" width="46%"><span class="name" id="name_23132524" title="BCP 2 Años">BCP 2 Años</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:5.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D23132524-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">3,83                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:6.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D23132524-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,79                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_23132523" title="BCP 5 Años">BCP 5 Años</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:7.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D23132523-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">4,06                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:8.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D23132523-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,74                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_17121761" title="BCP 10 Años">BCP 10 Años</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:9.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D17121761-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">4,41                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:10.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121761-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,46                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_17121758" title="BCU 5 Años">BCU 5 Años</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:11.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D17121758-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">1,07                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:12.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121758-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+1,90                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_17121760" title="BCU 10 Años">BCU 10 Años</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:13.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D17121760-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">1,41                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:14.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121760-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,71                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25881035" title="Tip 30-89">Tip 30-89</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:15.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D25881035-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">3,72                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:16.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881035-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtSome">0,00                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25881036" title="Tab 1 Año">Tab 1 Año</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:17.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D25881036-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">5,58                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:18.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881036-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtSome">0,00                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25812379" title="US Treasury 2">US Treasury 2</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:19.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D25812379-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">0,58                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:20.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25812379-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtSome">0,00                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25812380" title="US Treasury 5">US Treasury 5</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:21.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D25812380-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">0,97                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:22.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25812380-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+2,11                </span>
+            </td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25812381" title="US Treasury 10">US Treasury 10</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:23.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE.params:ID_NOTATION-3D25812381-26ID_QUALITY_PRICE-3D4.attr:PRICE.valueFilter:filterPrice">1,40                </span>
+            </td>
+			<td align="right" width="25%">
+                <span id="domhandler:24.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25812381-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+1,45                </span>
+            </td>
+		</tr>
+        	</table>
+</div><!--medCombo-->		</div><!--combo-->
+		<div class="comboMar_b sepTop">
+			<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="46%">Mercados</td>
+			<td class="tdCent" width="29%">Puntos</td>
+			<td width="25%">%</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    	                
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_17242077" style="display: none;">0</span>
+                        <span id="market_open_17242077" style="display: none;">0</span>
+                        <span class="name" id="name_17242077" title="IPSA, CHILE">
+                            IPSA, CHILE                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_17242077" class="gris">
+                            3.997,71                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_17242077" class="gris">
+                            +0,07                        </span>
+                        <input type="hidden" name="market_performancepct_raw_17242077" id="market_performancepct_raw_17242077" value="0.0688" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_50947616" style="display: none;">0</span>
+                        <span id="market_open_50947616" style="display: none;">0</span>
+                        <span class="name" id="name_50947616" title="S&P 40 MILA">
+                            S&P 40 MILA                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_50947616" class="gris">
+                            533,76                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_50947616" class="gris">
+                            +0,40                        </span>
+                        <input type="hidden" name="market_performancepct_raw_50947616" id="market_performancepct_raw_50947616" value="0.3969" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_1335248" style="display: none;">0</span>
+                        <span id="market_open_1335248" style="display: none;">0</span>
+                        <span class="name" id="name_1335248" title="BOVESPA, BRASIL">
+                            BOVESPA, BRASIL                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_1335248" class="gris">
+                            52.014,66                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_1335248" class="gris">
+                            +0,22                        </span>
+                        <input type="hidden" name="market_performancepct_raw_1335248" id="market_performancepct_raw_1335248" value="0.2174" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_324977" style="display: none;">0</span>
+                        <span id="market_open_324977" style="display: none;">0</span>
+                        <span class="name" id="name_324977" title="DOW JONES, USA">
+                            DOW JONES, USA                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_324977" class="gris">
+                            17.895,88                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_324977" class="gris">
+                            -0,13                        </span>
+                        <input type="hidden" name="market_performancepct_raw_324977" id="market_performancepct_raw_324977" value="-0.1269" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_325104" style="display: none;">0</span>
+                        <span id="market_open_325104" style="display: none;">0</span>
+                        <span class="name" id="name_325104" title="NASDAQ, USA">
+                            NASDAQ, USA                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_325104" class="gris">
+                            4.459,58                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_325104" class="gris">
+                            +0,33                        </span>
+                        <input type="hidden" name="market_performancepct_raw_325104" id="market_performancepct_raw_325104" value="0.3348" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_4359526" style="display: none;">0</span>
+                        <span id="market_open_4359526" style="display: none;">0</span>
+                        <span class="name" id="name_4359526" title="S&P 500, USA">
+                            S&P 500, USA                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_4359526" class="gris">
+                            2.097,90                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_4359526" class="gris">
+                            -0,09                        </span>
+                        <input type="hidden" name="market_performancepct_raw_4359526" id="market_performancepct_raw_4359526" value="-0.0872" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_60972397" style="display: none;">1</span>
+                        <span id="market_open_60972397" style="display: none;">1</span>
+                        <span class="name" id="name_60972397" title="NIKKEI 225, JPN">
+                            NIKKEI 225, JPN                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_60972397" class="txtSome">
+                            15.391,20                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_60972397" class="txtGreen">
+                            +0,75                        </span>
+                        <input type="hidden" name="market_performancepct_raw_60972397" id="market_performancepct_raw_60972397" value="0.7525" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_10583965" style="display: none;">1</span>
+                        <span id="market_open_10583965" style="display: none;">1</span>
+                        <span class="name" id="name_10583965" title="IPC, MEXICO">
+                            IPC, MEXICO                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_10583965" class="txtSome">
+                            45.394,37                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_10583965" class="txtGreen">
+                            +0,20                        </span>
+                        <input type="hidden" name="market_performancepct_raw_10583965" id="market_performancepct_raw_10583965" value="0.1978" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_1918069" style="display: none;">0</span>
+                        <span id="market_open_1918069" style="display: none;">0</span>
+                        <span class="name" id="name_1918069" title="FTSE 100, UK">
+                            FTSE 100, UK                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_1918069" class="gris">
+                            6.533,79                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_1918069" class="gris">
+                            +1,09                        </span>
+                        <input type="hidden" name="market_performancepct_raw_1918069" id="market_performancepct_raw_1918069" value="1.0861" />
+                    </td>
+                </tr>
+			
+                            
+                <tr>
+                    <td align="left" width="46%">
+                        <span id="market_tradeable_20735" style="display: none;">0</span>
+                        <span id="market_open_20735" style="display: none;">0</span>
+                        <span class="name" id="name_20735" title="DAX, ALEMANIA">
+                            DAX, ALEMANIA                        </span>
+                    </td>
+                    <td align="right" width="29%">
+                        <span id="market_price_20735" class="gris">
+                            9.418,78                        </span>
+                    </td>
+                    <td align="right" width="25%">
+                        <span id="market_performancepct_20735" class="gris">
+                            +0,49                        </span>
+                        <input type="hidden" name="market_performancepct_raw_20735" id="market_performancepct_raw_20735" value="0.4856" />
+                    </td>
+                </tr>
+			
+            		</table>
+	
+</div><!--medCombo-->		</div><!--combo-->
+		<div class="combo sepTop">
+			<div class="topCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td class="tdDer" width="46%">Más Transadas</td>
+			<td class="tdCent" width="29%">Precio</td>
+			<td width="25%">%</td>
+		</tr>
+    </table>
+</div><!--topCombo-->
+<div class="medCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" id="topflop">
+	    <tbody>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_1" style="display: none;">17242026</span>
+                    <span id="TOP_FLOP_performance_1" style="display: none;">-2.9</span>
+                    <span id="TOP_FLOP_name_1" class="name " title="RIPLEY CORP SA" style="cursor:pointer;">RIPLEY</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_1" class="">409,13</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_1" class="txtRed ">-0,70</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_2" style="display: none;">17241892</span>
+                    <span id="TOP_FLOP_performance_2" style="display: none;">5.5</span>
+                    <span id="TOP_FLOP_name_2" class="name " title="VINA CONCHA Y TORO" style="cursor:pointer;">CONCHATORO</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_2" class="">1.055,40</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_2" class="txtGreen ">+0,52</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_3" style="display: none;">17241862</span>
+                    <span id="TOP_FLOP_performance_3" style="display: none;">1.5</span>
+                    <span id="TOP_FLOP_name_3" class="name " title="CENCOSUD SA COM NPV" style="cursor:pointer;">CENCOSUD</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_3" class="">1.898,40</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_3" class="txtGreen ">+0,08</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_4" style="display: none;">6946349</span>
+                    <span id="TOP_FLOP_performance_4" style="display: none;">71.3</span>
+                    <span id="TOP_FLOP_name_4" class="name " title="EMBOTELLADORA ANDINA SA PRF'B'NPV" style="cursor:pointer;">ANDINA-B</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_4" class="">2.399,10</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_4" class="txtGreen ">+3,06</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_5" style="display: none;">159872948</span>
+                    <span id="TOP_FLOP_performance_5" style="display: none;">-0.2</span>
+                    <span id="TOP_FLOP_name_5" class="name " title="ENERSIS CHILE SA COM NPV" style="cursor:pointer;">ENERSIS-CH</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_5" class="">76,74</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_5" class="txtRed ">-0,26</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_6" style="display: none;">17241947</span>
+                    <span id="TOP_FLOP_performance_6" style="display: none;">-39</span>
+                    <span id="TOP_FLOP_name_6" class="name " title="S.A.C.I FALABELLA COM NPV" style="cursor:pointer;">FALABELLA</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_6" class="">5.000,10</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_6" class="txtRed ">-0,77</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_7" style="display: none;">17241878</span>
+                    <span id="TOP_FLOP_performance_7" style="display: none;">0.16</span>
+                    <span id="TOP_FLOP_name_7" class="name " title="BANCO DE CHILE COM" style="cursor:pointer;">CHILE</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_7" class="">70,36</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_7" class="txtGreen ">+0,23</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_8" style="display: none;">17242057</span>
+                    <span id="TOP_FLOP_performance_8" style="display: none;">276</span>
+                    <span id="TOP_FLOP_name_8" class="name " title="SOCIEDAD QUIMICA Y MINERA DE CHILE PRF SER'B'" style="cursor:pointer;">SQM-B</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_8" class="">17.002,00</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_8" class="txtGreen ">+1,65</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_9" style="display: none;">17875039</span>
+                    <span id="TOP_FLOP_performance_9" style="display: none;">-92.5</span>
+                    <span id="TOP_FLOP_name_9" class="name " title="COMPANIA CERVECERIAS UNIDAS SA COM NPV" style="cursor:pointer;">CCU</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_9" class="">7.506,40</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_9" class="txtRed ">-1,22</span></td>
+            </tr>
+		                <tr>
+               <td align="left" width="45%">
+                    <span id="TOP_FLOP_notation_10" style="display: none;">17241985</span>
+                    <span id="TOP_FLOP_performance_10" style="display: none;">19.7</span>
+                    <span id="TOP_FLOP_name_10" class="name " title="LATAM AIRLINES GROUP SA COM NPV" style="cursor:pointer;">LAN</span>
+                </td>
+                <td align="right" width="30%"><span id="TOP_FLOP_price_10" class="">4.370,30</span></td>
+                <td align="right" width="25%"><span id="TOP_FLOP_pct_10" class="txtGreen ">+0,45</span></td>
+            </tr>
+		    	    </tbody>
+	</table>
+</div><!--medCombo-->		</div><!--combo-->
+	</div><!--midBot-->
+	
+	<div class="midBot">   
+		<div class="comboMar">
+			        <div class="topCombo">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td class="tdDer" width="50%">Fondo Mutuos</td>
+                    <td class="tdCent" width="27%">Precio</td>
+                    <td width="23%">% 30 d</td>
+                </tr>
+            </table>
+        </div><!--topCombo-->
+        <div class="medCombo">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                    <td align="left" width="46%"><span class="name" id="name_25812367" title="Money Market">Money Market</span></td>
+                    <td align="right" width="29%"><span id="value_25812367">1.686,20</span></td>
+                    <td align="right" width="25%"><span id="performance_25812367" class="txtGreen">+0,26</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_63751132" title="Renta a Plazo">Renta a Plazo</span></td>
+                    <td align="right" width="29%"><span id="value_63751132">1.217,40</span></td>
+                    <td align="right" width="25%"><span id="performance_63751132" class="txtGreen">+0,28</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_25812372" title="Renta Nominal">Renta Nominal</span></td>
+                    <td align="right" width="29%"><span id="value_25812372">1.719,96</span></td>
+                    <td align="right" width="25%"><span id="performance_25812372" class="txtGreen">+0,56</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_53121511" title="Renta Local">Renta Local</span></td>
+                    <td align="right" width="29%"><span id="value_53121511">1.248,18</span></td>
+                    <td align="right" width="25%"><span id="performance_53121511" class="txtGreen">+0,39</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_25812368" title="Renta Chilena">Renta Chilena</span></td>
+                    <td align="right" width="29%"><span id="value_25812368">2.001,22</span></td>
+                    <td align="right" width="25%"><span id="performance_25812368" class="txtGreen">+0,85</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_76245856" title="Renta Activa">Renta Activa</span></td>
+                    <td align="right" width="29%"><span id="value_76245856">1.215,90</span></td>
+                    <td align="right" width="25%"><span id="performance_76245856" class="txtGreen">+0,69</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_25812371" title="Money Market Dólar">Money Market...</span></td>
+                    <td align="right" width="29%"><span id="value_25812371">1,90</span></td>
+                    <td align="right" width="25%"><span id="performance_25812371" class="txtGreen">+0,03</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_25812369" title="Renta Lat. Dólar">Renta Lat. D...</span></td>
+                    <td align="right" width="29%"><span id="value_25812369">2,03</span></td>
+                    <td align="right" width="25%"><span id="performance_25812369" class="txtGreen">+0,48</span></td>
+                </tr>
+			                <tr>
+                    <td align="left" width="46%"><span class="name" id="name_136925548" title="Renta Internacional (USD)">Renta Intern...</span></td>
+                    <td align="right" width="29%"><span id="value_136925548">9,97</span></td>
+                    <td align="right" width="25%"><span id="performance_136925548" class="txtGreen">+0,92</span></td>
+                </tr>
+			            </table>
+        </div><!--medCombo-->		</div><!--combo-->
+		<div class="comboMar">
+			<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="46%">F. de Inversi&oacute;n</td>
+			<td class="tdCent" width="29%">Precio</td>
+			<td width="25%">% 30 d</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    			<tr>
+			<td align="left" width="46%"><span id="name_38239541" class="name" title="Deuda Latinoamericana">Deuda Latino...</span></td>
+			<td align="right" width="29%"><span id="value_38239541">27.320,26</span></td>
+			<td align="right" width="25%"><span id="performance_38239541" class="txtRed">-0,41</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span id="name_38239479" class="name" title="Small Cap Chile">Small Cap Chile</span></td>
+			<td align="right" width="29%"><span id="value_38239479">67.916,88</span></td>
+			<td align="right" width="25%"><span id="performance_38239479" class="txtGreen">+1,33</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span id="name_40239479" class="name" title="Deuda Corporativa Chile">Deuda Corpor...</span></td>
+			<td align="right" width="29%"><span id="value_40239479">30.704,07</span></td>
+			<td align="right" width="25%"><span id="performance_40239479" class="txtGreen">+0,87</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span id="name_62395271" class="name" title="High Yield Latin America">High Yield L...</span></td>
+			<td align="right" width="29%"><span id="value_62395271">0,98</span></td>
+			<td align="right" width="25%"><span id="performance_62395271" class="txtGreen">+0,46</span></td>
+		</tr>
+            </table>
+</div><!--medCombo-->		</div><!--combo-->
+		<div class="comboMar_b">
+			 <div class="topCombo">
+	 <table cellpadding="0" cellspacing="0" border="0" width="100%">
+		 <tr>
+			 <td class="tdDer" width="46%">Monedas</td>
+			 <td class="tdCent" width="29%">Puntos</td>
+			 <td width="25%">%</td>
+		 </tr>
+	 </table>
+</div><!--topCombo-->
+<div class="medCombo">
+	 <table cellpadding="0" cellspacing="0" border="0" width="100%">
+             <tr>
+            <td align="left" width="46%"><span id="name_17121756" class="name" title="DOLAR SPOT">DOLAR SPOT</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:25.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121756-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	666,0500                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:26.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121756-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,57                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_1390634" class="name" title="EURO">EURO</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:27.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1390634-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	1,1075                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:28.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1390634-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,10                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_17121762" class="name" title="UF">UF</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:29.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121762-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	26.064,2200                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:30.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121762-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,01                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_17121757" class="name" title="DOLAR OBS.">DOLAR OBS.</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:31.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121757-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	664,5100                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:32.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D17121757-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,49                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_994752" class="name" title="REAL BRASILE&Ntilde;O">REAL BRASILE&Ntilde;O</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:33.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D994752-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	3,3609                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:34.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D994752-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,01                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_1363989" class="name" title="YEN JAPONES">YEN JAPONES</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:35.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1363989-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	100,8480                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:36.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1363989-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,09                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_1305587" class="name" title="LIBRA ESTERLINA">LIBRA ESTERLINA</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:37.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1305587-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	1,2945                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:38.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1305587-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,27                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_833622" class="name" title="DOLAR AUS.">DOLAR AUS.</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:39.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D833622-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	0,7508                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:40.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D833622-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,20                </span>
+            </td>
+        </tr>
+             <tr>
+            <td align="left" width="46%"><span id="name_1343320" class="name" title="YUAN CHINO">YUAN CHINO</span></td>
+            <td align="right" width="29%">
+                <span id="domhandler:41.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1343320-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">
+                	6,6871                </span>
+            </td>
+            <td align="right" width="25%">
+                <span id="domhandler:42.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1343320-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">
+                	+0,12                </span>
+            </td>
+        </tr>
+         </table>
+ </div><!--medCombo-->		</div><!--combo-->
+		<div class="combo">
+			<div class="topCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr>
+			<td class="tdDer" width="46%">Commodities</td>
+			<td class="tdCent" width="29%">Precio</td>
+			<td width="25%">%</td>
+		</tr>
+	</table>
+</div><!--topCombo-->
+<div class="medCombo">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+			<td align="left" width="46%"><span class="name" id="name_1022799" title="Cobre a Futuro">Cobre a Futuro</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:43.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1022799-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">2,12                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:44.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1022799-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtRed">-0,19</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25881002" title="Cobre a Cash">Cobre a Cash</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:45.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881002-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">2,14                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:46.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881002-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,40</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_28134860" title="Crude OIL WTI">Crude OIL WTI</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:47.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D28134860-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">45,40                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:48.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D28134860-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+0,49</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_1326189" title="Oro">Oro</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:49.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1326189-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">1.355,00                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:50.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1326189-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtRed">-0,43</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_1288094" title="Plata">Plata</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:51.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1288094-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">19,67                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:52.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D1288094-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtRed">-0,36</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25815104" title="Celulosa NBSK">Celulosa NBSK</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:53.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25815104-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">809,79                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:54.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25815104-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtSome">0,00</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25881003" title="Gas Natural">Gas Natural</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:55.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881003-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">2,83                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:56.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881003-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtGreen">+3,06</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25815105" title="Harina de Pesc.">Harina de Pesc.</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:57.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25815105-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">1.700,00                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:58.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25815105-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtSome">0,00</span></td>
+		</tr>
+        		<tr>
+			<td align="left" width="46%"><span class="name" id="name_25881004" title="Azucar">Azucar</span></td>
+			<td align="right" width="29%">
+                <span id="domhandler:59.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881004-26ID_QUALITY_PRICE-3D4.attr:PRICE.comp:PREV.eq:txtSome.gt:txtSome.lt:txtSome.resetAttr:PRICE.resetComp:ZERO.resetEq:txtSome.resetGt:txtSome.resetLt:txtSome">563,50                </span>
+            </td>
+			<td align="right" width="25%"><span id="domhandler:60.mdgObj:-2Fprices-2Fquote-3FVERSION-3D2.consumer:VALUE-2CCLASS.params:ID_NOTATION-3D25881004-26ID_QUALITY_PRICE-3D4.attr:PERFORMANCE_PCT.comp:PREV.eq:txtBackYel.gt:txtBackGreen.lt:txtBackRed.resetAttr:PERFORMANCE_PCT.resetComp:ZERO.resetEq:txtSome.resetGt:txtGreen.resetLt:txtRed.valueFilter:FilterPerformancePCT" class="txtRed">-1,43</span></td>
+		</tr>
+        	</table>
+</div><!--medCombo-->		</div><!--combo-->
+	</div><!--midBot-->
+	
+    <div class="clear"></div><!--clear-->
+	<div class="disc"><span style="font-weight:bolder;">Informaci&oacute;n de acciones en tiempo real. Monedas y commodities con desfase de 15 minutos.</span> Inf&oacute;rmese de las caracter&iacute;sticas esenciales de la inversi&oacute;n en estos fondos mutuos, las que se encuentran contenidas en sus reglamentos internos y contratos de suscripci&oacute;n de cuotas. La rentabilidad o ganancia obtenida en el pasado por estos fondos, no garantiza que se repita en el futuro. Los valores de los fondos mutuos son variables. Rentabilidad actualizada al &uacute;ltimo d&iacute;a h&aacute;bil vigente. Fuente: BTG Pactual Chile, Interactive Data, BCS. Sitio desarrollado utilizando la tecnolog&iacute;a y datos de <a href="http://www.interactivedata-ms.com/en/index.html">Interactive Data</a>. <strong><a href="http://www.btgpactual.mdgms.com/pdf/aviso_legal_btgpactual_chile.pdf">Aviso Legal</a></strong>.</div>
+</div><!--wrapper-->
+<div class="alerta" style="display:none">
+    <div class="bodAlerta">
+        <div class="topAlerta">Informaci&oacute;n</div>
+        <div class="infoAlerta">Informaci&oacute;n de acciones en tiempo real.<br />
+            Monedas y commodities con desfase de 15 minutos.</div>
+        <div class="btnCancelar">&nbsp;</div>
+    </div>
+</div><!--alerta-->
+<div id="debug"></div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24883966-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

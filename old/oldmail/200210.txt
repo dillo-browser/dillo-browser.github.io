@@ -1,0 +1,1951 @@
+Re: [Dillo-dev]dillo website problems
+
+From: Livio Baldini Soares <livio@im...> - 2002-10-28 22:04
+
+Hi all!
+
+Jorge Arellano Cid writes:
+> 
+> 
+> On Mon, 28 Oct 2002, Marc E. Fiuczynski wrote:
+> 
+> > The dillo website seems to be down. It's been down since the weekend (Sat?).
+> 
+> Yes, I can't access it either.
+
+It's back on-line now. 
+
+> I though it was something related to the presidential elections
+> and hope it starts working again soon.
+> 
+> Any clues?
+
+Most probably the server crashed during the weekend and it took them
+a while to get it up again (considering, I think, most of us were more
+interested in the election results than going to work :-P).
+
+> BTW (Livio): I sent you two emails, and saw your posting to the
+> list. Did you receive them?
+
+Yes. I didn't answer yet because I'm going to make the contacts you
+asked tonight (or possibly tomorrow), so I still don't have anything
+useful to report ;)
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]dillo website problems
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-28 19:50
+
+On Mon, 28 Oct 2002, Marc E. Fiuczynski wrote:
+
+> The dillo website seems to be down. It's been down since the weekend (Sat?).
+
+Yes, I can't access it either.
+
+I though it was something related to the presidential elections
+and hope it starts working again soon.
+
+Any clues?
+
+BTW (Livio): I sent you two emails, and saw your posting to the
+list. Did you receive them?
+
+Something weird is happening and I don't know what it is...
+
+
+puzzled
+Jorge.- 
+
+
+
+Re: [Dillo-dev]memory leak?
+
+From: Livio Baldini Soares <livio@im...> - 2002-10-28 19:32
+
+Hello Marc,
+
+Marc E. Fiuczynski writes:
+> Hi,
+> 
+> I am using dillo as a rendering engine for my digital picture frame
+> project --- converting an old laptop into an asthetic looking picture frame.
+> Lacking client-side scripting support, I am using http-equiv="refresh" to
+> cycle through a set of pictures being served via WiFi from my thttpd server.
+> 
+> After running this for 24 hours, I noticed that the dillo memory footprint
+> slowly grows. The footprint seems to grow at 4K increments. My conjecture is
+> that dillo's cache or history is slowly growing.
+> 
+> Is there a convinient way to disable the cache and history support?
+
+Humm, I don't know about history support, it shouldn't be too hard
+to do, but I think that would be the "wrong" way to fix your problem.
+But about the infinite growing cache, I made a patch to control the
+size of Dillo's cache (even set it to zero - which in practise will
+disable it):
+
+http://www.ime.usp.br/~livio/dillo/patches/cache-size-limit.diff
+
+The patch _should_ apply to current release/CVS. Some files might
+shift a bit, but I think it still works. The option you'll be looking
+for in you dillorc is `cache_size`.
+
+But I'm not sure your memory increase is cache related. If you apply
+my patch it will enable an `about:cache` page where you can see what
+files are currently cached, and much of cache they are occupying
+(never forget to reload it to update the info! ;). Maybe what you see
+is just a memory leak in the code... There is a rather complete e-mail
+I've sent about this patch, back in June. It's here:
+http://so....net/mailarchive/message.php?msg_id=1642897
+
+good luck!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]dillo website problems
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-28 18:56
+
+The dillo website seems to be down. It's been down since the weekend (Sat?). 
+
+
+
+[Dillo-dev]memory leak?
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-28 18:53
+
+Hi,
+
+I am using dillo as a rendering engine for my digital picture frame
+project --- converting an old laptop into an asthetic looking picture frame.
+Lacking client-side scripting support, I am using http-equiv="refresh" to
+cycle through a set of pictures being served via WiFi from my thttpd server.
+
+After running this for 24 hours, I noticed that the dillo memory footprint
+slowly grows. The footprint seems to grow at 4K increments. My conjecture is
+that dillo's cache or history is slowly growing.
+
+Is there a convinient way to disable the cache and history support?
+
+Thanks,
+Marc 
+
+
+
+Re: [Dillo-dev]Hello!
+
+From: Carlos Daniel Ruvalcaba Valenzuela <clsdaniel@ya...> - 2002-10-28 01:15
+
+Great!, i was looking at some cached pages at google and it says the
+there is not much done on DPI, but now knowing that the framework is
+complete and working is a great advance, i'm very interested to see it,
+and do some testings.
+
+Also don't spect that i passed 2 years learning lazy C, no way i'm a
+serious programmer (or a freak it's much the same) in whatever the
+languaje is, specially C/C++, also these 2 years are with pure C apps, i
+have worked more with C libraries doing the heavy work for some VB
+programs, and mixed with some x86 and mmx assembly.
+
+Ok, i'll wait to see the tarball posted, and then i'll start coding with
+it.
+
+Anyway, anyone working on downloads?, i whould like to know if there is
+something already instead of trying to start from scratch some basic
+stuff for a download plugin.
+
+
+_________________________________________________________
+Do You Yahoo!?
+La mejor conexión a internet y 25MB extra a tu correo por $100 al mes. http://net.yahoo.com.mx 
+
+
+
+Re: [Dillo-dev]Hello!
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-27 23:20
+
+Carlos,
+
+> I would like to help to the dillo project, i want to work over the
+> current DPI1 plans, i coded a little implementation witch i'm testing
+> right now.
+
+Talking about DPI1, I just "finished" a dpi-program for
+bookmarks: 1690 lines that need some polishing, but that make an
+excellent example.
+
+The code is well commented but there's still a small doc to
+write before sharing it and starting coding dpis!
+
+I was waiting for someone from CIPSGA to write back to one of
+our multiple attempts to contact them :(, but if things continue
+this way I'll pack a tarball with it and put it on the HTTP
+server next week.
+
+If some more time passes by and we still have no answers, we'll
+have to search for another CVS server...
+
+
+Cheers
+Jorge.-
+
+PS: If somebody wrote me this weekend, please resend, I didn't
+receive but one email and that's rare. 
+
+
+
+[Dillo-dev]Hello!
+
+From: Carlos Daniel Ruvalcaba Valenzuela <clsdaniel@ya...> - 2002-10-27 20:51
+
+I would like to help to the dillo project, i want to work over the
+current DPI1 plans, i coded a little implementation witch i'm testing
+right now.
+
+_________________________________________________________
+Do You Yahoo!?
+La mejor conexión a internet y 25MB extra a tu correo por $100 al mes. http://net.yahoo.com.mx 
+
+
+
+Re: [Dillo-dev]CSS
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-10-24 19:30
+
+tor 2002-10-24 klockan 18.50 skrev Sebastian Geerken:
+> Hi!
+>=20
+> I haven't yet read the whole thread, but just want to give some hints:
+> I've written some notes to the list, they can be found at
+> <http://www.geocrawler.com/archives/3/702/2002/4/0/8538786/>. Furthermore=
+,
+> there are documentations on Dw within the tarball.
+>=20
+> Some more notes:
+>=20
+> * How a particular attribute is rendered, is mainly the task of Dw,
+> e.g. DwPage (most likely) must handle floats, fixed positions
+> etc. They are not covered by the posting mentioned above, and may be
+> implemented bit by bit.
+>=20
+> * Another complex task is CSS parsing and evaluation, handling
+> document elements, and synchronizing the whole thing. (On the other
+> hand, some extensions of Dw may also have an impact on this,
+> especially the document tree.)
+
+FWIW, I'm interested in writing the cascade and parsing parts. But it
+would help to know more about how the document tree will look like and
+how it interact with the cascade.
+
+Cheers,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-10-24 17:02
+
+On Wed, Oct 23, 2002 at 12:58:52PM -0300, Jorge Arellano Cid wrote:
+> > [...]
+> > Yes, and probably on the content of the stream as well.
+> >
+> > Personally, I think that that is not something that should be added to
+> > Dillo, because the real solution is to fix the server.
+> 
+> That's the point.
+> 
+> Also, beacuase being as tolerant as IE or Mozilla or $* to
+> HTML, HTTP or .*P mistakes/errors/extensions/faults, only polutes
+> the web space rising the entry barriers for other SW to deal with
+> it.
+> 
+> Enough said.
+
+Sorry for adding this: This would not just extend HTTP, but *break*
+it. If the server does send a Content-Type, the browser MUST adhere to
+it. Any solution to "solve" this "problem" would make dillo's behavior
+simply incorrect, not only more tolerant. (Adding detection code for
+the case that no Content-Type is sent, would OTOH ok, see the HTTP
+specs.)
+
+Sebastian 
+
+
+
+[Dillo-dev]CSS
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-10-24 16:50
+
+Hi!
+
+I haven't yet read the whole thread, but just want to give some hints:
+I've written some notes to the list, they can be found at
+<http://www.geocrawler.com/archives/3/702/2002/4/0/8538786/>. Furthermore,
+there are documentations on Dw within the tarball.
+
+Some more notes:
+
+* How a particular attribute is rendered, is mainly the task of Dw,
+e.g. DwPage (most likely) must handle floats, fixed positions
+etc. They are not covered by the posting mentioned above, and may be
+implemented bit by bit.
+
+* Another complex task is CSS parsing and evaluation, handling
+document elements, and synchronizing the whole thing. (On the other
+hand, some extensions of Dw may also have an impact on this,
+especially the document tree.)
+
+Floats are something mainly affecting DwPage, but also will probably
+make the document tree more complicated. I've until now collected some
+ideas; who is interested in an implementation, may ask me to write
+them down. Of course, be warned that it is no simple task.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]CSS: HTMLParser question - update
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-24 16:48
+
+Tony,
+
+You may like to read the "CSS Spec" link (I just added it to
+the home site). It has a lot of information about CSS and dillo
+internals.
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]CSS: HTMLParser question - update
+
+From: Lars Clausen <lrclause@cs...> - 2002-10-24 15:41
+
+On Wed, 23 Oct 2002, tony@we... wrote:
+> Sorry, small correction....
+>=20
+> absolute-positioned elements do not affect the normal text flow (text
+> simply flows under/over such elements) so the question about text
+> rendering as it's parsed is irrelevant as float:left and float:right (and
+> img align=3Dright) have to appear before the text that will subsequently
+> flow around them.
+>=20
+> OK first hurdle down, but there is still the problem of images in floated
+> elements being of undetermined dimensions (as they are being retrieved by
+> a separate thread at this point). So the problem is this...
+>=20
+> A piece of HTML is encountered like this... <img src=3D'wherever.png'
+> align=3Dright>loads of text goes here that now needs to flow around the
+> image that has just been loaded...
+>=20
+> The IMG tag will get pushed to the parsing stack, but are the image's
+> dimensions retrieved before the following words are rendered?
+>=20
+> There is no problem with <DIV> elements floated that include only text,
+> as the CSS2 spec says that the element's width should be provided in the
+> css and if not is left up to the browser to decide.
+>=20
+> Could someone give me a quick pointer as to wether the images dimensions
+> are loaded before subsequent text rendering, or if not, can it be?
+
+Dillo is heavily threaded, so you can't depend on the dimensions being
+loaded at any specific point. You should just assume a zero-width picture
+until you know the dimensions, at which point you'll need to re-render.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]CSS: HTMLParser question - update
+
+From: Tony <dillo@we...> - 2002-10-24 07:54
+
+Sorry, small correction....
+
+absolute-positioned elements do not affect the normal text flow (text simply flows under/over such elements) so the question about text rendering as it's parsed is irrelevant as float:left and float:right (and img align=right) have to appear before the text that will subsequently flow around them.
+
+OK first hurdle down, but there is still the problem of images in floated elements being of undetermined dimensions (as they are being retrieved by a separate thread at this point). So the problem is this...
+
+A piece of HTML is encountered like this...
+<img src='wherever.png' align=right>loads of text goes here that now needs to flow around the image that has just been loaded...
+
+The IMG tag will get pushed to the parsing stack, but are the image's dimensions retrieved before the following words are rendered?
+
+There is no problem with <DIV> elements floated that include only text, as the CSS2 spec says that the element's width should be provided in the css and if not is left up to the browser to decide.
+
+Could someone give me a quick pointer as to wether the images dimensions are loaded before subsequent text rendering, or if not, can it be?
+
+
+thanks 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: Geoff Lane <zzassgl@tw...> - 2002-10-24 07:38
+
+> In fact, this is not a simple case. Dillo has code for autodetecting 
+> content type when content-type header is missing. This does not seem
+> to be a case here - application/octet-stream is valid content type and 
+> means something for what browser may prompt to download but should not 
+> try to show it by itself. Mozilla and IE probably looked file extension, 
+> but this kind of behavior is imho problematic - if you really want user 
+> to be prompted for download and configure web server to send 
+> application/octet-stream content-type but web browser tries to show it 
+> anyway because file extension, then this is not a wanted behavior. It is 
+> just guessing.
+
+While developing a web application for downloading data to client PCs I had
+to investigate the behaviour of various browsers to discover a common method
+to download the data (which happened to be comma seperated values.) For
+all but IE the browser accepted application/octet-stream and displayed the
+usually SaveFile dialog. IE ignored application/octet-stream and started up
+a spread sheet to display the data. In the end I had to create a new x-
+MIME type to ensure that IE never assumed it knew better than the server.
+
+From experimentation and some info I found on microsoft's web site I would
+say that IE will ignore both MIME and name suffix if it sees data it
+_thinks_ it can display or execute.
+
+This kind of policy, of course, just perpetuates bad server configurations.
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+A single fact can spoil a good argument. 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: Geoff Lane <zzassgl@tw...> - 2002-10-24 07:22
+
+> 
+> > So is the problem with thttpd? Why is it that mozilla and IE have no problem
+> > with this? Do they "guess" what the content type is based on the filename?
+> 
+> Yes, and probably on the content of the stream as well.
+> 
+> Personally, I think that that is not something that should be added to
+> Dillo, because the real solution is to fix the server.
+> 
+
+Recently I had reason to actually check the true contents of a large number
+of GIF files obtained from the web (and no, they were not porn :-)) Around
+80% were in fact JPG files. All the mainstream browsers seem to check the
+file contents signatures (similar to the file command.) IE will agressively
+search for content that it conciders displayable and/or executable no matter
+what MIME information is supplied (which led to the famous security problem
+cause by JavaScript hidden in the GIF comment field.)
+
+It's a sad state of affairs.
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\ 
+
+
+
+Re: [Dillo-dev]CSS: HTMLParser question
+
+From: Paul Chamberlain <tif@ti...> - 2002-10-24 03:08
+
+Tony wrote:
+> If the page text is being rendered as it is encountered
+> (as suspected) then I doubt CSS (or for that matter,
+> even an align=right img tag) can be implemented in the
+> code's current form. For example, the ending paragraph
+> may contain a <DIV class that positions it at the top...
+
+For an example of a truly whacked page which dillo
+doesn't handle well at all, go to:
+
+http://www.apaaustin.com/rost204r.htm
+
+Whatever was used to create this page went out of it's
+way to be as confusing as possible.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]CSS: HTMLParser question
+
+From: <livio@im...> - 2002-10-23 20:37
+
+Hi Tony,
+
+Tony writes:
+> Hi,
+> 
+> Could someone answer me a quick question about the HTML parsing process please....
+> 
+> It appears from the docs that the style info for text that is to be rendered is held in a parsing stack, which is pushed each time a new tag arrives and subsequently popped when the tag is closed. From this, can I infer that html page text is being rendered as it is being received? or is rendering delayed until the complete page has been read and the parsing stack built?
+
+The page is rendered during download.
+
+> If the page text is being rendered as it is encountered (as suspected) then I doubt CSS (or for that matter, even an align=right img tag) can be implemented in the code's current form. For example, the ending paragraph may contain a <DIV class that positions it at the top of the page, and it's width/height may be dependant on an image that hasn't been loaded by the time the first few paragraphs have been rendered.
+
+Hummm, so? The page is just re-rendered, like it is today. If info
+about an image is not downloaded yet the page is rendered in a certain
+way, and after the info (width and height) is received it is
+re-rendered. Same goes for tables and other stuff.. 
+
+Try using a slow connection on a slow site. Watch Dillo (or even
+Mozilla, Opera or Konqueror for that matter) and see how the rendering
+"evolves" during download. Of course the objects are pushed about the
+page until you download the entire page (and info about other
+elements, like images).
+
+The only other way I see of doing this is to do what Netscape 4
+did. Download enough info to determine what the page layout will be
+and only then render it. In my opinion that's just horrible for the
+user. I _really_ want to see the page during download, _even_ if the
+layout keeps "shifting" about.
+
+To sum it up, I think rendering at download-time is very adequate
+and imposes no barrier to implementing CSS.
+
+Cheers!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]CSS: HTMLParser question - update
+
+From: Tony <tony@we...> - 2002-10-23 20:33
+
+Sorry, small correction....
+
+absolute-positioned elements do not affect the normal text flow (text simply flows under/over such elements) so the question about text rendering as it's parsed is irrelevant as float:left and float:right (and img align=right) have to appear before the text that will subsequently flow around them.
+
+OK first hurdle down, but there is still the problem of images in floated elements being of undetermined dimensions (as they are being retrieved by a separate thread at this point). So the problem is this...
+
+A piece of HTML is encountered like this...
+<img src='wherever.png' align=right>loads of text goes here that now needs to flow around the image that has just been loaded...
+
+The IMG tag will get pushed to the parsing stack, but are the image's dimensions retrieved before the following words are rendered?
+
+There is no problem with <DIV> elements floated that include only text, as the CSS2 spec says that the element's width should be provided in the css and if not is left up to the browser to decide.
+
+Could someone give me a quick pointer as to wether the images dimensions are loaded before subsequent text rendering, or if not, can it be?
+
+
+thanks 
+
+
+
+[Dillo-dev]CSS: HTMLParser question
+
+From: Tony <tony@we...> - 2002-10-23 20:17
+
+Hi,
+
+Could someone answer me a quick question about the HTML parsing process please....
+
+It appears from the docs that the style info for text that is to be rendered is held in a parsing stack, which is pushed each time a new tag arrives and subsequently popped when the tag is closed. From this, can I infer that html page text is being rendered as it is being received? or is rendering delayed until the complete page has been read and the parsing stack built?
+
+If the page text is being rendered as it is encountered (as suspected) then I doubt CSS (or for that matter, even an align=right img tag) can be implemented in the code's current form. For example, the ending paragraph may contain a <DIV class that positions it at the top of the page, and it's width/height may be dependant on an image that hasn't been loaded by the time the first few paragraphs have been rendered.
+
+Could someone verify wether the text rendering is done during page content parsing or deferred please?
+
+thanks 
+
+
+
+RE: [Dillo-dev]Silly problem
+
+From: madis <madis@cy...> - 2002-10-23 18:17
+
+On Wed, 23 Oct 2002, Marc E. Fiuczynski wrote:
+
+> While I agree that the fix should be at the server side, I don't think it is
+> prudent for dillo to not work in simple cases. I doubt that dillo's
+> following is so huge that by not being so tollerant as other web browsers it
+> will change the implementation of today's web servers.
+
+In fact, this is not a simple case. Dillo has code for autodetecting 
+content type when content-type header is missing. This does not seem
+to be a case here - application/octet-stream is valid content type and 
+means something for what browser may prompt to download but should not 
+try to show it by itself. Mozilla and IE probably looked file extension, 
+but this kind of behavior is imho problematic - if you really want user 
+to be prompted for download and configure web server to send 
+application/octet-stream content-type but web browser tries to show it 
+anyway because file extension, then this is not a wanted behavior. It is 
+just guessing.
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]plans for CSS support?
+
+From: Tony <dillo@we...> - 2002-10-23 16:56
+
+I don't know how feasable it will be to retro-fit CSS to the code. Certainly if I was starting from scratch then i'd make sure every HTML 'object' (be it an image, table, H1 or body piece of text, etc) had css properties (padding, margin, colour, etc) and then alter those default CSS properties with any stylesheet information that was encountered. Certainly the img align=right html tag is really a CSS property. I will have a look at the code and see if I can get my head around it. In the meantime if anyone else is interested in helping please say so.
+
+Tony
+
+> There have been mumblings of CSS, but I don't think anybody took it upon
+> themselves. One thing that I'd particularly like to see, that is (I
+> believe) part of CSS, is image (object) align, i.e. text flowing around
+> images. Many pages depend on this, either as CSS or in the deprecated <img
+> align=left> form. 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: <Juergen.Daubert@t-...> - 2002-10-23 16:56
+
+On Wed, 23 Oct 2002 08:38:15 -0700 "Marc E. Fiuczynski"
+<mef@cs.washington.edu> wrote:
+
+[...] 
+
+> So is the problem with thttpd? 
+
+Maybe you should upgrade thttpd to 2.21 or even 2.23beta1. I've no problems 
+viewing your test page with both of versions of thttpd.
+
+regards
+Jürgen 
+
+-- 
+juergen.daubert@t-... 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: <jbradford@di...> - 2002-10-23 16:50
+
+> While I agree that the fix should be at the server side, I don't think it is
+> prudent for dillo to not work in simple cases. I doubt that dillo's
+> following is so huge that by not being so tollerant as other web browsers it
+> will change the implementation of today's web servers.
+
+My reasons for not wanting it in Dillo are that it will bloat the
+code, and also it means looking at each stream to decide what it is,
+instead of just looking at the content type. This would harm it's use
+in embedded systems.
+
+There is always the option of using a separate proxy application to
+re-write the content type headers.
+
+> My "primary" interest in using dillo is the fact that it is small. This is
+> because I have a need for a free small memory footprint browser for my
+> application (converting an old pentium laptop to a digital picture
+> frame).
+
+There was an article on Slashdot about that a while ago - if you
+haven't seen it, it might be worth searching for it.
+
+> To be totally honest (and risking to alienate people on this list), I'd
+> switch to another web browser in a heart beat if it worked with more of
+> today's web servers and html content (e.g., supporting client side
+> scripting, style sheets, etc.).
+
+Hmmm, why are you using a web browser in the picture frame
+application, anyway? Why not just use a framebuffer picture viewer?
+
+John. 
+
+
+
+RE: [Dillo-dev]Silly problem
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-23 16:22
+
+Jorge & John,
+
+While I agree that the fix should be at the server side, I don't think it is
+prudent for dillo to not work in simple cases. I doubt that dillo's
+following is so huge that by not being so tollerant as other web browsers it
+will change the implementation of today's web servers.
+
+My "primary" interest in using dillo is the fact that it is small. This is
+because I have a need for a free small memory footprint browser for my
+application (converting an old pentium laptop to a digital picture frame).
+To be totally honest (and risking to alienate people on this list), I'd
+switch to another web browser in a heart beat if it worked with more of
+today's web servers and html content (e.g., supporting client side
+scripting, style sheets, etc.).
+
+Cheers,
+Marc
+
+-----Original Message-----
+From: dillo-dev-admin@li...
+[mailto:dillo-dev-admin@li...]On Behalf Of Jorge
+Arellano Cid
+Sent: Wednesday, October 23, 2002 8:59 AM
+To: Dillo mailing list
+Subject: Re: [Dillo-dev]Silly problem
+
+
+
+
+On Wed, 23 Oct 2002 jbradford@di... wrote:
+
+> > So is the problem with thttpd? Why is it that mozilla and IE have no
+problem
+> > with this? Do they "guess" what the content type is based on the
+filename?
+>
+> Yes, and probably on the content of the stream as well.
+>
+> Personally, I think that that is not something that should be added to
+> Dillo, because the real solution is to fix the server.
+
+That's the point.
+
+Also, beacuase being as tolerant as IE or Mozilla or $* to
+HTML, HTTP or .*P mistakes/errors/extensions/faults, only polutes
+the web space rising the entry barriers for other SW to deal with
+it.
+
+Enough said.
+
+Cheers
+Jorge.-
+
+
+
+
+-------------------------------------------------------
+This s...net email is sponsored by: Influence the future
+of Java(TM) technology. Join the Java Community
+Process(SM) (JCP(SM)) program now.
+http://ads.so....net/cgi-bin/redirect.pl?sunm0002en
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-23 16:05
+
+On Wed, 23 Oct 2002 jbradford@di... wrote:
+
+> > So is the problem with thttpd? Why is it that mozilla and IE have no problem
+> > with this? Do they "guess" what the content type is based on the filename?
+>
+> Yes, and probably on the content of the stream as well.
+>
+> Personally, I think that that is not something that should be added to
+> Dillo, because the real solution is to fix the server.
+
+That's the point.
+
+Also, beacuase being as tolerant as IE or Mozilla or $* to
+HTML, HTTP or .*P mistakes/errors/extensions/faults, only polutes
+the web space rising the entry barriers for other SW to deal with
+it.
+
+Enough said.
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: <jbradford@di...> - 2002-10-23 15:43
+
+> So is the problem with thttpd? Why is it that mozilla and IE have no problem
+> with this? Do they "guess" what the content type is based on the filename?
+
+Yes, and probably on the content of the stream as well.
+
+Personally, I think that that is not something that should be added to
+Dillo, because the real solution is to fix the server.
+
+John. 
+
+
+
+RE: [Dillo-dev]nanoGTK ?
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-23 15:36
+
+I've forgotten about TinyX on the iPaq. Saw a demonstration of dillo on ipaq
+(as part of the "familiar" linux distribution).
+
+-----Original Message-----
+From: dillo-dev-admin@li...
+[mailto:dillo-dev-admin@li...]On Behalf Of Jorge
+Arellano Cid
+Sent: Wednesday, October 23, 2002 6:09 AM
+To: Dillo mailing list
+Subject: Re: [Dillo-dev]nanoGTK ?
+
+
+
+Hi!
+
+On Tue, 22 Oct 2002, Ross J. Reedstrom wrote:
+
+> I use dillo on my ipaq (with linux installed), which uses the tinyX build
+> (AFAIK). Works fine.
+
+Can anyone confirm that please?
+(Dillo working on tinyX)
+
+
+Cheers
+Jorge.-
+
+
+
+-------------------------------------------------------
+This s...net email is sponsored by: Influence the future
+of Java(TM) technology. Join the Java Community
+Process(SM) (JCP(SM)) program now.
+http://ads.so....net/cgi-bin/redirect.pl?sunm0002en
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+RE: [Dillo-dev]Silly problem
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-23 15:35
+
+Hi Jorge,
+
+So is the problem with thttpd? Why is it that mozilla and IE have no problem
+with this? Do they "guess" what the content type is based on the filename?
+
+Marc
+
+-----Original Message-----
+From: dillo-dev-admin@li...
+[mailto:dillo-dev-admin@li...]On Behalf Of Jorge
+Arellano Cid
+Sent: Wednesday, October 23, 2002 6:44 AM
+To: Dillo mailing list
+Subject: Re: [Dillo-dev]Silly problem
+
+
+
+Marc,
+
+> Hi,
+>
+> When I open an HTML page with a JPEG image source, dillo says that it
+cannot
+> open up the application/octet-stream MIME type. Well, I should send you
+the
+> exact error message in a later message.
+>
+> The html page is simply contains and is being served from a thttpd version
+> 2.1 server:
+>
+> <HTML>
+> <HEAD>
+> </HEAD>
+> <BODY>
+> <IMG src="pics/foo.jpg">
+> </BODY>
+> </HTML>
+>
+> There is no problem in opening this page from Internet Explorer or Mozilla
+> from the thttpd server.
+>
+> Any insights?
+
+Yes, the content/type should have been either:
+
+- image/jpeg
+- image/jpg
+- image/pjpeg
+
+not "application/octet-stream".
+
+You can read the HTTP RFCs for details...
+
+Cheers
+Jorge.-
+
+
+
+
+
+-------------------------------------------------------
+This s...net email is sponsored by: Influence the future
+of Java(TM) technology. Join the Java Community
+Process(SM) (JCP(SM)) program now.
+http://ads.so....net/cgi-bin/redirect.pl?sunm0002en
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]Silly problem
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-23 13:46
+
+Marc,
+
+> Hi,
+>
+> When I open an HTML page with a JPEG image source, dillo says that it cannot
+> open up the application/octet-stream MIME type. Well, I should send you the
+> exact error message in a later message.
+>
+> The html page is simply contains and is being served from a thttpd version
+> 2.1 server:
+>
+> <HTML>
+> <HEAD>
+> </HEAD>
+> <BODY>
+> <IMG src="pics/foo.jpg">
+> </BODY>
+> </HTML>
+>
+> There is no problem in opening this page from Internet Explorer or Mozilla
+> from the thttpd server.
+>
+> Any insights?
+
+Yes, the content/type should have been either:
+
+- image/jpeg
+- image/jpg
+- image/pjpeg
+
+not "application/octet-stream".
+
+You can read the HTTP RFCs for details...
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]plans for CSS support?
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-23 13:44
+
+Tony,
+
+> Firstly, respect for creating a very useful lightweight browser...
+
+Thanks.
+
+> Do you have any plans for adding CSS support?
+
+Yes, Sebastian developed a nice document on how a possible
+implementation could go. As he is very busy now, it's waiting for
+some "man-months" to push it forward.
+
+> If not it is something i would consider contributing to myself,
+> but im so pushed for time i don't know what i can dedicate towards it.
+
+Hmmm, this is not a trivial task. If you have a suitable amount
+of time (this depends on your understanding of GTK+ and Dw),
+please ask me back and I'll send you the doc.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]nanoGTK ?
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-23 13:44
+
+Hi!
+
+On Tue, 22 Oct 2002, Ross J. Reedstrom wrote:
+
+> I use dillo on my ipaq (with linux installed), which uses the tinyX build
+> (AFAIK). Works fine.
+
+Can anyone confirm that please?
+(Dillo working on tinyX)
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Dillo-dev -- confirmation of subscription -- request 259643
+
+From: Thomas White <taw27@ca...> - 2002-10-23 10:21
+
+On Wed, 23 Oct 2002 03:20:47 -0700
+dillo-dev-request@li... wrote:
+
+> Dillo-dev -- confirmation of subscription -- request 259643
+> 
+> We have received a request from 131.111.195.177 for subscription of
+> your email address, <taw27@ca...>, to the
+> dillo-dev@li... mailing list. To confirm the request,
+> please send a message to dillo-dev-request@li..., and
+> either:
+> 
+> - maintain the subject line as is (the reply's additional "Re:" is
+> ok),
+> 
+> - or include the following line - and only the following line - in the
+> message body: 
+> 
+> confirm 259643
+> 
+> (Simply sending a 'reply' to this message should work from most email
+> interfaces, since that usually leaves the subject line in the right
+> form.)
+> 
+> If you do not wish to subscribe to this list, please simply disregard
+> this message. Send questions to
+> dillo-dev-admin@li....
+
+
+______________________
+Thomas White
+Downing College
+Cambridge 
+
+
+
+Re: [Dillo-dev]nanoGTK ?
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-10-23 03:05
+
+On Tue, Oct 22, 2002 at 07:06:06PM -0700, Marc E. Fiuczynski wrote:
+> Hi,
+> 
+> I am interested in this, too, or any graphics platform that has a small
+> footprint. For example, has anyone used dilly with TinyX (or SmallX), which
+> is a small footprint version of the XFree86 Server? Alternatively, has
+> anyone run dillo ontop of gtk+fb, which is a version of GTK+ that uses the
+> framebuffer directly?
+
+I use dillo on my ipaq (with linux installed), which uses the tinyX build
+(AFAIK). Works fine.
+
+Ross
+-- 
+Ross Reedstrom, Ph.D. reedstrm@ri...
+Executive Director phone: 713-348-6166
+Gulf Coast Consortium for Bioinformatics fax: 713-348-6182
+Rice University MS-39
+Houston, TX 77005 
+
+
+
+[Dillo-dev]portuguese dillo man page
+
+From: <joaopaulo99@te...> - 2002-10-23 02:56
+
+i translate dillo man page, but i just translate the doc, doesn't create 
+the man page.
+i can study how to do it, it's necessary ?
+the transleted file is here:
+
+http://www.rootshell.be/~blackbox/dillo/man-page_dillo 
+
+
+
+Re: [Dillo-dev]plans for CSS support?
+
+From: Lars Clausen <lrclause@cs...> - 2002-10-23 02:28
+
+On Wed, 23 Oct 2002, dillo@we... wrote:
+> Hi,
+>=20
+> Firstly, respect for creating a very useful lightweight browser...
+> Do you have any plans for adding CSS support?
+>=20
+> If not it is something i would consider contributing to myself, but im so
+> pushed for time i don't know what i can dedicate towards it.
+
+There have been mumblings of CSS, but I don't think anybody took it upon
+themselves. One thing that I'd particularly like to see, that is (I
+believe) part of CSS, is image (object) align, i.e. text flowing around
+images. Many pages depend on this, either as CSS or in the deprecated <img
+align=3Dleft> form.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]plans for CSS support?
+
+From: Tony <dillo@we...> - 2002-10-23 02:13
+
+Hi,
+
+Firstly, respect for creating a very useful lightweight browser...
+Do you have any plans for adding CSS support?
+
+If not it is something i would consider contributing to myself, but im so pushed for time i don't know what i can dedicate towards it.
+
+regards,
+Tony 
+
+
+
+[Dillo-dev]Re: Dillo-dev -- confirmation of subscription -- request 185009
+
+From: Tony <dillo@we...> - 2002-10-23 02:10
+
+On Tue, 22 Oct 2002 19:08:18 -0700
+dillo-dev-request@li... wrote:
+
+> Dillo-dev -- confirmation of subscription -- request 185009
+> 
+> We have received a request from 80.193.224.154 for subscription of
+> your email address, <dillo@we...>, to the
+> dillo-dev@li... mailing list. To confirm the request,
+> please send a message to dillo-dev-request@li..., and
+> either:
+> 
+> - maintain the subject line as is (the reply's additional "Re:" is
+> ok),
+> 
+> - or include the following line - and only the following line - in the
+> message body: 
+> 
+> confirm 185009
+> 
+> (Simply sending a 'reply' to this message should work from most email
+> interfaces, since that usually leaves the subject line in the right
+> form.)
+> 
+> If you do not wish to subscribe to this list, please simply disregard
+> this message. Send questions to
+> dillo-dev-admin@li....
+> 
+> 
+
+
+
+RE: [Dillo-dev]nanoGTK ?
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-23 02:03
+
+Hi,
+
+I am interested in this, too, or any graphics platform that has a small
+footprint. For example, has anyone used dilly with TinyX (or SmallX), which
+is a small footprint version of the XFree86 Server? Alternatively, has
+anyone run dillo ontop of gtk+fb, which is a version of GTK+ that uses the
+framebuffer directly?
+
+Thanks,
+Marc
+
+-----Original Message-----
+From: dillo-dev-admin@li...
+[mailto:dillo-dev-admin@li...]On Behalf Of Daniel
+Stenberg
+Sent: Thursday, October 17, 2002 5:39 AM
+To: Dillo-dev@li...
+Subject: [Dillo-dev]nanoGTK ?
+
+
+Hey Dillo'ers
+
+Anyone tried Dillo on nanoGTK/Microwindows ? If so, care to share some
+experiences?
+
+nanoGTK is here: http://www.emsoftltd.com/index.php?action=nanogtk
+
+--
+Daniel Stenberg - http://daniel.haxx.se - +46-705-44 31 77
+ech`echo xiun|tr nu oc|sed 'sx\([sx]\)\([xoi]\)xo un\2\1 is xg'`ol
+
+
+
+-------------------------------------------------------
+This s...net email is sponsored by: viaVerio will pay you up to
+$1,000 for every account that you consolidate with us.
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Silly problem
+
+From: Marc E. Fiuczynski <mef@cs...> - 2002-10-23 02:03
+
+Hi,
+
+When I open an HTML page with a JPEG image source, dillo says that it cannot
+open up the application/octet-stream MIME type. Well, I should send you the
+exact error message in a later message.
+
+The html page is simply contains and is being served from a thttpd version
+2.1 server:
+
+<HTML>
+<HEAD>
+</HEAD>
+<BODY>
+<IMG src="pics/foo.jpg">
+</BODY>
+</HTML>
+
+There is no problem in opening this page from Internet Explorer or Mozilla
+from the thttpd server.
+
+Any insights?
+
+Thanks,
+Marc 
+
+
+
+Re: [Dillo-dev]what's happening?
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-22 21:13
+
+Melvin,
+
+> > Ah, last but not the least, Dillo is applying at linuxfund for
+> > some funds, so you may help the project by visiting:
+> >
+> > http://www.linuxfund.org
+> >
+> > and _voting_ some pesos from there.
+>
+> Done. The site does not explain all the rules on how to vote (maximum pesos,
+> etc). How much is the maximum amount we can give for one project? (2000 did not
+> work, 1000 worked, then I could add 500 more. Is 1500 the maximum?)
+
+I've read the site a couple of times, and still have a bunch of
+doubts (as when does this funding round end?).
+
+But yes, 1500 is the current maximum amount.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]what's happening?
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-10-22 16:48
+
+Hi Jorge,
+
+on Sun, 20 Oct 2002 23:50:58 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> Ah, last but not the least, Dillo is applying at linuxfund for
+> some funds, so you may help the project by visiting:
+> 
+> http://www.linuxfund.org
+> 
+> and _voting_ some pesos from there.
+
+Done. The site does not explain all the rules on how to vote (maximum pesos,
+etc). How much is the maximum amount we can give for one project? (2000 did not
+work, 1000 worked, then I could add 500 more. Is 1500 the maximum?)
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]what's happening?
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-10-21 02:55
+
+Madis,
+
+>
+> ... with the dpi1 and are there any release expected to come any time
+> soon?
+
+Things are quiet mainly because Sebastian is under a heavy work
+load, Livio is very busy too, and I'm still trying to settle
+to keep things rolling.
+
+Anyway, in the mean time, I've managed to develop 1400 lines of
+a dpi server (to illustrate how the whole thing works), what it
+can do, and what it does now.
+
+This is certainly good news!
+
+BTW, has someone started making a dpi-server?
+
+I'm trying hard to get the CIPSGA CVS set, but if it doesn't
+happen soon, I'll fall back to the tarball scheme, at least until
+I find a good solution.
+
+As for the release, once the dpi updates go to CVS, it will be
+a matter of polishing, integrating some patches, getting sure it
+works solid, and 0.7.0 will be ready.
+
+Ah, last but not the least, Dillo is applying at linuxfund for
+some funds, so you may help the project by visiting:
+
+http://www.linuxfund.org
+
+and _voting_ some pesos from there.
+
+Note: this is not a real money transfer, but virtual money
+that's assigned to the project. When the round ends, the internal
+"board" considers the highest voted projects and decides how much
+real money to grant.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]patched dillo sourceforge cvs version
+
+From: madis <madis@cy...> - 2002-10-21 00:24
+
+http://www.zone.ee/myzz/dillo/dillo-x.html
+
+should be fairly stable, at least it haven't crashed couple of month's and 
+i use this as my main web browser...
+
+-- 
+mzz 
+
+
+
+[Dillo-dev]what's happening?
+
+From: madis <madis@cy...> - 2002-10-20 11:52
+
+... with the dpi1 and are there any release expected to come any time 
+soon?
+
+-- 
+mzz 
+
+
+
+[Dillo-dev]nanoGTK ?
+
+From: Daniel Stenberg <daniel@ha...> - 2002-10-17 12:39
+
+Hey Dillo'ers
+
+Anyone tried Dillo on nanoGTK/Microwindows ? If so, care to share some
+experiences?
+
+nanoGTK is here: http://www.emsoftltd.com/index.php?action=nanogtk
+
+-- 
+Daniel Stenberg - http://daniel.haxx.se - +46-705-44 31 77
+ech`echo xiun|tr nu oc|sed 'sx\([sx]\)\([xoi]\)xo un\2\1 is xg'`ol 
+
+
+
+Re: [Dillo-dev]Re: local browsing (offline) patch updated
+
+From: Grigory Bakunov <black@as...> - 2002-10-16 11:05
+
+On Tue, 15 Oct 2002 19:36:32 -0700
+Kelson Vibber <kelson@po...> wrote:
+
+KV> Seems to work okay here. I've updated the RedHat 7.3 Dillo 0.6.6 RPM
+KV> to 
+KV> include the new all-in-one patch.
+
+KV> I do intend at some point to try out Tor's Xft patch, but the one time
+KV> I tried 
+KV> building it I was in too much of a hurry to do more than see if it
+KV> compiled. 
+KV> Eventually I'll set aside the time to mess with it.
+
+KV> http://www.hyperborea.org/software/
+
+
+Hmm. most of RedHat packages include localization patches.
+Why you don't include my localization patches for dillo ? :)
+http://bobuk.ipost.ru/packages/dillo/index.html
+
+
+
+
+
+........................................................................
+IRC: irc.openprojects.net #asplinux Grigory Bakunov
+EMAIL: black@as... ASPLinux Support Team
+ICQ: 51369901 http://www.asplinux.ru
+-----BEGIN GEEK CODE BLOCK-----
+GCS/MU d-(--) s:- a- C+++>++$ UBLAVSX+++$ P+ L++++$ E++$ W++ N+>- o? K?
+w-- O- M V-(--) PS+ PE+ !Y PGP+>++++ t+ 5++ X+++ R+++ tv+>-- b+++ ?DI D+
+G++ e>++$ h- r++ y+ z++(+++)
+------END GEEK CODE BLOCK------ 
+
+
+
+[Dillo-dev]Re: local browsing (offline) patch updated
+
+From: Kelson Vibber <kelson@po...> - 2002-10-16 02:36
+
+Seems to work okay here. I've updated the RedHat 7.3 Dillo 0.6.6 RPM to=20
+include the new all-in-one patch.
+
+I do intend at some point to try out Tor's Xft patch, but the one time I =
+tried=20
+building it I was in too much of a hurry to do more than see if it compil=
+ed. =20
+Eventually I'll set aside the time to mess with it.
+
+http://www.hyperborea.org/software/
+
+--=20
+Kelson Vibber
+kelson@po...
+http://www.hyperborea.org/
+Creative Writing - Photography - The Flash 
+
+
+
+[Dillo-dev]local browsing (offline) patch updated
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-10-14 22:12
+
+Hi,
+
+I updated my localhost-only browsing (aka offline mode) such it is now possible
+to switch the offline mode on and off while browsing (menu File->Work offline
+can be toggled). It is still possible to start directly in offline mode with
+the "-l" command line option. The patch (6k) is at
+
+http://melvin.hadasht.free.fr/home/dillo/local/
+
+The patch adds two new files (offline.[ch]) and modifies src/Makefile.am, so you
+may need to run automake etc.
+
+The objective of this patch is primarily to make the mail client Sylpheed-Claws
+render HTML mails in a secure way while providing the possibility to switch to
+online mode when the user wants it (patches for Sylpheed-Claws are on the same
+site).
+
+From the technical point of view, this patch works a bit differently than the
+last one. Instead of storing a 0 (null) IP in the cache to disallow
+non-localhost browsing, it now stores the correct IP but returns 0 (null) to the
+caller only when offline browsing is on. This saves a DNS lookup when offline
+mode is switched off and seems to be more logical (even if that means two places
+to patch instead of only one).
+
+Another difference is that the offline state is no more stored in dns.[ch]
+but in new files called offline.[ch]. These files are also responsible for
+setting the mode and for updating the menus of the different browser window
+(so the state offline on/off is consistent across windows.). 
+
+(With this scheme, it could be also possible to create a blacklist of hosts
+that should never be accessed. But that would need more work...)
+
+PS: IIRC, I read on the ML that the developers are continuing developing on a
+CVS repository that is not open to the public because of problems with CVS
+hosting. Is it possible to have a newer cvs snapshot (tar ball) downloadable
+from the web site so contributers can work on more uptodate versions? I hope
+the Dillo project is still alive.
+
+As always, any comments are welcome.
+
+Cheers
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]hello world
+
+From: madis <madis@cy...> - 2002-10-09 21:52
+
+On Wed, 9 Oct 2002, "Jo=E3o P. G. Vanzuita" wrote:
+
+> i want to help the project, but .. where are the people ?
+
+put this man page to the web and send link to the list and to jorge
+
+--=20
+mzz 
+
+
+
+[Dillo-dev]hello world
+
+From: <joaopaulo99@te...> - 2002-10-09 21:28
+
+i want to help the project, but .. where are the people ? 
+
+
+
+[Dillo-dev]translation
+
+From: <joaopaulo99@te...> - 2002-10-08 16:42
+
+i have translated the little man page of dillo, English to Portuguese,
+the project wants ? 
+
+
+
+[Dillo-dev]Re: Dillo-dev -- confirmation of subscription -- request 142884
+
+From: Hans-Dieter Stich <hdstich@hd...> - 2002-10-07 17:37
+
+Attachments: Message as HTML      
+
+Dillo-dev -- confirmation of subscription -- request 142884 
+
+
+
+[Dillo-dev]Dillo 0.6.6 RPM for Red Hat 7.3
+
+From: Kelson Vibber <kelson@po...> - 2002-10-04 20:00
+
+I'm not sure if this is the right place to send this, but I never heard 
+back from the address I tried earlier.
+
+I've started packaging a Dillo 0.6.6 RPM for Red Hat 7.3. I've added a 
+menu entry in the /etc/X11/applnk area (which should be shared by Gnome and 
+KDE, but isn't always), using one of the icons from the Dillo home page, 
+and I've included a couple of patches: Melvin Hadasht's combined 
+command-line/embeddable/fullwindow/local browsing patch 
+(http://melvin.hadasht.free.fr/home/index.html) and the remote access patch 
+from Sean's XEmacs Stuff (http://xemacs.seanm.ca/). It's compiled with 
+cookies enabled.
+
+If anyone's interested, it's at http://www.hyperborea.org/software/
+
+
+Kelson Vibber
+kelson@po...
+http://www.hyperborea.org/
+Creative Writing - Photography - The Flash 
+
+
+
+Re: [Dillo-dev]Problems and questions on Dillo 0.6.6
+
+From: <jbradford@di...> - 2002-10-04 15:47
+
+> The sourceforge CVS version have been unmodified for some months now and
+> as far as i know from reading this list, main dillo developers use cvs in 
+> cipsga.org.br now, but they have not been able to make it publicly 
+> readable because they couldn't contact this server's administrator.
+
+Can't we just get it working, and release 0.6.7? :-)
+
+John. 
+
+
+
+Re: [Dillo-dev]Problems and questions on Dillo 0.6.6
+
+From: madis <madis@cy...> - 2002-10-04 15:36
+
+On Fri, 4 Oct 2002, Daniel Stenberg wrote:
+
+> > This is caused by dillo cache, which believes that a cached document is
+> > valid forever. Since the url is same as it was, dillo will show the
+> > document from cache. I have patch for solving this, but it is against
+> > sourceforge cvs version and i am waiting new dillo release to update it.
+> > Older 0.6.6 patch (which is avaible in mix which some other modifications
+> > at http://www.zone.ee/myzz/dillo/dillo-0.6.6-mzz.diff) checks only 307
+> > redirect and cache: headers, but not 302 redirect.
+> 
+> Seems a bit restrictive to me.
+> 
+i can backport these changes to the 0.6.6, but the modified cvs version 
+seems more reliable to me since i have used it long time without 
+problems and mistakes can happen doing the backport.
+
+> Is the CVS version much improved since the 0.6.6? Is it better to switch over
+> to that for some bleeding edge tests?
+
+Changelog:
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/ChangeLog?rev=1.214&content-type=text/vnd.viewcvs-markup
+
+The sourceforge CVS version have been unmodified for some months now and
+as far as i know from reading this list, main dillo developers use cvs in 
+cipsga.org.br now, but they have not been able to make it publicly 
+readable because they couldn't contact this server's administrator.
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Problems and questions on Dillo 0.6.6
+
+From: Daniel Stenberg <daniel@ha...> - 2002-10-04 14:39
+
+On Fri, 4 Oct 2002, Madis Janson wrote:
+
+Thanks for your quick response.
+
+> This is caused by dillo cache, which believes that a cached document is
+> valid forever. Since the url is same as it was, dillo will show the
+> document from cache. I have patch for solving this, but it is against
+> sourceforge cvs version and i am waiting new dillo release to update it.
+> Older 0.6.6 patch (which is avaible in mix which some other modifications
+> at http://www.zone.ee/myzz/dillo/dillo-0.6.6-mzz.diff) checks only 307
+> redirect and cache: headers, but not 302 redirect.
+
+Seems a bit restrictive to me.
+
+Is the CVS version much improved since the 0.6.6? Is it better to switch over
+to that for some bleeding edge tests?
+
+> As a side note, RFC 2616 is a bit confusing about what 302 redirect should
+> do for POST request:
+
+Right, but the key to this problem is this section:
+
+> Note: RFC 1945 and RFC 2068 specify that the client is not allowed
+> to change the method on the redirected request. However, most
+> existing user agent implementations treat 302 as if it were a 303
+> response, performing a GET on the Location field-value regardless
+> of the original request method.
+
+This is what all browsers do now. Doing something else is would possibly be
+following the RFC better, but it would then behave differently from the
+others.
+
+-- 
+Daniel Stenberg - http://daniel.haxx.se - +46-705-44 31 77
+ech`echo xiun|tr nu oc|sed 'sx\([sx]\)\([xoi]\)xo un\2\1 is xg'`ol 
+
+
+
+Re: [Dillo-dev]Problems and questions on Dillo 0.6.6
+
+From: Madis Janson <madis@cy...> - 2002-10-04 14:29
+
+On Fri, 4 Oct 2002, Daniel Stenberg wrote:
+
+> I recently discovered Dillo and have plans on using it for an embedded
+> project. However, my first tests with dillo 0.6.6 on my Linux browser on
+> some sample pages left me a bit disapppointed, but this may very well be due
+> to my own ignorance or stupidity. Hence my mail here.
+> 
+> I tried a login-page. It is a plain HTML form querying for user and password.
+> I entered them both and pressed 'login'. It sent them off fine in a POST.
+> 
+> The remote site sends back a 302 with a Location: back to the exactly same
+> URL I was already browsing (the one with the form). Oh, right, and I got a
+> Cookie-Set back.
+> 
+> Dillon does not do anything on this response, it just shows the same login
+> screen again (while a working browser would send back a GET and as that new
+> cookie is used, get something entirely different back). I assume this is a
+> bad caching issue since it might believe that it already has the page cached
+> and thus shows that.
+
+This is caused by dillo cache, which believes that a cached document is 
+valid forever. Since the url is same as it was, dillo will show the 
+document from cache. I have patch for solving this, but it is against 
+sourceforge cvs version and i am waiting new dillo release to update it.
+Older 0.6.6 patch (which is avaible in mix which some other modifications 
+at http://www.zone.ee/myzz/dillo/dillo-0.6.6-mzz.diff) checks only 307 
+redirect and cache: headers, but not 302 redirect.
+
+As a side note, RFC 2616 is a bit confusing about what 302 redirect should 
+do for POST request:
+
+10.3.3 302 Found
+
+The requested resource resides temporarily under a different URI.
+Since the redirection might be altered on occasion, the client SHOULD
+continue to use the Request-URI for future requests. This response
+is only cacheable if indicated by a Cache-Control or Expires header
+field.
+
+The temporary URI SHOULD be given by the Location field in the
+response. Unless the request method was HEAD, the entity of the
+response SHOULD contain a short hypertext note with a hyperlink to
+the new URI(s).
+If the 302 status code is received in response to a request other
+than GET or HEAD, the user agent MUST NOT automatically redirect the
+request unless it can be confirmed by the user, since this might
+change the conditions under which the request was issued.
+
+Note: RFC 1945 and RFC 2068 specify that the client is not allowed
+to change the method on the redirected request. However, most
+existing user agent implementations treat 302 as if it were a 303
+response, performing a GET on the Location field-value regardless
+of the original request method. The status codes 303 and 307 have
+been added for servers that wish to make unambiguously clear which
+kind of reaction is expected of the client.
+
+--
+mzz 
+
+
+
+[Dillo-dev]Problems and questions on Dillo 0.6.6
+
+From: Daniel Stenberg <daniel@ha...> - 2002-10-04 13:43
+
+Hey Dillo developers.
+
+I recently discovered Dillo and have plans on using it for an embedded
+project. However, my first tests with dillo 0.6.6 on my Linux browser on
+some sample pages left me a bit disapppointed, but this may very well be due
+to my own ignorance or stupidity. Hence my mail here.
+
+I tried a login-page. It is a plain HTML form querying for user and password.
+I entered them both and pressed 'login'. It sent them off fine in a POST.
+
+The remote site sends back a 302 with a Location: back to the exactly same
+URL I was already browsing (the one with the form). Oh, right, and I got a
+Cookie-Set back.
+
+Dillon does not do anything on this response, it just shows the same login
+screen again (while a working browser would send back a GET and as that new
+cookie is used, get something entirely different back). I assume this is a
+bad caching issue since it might believe that it already has the page cached
+and thus shows that.
+
+Now, it is supposed to have received a cookie. My .dillo/cookierc looks like
+this:
+
+--- start ---
+DEFAULT DENY
+.domain.tld ACCEPT
+--- end ----
+[.domain.tld is something else in real life]
+
+Isn't this the way it is supposed to work?
+
+Now, if I reload the page, Dillo does perform a GET for the page, but it does
+not send along the cookie "correctly". Etherealing on the HTTP traffic
+clearly shows that the request doesn't include the cookie the correct way in
+the request (but it does send a Cookie2: header that puzzles me) and thus
+this doesn't help and yes, I get back that same login page again.
+
+Anyone recognize this?
+
+Another issue, is there anyone who has any experience on running Dillo on
+GTKfb? If all I want to do in an embedded Linux system is running Dillo, it
+does seem like a cool way to avoid X all together.
+
+I'm sorry if this is all just RTFM, but I've actually tried to find the
+answers to these questions. I'd be glad to read more if you can just point to
+which docs I should study!
+
+-- 
+Daniel Stenberg - http://daniel.haxx.se - +46-705-44 31 77
+ech`echo xiun|tr nu oc|sed 'sx\([sx]\)\([xoi]\)xo un\2\1 is xg'`ol 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Tor Andersson <tor.andersson@ds...> - 2002-10-02 20:19
+
+Matias Aguirre <yo_soy@fa...> wrote:
+
+> I have a problem whan compile dillo with xft patch..
+> I use cvs version, and I patch manualy because the patch return a few errors.
+>
+> dw_page.c: In function `Dw_page_draw_line':
+> dw_page.c:1021: warning: implicit declaration of function `XftDrawDrawable'
+> dw_page.c:1048: structure has no member named `text'
+> dw_page.c:1049: structure has no member named `text'
+> make[3]: *** [dw_page.o] Error 1
+
+The CVS version of dillo has changed some data structures. Try replacing
+word->content.text with word->content.data.text and you should be fine.
+
+/tor 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Nicola Girardi <nicola@g-...> - 2002-10-02 17:37
+
+On Tue, Oct 01, 2002 at 09:52:17PM +0200, Nicola Girardi wrote:
+> > dw_page.c: In function `Dw_page_draw_line':
+> > dw_page.c:1021: warning: implicit declaration of function `XftDrawDrawable'
+
+I (thought I had) said, that this error disappeared for me when I
+updated the Xft/Xrender/fontconfig libraries available from
+fontconfig.org. 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Nicola Girardi <nicola@g-...> - 2002-10-01 21:24
+
+> dw_page.c: In function `Dw_page_draw_line':
+> dw_page.c:1021: warning: implicit declaration of function `XftDrawDrawable' 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Nicola Girardi <nicola@g-...> - 2002-10-01 21:24
+
+> I'm currently trying to port the Xft patch to the GTK2 stuff. That would
+> fix the layout problems and bring it up to an acceptable performance
+> level too. Pango just doesn't seem to cut it for this kind of job.
+
+It's a pity, Pango has other features that are nice to have. I
+wouldn't know how to display pages properly with Pango anyway... 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: <jbradford@di...> - 2002-10-01 19:31
+
+> > Today I tried Tor's Xft patch which was posted on this list. You
+> > need to add -lXft and -lfontconfig to make it work. The result, as
+> > far as antialiasing is concerned, is much better than with the GTK2
+> > patch; in the latter, Dillo's layout was partially ruined by large
+> > gaps between lines and images not positioned correctly (at least
+> > when images happen in text like ``something in <img src="this.jpg">
+> > line'').
+> 
+> I'm currently trying to port the Xft patch to the GTK2 stuff. That would
+> fix the layout problems and bring it up to an acceptable performance
+> level too. Pango just doesn't seem to cut it for this kind of job.
+
+Ah, but the beauty of Pango is that we get support for loads of different character sets, E.G. Japanese.
+
+John. 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-10-01 19:19
+
+Hi,
+
+> Today I tried Tor's Xft patch which was posted on this list. You
+> need to add -lXft and -lfontconfig to make it work. The result, as
+> far as antialiasing is concerned, is much better than with the GTK2
+> patch; in the latter, Dillo's layout was partially ruined by large
+> gaps between lines and images not positioned correctly (at least
+> when images happen in text like ``something in <img src=3D"this.jpg">
+> line'').
+
+I'm currently trying to port the Xft patch to the GTK2 stuff. That would
+fix the layout problems and bring it up to an acceptable performance
+level too. Pango just doesn't seem to cut it for this kind of job.
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Tor's Xft patch
+
+From: Matias Aguirre <yo_soy@fa...> - 2002-10-01 17:10
+
+On Mon, 30 Sep 2002 19:33:06 +0200
+Nicola Girardi <nicola@g-...> wrote:
+
+> Today I tried Tor's Xft patch which was posted on this list. You
+> need to add -lXft and -lfontconfig to make it work. The result, as
+> far as antialiasing is concerned, is much better than with the GTK2
+> patch; in the latter, Dillo's layout was partially ruined by large
+> gaps between lines and images not positioned correctly (at least
+> when images happen in text like ``something in <img src="this.jpg">
+> line'').
+> 
+> At least this happens with my configuration.
+> 
+> I'd really suggest you try that nice Xft patch.
+> 
+I have a problem whan compile dillo with xft patch..
+I use cvs version, and I patch manualy because the patch return a few errors.
+
+dw_page.c: In function `Dw_page_draw_line':
+dw_page.c:1021: warning: implicit declaration of function `XftDrawDrawable'
+dw_page.c:1048: structure has no member named `text'
+dw_page.c:1049: structure has no member named `text'
+make[3]: *** [dw_page.o] Error 1
+
+Greetings
+
+-- 
+Matias Aguirre
+Software Engineer
+Sinatec S.A.
+Linux User #: 78193
+
+Buenos Aires, Argentina 
+
+
+
+[Dillo-dev]Tor's Xft patch
+
+From: Nicola Girardi <nicola@g-...> - 2002-10-01 15:26
+
+Today I tried Tor's Xft patch which was posted on this list. You
+need to add -lXft and -lfontconfig to make it work. The result, as
+far as antialiasing is concerned, is much better than with the GTK2
+patch; in the latter, Dillo's layout was partially ruined by large
+gaps between lines and images not positioned correctly (at least
+when images happen in text like ``something in <img src="this.jpg">
+line'').
+
+At least this happens with my configuration.
+
+I'd really suggest you try that nice Xft patch. 
+

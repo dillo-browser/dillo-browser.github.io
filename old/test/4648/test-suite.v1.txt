@@ -1,0 +1,91 @@
+Legend: d4646 = dillo version #4646 in Mercurial repository.
+        x a = Test failed, with code a = Problems 1, 9 and 3.
+Custom test pages at: http://www.dillo.org/test/4648/
+
+
+                              Results Table
+.-------.--------.------.-----------.-----------------------.-----.-----.
+|       |   BTG  | test | pravda.ru |         4ta.html      | VT  | PV  |
+|       | render | t.*  | #1  | #2  | Girl | footb. | horos.|     |     |
+|-------|--------|------|-----------|-----------------------|-----|-----|
+|d4657  |   ok   |  ok  | ok  | ok  |  ok  |  ok    |  ok   | ok  | ok  |*
+|d4652  |   ok   |  ok  | x a | x ic|  ok  |  x l   |  x d  | x n | ok  |
+|d4651  |   ok   |  ok  | x a | x ic|  ok  |  x l   |  x d  | x n | ok  |
+|d4648  |   ok   |  ok  | ok  | ok  |  ok  |  ok    |  ok   | ok  | ok  |*
+|d4647  |   ok   |  ok  | ok  | x g |  ok  |  ok    |  ok   | ok  | ok  |
+|d4646  |   ok   |  ok  | x a | x i |  ok  |  x j   |  x d  | x n | ok  |
+|d4645  |   ok   |  ok  | x m | x i |  ok  |  x j   |  x d  | ok  | ok  |
+|d4644  |   ok   |  ok  | x a | x b |  ok  |  x j   |  x d  | ok  | x k |
+|incr   |   ok   |  ok  | x a | x b |  x c |  ok    |  x d  | x i | x k |
+|d4587  |   ok   |  x e | ok  | ok  |  ok  |  ok    |  ok   | x i | x k |
+|d4584  |   ok   |  x h | ok  | ok  |  ok  |  ok    |  ok   | x i | x k |
+'-----------------------------------'-----------------------------'-----'
+
+ ___________________________________________________________
+/   a   |   b   | c |  d  | e | f | g  | h  | i  |  j  | k  \  incr = d4594
+| 1 9 3 | 1 9 4 | 9 | 1 5 | 6 | 7 | 4  | 12 | 13 | 8 9 | 10 | 47 = prune patch
+'------------------------------------------------------'----' 45 = idle patch
+| l: 2 9| m: 4 2| n: 5 9  |                                   46 = words patch
+                                                              48 = viewportchg
+Problems:
+1: overwrites text with images.
+2: crops images (aspect ratio).
+3: different layout.
+4: overwrites text with float.
+5: overwrites text with text.
+6: CPU HOG with: t2.n, t2.n.sm
+7: Missing page sections (sometimes works for the same page).
+8: Small images cut in two sometimes ("ESP", "CRO", ...)
+9: Wrong aspect ratio for images (text line height)
+10: Page drawn with offset (but browser thinks other section is on screen).
+11: CPU HOG.
+12: CPU HOG with: t1, t1n, t2.n, t2.n.sm, t3.
+13: overwrites text and images with text and images.
+
+Goods:
+*: works for the whole t.* suite.
+
+Testing (all with background images disabled):
+
+BTG:
+ 1.- Bck/Fwd several times (first at normal then maximized).
+ 2.- resize from max to normal several times.
+
+pravda #1:
+ 1. Load [1] at normal size, wait most images to load, check images and check
+    them not to overlap text, go Bck/Fwd, check again.
+ 2. Maximize window, check images don't overlap text, check the page layout
+    to have three main columns (the upper part). Go Bck/Fwd, check again.
+
+pravda #2:
+ 1. Load [1] at normal size, wait most images to load, then load [2],
+    press page down, check the "print version" float doesn't overlap text,
+    or images (they may stack), check the two images inside it have the
+    same size and ratio, maximize, return to normal, check the float again.
+
+4ta:
+1. Run dillo, disable images, load 4ta.html, click Girl img, go Bck/Fwd,
+   check img, exit dillo.
+2. Run dillo, disable images, load 4ta.html, click football img, go Bck/Fwd,
+   check img, click dep.png img, check images, go Bck/Fwd, check images.
+3. Run dillo, disable images, load 4ta.html, click tauro img, check horoscope
+   text, go Bck/Fwd, check h. text, click aries img, check h. text, go Bck/Fwd,
+   check h. text, exit dillo.
+
+VT:
+ 1. Load [3] at normal size, wait for most images to load, go Bck/Fwd, check
+   images and text not to override each other.
+
+PV:
+ 1. Load [5] at normal size, wait for most images to load, search for "re-re"
+    with Find Text, press page down (you'll see an image), go Bck/Fwd, check
+    the image is there. If not, you can place the cursor where the image was,
+    if you get a hand cursor, Dillo thinks it is there. Wait for the tooltip
+    and drag it a bit downwards to the right, Dillo will repaint from the image
+    data.
+
+[1] http://tinyurl.com/j2yavxk
+[2] http://tinyurl.com/gqso9eu
+[3] http://tinyurl.com/msyl7x
+[4] http://tinyurl.com/grd6yg4
+[5] http://tinyurl.com/huvf6pn

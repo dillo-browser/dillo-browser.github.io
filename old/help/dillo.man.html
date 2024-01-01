@@ -1,0 +1,264 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Feb 11 18:06:54 2010 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>dillo</title>
+
+</head>
+<body>
+
+<h1 align="center">dillo</h1>
+
+<a href="dillo.man.html#NAME">NAME</a><br>
+<a href="dillo.man.html#SYNOPSIS">SYNOPSIS</a><br>
+<a href="dillo.man.html#DESCRIPTION">DESCRIPTION</a><br>
+<a href="dillo.man.html#OPTIONS">OPTIONS</a><br>
+<a href="dillo.man.html#EXIT STATUS">EXIT STATUS</a><br>
+<a href="dillo.man.html#ENVIRONMENT">ENVIRONMENT</a><br>
+<a href="dillo.man.html#FILES">FILES</a><br>
+<a href="dillo.man.html#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">dillo &minus;
+web browser</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>dillo</b>
+[<i>OPTION</i>]... [<b>&minus;&minus;</b>]
+[<i>URL</i>|<i>FILE</i>]...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Dillo is a
+lightweight graphical web browser that aims to be secure. It
+handles HTTP internally, and FILE, FTP, and DATA URIs are
+handled through a plugin system (dpi). In addition,
+<i>INSECURE</i> HTTPS support can be enabled. Both FTP and
+Dillo&rsquo;s download manager use the <b>wget</b>(1)
+downloader.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Dillo displays
+HTML, text, PNG, JPEG, and GIF files. It handles cookies,
+basic authentication, proxying, and some CSS.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Framesets are
+displayed as links to frames, and there is currently no
+support for javascript or video.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&minus;f</b>,
+<b>&minus;&minus;fullwindow</b></p>
+
+<p style="margin-left:22%;">Start in full window mode: hide
+address bar, navigation buttons, menu, and status bar.</p>
+
+<p style="margin-left:11%;"><b>&minus;g</b>,
+<b>&minus;geometry</b> <i>GEO</i></p>
+
+<p style="margin-left:22%;">Set initial window position
+where <i>GEO</i> is
+<i>W</i><b>x</b><i>H</i>[{<b>+&minus;</b>}<i>X</i>{<b>+&minus;</b>}<i>Y</i>].</p>
+
+<p style="margin-left:11%;"><b>&minus;h</b>,
+<b>&minus;&minus;help</b></p>
+
+<p style="margin-left:22%;">Display this help text and
+exit.</p>
+
+<p style="margin-left:11%;"><b>&minus;l</b>,
+<b>&minus;&minus;local</b></p>
+
+<p style="margin-left:22%;">Don&rsquo;t load images for
+these URL(s).</p>
+
+<p style="margin-left:11%;"><b>&minus;v</b>,
+<b>&minus;&minus;version</b></p>
+
+<p style="margin-left:22%;">Display version info and
+exit.</p>
+
+<p style="margin-left:11%;"><b>&minus;x</b>,
+<b>&minus;&minus;xid</b> <i>XID</i></p>
+
+<p style="margin-left:22%;">Open first Dillo window in an
+existing window whose window ID is <i>XID</i>.</p>
+
+<h2>EXIT STATUS
+<a name="EXIT STATUS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em"><b>0</b></p></td>
+<td width="10%"></td>
+<td width="49%">
+
+
+<p style="margin-top: 1em">No error.</p></td>
+<td width="29%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>1</b></p></td>
+<td width="10%"></td>
+<td width="49%">
+
+
+<p>Internal error.</p></td>
+<td width="29%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>2</b></p></td>
+<td width="10%"></td>
+<td width="49%">
+
+
+<p>Error in command line arguments.</p></td>
+<td width="29%">
+</td></tr>
+</table>
+
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>HOME</b> (or
+<b>HOMEDRIVE</b> and <b>HOMEPATH</b> on Cygwin)</p>
+
+<p style="margin-left:22%;">User&rsquo;s home
+directory.</p>
+
+<p style="margin-left:11%;"><b>http_proxy</b></p>
+
+<p style="margin-left:22%;">URL of proxy to send HTTP
+traffic through.</p>
+
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p style="margin-top: 1em"><i>dpid</i></p></td>
+<td width="4%"></td>
+<td width="38%">
+
+
+<p style="margin-top: 1em">Dillo plugin daemon</p></td>
+<td width="40%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>dpidc</i></p></td>
+<td width="4%"></td>
+<td width="38%">
+
+
+<p>Control program for dpid.</p></td>
+<td width="40%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>~/.dillo/bm.txt</i></p>
+
+<p style="margin-left:22%;">User bookmarks</p>
+
+
+<p style="margin-left:11%;"><i>~/.dillo/cookies.txt</i></p>
+
+<p style="margin-left:22%;">Stored cookies</p>
+
+<p style="margin-left:11%;"><i>~/.dillo/cookiesrc</i></p>
+
+<p style="margin-left:22%;">Cookie settings</p>
+
+<p style="margin-left:11%;"><i>~/.dillo/dillorc</i></p>
+
+<p style="margin-left:22%;">Configuration file.</p>
+
+
+<p style="margin-left:11%;"><i>~/.dillo/dpid_comm_keys</i></p>
+
+<p style="margin-left:22%;">Keys used in dpi daemon
+communication.</p>
+
+<p style="margin-left:11%;"><i>~/.dillo/dpidrc</i></p>
+
+<p style="margin-left:22%;">Contains name of directory
+containing dpis, and associates dpi files with
+protocols.</p>
+
+<p style="margin-left:11%;"><i>~/.dillo/keysrc</i></p>
+
+<p style="margin-left:22%;">Keybindings.</p>
+
+<p style="margin-left:11%;"><i>~/.dillo/style.css</i></p>
+
+<p style="margin-left:22%;">User style sheet</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>wget</b>(1)</p>
+
+<p style="margin-left:11%; margin-top: 1em">Dillo website:
+<b>http://www.dillo.org</b></p>
+<hr>
+</body>
+</html>

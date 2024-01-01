@@ -1,0 +1,1987 @@
+[Dillo-dev]Re: Patch: META http-equiv=refresh is BROKEN a little :(
+
+From: Nikita V. Borodikhin <eliterr@tk...> - 2002-07-31 07:30
+
+I'm so sorry...
+
+Patch is broken a little (DRC_TOKEN_USE_META_REFRESH placed in pref.c
+instead of DRC_TOKEN_ALLOW_META_REFRESH)...
+
+
+Here is the correct patch:
+
+diff -pruN dillo.orig/dillorc dillo/dillorc
+--- dillo.orig/dillorc Thu May 30 17:21:08 2002
++++ dillo/dillorc Wed Jul 31 14:07:07 2002
+@@ -15,6 +15,9 @@ geometry=640x550
+# If you have a lot of memory and a slow CPU, use YES, otherwise use NO
+use_dicache=NO
+
++# We do not allow http-equiv=refresh by default because it's not
++# conform to official HTML 4.01 standard
++allow_meta_refresh=NO
+
+#-------------------------------------------------------------------------
+# RENDERING SECTION
+diff -pruN dillo.orig/src/html.c dillo/src/html.c
+--- dillo.orig/src/html.c Mon Jul 1 10:13:37 2002
++++ dillo/src/html.c Wed Jul 31 14:10:52 2002
+@@ -2512,15 +2512,74 @@ static void Html_tag_close_form(DilloHtm
+
+/*
+* Handle <META>
+- * We do not support http-equiv=refresh because it's non standar,
+- * (the HTML 4.01 SPEC recommends explicitily to avoid it), and it
+- * can be easily abused!
++ * We disable http-equiv=refresh by default because it's non standard,
++ * (the HTML 4.01 SPEC recommends explicitily to avoid it),
++ * and it can be easily abused!
+*/
+static void Html_tag_open_meta(DilloHtml *html, char *tag, gint tagsize)
+{
++ const gchar *http_equiv;
++ const gchar *content;
++ const gchar *url_string;
++ DwPage *page;
++ DwStyle style_attrs, *link_style;
++ DilloUrl *url;
++ gint dummy;
++
++ page = DW_PAGE(html->dw);
++ style_attrs = *(html->stack[html->stack_top].style);
++
+/* only valid inside HEAD */
+- if (html->InFlags & IN_HEAD)
+- return;
++ if (! (html->InFlags & IN_HEAD))
++ DEBUG_HTML_MSG ("META tag is not inside HEAD\n");
++
++ if ((http_equiv = Html_get_attr(html, tag, tagsize, "http-equiv")))
++ {
++ if ((strcasecmp (http_equiv, "refresh") == 0) && prefs.allow_meta_refresh
++ && (content = Html_get_attr(html, tag, tagsize, "content")))
++ {
++ url_string = strstr (content, "URL=");
++ if (strlen (url_string) > 4)
++ url_string += 4;
++ else
++ url_string = NULL;
++
++ if (url_string && (url = a_Url_new(url_string,
++ URL_STR_(html->linkblock->base_url),
++ 0, 0)))
++ {
++ a_Dw_page_add_text (page, g_strdup ("This page uses META-refresh to "),
++ html->stack[(html)->stack_top].style);
++
++ if (a_Cache_url_read(url, &dummy)) /* visited frame */
++ style_attrs.color = a_Dw_style_color_new
++ (html->linkblock->visited_color, html->bw->main_window->window);
++ else /* unvisited frame */
++ style_attrs.color = a_Dw_style_color_new
++ (html->linkblock->link_color, html->bw->main_window->window);
++
++ style_attrs.uline = TRUE;
++ style_attrs.link = Html_set_new_link(html, &url);
++ link_style = a_Dw_style_new (&style_attrs,
++ html->bw->main_window->window);
++
++ a_Dw_page_add_text(page, g_strdup(url_string), link_style);
++
++ a_Dw_style_unref(link_style);
++ }
++ else
++ {
++ a_Dw_page_add_text (page, g_strdup ("Strange META-refresh argument: "),
++ html->stack[(html)->stack_top].style);
++ a_Dw_page_add_text (page, g_strdup (content),
++ html->stack[(html)->stack_top].style);
++ }
++
++ a_Dw_page_add_parbreak(page, 9, html->stack[(html)->stack_top].style);
++ }
++ }
++
++ return;
+}
+
+/*
+diff -pruN dillo.orig/src/prefs.c dillo/src/prefs.c
+--- dillo.orig/src/prefs.c Thu Apr 11 12:37:35 2002
++++ dillo/src/prefs.c Wed Jul 31 13:43:44 2002
+@@ -53,6 +53,7 @@ static const struct {
+{ "limit_text_width", DRC_TOKEN_LIMIT_TEXT_WIDTH },
+{ "font_factor", DRC_TOKEN_FONT_FACTOR },
+{ "use_dicache", DRC_TOKEN_USE_DICACHE },
++ { "allow_meta_refresh", DRC_TOKEN_ALLOW_META_REFRESH },
+{ "show_back", DRC_TOKEN_SHOW_BACK },
+{ "show_forw", DRC_TOKEN_SHOW_FORW },
+{ "show_home", DRC_TOKEN_SHOW_HOME },
+@@ -178,6 +179,9 @@ static guint Prefs_parser(GScanner *scan
+case DRC_TOKEN_USE_DICACHE:
+prefs.use_dicache = (strcmp(scanner->value.v_string, "YES") == 0);
+break;
++ case DRC_TOKEN_ALLOW_META_REFRESH:
++ prefs.allow_meta_refresh = (strcmp(scanner->value.v_string, "YES") == 0);
++ break;
+case DRC_TOKEN_SHOW_BACK:
+prefs.show_back = (strcmp(scanner->value.v_string, "YES") == 0);
+break;
+@@ -339,6 +343,7 @@ void a_Prefs_init(void)
+prefs.limit_text_width = FALSE;
+prefs.font_factor = 1.0;
+prefs.use_dicache = FALSE;
++ prefs.allow_meta_refresh = FALSE;
+prefs.show_back=TRUE;
+prefs.show_forw=TRUE;
+prefs.show_home=TRUE;
+diff -pruN dillo.orig/src/prefs.h dillo/src/prefs.h
+--- dillo.orig/src/prefs.h Thu Apr 11 12:37:35 2002
++++ dillo/src/prefs.h Wed Jul 31 13:44:01 2002
+@@ -43,6 +43,7 @@ typedef enum {
+DRC_TOKEN_SHOW_ALT,
+DRC_TOKEN_LIMIT_TEXT_WIDTH,
+DRC_TOKEN_USE_DICACHE,
++ DRC_TOKEN_ALLOW_META_REFRESH,
+DRC_TOKEN_SHOW_BACK,
+DRC_TOKEN_SHOW_FORW,
+DRC_TOKEN_SHOW_HOME,
+@@ -85,6 +86,7 @@ struct _DilloPrefs {
+gboolean limit_text_width;
+gdouble font_factor;
+gboolean use_dicache;
++ gboolean allow_meta_refresh;
+gboolean show_back;
+gboolean show_forw;
+gboolean show_home; 
+
+
+
+[Dillo-dev]Patch: META http-equiv=refresh
+
+From: Nikita V. Borodikhin <eliterr@tk...> - 2002-07-31 07:16
+
+Hello all Dillo users !
+
+I thought that META http-equiv=refresh parameter in fully not standard
+but recently I found Web Design Group's page about META tag
+(see http://www.htmlhelp.com/reference/html40/head/meta.html).
+
+They wrote <META http-equiv=refresh content='10; URL=>
+is usual tag but not all browsers can handle it, so I made patch that
+adds support for it (disabled by default) that adds ability to see
+URL refreshing to as link (like dillo's frame support does).
+
+Sincerely yours,
+Nikita V. Borodikhin
+
+
+
+Here is the patch:
+
+diff -pruN dillo.orig/dillorc dillo/dillorc
+--- dillo.orig/dillorc Thu May 30 17:21:08 2002
++++ dillo/dillorc Wed Jul 31 14:07:07 2002
+@@ -15,6 +15,9 @@ geometry=640x550
+# If you have a lot of memory and a slow CPU, use YES, otherwise use NO
+use_dicache=NO
+
++# We do not allow http-equiv=refresh by default because it's not
++# conform to official HTML 4.01 standard
++allow_meta_refresh=NO
+
+#-------------------------------------------------------------------------
+# RENDERING SECTION
+diff -pruN dillo.orig/src/html.c dillo/src/html.c
+--- dillo.orig/src/html.c Mon Jul 1 10:13:37 2002
++++ dillo/src/html.c Wed Jul 31 14:10:52 2002
+@@ -2512,15 +2512,74 @@ static void Html_tag_close_form(DilloHtm
+
+/*
+* Handle <META>
+- * We do not support http-equiv=refresh because it's non standar,
+- * (the HTML 4.01 SPEC recommends explicitily to avoid it), and it
+- * can be easily abused!
++ * We disable http-equiv=refresh by default because it's non standard,
++ * (the HTML 4.01 SPEC recommends explicitily to avoid it),
++ * and it can be easily abused!
+*/
+static void Html_tag_open_meta(DilloHtml *html, char *tag, gint tagsize)
+{
++ const gchar *http_equiv;
++ const gchar *content;
++ const gchar *url_string;
++ DwPage *page;
++ DwStyle style_attrs, *link_style;
++ DilloUrl *url;
++ gint dummy;
++
++ page = DW_PAGE(html->dw);
++ style_attrs = *(html->stack[html->stack_top].style);
++
+/* only valid inside HEAD */
+- if (html->InFlags & IN_HEAD)
+- return;
++ if (! (html->InFlags & IN_HEAD))
++ DEBUG_HTML_MSG ("META tag is not inside HEAD\n");
++
++ if ((http_equiv = Html_get_attr(html, tag, tagsize, "http-equiv")))
++ {
++ if ((strcasecmp (http_equiv, "refresh") == 0) && prefs.allow_meta_refresh
++ && (content = Html_get_attr(html, tag, tagsize, "content")))
++ {
++ url_string = strstr (content, "URL=");
++ if (strlen (url_string) > 4)
++ url_string += 4;
++ else
++ url_string = NULL;
++
++ if (url_string && (url = a_Url_new(url_string,
++ URL_STR_(html->linkblock->base_url),
++ 0, 0)))
++ {
++ a_Dw_page_add_text (page, g_strdup ("This page uses META-refresh to "),
++ html->stack[(html)->stack_top].style);
++
++ if (a_Cache_url_read(url, &dummy)) /* visited frame */
++ style_attrs.color = a_Dw_style_color_new
++ (html->linkblock->visited_color, html->bw->main_window->window);
++ else /* unvisited frame */
++ style_attrs.color = a_Dw_style_color_new
++ (html->linkblock->link_color, html->bw->main_window->window);
++
++ style_attrs.uline = TRUE;
++ style_attrs.link = Html_set_new_link(html, &url);
++ link_style = a_Dw_style_new (&style_attrs,
++ html->bw->main_window->window);
++
++ a_Dw_page_add_text(page, g_strdup(url_string), link_style);
++
++ a_Dw_style_unref(link_style);
++ }
++ else
++ {
++ a_Dw_page_add_text (page, g_strdup ("Strange META-refresh argument: "),
++ html->stack[(html)->stack_top].style);
++ a_Dw_page_add_text (page, g_strdup (content),
++ html->stack[(html)->stack_top].style);
++ }
++
++ a_Dw_page_add_parbreak(page, 9, html->stack[(html)->stack_top].style);
++ }
++ }
++
++ return;
+}
+
+/*
+diff -pruN dillo.orig/src/prefs.c dillo/src/prefs.c
+--- dillo.orig/src/prefs.c Thu Apr 11 12:37:35 2002
++++ dillo/src/prefs.c Wed Jul 31 13:43:44 2002
+@@ -53,6 +53,7 @@ static const struct {
+{ "limit_text_width", DRC_TOKEN_LIMIT_TEXT_WIDTH },
+{ "font_factor", DRC_TOKEN_FONT_FACTOR },
+{ "use_dicache", DRC_TOKEN_USE_DICACHE },
++ { "allow_meta_refresh", DRC_TOKEN_USE_META_REFRESH },
+{ "show_back", DRC_TOKEN_SHOW_BACK },
+{ "show_forw", DRC_TOKEN_SHOW_FORW },
+{ "show_home", DRC_TOKEN_SHOW_HOME },
+@@ -178,6 +179,9 @@ static guint Prefs_parser(GScanner *scan
+case DRC_TOKEN_USE_DICACHE:
+prefs.use_dicache = (strcmp(scanner->value.v_string, "YES") == 0);
+break;
++ case DRC_TOKEN_ALLOW_META_REFRESH:
++ prefs.allow_meta_refresh = (strcmp(scanner->value.v_string, "YES") == 0);
++ break;
+case DRC_TOKEN_SHOW_BACK:
+prefs.show_back = (strcmp(scanner->value.v_string, "YES") == 0);
+break;
+@@ -339,6 +343,7 @@ void a_Prefs_init(void)
+prefs.limit_text_width = FALSE;
+prefs.font_factor = 1.0;
+prefs.use_dicache = FALSE;
++ prefs.allow_meta_refresh = FALSE;
+prefs.show_back=TRUE;
+prefs.show_forw=TRUE;
+prefs.show_home=TRUE;
+diff -pruN dillo.orig/src/prefs.h dillo/src/prefs.h
+--- dillo.orig/src/prefs.h Thu Apr 11 12:37:35 2002
++++ dillo/src/prefs.h Wed Jul 31 13:44:01 2002
+@@ -43,6 +43,7 @@ typedef enum {
+DRC_TOKEN_SHOW_ALT,
+DRC_TOKEN_LIMIT_TEXT_WIDTH,
+DRC_TOKEN_USE_DICACHE,
++ DRC_TOKEN_ALLOW_META_REFRESH,
+DRC_TOKEN_SHOW_BACK,
+DRC_TOKEN_SHOW_FORW,
+DRC_TOKEN_SHOW_HOME,
+@@ -85,6 +86,7 @@ struct _DilloPrefs {
+gboolean limit_text_width;
+gdouble font_factor;
+gboolean use_dicache;
++ gboolean allow_meta_refresh;
+gboolean show_back;
+gboolean show_forw;
+gboolean show_home; 
+
+
+
+[Dillo-dev]Bug 254, Table width is too large.
+
+From: Matias Aguirre <yo_soy@fa...> - 2002-07-31 07:16
+
+Hi list, Im new to dillo and you maked a great work.
+
+In 254 bug describes "table width is too large" but this is not the reason of this bug.
+The reason is that if you read the source of http://linux.oreillynet.com/pub/a/linux/2001/11/15/learnunixos.html you found <IFRAME> tag, and this dont put in dillo sources.
+
+This is a <IFRAME> referense: http://www.htmlhelp.com/reference/html40/special/iframe.html
+
+Greetings
+
+ps: sorry by my bad english 
+
+
+
+[Dillo-dev]Nav push consistency
+
+From: Eric GAUDET <eric@rt...> - 2002-07-28 22:45
+
+Hi all,
+
+I just occured to me that the way Dillo handles URL is somewhat inconsist=
+ent.
+Choosing an already visited URL from the back history pushes the old page=
+, and
+remembers the position in this page. However, clicking on a link for an a=
+lready
+visited URL pushes the same link, only a the top of the page.
+What=B4s really inconsistent, is if you have several time the same page i=
+n the
+back history, the remembered position in the page is unique (the last
+position), no matter what history entry you choose.
+
+I understand that there is two different codepath and only one cache entr=
+y, be
+still.
+
+To be more polished, we have to choose between two consistent behaviors:
+- the position is stored in the back history, not in the cache entry. Tha=
+t way,
+every back history remembers its own position, and newly clicked link ope=
+n the
+page at the top
+- the position remains stored in the cache entry, and is always used no m=
+atter
+what. All nav push to this URL positions the page at this unique position=
+,
+regardless of if it is clicked from the back history, a link in the page,=
+or
+entered in the location bar.
+
+I think I prefer the latter myself. What do you guys think?
+
+Best,
+Eric 
+
+
+
+Re: [Dillo-dev]Copy/paste in Dillo
+
+From: Eric GAUDET <eric@rt...> - 2002-07-28 03:52
+
+There is no problem asking for new features, but before doing that, it mi=
+ght be
+wise to read le web site, especially the bug track. I am sick and tired o=
+f the
+new visitors asking the same question again and again, even if there is a
+published todo list.
+
+John was right on: Dillo is open source and contributions have always bee=
+n
+welcome.
+
+If you feel like a feature is missing, go head and code it.=20
+
+If you don=B4t want/can=B4t do it, just wait. It might not be there eithe=
+r because
+it is difficult, or because Dillo=B4s developers have other priority, or =
+are too
+busy doing something else. We are all coding Dillo on our free time, and =
+we can
+not answer to individual demands. Dillo has been progressing a lot since =
+the
+very being, only driven by the needs of contributors.
+
+If you don=B4t want to wait, use another browser.
+
+As for copy/paste, it is actually the oldest entry in the bug-track engin=
+e, and
+I agree this is an important one. I filed it, then I volunteered to imple=
+ment
+it. However, many issues are in the way. First of all, Dillo=B4s internal
+representation has changed a lot and keeps changing. Secondly, I didn=B4t=
+have
+time so far to give a try to the new iterators.
+
+In short, this is far from being =A8a simple task=A8.
+
+You want to know when: when somebody codes it! Simple as that. I am doing=
+it,
+slowly (don=B4t hold your breath). If somebody else does it before me, mo=
+re power
+to him!
+
+Just sit tight and wait.
+
+Best,
+Eric
+
+-- En reponse de "Re: [Dillo-dev]Copy/paste in Dillo" de Jamin W. Collins=
+, le
+27-Jul-2002 :
+> On Sat, 27 Jul 2002 13:42:21 -0500 (CDT)
+> John Utz <john@ut...> wrote:
+>=20
+>> We await your patch!
+>>=20
+>> (which is a nice way of saying, if you wont fix it yourself, stop=20
+>> bitching)
+>=20
+> Curious, is there a problem with users of Dillo asking for or expressin=
+g
+> interested in having a feature added? I didn't take the OP's request a=
+s
+> "bitching".
+>=20
+> --=20
+> Jamin W. Collins
+>=20
+>=20
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Welcome to geek heaven.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------------------------------------------
+Eric GAUDET <eric@rt...>
+Le 27-Jul-2002 a 20:30:25
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+Re: [Dillo-dev]libdillo
+
+From: Jonathan Gardner <gardnerj@pr...> - 2002-07-28 01:48
+
+On Tue, 23 Jul 2002 09:06:26 +0200
+Melvin Hadasht <melvin.hadasht@fr...> wrote:
+
+> Mean while, I made a small patch for the same reason but with another
+> approach, if you're interested:
+> http://melvin.hadasht.free.fr/home/dillo/sylpheed/ 
+
+Speaking of this patch. It still worked as of the 0.7.8claws release of
+Sylpheed-claws but now as of the 0.8.0claws release it doesn't patch so
+well and the make doesn't work.
+Any plans on updating the patch?
+Thanks much for it. It really makes Sylpheed even more nifty than it
+already was.
+
+Cheers,
+Jonathan
+
+-- 
+#define __INTELLECTUAL_CHRISTIAN__
+
+#include <JESUS><
+#include ><DARWIN>
+L L 
+
+
+
+Re: [Dillo-dev]Copy/paste in Dillo
+
+From: John Utz <john@ut...> - 2002-07-28 01:19
+
+umm, i overspoke.
+
+sorry.
+
+On Sat, 27 Jul 2002, Jamin W. Collins wrote:
+
+> On Sat, 27 Jul 2002 13:42:21 -0500 (CDT)
+> John Utz <john@ut...> wrote:
+> 
+> > We await your patch!
+> > 
+> > (which is a nice way of saying, if you wont fix it yourself, stop 
+> > bitching)
+> 
+> Curious, is there a problem with users of Dillo asking for or expressing
+> interested in having a feature added? I didn't take the OP's request as
+> "bitching".
+> 
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Copy/paste in Dillo
+
+From: Jamin W. Collins <jcollins@as...> - 2002-07-27 19:54
+
+On Sat, 27 Jul 2002 13:42:21 -0500 (CDT)
+John Utz <john@ut...> wrote:
+
+> We await your patch!
+> 
+> (which is a nice way of saying, if you wont fix it yourself, stop 
+> bitching)
+
+Curious, is there a problem with users of Dillo asking for or expressing
+interested in having a feature added? I didn't take the OP's request as
+"bitching".
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev]Copy/paste in Dillo
+
+From: John Utz <john@ut...> - 2002-07-27 18:42
+
+We await your patch!
+
+(which is a nice way of saying, if you wont fix it yourself, stop 
+bitching)
+
+On 27 Jul 2002, mightyunclean wrote:
+
+> Anyone know when support for text copy/paste will be incorporated into
+> Dillo ?
+> 
+> Or if there is a patch available to enable support for this ?
+> 
+> Have been following Dillo's development from about 0.4.0, but there
+> still hasn't been any support for this.
+> I wonder if anyone has even thought of this simple but important
+> feature.
+> It is so frustrating being forced to use some other browser all the time
+> simply because Dillo lacks basic functionality.
+> Apart from this, everything is fine & dandy.
+> 
+> Keep up the good work fellas.
+> 
+> 
+> 
+> http://www.sold.com.au - SOLD.com.au
+> - Find yourself a bargain!
+> 
+> 
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Welcome to geek heaven.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Copy/paste in Dillo
+
+From: mightyunclean <mightyunclean@ne...> - 2002-07-27 07:52
+
+Anyone know when support for text copy/paste will be incorporated into
+Dillo ?
+
+Or if there is a patch available to enable support for this ?
+
+Have been following Dillo's development from about 0.4.0, but there
+still hasn't been any support for this.
+I wonder if anyone has even thought of this simple but important
+feature.
+It is so frustrating being forced to use some other browser all the time
+simply because Dillo lacks basic functionality.
+Apart from this, everything is fine & dandy.
+
+Keep up the good work fellas.
+
+
+
+http://www.sold.com.au - SOLD.com.au
+- Find yourself a bargain! 
+
+
+
+Re: [Dillo-dev]libdillo
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-07-23 07:06
+
+Hi erez@sa...,
+
+on Tue, 23 Jul 2002 03:18:37 -1:00
+erez@sa... wrote:
+
+> I was wondering if it is possible to
+> split dillo into a gtk-widget-lib
+> 
+> (libdillo) and an application, 
+> so people could use libdillo and have
+> html in their apps
+
+that would be great. 
+
+Mean while, I made a small patch for the same reason but with another approach,
+if you're interested:
+http://melvin.hadasht.free.fr/home/dillo/sylpheed/ 
+
+Namlala unono (Comoran: Goodbye)
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]libdillo
+
+From: <erez@sa...> - 2002-07-23 06:17
+
+hello
+
+I`m currently writing a mail client for
+linux/ipaq, and I need a html widget.
+
+I thought of using dillo for this
+( porting it`s source into my app)
+but as I already have dillo, this will
+make the same code twice, and it`s a
+waste of flash,and I will have to
+port again when there will be a new
+vesion of dillo.
+
+I was wondering if it is possible to
+split dillo into a gtk-widget-lib
+
+(libdillo) and an application, 
+so people could use libdillo and have
+html in their apps
+
+
+ps,
+I`m not on this mailing list so please
+also CC to me.
+
+thanks,
+erez. 
+
+
+
+RE: [Dillo-dev]ecmascript, javascript and CSS 
+
+From: floorzat floorzat <floorzat@ho...> - 2002-07-22 21:58
+
+Um.....
+The codebase structure severely restricts the possibility of reasonable 
+implementation of script controlled DOM.
+New Eventloop structures and highly complex semaphor systems would be 
+required and a complete ground up recode would probably be simpler.
+
+
+
+_________________________________________________________________
+Join the worlds largest e-mail service with MSN Hotmail. 
+http://www.hotmail.com 
+
+
+
+Re: [Dillo-dev]Pixmap GTK themes
+
+From: Patrick Glennon <pglennon@me...> - 2002-07-21 17:31
+
+Attachments: Message as HTML      
+
+I have done a lot of pixmap themeing with dillo with no problems, from
+v. 0.6.2 up to relatively current CVS builds. Also used thinice engine
+and xenophilia with no problems...
+
+do you have gtk themes properly set up? are your path names to the
+engine libraries properly referenced in the gtkrc file? Also, do you
+have the gtk/gdk libs installed? another thing to check is to make
+sure that the theme engine libraries are in ( usually )
+/usr/lib/gtk/themes/engines
+
+libpixmap.so - pixmap theme engine
+libxeno.so - xenophilia theme engine
+libthinice.so - thinice theme engine
+( etc.. )
+
+hope this helps, and is not just a regurgitation of the obvious...
+
+Cheers,
+-Patrick
+
+On Sat, 2002-07-20 at 21:59, Mark Schreiber wrote:
+
+Does anyone else have any problems using pixmap GTK themes with dillo?
+I'm not seeing any pixmaps in pixmap engine gtk themes being drawn in
+a dillo (current CVS) window, though all the other GTK apps I use work
+fine. I'd like to see whether this is just my copy of dillo first,
+though.
+
+If anyone has a pixmap gtk theme on their computer, could you try
+switching to it and see whether the pixmaps are visible in your dillo
+window?
+
+Thanks!
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+[Dillo-dev]Pixmap GTK themes
+
+From: Mark Schreiber <mark7@an...> - 2002-07-21 02:59
+
+Attachments: Message as HTML      
+
+Does anyone else have any problems using pixmap GTK themes with dillo?
+I'm not seeing any pixmaps in pixmap engine gtk themes being drawn in
+a dillo (current CVS) window, though all the other GTK apps I use work
+fine. I'd like to see whether this is just my copy of dillo first,
+though.
+
+If anyone has a pixmap gtk theme on their computer, could you try
+switching to it and see whether the pixmaps are visible in your dillo
+window?
+
+Thanks!
+
+--=20
+Best of luck,
+Mark Schreiber 
+
+
+
+[Dillo-dev]Re: Reading gzipped files
+
+From: Vikas G P <vikasgp386@ho...> - 2002-07-17 13:20
+
+On Mon,15 Jul 2002 07:23 PM Ken Hayber wrote,
+
+>My point was that I believe that when http servers like apache support
+>gzip they do not change the filename, they just compress the data on the
+>fly. I could be wrong too, but that's what I believe is the case. It is
+>the content-coding attribute that tells the browser it is compressed, not
+>the filename.
+>
+>Maybe they're just two complementary ways to accomplish the same thing:
+>.gz for local files, content-coding for http-served files. Would it be
+>hard to implement both
+
+Ah,
+I get it now. What Ken is saying is that we need to support on-the-fly decompession of content sent via http, by checking their
+content-encoding attribute. The reason I did it only for local files is :
+I don't think there are many sites out there which put up index.html.gz. And gzipped files on the server should probably be
+downloaded, and I didn't know how to do it.
+BTW, most other browsers offer to download a .html.gz sent over http.
+
+On Mon, 15 Jul 2002 08:04 PM madis wrote,
+
+>On Mon, 15 Jul 2002, Ken Hayber wrote:
+
+>> Maybe they're just two complementary ways to accomplish the same thing:
+>> ..gz for local files, content-coding for http-served files. Would it be
+>> hard to implement both?
+
+>I looked for it now, seems that it requires modifing IO/http.c and cache.c
+>(at least). Implementing this way would be *the right thing* imho, but it
+>requires fully understanding how these two things talk with each other
+>(what i didn't bothered). Main problem is that a part of http traffic is
+>gzip'ed (body), but another part is not (header).
+
+Yes, IMHO it is the *right thing* to do.
+
+Vikas G P 
+
+
+
+[Dillo-dev]gzipped HTML files
+
+From: Geoff Lane <zzassgl@tw...> - 2002-07-17 07:46
+
+A few months ago I posted some patches for gzipped HTML support. These can
+be found at
+http://twirl.mcc.ac.uk/dillo/dillo_gzip.html
+There is also a very brief discussion about the requirements and possible
+improvements. The patches will probably need to be re-worked for the recent
+dillo releases. Anyone who want's to grab a copy and work up a proper patch
+for dillo, please do so.
+
+I see that Apache2 contains mod_gzip as a standard module - there's probably
+going to be a lot more compressed web pages in the future.
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+Govt investigations contribute more to amusement than knowledge. 
+
+
+
+Re: [Dillo-dev]RE: Dillo-dev digest, Vol 1 #539 - 1 msg
+
+From: madis <madis@cy...> - 2002-07-16 19:53
+
+On 16 Jul 2002, Patrick Glennon wrote:
+
+> Go into ~/.dillo/dillorc and make changes to these entries, depending on
+> how much you want to strip it down:
+> 
+> show_back=NO
+> show_forw=NO
+> show_home=NO 
+> show_reload=NO
+> show_save=NO
+> show_stop=NO
+> show_menubar=NO
+> show_clear_url=NO
+> show_url=NO
+> show_progress_box=NO
+> 
+and...
+panel_size=tiny
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]RE: Dillo-dev digest, Vol 1 #539 - 1 msg
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-07-16 19:43
+
+Hi Jedediah,
+
+on Tue, 16 Jul 2002 16:31:41 -0300 "Jedediah Ferguson"
+<jFerguson@tr...> wrote:
+
+> I was wondering if there is a means to suppress the navigation bar.
+> I am only running a 1/4 VGA display and it would be advantageous is
+> the naviagtion bar could be removed or hidden upon initialization as
+> it would make for a cleaner GUI.
+
+You can double-click inside the window to go into full-window mode.
+There is no command line option to run it from the start in that mode. But I
+have a preliminary patch here:
+
+http://melvin.hadasht.free.fr/home/dillo/fullwindow/index.html
+
+Cheers
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]RE: Dillo-dev digest, Vol 1 #539 - 1 msg
+
+From: Jamin W. Collins <jcollins@as...> - 2002-07-16 19:41
+
+On Tue, 16 Jul 2002 16:31:41 -0300 "Jedediah Ferguson"
+<jFerguson@tr...> wrote:
+
+> I was wondering if there is a means to suppress the navigation bar. I
+> am only running a 1/4 VGA display and it would be advantageous is the
+> naviagtion bar could be removed or hidden upon initialization as it
+> would make for a cleaner GUI.
+
+Double-click the background of the browser's page.
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev]RE: Dillo-dev digest, Vol 1 #539 - 1 msg
+
+From: Patrick Glennon <pglennon@me...> - 2002-07-16 19:38
+
+Attachments: Message as HTML      
+
+Go into ~/.dillo/dillorc and make changes to these entries, depending on
+how much you want to strip it down:
+
+show_back=NO
+show_forw=NO
+show_home=NO 
+show_reload=NO
+show_save=NO
+show_stop=NO
+show_menubar=NO
+show_clear_url=NO
+show_url=NO
+show_progress_box=NO
+
+I also use it on an embedded system, and have also found it helpful to
+blank the X cursor... let me know if you would like a patch for
+that... it just amounts to replacing the gdk cursor call with an inline
+blank gdk cursor creation, and it is just two files that need to be
+modified....
+
+Cheers!
+
+-Patrick
+
+On Tue, 2002-07-16 at 14:31, Jedediah Ferguson wrote:
+
+Dillo-Dev,
+
+Dillo is an impressive web browser. I am currently running it on a minimal Debian system on a single board computer in the hopes of using it as a GUI. Dillo runs much more quickly than other browsers I have tried. It can even render complex sites like Slashdot almost as fast as the video can refresh.
+
+I was wondering if there is a means to suppress the navigation bar. I am only running a 1/4 VGA display and it would be advantageous is the naviagtion bar could be removed or hidden upon initialization as it would make for a cleaner GUI.
+
+Thanks for a Great Program.
+
+
+Best Regards,
+
+Jedediah Ferguson
+Computer Engineering Co-op
+
+mailto:Jedediah.Ferguson@tr...
+http://www.trecan.com
+
+4049 St. Margaret's Bay Road
+Hubley, Nova Scotia, B3Z 1C2, Canada
+
+Phone: 902 876-0457
+Fax: 902 876-8275
+
+
+
+
+
+-------------------------------------------------------
+This s...net email is sponsored by: Jabber - The world's fastest growing 
+real-time communications platform! Don't just IM. Build it in! 
+http://www.jabber.com/osdn/xim
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]RE: Dillo-dev digest, Vol 1 #539 - 1 msg
+
+From: Jedediah Ferguson <jFerguson@tr...> - 2002-07-16 19:31
+
+Dillo-Dev,
+
+Dillo is an impressive web browser. I am currently running it on a =
+minimal Debian system on a single board computer in the hopes of using =
+it as a GUI. Dillo runs much more quickly than other browsers I have =
+tried. It can even render complex sites like Slashdot almost as fast as =
+the video can refresh.
+
+I was wondering if there is a means to suppress the navigation bar. I =
+am only running a 1/4 VGA display and it would be advantageous is the =
+naviagtion bar could be removed or hidden upon initialization as it =
+would make for a cleaner GUI.
+
+Thanks for a Great Program.
+
+
+Best Regards,
+
+Jedediah Ferguson
+Computer Engineering Co-op
+
+mailto:Jedediah.Ferguson@tr...
+http://www.trecan.com
+
+4049 St. Margaret's Bay Road
+Hubley, Nova Scotia, B3Z 1C2, Canada
+
+Phone: 902 876-0457
+Fax: 902 876-8275 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-07-16 15:14
+
+On Thu, Jul 11, 2002 at 01:16:53PM -0500, Paul Chamberlain wrote:
+> I think you set my expectations too high. I have a LOT of
+> bookmarks in mozilla. I'm not sure which one caused it,
+> but when dillo tried to load, it said:
+> 
+> Loading bookmarks...
+> 
+> GLib-ERROR **: could not allocate -75 bytes
+> aborting...
+> Aborted (core dumped)
+
+Funnily, I had them in the booksmark.html file, i.e. something like
+
+---
+...
+<li><A HREF="...">...</A></li>
+
+** CRITICAL **: file web.c: line 56 (a_Web_dispatch_by_type): assertion `dw != NULL' failed.
+<li><A HREF="...">...</A></li>
+
+** WARNING **: 11 styles left
+
+** WARNING **: 2 fonts (11 references) left
+
+** WARNING **: 2 colors (11 references) left
+
+** WARNING **: 1 shaded colors (8 references) left
+<li><A HREF="...">...</A></li>
+...
+---
+
+I cannot reproduce this, someone who can should insert an entry in to
+the bug tracking engine. (I'm not even sure if these bugs still exist,
+I rarely use the "View Bookmarks" function.)
+
+> This s...net email is sponsored by:ThinkGeek
+> PC Mods, Computing goodies, cases & more
+> http://thinkgeek.com/sf
+
+Seems that is time to switch the list hoster.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Re:Reading gzipped files
+
+From: Ken Hayber <khayber@so...> - 2002-07-15 14:48
+
+I looked a bit more at the RFCs and see that there is also a 
+transfer-coding attribute that seems to be more directed at what I am 
+talking about. It seems a bit confusing; maybe I'll take a look at the 
+apache code and see if I can tell what they are doing. It seems that 
+content-coding may be intended to describe the content (not modify it) and 
+transfer coding describes how it is being transferred (on the fly, e.g. 
+chunked, gzip, etc).
+
+I found a small discussion indicating that a content-coding of gzip might 
+indicate to the browser (UA) to save the file rather than display it, 
+whereas the transfer-encoding would indicate that the UA should decode it.
+
+(http://ftp.ics.uci.edu/pub/ietf/http/hypermail/1999/0197.html)
+
+
+
+On Monday, July 15, 2002, at 07:52 AM, madis wrote:
+
+> On Mon, 15 Jul 2002, Ken Hayber wrote:
+>
+>> My point was that I believe that when http servers like apache support
+>> gzip they do not change the filename, they just compress the data on the
+>> fly. I could be wrong too, but that's what I believe is the case. It is
+>> the content-coding attribute that tells the browser it is compressed, not
+>> the filename.
+>>
+>> Maybe they're just two complementary ways to accomplish the same thing:
+>> ..gz for local files, content-coding for http-served files. Would it be
+>> hard to implement both?
+>
+> I looked for it now, seems that it requires modifing IO/http.c and cache.
+> c
+> (at least). Implementing this way would be *the right thing* imho, but it
+> requires fully understanding how these two things talk with each other
+> (what i didn't bothered). Main problem is that a part of http traffic is
+> gzip'ed (body), but another part is not (header).
+> 
+
+
+
+Re: [Dillo-dev]Re:Reading gzipped files
+
+From: madis <madis@cy...> - 2002-07-15 14:35
+
+On Mon, 15 Jul 2002, Ken Hayber wrote:
+
+> My point was that I believe that when http servers like apache support 
+> gzip they do not change the filename, they just compress the data on the 
+> fly. I could be wrong too, but that's what I believe is the case. It is 
+> the content-coding attribute that tells the browser it is compressed, not 
+> the filename.
+> 
+> Maybe they're just two complementary ways to accomplish the same thing: 
+> ..gz for local files, content-coding for http-served files. Would it be 
+> hard to implement both?
+
+I looked for it now, seems that it requires modifing IO/http.c and cache.c 
+(at least). Implementing this way would be *the right thing* imho, but it 
+requires fully understanding how these two things talk with each other 
+(what i didn't bothered). Main problem is that a part of http traffic is 
+gzip'ed (body), but another part is not (header).
+
+--
+mzz 
+
+
+
+Re: [Dillo-dev]Re:Reading gzipped files
+
+From: Ken Hayber <khayber@so...> - 2002-07-15 13:53
+
+Well, if you're trying to add support to open .html.gz files like some 
+other apps (I've seen others like .ps.gz, ...?) can do then I think you're 
+fine.
+
+My point was that I believe that when http servers like apache support 
+gzip they do not change the filename, they just compress the data on the 
+fly. I could be wrong too, but that's what I believe is the case. It is 
+the content-coding attribute that tells the browser it is compressed, not 
+the filename.
+
+Maybe they're just two complementary ways to accomplish the same thing: 
+.gz for local files, content-coding for http-served files. Would it be 
+hard to implement both?
+
+On Sunday, July 14, 2002, at 11:22 PM, Vikas G P wrote:
+
+> On Friday, July 12, 2002, Ken Hayber wrote,
+>
+>> Not to be negative, but isn't the proper way to handle gzip in a browser
+>> to check the content-coding attribute and not the filename/ext?
+>
+> As I said, the patch only works for _local_ files, so we get it's type 
+> from it's extension, and if the ext is .gz,
+> it is stripped and the resulting name is examined again.
+>
+>> I thought
+>> the filename stays the same.
+>
+> Where does the filename change ?
+> Or am I getting this wrong ?
+>
+> Vikas G P
+>
+>
+>
+>
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Welcome to geek heaven.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+>
+
+"Nothing is impossible for anyone impervious to reason."
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Ken Hayber
+mailto:khayber@so...
+http://khayber.dyndns.org 
+
+
+
+[Dillo-dev]Re:Reading gzipped files
+
+From: Vikas G P <vikasgp386@ho...> - 2002-07-15 07:00
+
+On Friday, July 12, 2002, Ken Hayber wrote,
+
+> Not to be negative, but isn't the proper way to handle gzip in a browser 
+> to check the content-coding attribute and not the filename/ext? 
+
+As I said, the patch only works for _local_ files, so we get it's type from it's extension, and if the ext is .gz,
+it is stripped and the resulting name is examined again.
+
+> I thought 
+> the filename stays the same.
+
+Where does the filename change ?
+Or am I getting this wrong ?
+
+Vikas G P 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Tomas Guemes <tomas@pa...> - 2002-07-14 02:20
+
+On 13 Jul 2002 09:56:31 -0500
+"Lars Clausen" <lrclause@cs.uiuc.edu> wrote:
+
+> 
+> On Sat, 13 Jul 2002, Tomas Guemes wrote:
+> 
+> > I made a patch so dillo can support subdirectories in the bookmarks
+> > menu, cause otherwise if you have a lot of entries, part of the menu
+> > will be out of the screen and could not be reached with the actual
+> > flat bookmarks scheme. Also I have modified the python script
+> > xbel2html, to fit the format of the patch.
+> 
+> Ohhh! I wanted to see that! Thank you.
+> 
+> > You can find the patch and the script xbel2dbm in
+> > http://golem/tomas/dillo/
+> 
+> Uhm... golem? That must be a new top-level domain that I've never
+> heard of before:)
+> 
+
+Sorry, this is the internal name :)
+http://pasky.dhs.org/tomas/dillo/
+
+> -Lars
+> 
+> -- 
+> Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| Hårdgrim of
+> Numenor"I do not agree with a word that you say, but I 
+> |---------------------------- will defend to the death your right to
+> |say it." | Where are we going, and --Evelyn Beatrice Hall
+> |paraphrasing Voltaire | what's with the handbasket?
+> 
+> 
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Welcome to geek heaven.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Lars Clausen <lrclause@cs...> - 2002-07-13 14:56
+
+On Sat, 13 Jul 2002, Tomas Guemes wrote:
+
+> I made a patch so dillo can support subdirectories in the bookmarks
+> menu, cause otherwise if you have a lot of entries, part of the menu
+> will be out of the screen and could not be reached with the actual flat
+> bookmarks scheme. Also I have modified the python script xbel2html, to
+> fit the format of the patch.
+
+Ohhh! I wanted to see that! Thank you.
+
+> You can find the patch and the script xbel2dbm in
+> http://golem/tomas/dillo/
+
+Uhm... golem? That must be a new top-level domain that I've never heard of
+before:)
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Tomas Guemes <tomas@pa...> - 2002-07-13 13:14
+
+On Thu, 11 Jul 2002 03:16:21 +0200 (MET DST)
+"Lawrence Mayer" <Lawrence.Mayer@ds...> wrote:
+
+> Hi,
+> 
+> I use Dillo, Links, Lynx, and Netscape. So far, all my bookmarks are
+> in Netscape, but I would love to be able to share my bookmarks between
+> these 4 browsers.
+
+> 2. Any utilities which CONVERT bookmarks back and forth between the
+> above browsers, or at least some of them?
+
+I found a way to convert through xbel. 
+
+Xbel is the XML format used by konqueror, there are some programs to
+convert xbel to other formats and viceversa, the debian packages are
+xbel and xbel-utils you can read more and find them in
+http://pyxml.so....net/topics/xbel/
+
+I made a patch so dillo can support subdirectories in the bookmarks
+menu, cause otherwise if you have a lot of entries, part of the menu
+will be out of the screen and could not be reached with the actual flat
+bookmarks scheme. Also I have modified the python script xbel2html, to
+fit the format of the patch.
+
+You can find the patch and the script xbel2dbm in
+http://golem/tomas/dillo/
+
+greetings
+
+Tomas 
+
+
+
+Re: [Dillo-dev][PATCH] reading gzipped files
+
+From: Ken Hayber <khayber@so...> - 2002-07-12 13:35
+
+Not to be negative, but isn't the proper way to handle gzip in a browser 
+to check the content-coding attribute and not the filename/ext? The rfc 
+says on-the-fly encoding/decoding between server and client. I thought 
+the filename stays the same.
+
+bug #156:
+Impact: feature fault
+At: run time
+Type: misbehaviour
+Comments: Dillo doesn't render gzipped html's. Sourceforge (once) put
+up a gzipped inde.html and all I got was binary :-(
+This is kind of new, but nice!
+HTReproduce: Just gzip a local .html. Try to look at it in Netscape and
+then in Dillo.
+
+
+On Friday, July 12, 2002, at 12:38 AM, Vikas G P wrote:
+
+> Hi everyone,
+>
+> Here's a small patch to make dillo read gzipped files[BUG #156]. It only 
+> works only on local files, since a .gz file on a server is
+> probably there for download. It sends the content-length as 0, which is 
+> ugly, but seems to work fine.
+>
+> Happy coding,
+> Vikas 
+
+
+
+[Dillo-dev][PATCH] reading gzipped files
+
+From: Vikas G P <vikasgp386@ho...> - 2002-07-12 07:33
+
+Hi everyone,
+
+Here's a small patch to make dillo read gzipped files[BUG #156]. It only works only on local files, since a .gz file on a server is
+probably there for download. It sends the content-length as 0, which is ugly, but seems to work fine.
+
+Happy coding,
+Vikas
+
+--------------------
+--- dillo-0.6.6/src/IO/file.c Wed Apr 10 06:29:42 2002
++++ dillo-0.6.6.patch/src/IO/file.c Thu Jul 11 18:08:23 2002
+@@ -29,6 +29,7 @@
+#include <stdio.h>
+#include <signal.h>
+#include <math.h> /* for rint */
++#include <zlib.h>
+
+#include <errno.h> /* for errno */
+#include "Url.h"
+@@ -80,7 +81,8 @@ static gint File_get_file(const gchar *F
+static gint File_get_dir(const gchar *DirName);
+static char *File_dir2html(DilloDir *Ddir);
+static void File_not_found_msg(DilloWeb *web, const char *filename, int fd);
+-
++static gint File_ext(const char *filename,const char *ext);
++static char *File_content_type_gz(const char *filename);
+
+/*
+* Allocate a DilloFile structure, and set working values in it.
+@@ -162,6 +164,7 @@ static void *File_transfer_file(void *da
+char buf[8192];
+DilloFile *Dfile = data;
+ssize_t nbytes;
++ gzFile gzipfile;
+
+/* Set this thread to detached state */
+pthread_detach(Dfile->th1);
+@@ -172,7 +175,8 @@ static void *File_transfer_file(void *da
+
+/* Send File Size info */
+if (Dfile->FileSize != -1) {
+- sprintf(buf, "Content-length: %ld\n", Dfile->FileSize);
++ sprintf(buf, "Content-length: %ld\n",
++ File_ext(Dfile->Filename,"gz") ? 0l : Dfile->FileSize );
+write(Dfile->FD_Write, buf, strlen(buf));
+}
+/* Send end-of-header */
+@@ -181,8 +185,23 @@ static void *File_transfer_file(void *da
+
+
+/* Append raw file contents */
+- while ( (nbytes = read(Dfile->FD, buf, 8192)) != 0 ) {
+- write(Dfile->FD_Write, buf, nbytes);
++
++ /* gzipped */
++ if( File_ext(Dfile->Filename,"gz")){
++ if( (gzipfile = gzdopen(Dfile->FD,"rb")) ){;
++ while( (nbytes = gzread(gzipfile, buf, 8192)) != 0){
++ write(Dfile->FD_Write, buf, nbytes);
++ }
++ }
++ else{
++ g_print("Error: Could not decompress gzipped file\n");
++ }
++ }
++ /* not gzipped */
++ else{
++ while ( (nbytes = read(Dfile->FD, buf, 8192)) != 0 ) {
++ write(Dfile->FD_Write, buf, nbytes);
++ }
+}
+
+close(Dfile->FD);
+@@ -258,8 +277,21 @@ static char *File_content_type(const cha
+} else if (File_ext(filename, "html") || File_ext(filename, "htm") ||
+File_ext(filename, "shtml")) {
+return "text/html";
++ } else if(File_ext(filename, "gz")){
++ return File_content_type_gz(filename);
+}
+return "text/plain";
++}
++
++/*
++ * Return content_type of the uncompressed file
++ */
++static char *File_content_type_gz(const char *filename)
++{
++ gchar *original_name = g_strndup(filename,rindex(filename,(int)'.')-filename);
++ gchar *content_type = File_content_type(original_name);
++ g_free(original_name);
++ return content_type;
+}
+
+/* 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Paul Chamberlain <tif@ti...> - 2002-07-11 18:17
+
+Ross J. Reedstrom wrote:
+> Well, for dillo and netscape, you can just put a symlink in one or the other's
+> dot directory to the others bookmarks.html file. I just tested this by
+> symlinking ~/.diullorc/bookmarks.html to ~/.mozilla/default/bookmarks.html
+
+I think you set my expectations too high. I have a LOT of
+bookmarks in mozilla. I'm not sure which one caused it,
+but when dillo tried to load, it said:
+
+Loading bookmarks...
+
+GLib-ERROR **: could not allocate -75 bytes
+aborting...
+Aborted (core dumped)
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Pat Shanahan <pat@em...> - 2002-07-11 11:34
+
+* Ross J. Reedstrom <reedstrm@ri...> [07-11-02 05:05]:
+> On Thu, Jul 11, 2002 at 03:16:21AM +0200, Lawrence Mayer wrote:
+> > Hi,
+> > 
+> > I use Dillo, Links, Lynx, and Netscape. So far, all my bookmarks are in
+> > Netscape, but I would love to be able to share my bookmarks between these
+> > 4 browsers.
+> 
+> Well, for dillo and netscape, you can just put a symlink in one or the other's
+> dot directory to the others bookmarks.html file. I just tested this by
+> symlinking ~/.diullorc/bookmarks.html to ~/.mozilla/default/bookmarks.html
+> 
+> It worked fine: the 'View bookmarks" function in dillo handled the page just
+> fine. with sections and everything.
+
+You may also make bookmarks in netscape/dillo for each, ie:
+file:///home/yurName/.dillo/bookmarks.html in Netacape &
+file:///home/yurName/.mozilla/default/bookmarks.html in Dillo
+
+-- 
+Patrick Shanahan
+Registered Linux User #207535 
+@ http://counter.li.org 
+
+
+
+Re: [Dillo-dev]Netscape bookmarks conversion?
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-07-11 05:49
+
+On Thu, Jul 11, 2002 at 03:16:21AM +0200, Lawrence Mayer wrote:
+> Hi,
+> 
+> I use Dillo, Links, Lynx, and Netscape. So far, all my bookmarks are in
+> Netscape, but I would love to be able to share my bookmarks between these
+> 4 browsers.
+
+Well, for dillo and netscape, you can just put a symlink in one or the other's
+dot directory to the others bookmarks.html file. I just tested this by
+symlinking ~/.diullorc/bookmarks.html to ~/.mozilla/default/bookmarks.html
+
+It worked fine: the 'View bookmarks" function in dillo handled the page just
+fine. with sections and everything.
+
+Ross 
+
+
+
+[Dillo-dev]Netscape bookmarks conversion?
+
+From: Lawrence Mayer <Lawrence.Mayer@ds...> - 2002-07-11 01:16
+
+Hi,
+
+I use Dillo, Links, Lynx, and Netscape. So far, all my bookmarks are in
+Netscape, but I would love to be able to share my bookmarks between these
+4 browsers.
+
+Can anyone offer any advice?
+
+1. Will Netscape's bookmark import do me any good here?
+
+2. Any utilities which CONVERT bookmarks back and forth between the above
+browsers, or at least some of them?
+
+3. Any utilities which SYNCHRONIZE bookmarks between the above browsers,
+or at least some of them?
+
+
+I would be thankful for your advice or tips.
+
+Friendly Greetings,
+Lawrence Mayer <lawmay@ki.se>
+Ume=E5, Sweden 
+
+
+
+Re: [Dillo-dev]Cookies don't work
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-07-10 13:49
+
+> Allo,
+
+Hi,
+=20
+> I compiled dillo-0.6.6, passing the parameter --enable-cookies, and got n=
+o
+> errors; made sure my ~/.dillo/cookiesrc says:
+> DEFAULT ACCEPT
+>=20
+> yet cookies don't appear to work. ~/.dillo/cookies remains empty (0 byte=
+)
+> and web pages I visit don't retain my login information. Tested against
+> http://www.livejournal.com, http://www.w30wnzj00.com, http://www.slashdot.org. =20
+
+Slashdot works for me.=20
+http://www.w30wnzj00.com seems to send a malformed expiry date and gets
+ignored.=20
+Unfortunately, I can't test livejournal ATM.
+
+> Please advise; is there anything I did wrong, or any logfiles I should be=
+looking at?
+> Thanks.
+
+You could change the line (in cookies.c) which says:
+#define DEBUG_LEVEL 8
+to:
+#define DEBUG_LEVEL 1
+
+Then it would tell you pretty much everything it does. A good starting
+point would be to check if the date strings are parsed correctly.
+
+>=20
+> matthew@de...
+>=20
+
+Cheers,
+J=F6rgen 
+
+
+
+[Dillo-dev]Cookies don't work
+
+From: matthew <matthew@de...> - 2002-07-10 12:59
+
+Allo,
+
+I compiled dillo-0.6.6, passing the parameter --enable-cookies, and got no
+errors; made sure my ~/.dillo/cookiesrc says:
+DEFAULT ACCEPT
+
+yet cookies don't appear to work. ~/.dillo/cookies remains empty (0 byte)
+and web pages I visit don't retain my login information. Tested against
+http://www.livejournal.com, http://www.w30wnzj00.com, http://www.slashdot.org. Please advise;
+is there anything I did wrong, or any logfiles I should be looking at?
+Thanks.
+
+
+matthew@de... 
+
+
+
+[Dillo-dev]dillo user notes
+
+From: Abc Xyz <abc@an...> - 2002-07-10 10:35
+
+fbsd 4.5 dillo .66
+
+i didn't use this more than a few minutes, but this is what
+i was missing severely enough to stop ...
+
+no keyboard navigation (esp backward foreward - Left/Right arrows).
+(i hate having to reach for my mouse needlessly).
+animated gifs apparently broken.
+reload HTML meta tags don't work.
+missing backwards/forewards in right-click mouse menu.
+
+minor stuff ...
+
+would be nice if "view source" opened to the same size as parent window.
+i dunno if it does YahooMail and Hotmail, but that would be nice.
+hopefully it uses ~/.mailcap ...
+hopefully it allows https? for online ordering?
+HTML warning: hexadecimal color lacks leading '#' - oh pooh.
+WARNING: Cache_stop_client, inexistent client - lots of these.
+
+wish list:
+
+UP-ARW - up one link (or half/most of a page if no link).
+DN-ARW - same, but downwards (like lynx - invert link colors).
+
+ALT-UP-ARW - smooth scrolling up.
+ALT-DN-ARW - smooth scrolling down.
+ALT-LT-ARW - smooth scrolling left.
+ALT-RT-ARW - smooth scrolling right.
+
+i guess i would like to see that the user interface is
+as snappy and hassle free as the browser :)
+
+but all in all, this browser is small and snappy,
+and renders *extremely* nicely. i can't wait till
+i can use it and toss my 14MB Navigator!
+with 40MB of Linux emulation :) 
+
+
+
+Re: [Dillo-dev]ecmascript, javascript and CSS
+
+From: Freya <Freya@he...> - 2002-07-09 11:31
+
+> > Is there an intention to implement these scripts?
+> 
+> Both JavaScript and Java would greatly increase the size of Dillo and
+
+Incidently, I've never felt the need to have java, I've never come
+across any site that really required it that much on the client side
+beyone a spectrum emulator and some really clever audio/video
+technology. I think most Java is done through servlets and the like, I
+do hope so anyway! :)
+
+> require numerous hooks into the existing code to obtain the
+> functionallity seen in other browsers. For example, in DHTML, you
+> perform special effects by tagging various events with a fragment of
+> JavaScript so, for example, when the mouse moves over a specific area
+> of the screen a button lights up or additional text appears. This has
+> some deep implications about the way that Dillo paints the window
+> images.
+
+I've been wondering about this, Mozilla of course has preety good
+javascript support and the thing is, is that it uses some kind of plugin
+architechture for the scripting, so I was wondering if we could just
+provide support for the plugin architexture and just use their scripting
+engine, or whatever scripting engines are available, or even no
+scripting engine.
+
+The trouble I have with this idea, is that all this talk of Mozilla just
+having a javascript plugin, is I suspect a real oversimplification of
+things. It surely must talk directly to the rendering engine at a really
+low and nasty level. Whats worse, is I don't even think it's as simple
+as having implications in the way that dillo paints the window images,
+as I understand it you would have to implement some kind of object model
+in the rendering engine too? This seems to me like a massive task unless
+the object model is implemented in the js engine which I strongly
+suspect it isn't, it's too specific to rendering and I think their
+javascript engine is also used in the netscape webserver, or at least
+used to be.
+
+Personally I can also live without things like DHTML support. I'd really
+just like support something like that of Netscape 3, enough to let me
+log in to yahoo mail and the like, however the more I think about it the
+more nasty it seems. 
+
+
+> > how about flash?
+
+I've often thought it would be nice to just have a flash browser
+seperately from my webbrowser that could just open flash site if I felt
+the need or show animations, I don't see much point in it being part of
+the browser and I generally hate flash as it's mostly just used for
+really annoying adverts.
+
+> If anyone has some spare time, one project that would usefully
+> demonstrate the kind of changes that would be needed in the Dillo
+> image code is implementing GIF and PNG animations. You would need
+> some kind of regular"update animation" event and some state
+> information associated with animation files. A thread[1] per animated
+> image using some kind of "server push" scheme may work; or more
+> crudely, you could get the cache to manage it all and set up some kind
+> of list of "repaint screen area x,y,w,h" events.
+
+IF anyone does implement this please also implement an option to turn it
+off! I think this is kind of low priority myself as it doesn't affect
+the usability of a website much. 
+CSS was mentioned in the subject line, but no-one has really talked
+about it here. Of all the technologies unimplimented, this is in a way
+the nicest, as it's not actually fudamentally bad technology in the way
+that javascript or flash is. From the point of view of dillo
+implementing good technology really well, my vote would be for css but
+of course, thats just looking at creating a good browser based on nice
+technology as opposed to the real world of websites. :(
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]ecmascript, javascript and CSS
+
+From: Geoff Lane <zzassgl@tw...> - 2002-07-09 07:59
+
+> Is there an intention to implement these scripts?
+
+Both JavaScript and Java would greatly increase the size of Dillo and
+require numerous hooks into the existing code to obtain the functionallity
+seen in other browsers. For example, in DHTML, you perform special effects
+by tagging various events with a fragment of JavaScript so, for example,
+when the mouse moves over a specific area of the screen a button lights up
+or additional text appears. This has some deep implications about the way
+that Dillo paints the window images.
+
+> how about flash?
+
+The flash "interpreter" is quite small and for simple images you could run
+it as an external helper (I have actually thought about doing this) but you
+wouldn't get any of the interactive or animation features. Again, proper
+implementation of flash would require some extensive changes in the way
+Dillo paints the window images.
+
+If anyone has some spare time, one project that would usefully demonstrate
+the kind of changes that would be needed in the Dillo image code is
+implementing GIF and PNG animations. You would need some kind of regular
+"update animation" event and some state information associated with
+animation files. A thread[1] per animated image using some kind of "server
+push" scheme may work; or more crudely, you could get the cache to manage it
+all and set up some kind of list of "repaint screen area x,y,w,h" events.
+
+BTW, for those of you waiting for the external helper code - sorry, Real
+World events have delayed any progress recently. Work is continuing, just
+very, very slowly.
+
+[1] True threads acting as "data generators" is a very powerful design idea
+for browsers and can hugely simplify the code in some cases.
+
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+Syntax is another name for conscience money. 
+
+
+
+Re: [Dillo-dev]ecmascript, javascript and CSS
+
+From: Scott Barnes <reeve@du...> - 2002-07-08 19:45
+
+Attachments: Message as HTML      Message as HTML      
+
+
+
+
+
+[Dillo-dev]ecmascript, javascript and CSS
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-07-08 16:26
+
+Is there an intention to implement these scripts?
+how about flash?
+
+thanks
+
+jonathan 
+
+
+
+[Dillo-dev]A quick Thankyou
+
+From: Freya <Freya@he...> - 2002-07-08 14:26
+
+Madis sent me a binary of the latest CVS with some extra stuff patched.
+Thankyou Madis!
+
+I'm rather taken aback at how much faster and stable it is than my old
+copy. So far it's never crashed at all and I'm able to use a lot more
+websites etc now that I have cookies! I'm not sure where the speed
+increase is coming from. Madis stripped it before sending it to me but
+I've been led to believe that this shouldn't make a lot of difference.
+Perhaps it does when you only have 8mb!
+
+Anyway thankyou to you all for your help which makes my nasty old laptop
+almost as usable as the Duron downstairs.
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]valign="middle"
+
+From: Freya <Freya@he...> - 2002-07-06 17:24
+
+A bit of further investigation shows this is definitely a dillo thing.
+Hard breaks also don't seem to render in dillo.
+
+I booted a computer using konoppix, (a version of linux that runs
+directly off a cd-rom with a read only live file system) and tried a
+number of webbrowsers that it comes with. I also tried some pages in IE
+under windows.
+
+The results were kind of interesting. All of them seem to render valign
+properly. My page seemed to render best in Mozzilla. Konquerer a close
+second, but what shocked me was how ghastly everything looked in IE, and
+I'm not just talking about my page but a lot of sites I looked at.
+Interestingly, dillo seems to my eye to make webpages look the nicest.
+The valign bug even makes one page I use look much better! ;)
+
+I guess theres still a few problems in the dillo rendering engine. It
+tends to render pages so well usually that I always just kind of assume
+that part of dillo is perfect! :)
+
+love
+
+Freya
+
+
+> I'm writing a webpage and I'm trying to centere the text vertically in
+> a cell of a table. I'm using valign="middle" in a td element but it
+> seems to have absolutely no effect. Is this supported in dillo or is
+> there something very wierd about my webpage?
+> 
+> I don't presently have the latest dillo, so it might be related to
+> that? I'm currently running 0.62, if anyone has a more recent compiled
+> binary they could e-mail me that would be great as I don't presently
+> have a working compiler. :(
+> 
+> love
+> 
+> Freya
+> 
+> 
+> -------------------------------------------------------
+> This s...net email is sponsored by:ThinkGeek
+> Got root? We do.
+> http://thinkgeek.com/sf
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]valign="middle"
+
+From: Freya <Freya@he...> - 2002-07-06 10:05
+
+I'm writing a webpage and I'm trying to centere the text vertically in a
+cell of a table. I'm using valign="middle" in a td element but it seems
+to have absolutely no effect. Is this supported in dillo or is there
+something very wierd about my webpage?
+
+I don't presently have the latest dillo, so it might be related to that?
+I'm currently running 0.62, if anyone has a more recent compiled binary
+they could e-mail me that would be great as I don't presently have a
+working compiler. :(
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]Dillo scaling hack
+
+From: Pigeon <pigeon@pi...> - 2002-07-03 13:34
+
+> No ARM binaries to test, I'm afraid. Do you have a cross-compile setup
+> working for dillo? I'd love to know how you set it up.
+
+I have both cross compiling and native compiling environment setup. For cross compiling I basically use the one found on handhelds.org, the skiff one.
+
+
+Pigeon. 
+
+
+
+[Dillo-dev]ematic is down again :(
+
+From: Jorge Arellano Cid <jcid@in...> - 2002-07-02 18:34
+
+Hi there,
+
+Once again, when at crossroads, the ematic server goes down (I'll
+begin to think about a correlation there ;).
+
+Well, just send me email to [jcid at inf.utfsm.cl]
+
+
+Cheers
+Jorge.-
+
+
+-- 
+

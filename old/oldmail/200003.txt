@@ -1,0 +1,200 @@
+[Dillo-dev]Developer release
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-03-30 22:50
+
+Hi everyone!
+
+Today dillo-0.1.0.tar.gz is ready for download. It will be our
+first public developer release!
+
+When James finish setting it to on the sourceforge ftp server,
+I'll add a download link to the home page, announce it to the gtk
+devel mailing list, and it will be public!
+
+Comments are welcomed.
+
+
+Jorge.-
+
+
+Pd: Haven't got any feedback on the former release yet :-| 
+
+
+
+[Dillo-dev]Activity
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-03-15 16:16
+
+Hi,
+
+Has anyone downloaded dillo-0.0.6?
+(Haven't received a single comment yet...)
+
+Jorge.- 
+
+
+
+[Dillo-dev]New release
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-03-09 17:58
+
+Hi!
+
+Finally, dillo-0.0.6.tar.gz is out!
+Several bug fixes, feature additions and docs had been added.
+Please check it carefully and send me comments about the documentation.
+
+Beware:
+- The Image progress bar is not working properly, it needs further
+work.
+- Sometimes the IP transfer blocks the browser. I'm working on that...
+- Sometimes images are rendered as a white rectangle. Any clues?
+
+
+Finally, Luca added preferences that are to be set using a
+readable config file. I included a sample one within the tarball
+(dillorc). Copy it to your .dillo/ directory and adjust to your taste!
+
+Ah, I also updated the web site. Check it out!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Lots of news!
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-03-03 19:03
+
+Hi guys!
+
+Although mailing list activity had been dead, my email box has
+showed some traffic. A lot of things are happening now, and I wish
+to share the with all of you.
+
+dillo-0.0.6 is almost ready for release (less than a week more) and
+I want dillo-0.0.7 to be our first developer's release; Let's work 
+toward that goal!
+
+I've been working ironing some bugs (check the bug track) and writing
+DOCUMENTATION!!! All that stuff will be inside the next tarball in the
+doc/ dir. Please check it carefully and send me some feedback about it.
+What did you like? What you want extended? --things like that.
+If you feel confident enough to send me your extensions, please do so.
+
+The other part (the one that has taken most of my time) is the table and
+frames extensions to dillo parser. There were several alternatives, among
+them I found:
+
+1.- gtk-xmhtml
+2.- xml (Entity engine)
+3.- xhtml
+4.- gtkhtml
+5.- mMosaic source code
+
+The main point was to find a HTML-rendering library or some code
+that can be adapted to dillo.
+
+Briefly:
+
+1.- Is deprecated. (Dead, as Miguel de Icaza told me)
+
+2.- This is very interesting and consists on writing a new HTML parser
+but having all the rendering done by the Entity engine. Entity is a new
+project by Ian Main (he also worked in gzilla a long time ago). Entity is
+an XML parsing engine, written in C that can be used to develop apps.
+specified as XML with functionality implemented in another language.
+(Interesting, but I need more time to evaluate it. --Spent three and a
+half hours on IRC with Ian talking about it...)
+If you want to investigate, go to:
+http://entity.evilplan.org
+
+3.- XHTML is a family of current and future document types and modules
+that reproduce, subset and extend HTML 4. XHTML family doc. types are XML
+based, and ultimately are designed to work in conjunction with XML-based
+user agents.
+What does it means? That if we implement an XHTML parser, we should
+be able to handle that, some more and, with some little magic, HTML 4.0
+
+4.- gtkhtml is the html library that will superseed gtk-xmhtml in the
+gnome project. I tryed to try it :) as Miguel suggested, but id depended
+on several other gnome-libs (gnome-xml, glibwww, gnome-print, gtkhtml...)
+I gave up. It was impressively big, and the meaning of having a light
+weight browser is absolutely lost.
+
+5.- mMosaic claims to support TABLES and one level of frames. Maybe
+we can look there. (Zero research :( )
+
+Well, it seems we'll continue extending dillo widget to support tables
+and frames until we found a better way to do the job.
+
+Opinions&suggestions are welcome.
+
+
+------
+
+Sammy,
+
+I included all your patches in dillo-0.0.6
+
+> it compiled like a breeze over here (running slackware 7 with newest
+> version of glib & gtk)
+
+Good! (I plan to install Slk 7 soon)
+
+> i still notice that sometimes dillo starts taking a lot of cpu power
+> (it doesn't appear to be doing anything though). I've noticed this with 
+> other versions of dillo too.
+
+This worries me from time to time. I've never been able to reproduce
+the bug, and the only thing I can think of, is a surviving thread (maybe
+the scheduling one) from a KILL signal. Pleas check it.
+'ps aux | grep dillo'
+When you first run dillo, there should be one process. After the first
+DNS query, there should be 2. And from then and on, those two threads
+remain but when resolving a query, one more thread per query is
+temporarily added.
+
+> congratulations on fixing the image code .. i could now surf to
+> http://www.tuxedo.org/~esr/ and
+> see all jpgs and png's :)
+
+Thanks a lot.
+
+Finally: Are you working on the reload button?
+
+------
+
+James:
+
+I've been working the progress bars code. Finally moved them to the
+upper part and at least the text one is working reasonably well. I have
+to put further work with the image one though.
+I hope to improve those a bit before releasin dillo-0.0.6.
+
+Ah, I need my sourceforge account to have admin permissions!
+Currently it recognizes me as a user (No uploads, FTP, HTML site...)
+
+If you're stuck with bug #5, you'll find some good info in the docs I
+wrote (wait next release or send me an email request)
+
+
+-----
+
+Luca,
+
+I hope to have answered some of your questions with the first part
+of this book :)
+
+> What's about gtk-app-devel-list@re... (gtk mailing list) and the
+> so....net' news?
+
+The suggestions you gave to my gtk-oriented-announce-place request, seem
+OK to me. Lets keep it that way, unless a better one pops-up. 
+
+
+
+Sincerely
+Jorge.- 
+
+

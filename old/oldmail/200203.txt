@@ -1,0 +1,3136 @@
+[Dillo-dev]Re: Dillo configuration (fwd)
+
+From: Tomas <tomas@pu...> - 2002-03-31 12:45
+
+Attachments: Message as HTML      
+
+On Wed, Mar 27, 2002 at 10:23:20AM -0400, Jorge Arellano Cid wrote:
+> ---------- Forwarded message ----------
+> Date: Tue, 5 Feb 2002 16:04:30 -0300 (CLST)
+> From: Jorge Arellano Cid <jcid@em...>
+> To: Chris Wareham <chris.wareham@io...>
+> Subject: Re: Dillo configuration
+
+=2E..
+
+>=20
+> * There's a third history mechanism that hasn't made it into
+> the code yet: linear history. It's designed to provide a
+> chronological list of visited urls, with its own button a the
+> leftmost part. The problem with it is that it should provide
+> scrolling, highlighting of the current-page-item inside the
+> history list and display the url at the status bar.
+> A nice solution would be to have a sort of popup that can be
+> constrained to a certain number of items, with scrolling,
+> highlighting and url-showing (so it can be used for
+> back/Fwd/linear history widgets).
+> If you can do that, it'd be very helpful. Just tell me and I
+> send you the code I have.
+
+Could you send me the code you have already done, did you ask in
+gtk-list if there is a widget like this or should i do that.
+
+
+greets
+
+Tomas 
+
+
+
+[Dillo-dev][PATCH] block non local browsing
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-03-30 21:13
+
+Hi,
+
+Finally, I first made a patch to block all non local (non 127.x.x.x)
+requests. So browsing files or http pages on the localhost is still
+permitted. Non local (dns) requests are reported unknown (dns returns
+0). This behavior is available using -l (for local) command line
+option. This feature should be used when browsing untrusted pages. If
+there is an interest, I'll try to make it a run-time option. 
+
+Patch (4k) against cvs (cvs diff -c) is located at:
+
+http://melvin.hadasht.free.fr/dillo/dillo-local-cvs-30-03-2002.patch
+
+and
+
+http://freefluid.dyndns.org/dillo/dillo-local-cvs-30-03-2002.patch
+
+Next step is providing remote control to dillo.
+
+Cheers.
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]New site link
+
+From: Calvin Arndt <calarndt@pr...> - 2002-03-30 21:09
+
+dillo.s...net site needs to be updated with a link to the new dillo.cipsga.org.br site.
+New site is very hard to find (Even google search does not return a link!) 
+
+
+
+Re: [Dillo-dev]Bookmarks menuitem in state bar and scroll menu
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-30 14:06
+
+Tomas,
+
+
+> One of my doubts before doing it was if i should patch against
+> 0.6.4 or against the latest CVS code. I never worked before with CVS and
+> diff so if i did something wrong just tell me so the next time i will
+> try to do it better :)
+>
+> What i did was:
+>
+> - get the code from CVS in ~/dillo/dillo-cvs
+> - copy to another directory ~/dillo/dillo-tomas
+> - work on ~/dillo/dillo-tomas
+> - diff -pru dillo dillo-tomas (i saw the -pru flags for diff in another
+> patch)
+
+That's exactly the way I do it!
+
+BTW, I also put the '-pru' flags in the patching section of the
+new site (it was somewhat hidden in a README file; funny but
+true! ;)
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bookmarks menuitem in state bar and scroll menu
+
+From: Tomas <tomas@pu...> - 2002-03-30 00:49
+
+Attachments: Message as HTML      
+
+On Fri, Mar 29, 2002 at 10:07:15AM -0400, Jorge Arellano Cid wrote:
+>=20
+>=20
+> On Thu, 28 Mar 2002, Tomas wrote:
+>=20
+> > I have added scroll to the bookmark menu and the status bar now reflects
+> > the url is pointed with the mouse as in Back/Forwd history.
+> >
+> > The problem i see is when the menus are big enough to do scroll
+> > then covers the state bar so it's not posible to see the address.
+> >
+> > This is my first patch so any sugestion is very apreciated :) it's
+> > with the CVS code.
+^^^^
+
+Sorry i was trying to say that the patch i did was against the CVS code
+from
+that day and not against the stable version (0.6.4)
+
+One of my doubts before doing it was if i should patch against
+0.6.4 or against the latest CVS code. I never worked before with CVS and
+diff so if i did something wrong just tell me so the next time i will=20
+try to do it better :)=20
+
+What i did was:
+
+- get the code from CVS in ~/dillo/dillo-cvs
+- copy to another directory ~/dillo/dillo-tomas
+- work on ~/dillo/dillo-tomas
+- diff -pru dillo dillo-tomas (i saw the -pru flags for diff in another
+patch)
+=20
+
+
+>=20
+> The code is not in CVS now, as we're still working on it with
+> Tomas. The idea is to make a generic popup that allows scrolling,
+> shows the URL in the status bar, and that has a customizable
+> number of displayed-entries.
+>=20
+>=20
+> Cheers
+> Jorge.-
+>=20 
+
+
+
+[Dillo-dev]Re: CSS
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-03-28 22:22
+
+connected fine, comments please on CSS1 and CSS2 which do not seem to be 
+supported at present...
+
+will they be? and if so when-ish?
+
+really its a fabulous browser - good stuff
+
+thanks again 
+
+
+
+[Dillo-dev]CSS
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-03-28 21:58
+
+Does Dillo support CSS1 or CSS2? if not is there a planned for day.
+I've no idea of the workload, or bloat factor, but would like to use it.
+
+I'm busy rebuilding our website, and can't just get dillo to connect to 
+the internet.
+damn, ipaq and ssh is fine, as is the web connection, they just wont 
+talk to each other.
+oh well maybe tomorrow.
+
+thanks 
+
+
+
+Re: [Dillo-dev]Bookmarks menuitem in state bar and scroll menu
+
+From: Lars Clausen <lrclause@cs...> - 2002-03-28 18:05
+
+On Thu, 28 Mar 2002, tomas@pu... wrote:
+> Hi all,
+>=20
+> I have added scroll to the bookmark menu and the status bar now reflects
+> the url is pointed with the mouse as in Back/Forwd history.
+
+Cool, my bookmarks are getting to that state soon.
+
+If you feel like hacking more at the bookmarks, I'd love to see submenus in
+the bookmarks. Galeon does a good job of handling them, if you want
+inspiration.=20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Bookmarks menuitem in state bar and scroll menu
+
+From: Tomas <tomas@pu...> - 2002-03-28 15:48
+
+Attachments: Message as HTML      Message as HTML      
+
+
+
+
+
+[Dillo-dev]patch: embedding dillo
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-03-28 00:03
+
+Hi,
+
+Thanks for this great piece of software. I use it all day (as long as
+the pages do not require java/javascript). It is really amazing fast and
+renders correctly the majority of the sites I visit. Please continue
+such a good work!
+
+I came to the idea that dillo can be used as an embedded html viewer in
+email MUA, for example. So I used the Gtk_Socket/Gtk_Plug feature to
+make a very small patch that allows dillo to be embedded in an existing
+gtk_socket window. It adds a '-xid' command line option (should be
+placed after the URI) which need the xid of a window (provided by the
+GDK_WINDOW_XWINDOW(GdkWindow *) macro). That way, any GTK application
+can create a gtk_socket, then it launches dillo with the -xid option and
+the first dillo window will be embedded. This worked so far quiet good:
+I hacked my Sylpheed-Claws version to support it.
+
+The dillo patch against cvs is at:
+
+http://melvin.hadasht.free.fr/dillo/dillo-embed-cvs-27-03-2002.patch
+
+or at 
+
+http://freefluid.dyndns.org/dillo/dillo-embed-cvs-27-03-2002.patch
+
+(the latter being not up 24/24).
+
+But as html mail is so dangerous, I wanted to ask you: is there any plan
+to make dillo able to run in offline mode? For example by using a
+command line. 
+
+To continue with my plan to use dillo as a versatile tool, I plan to
+make another patch where dillo will be able to listen on a Unix socket
+for commands sent by other processes. These commands would be very
+simple:
+
+- open an URL in current window, 
+
+- open an URL in a new window (with the xid supplied, xid = 0 being in a
+new GTK_TOP_LEVEL)
+
+- close window xid (!= 0), or quit (xid = 0). 
+
+The patch should not be big (at first sight), but I don't know when I
+will have time to do it.
+
+So, is there any interest in such features? 
+Any suggestions or comments to the patch or to my ideas are welcome!
+
+Thanks.
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev][RFC] Pixmap (XPM) image support / Broken pixmap
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-03-26 18:21
+
+Hi,
+
+On Mon, Mar 25, 2002 at 03:50:11PM -0800, Michael Taht wrote:
+> I don't know if this has been discussed before, but why not bite the
+> bullet and evolve up to the gdk-pixbuf library? 
+
+I'd second Livio, simply for the reason that the the current code
+works (rather) well, and that it is simple enough to maintain, but
+otherwise gives more control over it.
+
+On Mon, Mar 25, 2002 at 09:39:00PM -0300, Livio Baldini Soares wrote:
+> Howdy Dillo people,
+> 
+> This patch is an incremental patch to my previous patch which adds
+> pixmap (XPM) support to Dillo (see:
+> http://www.geocrawler.com/lists/3/SourceForge/702/0/8209368/).
+> 
+> It relies on that support to effectively display a "404" pixmap on
+> 404 or redirections for non-root URLs. It basically adds a pixmap in
+> src/xpm.h called notfound_xpm. I tried to do frowning face by hand (I
+> know it's ugly, but it's just for testing). You can replace it with
+> whichever XPM you prefer.
+> 
+> But the "real" changes are located in the cache.c, they're only
+> about 5 lines "setting up" the entry data. The patch is at:
+> 
+> http://www.ime.usp.br/~livio/dillo/patches/notfound-pixmap.diff
+> 
+> As always, please send feedback!
+
+I planned to reuse the code which reads the image data (anything
+before DwImage) for background images, and I doubt that such a
+background is pleasant for the user ;-) Rather, backgrounds should
+then simply not be seen (perhaps, the user could silently be
+notified).
+
+An idea I had already, was to implement the display of failures in
+DwImage. Some time ago, I wrote something about an interface, which
+replaces (mostly) DwImage in the image code which does not actually
+display images, and is implemented by DwImage and the code handling
+backgrounds. An idea is to add a failed message, which is called for
+any broken images (40x, corrupt data), which is ignored by
+backgrounds, but puts an DwImage into a state, in which is showed that
+an error has occurred.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][RFC] Pixmap (XPM) image support [Patch 1/3]
+
+From: Pekka Lampila <medar@ka...> - 2002-03-26 17:17
+
+On Mon, 25 Mar 2002 22:09:26 -0300
+Livio Baldini Soares <livio@im...> wrote:
+
+> Does anyone know here "de facto" if gdk-pixbuf does progressive
+> loading of images from an in-memory buffer? Or of another "well
+> established" light library which does this?
+
+http://developer.gnome.org/doc/API/gdk-pixbuf/gdkpixbufloader.html
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+Re: [Dillo-dev][RFC] Pixmap (XPM) image support [Patch 1/3]
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-26 01:09
+
+Hello Michael!
+
+Michael Taht writes:
+> I don't know if this has been discussed before, but why not bite the
+> bullet and evolve up to the gdk-pixbuf library? 
+
+Well to tell you the truth, I have been giving thought about this
+issue too... to use an external image library, like gdk-pixbuf or
+imlib, etc.
+
+I see advantages and disadvantages to this, but I haven't really
+convinced myself which is better. Some people seem to like that Dillo
+does not depend on big graphics libraries. On the other hand,
+maintaining various image codes is not very good for development... 
+
+What are opinions from other developers? Jorge? Sebastian?
+
+> I believe it supports progressive loading of a variety of image
+> types.
+
+Well _this_ (IMHO) is the main reason for not changing to an image
+library. I haven't seen any library which does progressive in-memory
+loading of any type of images. This information can be wrong, but
+look at the gdk-pixbuf/io-xpm.c comment (from GTK 2.0.0):
+
+/*
+* FIXME xpm loading progressively is not properly implemented.
+* Instead we will buffer to a file then load that file when done.
+* This is very broken but it should be relayively simple to fix
+* in the future.
+*/
+
+(Which is quite horrible.. they use a temporary file in /tmp/... :(
+
+Anyway, my knowledge of most image libraries is _very_ limited, so
+I'll stop guessing and ask:
+
+Does anyone know here "de facto" if gdk-pixbuf does progressive
+loading of images from an in-memory buffer? Or of another "well
+established" light library which does this?
+
+If we find a good candidate, it might help out our discussion.
+
+best regards,
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev][RFC] Broken pixmap on 404 non-root URLs [Patch 2/3]
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-26 00:39
+
+Howdy Dillo people,
+
+This patch is an incremental patch to my previous patch which adds
+pixmap (XPM) support to Dillo (see:
+http://www.geocrawler.com/lists/3/SourceForge/702/0/8209368/).
+
+It relies on that support to effectively display a "404" pixmap on
+404 or redirections for non-root URLs. It basically adds a pixmap in
+src/xpm.h called notfound_xpm. I tried to do frowning face by hand (I
+know it's ugly, but it's just for testing). You can replace it with
+whichever XPM you prefer.
+
+But the "real" changes are located in the cache.c, they're only
+about 5 lines "setting up" the entry data. The patch is at:
+
+http://www.ime.usp.br/~livio/dillo/patches/notfound-pixmap.diff
+
+As always, please send feedback!
+
+The next patch should be the unhandled MIME type patch... but it
+might be ready only for tomorrow.
+
+kind regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev][RFC] Pixmap (XPM) image support [Patch 1/3]
+
+From: Michael Taht <mtaht@mv...> - 2002-03-25 23:50
+
+I don't know if this has been discussed before, but why not bite the
+bullet and evolve up to the gdk-pixbuf library? 
+
+I believe it supports progressive loading of a variety of image types.
+
+On Mon, 2002-03-25 at 15:02, Livio Baldini Soares wrote:
+> Hello Dillo people!
+> 
+> On my quest to squash bug #81 (see
+> http://www.geocrawler.com/lists/3/SourceForge/702/0/8169781/ for
+> previous post), Andreas suggested I try to combine my fix with bug
+> #245 (broken images). So I have adopted that bug too, and will try to
+> kill them all with a bottom-up strategy.
+> 
+> First of all, I needed a generic way to insert an image inside
+> Dillo's page from within the cache module ('cause the cache is the one
+> which will detect missing images/unhandled mime types, etc). I thought
+> of various ways to do this, but the most natural was using a pixmap
+> (XPM) renderer. This is my motivation: _internal use_.
+> 
+> I have passed the last weekend implementing this. Basically I
+> started from GTK's 1.2.10 gdkpixmap.c and GTK's 2.0.0
+> gdk-pixbuf/io-xpm.c. There were two problems there. First there was a
+> lot of stuff which could be simplified for Dillo's use. I've tried to
+> do this and I think only two functions are still similar to the GTK's
+> version.
+> 
+> The second (and most important and troublesome), was that GTK's
+> pixmap render is synchronous, ie, it must have _all_ the data before
+> it can start rendering. I've made it possible to do a progressive
+> render.
+> 
+> So, now dillo has support for <image/x-xpixmap>. I know that noone
+> actually uses xpm's out there, and probably no other browser
+> implements it, but I figured since I implemented for internal use, why
+> not do it "right" and make it robust/progressive.
+> 
+> The patch is at (against CVS from 25-Mar-2002):
+> http://www.ime.usp.br/~livio/dillo/patches/pixmap-support.diff
+> 
+> There is a test page here:
+> http://www.ime.usp.br/~livio/dillo/xpm-test/
+> 
+> The first two images will not appear (there are purposely broken to
+> test the next patch I'll be sending to the list), but the next 5 xpms
+> should render perfectly.
+> 
+> Does anybody see a better way of doing this in Dillo than what I
+> proposed? Comments are always very welcome!
+> 
+> PS: There seems to be a _very_ rare "glitch" in my code. I can't
+> reproduce it, but sometimes the XPM is rendered incorrectly... by
+> pressing Back and Forward, or Reload, it re-renders fine. I stared at
+> the code for about 2 hours and couldn't see what's causing it. If
+> anyone sees this problem and has either a fix or a reproducible case,
+> please contact me!
+> 
+> best regards to all,
+> 
+> -- 
+> Livio <livio@im...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev][RFC] Pixmap (XPM) image support [Patch 1/3]
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-25 23:02
+
+Hello Dillo people!
+
+On my quest to squash bug #81 (see
+http://www.geocrawler.com/lists/3/SourceForge/702/0/8169781/ for
+previous post), Andreas suggested I try to combine my fix with bug
+#245 (broken images). So I have adopted that bug too, and will try to
+kill them all with a bottom-up strategy.
+
+First of all, I needed a generic way to insert an image inside
+Dillo's page from within the cache module ('cause the cache is the one
+which will detect missing images/unhandled mime types, etc). I thought
+of various ways to do this, but the most natural was using a pixmap
+(XPM) renderer. This is my motivation: _internal use_.
+
+I have passed the last weekend implementing this. Basically I
+started from GTK's 1.2.10 gdkpixmap.c and GTK's 2.0.0
+gdk-pixbuf/io-xpm.c. There were two problems there. First there was a
+lot of stuff which could be simplified for Dillo's use. I've tried to
+do this and I think only two functions are still similar to the GTK's
+version.
+
+The second (and most important and troublesome), was that GTK's
+pixmap render is synchronous, ie, it must have _all_ the data before
+it can start rendering. I've made it possible to do a progressive
+render.
+
+So, now dillo has support for <image/x-xpixmap>. I know that noone
+actually uses xpm's out there, and probably no other browser
+implements it, but I figured since I implemented for internal use, why
+not do it "right" and make it robust/progressive.
+
+The patch is at (against CVS from 25-Mar-2002):
+http://www.ime.usp.br/~livio/dillo/patches/pixmap-support.diff
+
+There is a test page here:
+http://www.ime.usp.br/~livio/dillo/xpm-test/
+
+The first two images will not appear (there are purposely broken to
+test the next patch I'll be sending to the list), but the next 5 xpms
+should render perfectly.
+
+Does anybody see a better way of doing this in Dillo than what I
+proposed? Comments are always very welcome!
+
+PS: There seems to be a _very_ rare "glitch" in my code. I can't
+reproduce it, but sometimes the XPM is rendered incorrectly... by
+pressing Back and Forward, or Reload, it re-renders fine. I stared at
+the code for about 2 hours and couldn't see what's causing it. If
+anyone sees this problem and has either a fix or a reproducible case,
+please contact me!
+
+best regards to all,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]OpenSSL/Cookies Patch for Dillo 0.6.4
+
+From: Willem van Engen <wvengen@st...> - 2002-03-25 14:19
+
+Thanks for the patch! However, my configure fails; there seems to be an
+error in the automake/autoconf generated configure. I tried to hack around
+this one error, but there are many other errors. So the generated
+configure looks really broken. What version of autoconf and automake did
+you use? I currently have automake 1.5 and autoconf 2.53.
+
+- Willem van Engen
+
+(After successful patching)
+
+/usr/ports/www/dillo/work/dillo-0.6.4# uname -a
+
+FreeBSD foo 4.5-STABLE FreeBSD 4.5-STABLE #1: Sat Feb 2 06:36:47 CET 2002
+wvengen@foo:/usr/obj/usr/src/sys/FOO i386
+
+/usr/ports/www/dillo/work/dillo-0.6.4# automake
+
+automake: configure.in: required file `./depcomp' not found
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/lang-compile.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/depend2.am: AMDEP does not appear in AM_CONDITIONAL
+/usr/local/share/automake/am/lang-compile.am: AMDEP does not appear in AM_CONDITIONAL
+
+/usr/ports/www/dillo/work/dillo-0.6.4# autoconf
+
+/usr/ports/www/dillo/work/dillo-0.6.4# ./configure --includedir="/usr/local/include" --libdir="/usr/local/lib" --with-jpeg-inc="/usr/local/include" --enable-ssl
+
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking whether make sets ${MAKE}... yes
+checking for working aclocal... found
+checking for working autoconf... found
+checking for working automake... found
+checking for working autoheader... found
+checking for working makeinfo... found
+checking for gcc... gcc
+checking for C compiler default output... a.out
+checking whether the C compiler works... yes
+checking whether we are cross compiling... no
+checking for suffix of executables... 
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ANSI C... none needed
+checking for ranlib... ranlib
+checking for gtk-config... /usr/X11R6/bin/gtk-config
+checking for GTK - version >= 1.2.0... yes
+checking for jpeg_destroy_decompress in -ljpeg... yes
+checking how to run the C preprocessor... gcc -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... no
+checking for unistd.h... yes
+checking jpeglib.h usability... yes
+checking jpeglib.h presence... yes
+checking for jpeglib.h... yes
+checking jconfig.h usability... yes
+checking jconfig.h presence... yes
+checking for jconfig.h... yes
+checking jerror.h usability... yes
+checking jerror.h presence... yes
+checking for jerror.h... yes
+checking jmorecfg.h usability... yes
+checking jmorecfg.h presence... yes
+checking for jmorecfg.h... yes
+./configure: line 3439: syntax error near unexpected token `;}'
+./configure: line 3439: `LIBS="-lssl rejected by the preprocessor!" >&2;}'
+
+/usr/ports/www/dillo/work/dillo-0.6.4# cat configure | head -n 3445 | tail -n 10
+
+echo $ECHO_N "checking for SSL_connect in -lssl... $ECHO_C" >&6
+if test "${ac_cv_lib_ssl_SSL_connect+set}" = set; then
+echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+ac_check_lib_save_LIBS=$LIBS
+LIBS="-lssl rejected by the preprocessor!" >&2;}
+{ echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;};;
+no:yes $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+
+/usr/ports/www/dillo/work/dillo-0.6.4# 
+
+
+
+Re: Re: [Dillo-dev]download behavior
+
+From: Paul Chamberlain <tif@ti...> - 2002-03-24 23:12
+
+From Mark Schreiber <mark7@an...> -----
+> * Use MIME types, file extensions, *and* protocol names to specify the
+> helper program.
+
+plural... I think I should be able to specify several handlers
+for a mime type, file extension, etc. and have the menu offer
+each of them. Sometimes I want to view it, sometimes I want
+to edit it, sometimes I want to print it, etc. In particular,
+I have several image-viewers with different strengths.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+[Dillo-dev]OpenSSL/Cookies Patch for Dillo 0.6.4
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-03-24 15:20
+
+At the request of a Dillo user, I've posted my OpenSSL/Cookies patch for
+version 0.6.4 at
+
+http://members.bellatlantic.net/~vze2mqqv/dillo-ssl-cookies.0.6.4.diff
+
+This is not a patch for the faint of heart. To deal with SSL Proxy
+Tunnelling, I essentially had to rewrite the I/O engine. I will not be
+maintaining this patch against CVS versions, as I believe Jorge has his
+own plans for SSL. If that's not the case, I'll recreate it for the
+next major release.
+
+To apply the patch, download it into your dillo source root directory and...
+
+patch -p1 <./dillo-ssl-cookies.0.6.4.diff
+automake
+autoconf
+./configure --enable-ssl
+make
+./src/dillo https://www.so....net/ # simple test case
+make install
+
+Best of luck.
+
+-js
+
+-- 
+-Jonathan P Springer <jonathan.springer@ve...>
+------------------------------------------------------------------------------
+"A standard is an arbitrary solution to a recurring problem." - Joe Hazen 
+
+
+
+Re: [Dillo-dev]download behavior
+
+From: Stephen Lewis <slewis@pa...> - 2002-03-23 20:56
+
+On Sat, 23 Mar 2002 15:40:53 -0500
+Mark Schreiber <mark7@an...> wrote:
+
+> * Be able to download a file and then hand it to a helper program *or*
+> just pass the URL as an argument to the helper program.
+
+I think rather than having an exclusive choice like that, it'd be nice to
+have two separate modules - 'download', and 'post-process'.
+This would let you use, say, wget to download, and then still be
+able to execute an external app after its done downloading based on its 
+mime-type to display the downloaded file.
+
+Stephen Lewis 
+
+
+
+Re: [Dillo-dev]download behavior
+
+From: Mark Schreiber <mark7@an...> - 2002-03-23 20:41
+
+On Fri, Mar 22, 2002 at 08:06:54AM -0500, Imad Hussain wrote:
+> On Fri, 22 Mar 2002 13:24:45 +0100
+> Tomas <tomas@pu...> wrote:
+> <SNIP>
+> > I just wondering if this behaviour is what you want or is going to be
+> > change in the future.
+> > 
+> > Also ask if there is any planning of implement resume for file
+> > downloading.
+> 
+> Y'know, it would be pretty nice if you could force dillo to use an
+> external utility (e.g. wget) to take care of file downloads completely.
+> I'd imagine the changes necessary to the source would not be monumental
+> in scope -- and for those without wget (or whatever), this could be
+> controlled by an option in .dillorc. It takes much of the burden off of
+> dillo itself; after all, why reinvent the wheel?
+
+A navigator style interface would be really nice, with "helpers".
+I've wished for the ability to make mailto: links open in mutt for
+some time.
+
+I'd suggest that such a system:
+
+* Be able to download a file and then hand it to a helper program *or*
+just pass the URL as an argument to the helper program.
+
+* Be able to hand components of URLs to external programs. If you
+take a look in Navigator's preferences dialog, you'll see lines like
+
+telnet rxvt -e telnet %h %p
+
+This lets navigator hand just the host and the port off. Since a
+lot of programs can't take a whole URL, this is really useful.
+%h host
+%u username
+%p port
+%s download file and replace with name of local file
+
+* Use MIME types, file extensions, *and* protocol names to specify the
+helper program.
+
+* Use /etc/mime.types if present to obtain mime type/extension
+mappings.
+
+* To improve startup speed (Navigator starts slowly because it has to
+parse zillions of files each startup), it might be worthwhile to do
+all the parsing work lazily -- don't do it for an instance of dillo
+until dillo runs across something it doesn't understand how to
+handle locally.
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+Re: [Dillo-dev]navigation feature
+
+From: Mark Schreiber <mark7@an...> - 2002-03-23 19:25
+
+On Thu, Mar 21, 2002 at 06:05:51PM -0600, John Utz wrote:
+> i sent a patch in months ago to do the 'back' part.
+> 
+> but it never showed up in the release (dillo-6.3).
+> 
+> sort of takes the wind out of one's sails when it comes to contributing 
+> patches.....
+
+Speaking of which, is there any reason that the dillo project avoids
+using the sourceforge patch/bug tracking engines?
+
+I'll grant that the bug tracking engine it does use is fast and
+lightweight...but the sourceforge system does have some nice features:
+
+* I really wish I could follow-up on bugs with questions or comments.
+The SF bug tracker lets people view bugs and comment on them. Jorge
+has stated that he'd like to keep this ML low traffic -- which means
+not sending all replies about patches to the list. However, if you
+reply directly to the person, you do not allow anyone else to
+identify problems with your comments or answer your questions. SF's
+bug tracker could handle this.
+
+* It feels more rewarding to have a patch sitting in the patch manager
+than to email it away and not see it again until it gets in the
+source.
+
+* Dropping patches in a patch manager lets other people possibly
+identify problems without Jorge having to run through them all
+first.
+
+* I accidently sent a partial patch to Jorge some time ago. Since I
+was using email, I had to send an entire second copy, which puts the
+burden of dealing with the mistake on him -- not ideal. Using a
+patch manager, I could have removed the incorrect file and attached
+the correct one, adding a followup noting what I did.
+
+* If a patch is in the patch manager, it lets people try it out if
+they want to (or desperately need that specific functionality, and
+aren't worried about it passing the maintainer's scrutiny).
+Granted, you can email dillo-dev, but that cuts into the low-traffic
+guideline.
+
+* Adds documentation that the person did some work on a piece of
+software, which always feels good. That patch entry will probably
+be around (though closed) for as long as sourceforge is around.
+
+* It's easy to see what patches were added for the last release. My
+table rendering patch made it into CVS (Woohoo! Thanks Jorge!), but
+there isn't a Changelog entry or any other way of knowing that the
+table rendering code differs in this release. If all of a sudden a
+webpage starts crashing CVS dillo, and the only changes since the
+last working copy were two config file parsing changes and some
+rendering change it's handy to have a document that you can glance
+at and say "ah, must be the XYZ changes...I'll start looking there
+for the source of the problem".
+
+* Security. Not all patch managers do this, but SF's allows you to
+log in and submit authenticated patches. Maybe not a huge deal for
+dillo since dillo isn't a server, but it avoids spoofed email "from
+core developers" to Jorge that could introduce unwanted
+"functionality".
+
+* Reliability. Right now, pending patches are spread out around the
+world on various hard drives (or may even have been deleted). Jorge
+probably has a complete set, but what if he suffers a hard drive
+crash? If SF has a set of patches, suddenly having everything
+vanish in one catastrophic incident isn't an issue.
+
+* Finally, with a patch manager, you know that the patch got there.
+There's no "was my mailserver misbehaving, or is the maintainer just
+busy ATM?" worries.
+
+Cons:
+
+* Dillo doesn't currently do https, which you have to do if you want
+patches attributed to a SF account and authenticated. Dunno whether
+you can submit non-logged in patches with dillo -- I haven't tried.
+(Cookie support may even be required...again, I haven't looked) I
+can see that it might be a bit embarassing to currently have to use
+a browser other than dillo to submit patches for dillo.
+
+Anyway, is there some reason I'm missing?
+
+My own currently pending dillo patches are up at
+<http://ion.res.cmu.edu/schreib1/current_patches/>, if anyone wants to
+try 'em or send feedback.
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+Re: [Dillo-dev]CVS
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-03-23 02:39
+
+Hi!
+
+fre 2002-03-22 klockan 08.43 skrev Calvin Arndt:
+> downloaded CVS yesterday... says 0.6.5pre1!!!!!!!!!
+>=20
+> compiled -- successfully
+>=20
+> executed -- successfully
+>=20
+> tried http://www.google.com
+>=20
+> tried to set my preferences on google.com
+>=20
+> :-(=20
+>=20
+> google say's cookies aren't enabled (even though they are in dillorc)
+>=20
+> google.com ACCEPT
+
+You mention dillorc, so just to be sure, That line should be in
+~/.dillo/cookiesrc
+
+Also, the line should probably be one of:
+.google.com ACCEPT
+http://www.google.com ACCEPT
+
+HTH,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]download behavior
+
+From: Imad Hussain <magius@pu...> - 2002-03-22 13:03
+
+On Fri, 22 Mar 2002 13:24:45 +0100
+Tomas <tomas@pu...> wrote:
+<SNIP>
+> I just wondering if this behaviour is what you want or is going to be
+> change in the future.
+> 
+> Also ask if there is any planning of implement resume for file
+> downloading.
+
+Y'know, it would be pretty nice if you could force dillo to use an
+external utility (e.g. wget) to take care of file downloads completely.
+I'd imagine the changes necessary to the source would not be monumental
+in scope -- and for those without wget (or whatever), this could be
+controlled by an option in .dillorc. It takes much of the burden off of
+dillo itself; after all, why reinvent the wheel?
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+[Dillo-dev]download behavior
+
+From: Tomas <tomas@pu...> - 2002-03-22 12:24
+
+Attachments: Message as HTML      
+
+Hi all,
+
+I'm trying to do a downloading button in the toolbar like it's said in the
+documentation just to understand dillo source.
+
+Now the files are cached so if you donwload a couple of big files the
+amount of memory used by dillo grows in the same size.=20
+Also if you try to save a very big file like an iso-image of 600Mb it
+fails to allocate this amount of memory:=20
+
+GLib-ERROR **: could not allocate 667461632 bytes
+aborting...
+Aborted
+
+I just wondering if this behaviour is what you want or is going to be
+change in the future.
+
+Also ask if there is any planning of implement resume for file
+downloading.
+
+
+greets=20
+
+Tomas 
+
+
+
+[Dillo-dev]CVS
+
+From: Calvin Arndt <calarndt@ya...> - 2002-03-22 07:43
+
+downloaded CVS yesterday... says 0.6.5pre1!!!!!!!!!
+
+compiled -- successfully
+
+executed -- successfully
+
+tried http://www.google.com
+
+tried to set my preferences on google.com
+
+:-( 
+
+google say's cookies aren't enabled (even though they are in dillorc)
+
+google.com ACCEPT
+
+set number of results=100
+
+saved prefs
+
+no of results returned == 10
+
+:-(
+:-(
+
+cookies are not detected by google!
+
+just thought you might like to know...
+
+cal...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Movies - coverage of the 74th Academy Awards®
+http://movies.yahoo.com/ 
+
+
+
+Re: [Dillo-dev]navigation feature
+
+From: John Utz <john@ut...> - 2002-03-22 00:06
+
+i sent a patch in months ago to do the 'back' part.
+
+but it never showed up in the release (dillo-6.3).
+
+sort of takes the wind out of one's sails when it comes to contributing 
+patches.....
+
+On Thu, 21 Mar 2002, Imad Hussain wrote:
+
+> On Thu, 21 Mar 2002 00:04:25 +0200 (GMT-2)
+> madis@cy... wrote:
+> 
+> > 
+> > here is a small patch to add back/forward commands as first items into
+> > dillo context menu. why? because i got quite used to opera mouse
+> > gestures and after that found in galeon, that this kind of context
+> > menu usage is quite comfortable, when compared with moveing mouse over
+> > the screen to back button... and then back to scroll... i have used
+> > this patch now some time and it seems to be good for myself, so maybe
+> > its useful?
+> 
+> Oh, I'd been looking for a similar patch -- glad to see it's so simple.
+> ;) Didn't Dillo used to have back and forward on the context menu? Or
+> was that something just in the literature a few versions back?
+> 
+> 
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]navigation feature
+
+From: Imad Hussain <magius@pu...> - 2002-03-21 23:51
+
+On Thu, 21 Mar 2002 00:04:25 +0200 (GMT-2)
+madis@cy... wrote:
+
+> 
+> here is a small patch to add back/forward commands as first items into
+> dillo context menu. why? because i got quite used to opera mouse
+> gestures and after that found in galeon, that this kind of context
+> menu usage is quite comfortable, when compared with moveing mouse over
+> the screen to back button... and then back to scroll... i have used
+> this patch now some time and it seems to be good for myself, so maybe
+> its useful?
+
+Oh, I'd been looking for a similar patch -- glad to see it's so simple.
+;) Didn't Dillo used to have back and forward on the context menu? Or
+was that something just in the literature a few versions back?
+
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+[Dillo-dev]plugin interface redesign?
+
+From: Geoff Lane <zzassgl@tw...> - 2002-03-21 15:34
+
+How is the new plugin interface coming along?
+
+I have some ideas about pop3:, imap: and news: I'd like to try which really
+should be implemented as plugins but have been reluctant to start without at
+least a hint of what the new interface will look like.
+
+Thanks
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\ 
+
+
+
+Re: [Dillo-dev]About bug #81
+
+From: Andreas Schweitzer <andy@ph...> - 2002-03-21 14:44
+
+????
+What the ... did my mail client just do ?
+
+I wanted to suggest solution 3 in combination with Bug 245
+(broken images). And one could also have 2 icons - one
+for broken image and one for unkmown type.
+
+Cheers
+Andreas
+
+(Hoping that bottom quoting makes this mail go through ...)
+
+On Thu, Mar 21, 2002 at 09:38:49AM -0500, Andreas Schweitzer wrote:
+> Hi
+> 
+> > Ok, that seems quite fine to me, but there is a little problem with
+> > non-root URL's. For example:
+> > http://www.libmng.com/MNGsuite/basic_img.html
+> > 
+> > Has 3 non-root images. What should I do in this case? 
+> > 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]About bug #81
+
+From: Andreas Schweitzer <andy@ph...> - 2002-03-21 14:38
+
+Hi
+
+> Ok, that seems quite fine to me, but there is a little problem with
+> non-root URL's. For example:
+> http://www.libmng.com/MNGsuite/basic_img.html
+> 
+> Has 3 non-root images. What should I do in this case? 
+> 
+
+
+
+[Dillo-dev]About bug #81
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-21 12:38
+
+Hello!
+
+I've started fixing bug #8 yesterday (trying to view anything other
+than text, images or HTML). What I did was to offer the user a
+`download' option. So far it's working out ok, and I try to click on a
+link that points to a FLASH file, PS, PDF, etc, it instantly opens up
+the "Save File as..." window.
+
+Ok, that seems quite fine to me, but there is a little problem with
+non-root URL's. For example:
+http://www.libmng.com/MNGsuite/basic_img.html
+
+Has 3 non-root images. What should I do in this case? 
+
+[1] Should I make instantly open 3 "Save as..." windows? (not very
+nice for the user.. imagine 20 MNG images on a single page :(.
+
+[2] Should I open the windows one at a time? (ugly solution too...)
+
+[3] Should I ignore non-root files?
+
+I'm leaning towards solution number 3. So my patch would only change
+Dillo's behaviour with regard to root URLs, i.e. when the user
+consciously clicks on a certain link/file which Dillo doesn't treat.
+
+But I'm not sure this is the best solution. Anyone have any
+suggestions? Better ideas are welcome! ;)
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]CIPSGA
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-20 22:45
+
+Hi everyone!
+[there's more to this mail than what's apparent to the eye]
+
+On Wed, 20 Mar 2002, Livio Baldini Soares wrote:
+
+> > > > Congratulations on this patch J=F6rgen and Lars!
+> >
+> > FWIW, I made a 35Kb patch over the original 31Kb original
+> > version, fixing a big list of problems, and no one noticed? :(
+>
+> Of course we notice (at least I do!), Jorge. But you get no thanks,
+> you're the maintainer! It's your _job_! ;-)
+
+! :-)
+
+> Seriously though, I have a feeling that Dillo has less developers
+> than most open source projects I've seen out there (I could be
+> wrong). So I have an "evil plan" to stimulate our current developers to
+> produce more & better (giving them lots of thanks.. and who knows,
+> beer too! ;). Hope it starts working soon!
+
+Pay attention please!
+
+There's a lot of background activity here, and one of those
+things is the move from SF to a new site. Livio has uploaded the
+site already (facilities were provided by cipsga, thanks go to
+Marcelo, Kov and Henrique).
+
+The new site's at: http://dillo.cipsga.org.br/
+
+It hasn't yet been blessed as our official site, but please go
+there and test it, specially those of you from Europe, so we can
+get a feel of how the connection behaves.
+
+As for the bugtrack, keep using the SF one, until we decide to
+keep going from cipsga.
+
+
+The next step is to create the mailing-lists there, and to set
+search capabilities. Probably CVS will be the last thing to move.
+
+I wish to release the next dillo version from cipsga, and thus
+make it official "urbi et orbi".
+
+Most of you ignore the fact that SF download counters had been
+wrong for more than a year (yes I know what I'm saying); just
+think of all the statistics, project ratings, press coverage et
+related stuff that has been silently delivered broken...
+
+Well, I hope we can finally get a good estimate of our current
+user base. From the extensive mail archive I have here, comes the
+fact that dillo is known in at least 37 different countries!!!
+(yes, from every continent!)
+
+Dillo project is steadily gaining more attention, and I'm sure
+that the new release will be another big step forward as lots of
+people will be able to start using their web-based mail with
+dillo.
+
+As for new developers, I've always said that this is not an
+easy project to work in. The average is 6 months for new
+developers to start sending clean patches, and now, I'm crossing
+fingers for some freshmen to surpass the magic threshold.
+
+With regard to funding (remember 2002 plans?), I'm working on a
+presentation page to address meta information as: objectives,
+current state, future plans, whys, whats, advantages,
+proyections, required money, etc. In summary, very interesting
+info, aimed to the non-technical reader but worth reading to all
+of us.
+
+
+Best
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Dillo on Solaris 8..
+
+From: Yu-Fong Cho <yfcho@ms...> - 2002-03-20 22:11
+
+Please give me some information about this.
+
+I know this is not a development problem, but I am trying install Dillo on
+different platforms for interest. I have done on FreeBSD 4.5 and now are
+trying on Solaris 8 x86. Just give me some information about this and I'll
+appreciate it.
+
+Thank you.
+
+
+-----Original Message-----
+From: dillo-dev-admin@li...
+[mailto:dillo-dev-admin@li...]On Behalf Of Yu-Fong Cho
+Sent: Tuesday, March 19, 2002 12:46 PM
+To: Dillo Dev
+Subject: [Dillo-dev]Dillo on Solaris 8..
+
+
+Hi,
+
+Has anyone tried run Dillo 0.6.4 on Solaris 8 before?
+
+I compiled and installed it. It seems be ok except the way it handle jpeg
+image.
+The jpeg image shows only black and while mode and has some vertical line on
+it. It isn't right.
+
+I have GNU jpeg and zlib installed. Does anyone know what is going on?
+I tried Dillo on FreeBSD 4.5 before and it was ok.
+
+Appreciate any information. Thank you.
+
+
+Yu-Fong Cho
+
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]navigation feature
+
+From: <madis@cy...> - 2002-03-20 21:53
+
+Attachments: patch-dillo-menu      
+
+here is a small patch to add back/forward commands as first items into 
+dillo context menu. why? because i got quite used to opera mouse gestures 
+and after that found in galeon, that this kind of context menu usage is 
+quite comfortable, when compared with moveing mouse over the screen to 
+back button... and then back to scroll... i have used this patch now some 
+time and it seems to be good for myself, so maybe its useful?
+
+--
+mzz 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-20 21:22
+
+Howdy!
+
+Jorge Arellano Cid writes:
+> 
+> Hi there,
+> 
+> > Otherwise, I could use dillo with cookies happily (on AIX with strsep) and
+> > it only was "vulnerable" to the NULL pointer bug that was fixed
+> > recently.
+> >
+> > > Congratulations on this patch Jörgen and Lars!
+> 
+> FWIW, I made a 35Kb patch over the original 31Kb original
+> version, fixing a big list of problems, and no one noticed? :(
+
+Of course we notice (at least I do!), Jorge. But you get no thanks,
+you're the maintainer! It's your _job_! ;-)
+
+Seriously though, I have a feeling that Dillo has less developers
+than most open source projects I've seen out there (I could be
+wrong). So I have an "evil plan" to stimulate our current developers to
+produce more & better (giving them lots of thanks.. and who knows,
+beer too! ;). Hope it starts working soon!
+
+BTW: Oh Jorge... congratulations you too on this nice patch!
+(HEheh.. my evil plan is being extended to maintainers ;)
+
+(... sorry 'bout the nonsense e-mail ...)
+
+best regards to all! 
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-20 20:48
+
+Hi there,
+
+> Otherwise, I could use dillo with cookies happily (on AIX with strsep) an=
+d
+> it only was "vulnerable" to the NULL pointer bug that was fixed
+> recently.
+>
+> > Congratulations on this patch J=F6rgen and Lars!
+
+FWIW, I made a 35Kb patch over the original 31Kb original
+version, fixing a big list of problems, and no one noticed? :(
+
+This is very important to me because that was the main reason
+for the cookies patch not being integrated earlier; there was a
+lot to do, fix and stabilize. Not lack of interest!
+
+BTW, the bugtrack shows 95%. i.e. there're still things to work
+on; as the strsep() for instance.
+
+
+Thanks
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-20 20:48
+
+Hi,
+
+On Tue, 19 Mar 2002, Livio Baldini Soares wrote:
+
+> Anyway, CVS Dillo works well with Linux, but doesn't compile on
+> Solaris (5.7), unless I --disable-cookies. The problem is that the new
+> cookies.c uses the strsep() function, which is not available. I have
+> substituted the strsep() with strtok() which, if I'm not mistaken, is
+> a POSIX call, and does the "same" thing, no?
+>
+> This is an _untested_ patch:
+> http://www.ime.usp.br/~livio/dillo/patches/strsep_to_strtok.diff
+
+We had get rid of strtok() due to its potential problems, so
+I decided to implement a custom strsep in misc.c. Now in CVS!
+Please test it.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-20 17:31
+
+Jorgen Viksell writes:
+> Hi!
+
+[...]
+
+> Unfortunately, strtok() doesn't handle empty pieces (in this case, two
+> tabs in a row).
+
+Ah.. you're right! :(
+
+> Looks like we have to write our own stuff here. Shouldn't take too long
+> though...
+
+Well it seems that someone (?) implemented a simple version of
+strsep() inside misc.c, and now the Solaris version is working fine
+once again.
+
+best regards,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-03-20 15:48
+
+Hi!
+
+ons 2002-03-20 klockan 03.19 skrev Livio Baldini Soares:
+> Hello!
+>=20
+> Well, I'm happy to see that Dillo CVS now has Cookies :-)=20
+> I haven't been able to test them though, but I guess they be very
+> useful to me when authentication and SSL are implemented.
+>=20
+> Anyway, CVS Dillo works well with Linux, but doesn't compile on
+> Solaris (5.7), unless I --disable-cookies. The problem is that the new
+> cookies.c uses the strsep() function, which is not available. I have
+> substituted the strsep() with strtok() which, if I'm not mistaken, is
+> a POSIX call, and does the "same" thing, no?
+
+Unfortunately, strtok() doesn't handle empty pieces (in this case, two
+tabs in a row).
+Looks like we have to write our own stuff here. Shouldn't take too long
+though...
+
+> This is an _untested_ patch:
+> http://www.ime.usp.br/~livio/dillo/patches/strsep_to_strtok.diff
+>=20
+> Congratulations on this patch J=F6rgen and Lars!
+
+Thanks! :-)
+
+> best regards! =20
+>=20
+> -- =20
+> Livio <livio@im...>
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Cookies patch on Solaris
+
+From: Andreas Schweitzer <andy@ph...> - 2002-03-20 06:37
+
+Hi
+
+> Anyway, CVS Dillo works well with Linux, but doesn't compile on
+> Solaris (5.7), unless I --disable-cookies. The problem is that the new
+> cookies.c uses the strsep() function, which is not available. I have
+> substituted the strsep() with strtok() which, if I'm not mistaken, is
+> a POSIX call, and does the "same" thing, no?
+
+I did the same thing on AIX. However, AIX has also other issues :-)
+
+Otherwise, I could use dillo with cookies happily (on AIX with strsep) an=
+d
+it only was "vulnerable" to the NULL pointer bug that was fixed
+recently.
+
+> Congratulations on this patch J=F6rgen and Lars!
+
+I second that ! :-)
+
+Cheers
+Andreas
+
+--=20
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Cookies patch on Solaris
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-20 02:19
+
+Hello!
+
+Well, I'm happy to see that Dillo CVS now has Cookies :-) 
+I haven't been able to test them though, but I guess they be very
+useful to me when authentication and SSL are implemented.
+
+Anyway, CVS Dillo works well with Linux, but doesn't compile on
+Solaris (5.7), unless I --disable-cookies. The problem is that the new
+cookies.c uses the strsep() function, which is not available. I have
+substituted the strsep() with strtok() which, if I'm not mistaken, is
+a POSIX call, and does the "same" thing, no?
+
+This is an _untested_ patch:
+http://www.ime.usp.br/~livio/dillo/patches/strsep_to_strtok.diff
+
+Congratulations on this patch Jörgen and Lars!
+
+best regards! 
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Dillo on Solaris 8..
+
+From: Yu-Fong Cho <yfcho@ms...> - 2002-03-19 17:46
+
+Hi,
+
+Has anyone tried run Dillo 0.6.4 on Solaris 8 before?
+
+I compiled and installed it. It seems be ok except the way it handle jpeg
+image.
+The jpeg image shows only black and while mode and has some vertical line on
+it. It isn't right.
+
+I have GNU jpeg and zlib installed. Does anyone know what is going on?
+I tried Dillo on FreeBSD 4.5 before and it was ok.
+
+Appreciate any information. Thank you.
+
+
+Yu-Fong Cho 
+
+
+
+[Dillo-dev]Re : Dillo library and binding
+
+From: Christophe Baillon <cbaillon@it...> - 2002-03-18 13:48
+
+Thanks for your help.
+Your code works fine !
+
+I know Dw is immature, but Dillo is the only light browser
+I have found interesting. 
+
+Dillo is exactly what i need for my work !
+
+We use Dillo 0.6.4 for the Dillo library and binding.
+
+The Functionnalities provided by widgets in 0.6.4 are far above
+our expectations.
+
+
+Regards
+
+
+
+>Hi Christophe,
+
+>On Fri, Mar 08, 2002 at 10:42:30PM +0000, Christophe Baillon wrote:
+>> I am working on a Ada 95 binding of Dillo widgets. (In GPL of course!)
+>> To realize it, I need to isolate widgets in a C library.
+>> I have almost achieved it.
+>> 
+>> Libdw contains only dillo widget, without IO and cache (I removed
+>> Dw_Image at the moment) I kept few important dillo file,
+>> like url.c, findtext.c ...
+>> 
+>> The goal is to profit of specific dillo widget to make
+>> rendering in embedded applications.
+>
+>Just a few warnings before: 1. Dw is very immature, and will change
+>often. 2. Dw contains many ad hoc implementations, partly only
+>suitable for the code of dillo. E.g., there are problems when adding
+>other widgets than DwPage's to a table (will change a bit).
+>
+>Of course, if you have suggestions or improvements, send them to me.
+>
+>> I've done a C test program . It can create new dw_style,
+>> but there is a "segmentation fault" when using
+>> a_Dw_gtk_scrolled_window_set_dw to set a dw children (Dw_Ruler for
+>> instance).
+>> [...]
+>
+>The attached example works. See comments for details (especially: a
+>widget must always have a style).
+>
+>Sebastian 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-15 14:39
+
+Livio,
+
+> Jorge Arellano Cid writes:
+> >
+> > As indexed GIFs have at most 256 colors, and a corrupted gif
+> > can declare less colors (or zero), and try to access out of
+> > bounds bytes afterwards, the 256 constant provides a kind of
+> > protection against SEGFAULTS.
+>
+> [...]
+> The bug is this. Suppose an Image has only 5 colors. So you have the
+> image buffer (which is actually entry->Data, or CacheClient->Buf),
+> which is allocated in the IO system having a fixed size (say 200). So
+> we're trying to copy 256 bytes out of a 200 byte long buffer... see
+> the problem?
+>
+> I have a quick fix which was, copy _only_ gif->NumColors from the
+> image Buf, that way we don't memcpy() from invalid memory, _but also_
+> alloc more colors (and set them o zero) so if a problem GIF tries to
+> access an out of bounds colors we get no segfault.
+>
+> Watcha think?
+
+OK, I just made a few changes and commited to CVS.
+Please test it.
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-15 03:32
+
+Hello!
+
+Jorge Arellano Cid writes:
+> 
+> As indexed GIFs have at most 256 colors, and a corrupted gif
+> can declare less colors (or zero), and try to access out of
+> bounds bytes afterwards, the 256 constant provides a kind of
+> protection against SEGFAULTS.
+> 
+> After a fast revision, I can't find anything wrong with it yet,
+> but what looks very suspicious to me is the 'version' number that
+> a_Dicache_set_cmap is receiving.
+> --i.e. #1 in http://www.zone.ee/myzz/dillo/cache-crash-gdb
+> 
+> That number comes from a_Dicache_add_entry and it should be
+> a simple counter (AFAIR). Livio is the author of that code, so
+> this question is for him! :)
+> 
+
+Jorge, I fixed that some time ago. Look here:
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/src/dicache.c.diff?r1=1.19&r2=1.20
+
+And that actually doesn't matter at all. It's just a version number
+(doesn't necessarily have to small, or even positive for the matter).
+
+The bug is this. Suppose an Image has only 5 colors. So you have the
+image buffer (which is actually entry->Data, or CacheClient->Buf),
+which is allocated in the IO system having a fixed size (say 200). So
+we're trying to copy 256 bytes out of a 200 byte long buffer... see
+the problem?
+
+I have a quick fix which was, copy _only_ gif->NumColors from the
+image Buf, that way we don't memcpy() from invalid memory, _but also_
+alloc more colors (and set them o zero) so if a problem GIF tries to
+access an out of bounds colors we get no segfault.
+
+Watcha think? 
+
+The patch is at:
+http://www.ime.usp.br/~livio/dillo/patches/gif_seg.diff
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-15 02:01
+
+On Wed, 13 Mar 2002 madis@cy... wrote:
+
+> On 11 Mar 2002, Lars Clausen wrote:
+>
+> > Yes, we've noticed that NULL bug, and how there doesn't seem to be a way to
+> > get a NULL cookie in the first place. I'm leaning towards an explanation
+> > of general memory corruption. Did you try running without the cookies
+> > patch, but linked with efence? I notice that a_Dicache_set_cmap is called
+> > only from gif.c, and there with num_colors = 256 rather than
+> > gif->NumColors. That could cause the memcpy to run over the edge of cmap,
+> > maybe.
+>
+> i tried now dillo without cookies and with efence, and the memcpy bug
+> didn't go away with cookies ;) anyway, replacing this constant 256 in
+> gif.c with "gif->NumColors < 256 ? gif->NumColors : 256" seems to
+> solve this memory corruption problem, but since i don't know exactly why
+> this constant was put there in first place i'm not sure, whether this is a
+> good fix (or is this < 256 check needed at all, i put it there because
+> gifs shouldn't have more colors and suspected that constant 256 was
+> there because some invalid gif caused NumColors go over 256).
+> http://www.zone.ee/myzz/dillo/patch-dillo-gif
+
+As indexed GIFs have at most 256 colors, and a corrupted gif
+can declare less colors (or zero), and try to access out of
+bounds bytes afterwards, the 256 constant provides a kind of
+protection against SEGFAULTS.
+
+After a fast revision, I can't find anything wrong with it yet,
+but what looks very suspicious to me is the 'version' number that
+a_Dicache_set_cmap is receiving.
+--i.e. #1 in http://www.zone.ee/myzz/dillo/cache-crash-gdb
+
+That number comes from a_Dicache_add_entry and it should be
+a simple counter (AFAIR). Livio is the author of that code, so
+this question is for him! :)
+
+
+> but fixing this gif issue didn't fixed segfault totally - when i went to
+> http://www.delfi.ee site the efence linked dillo crashed happily again and i
+> discovered bug in IO.c function IO_callback: when IO_read function decided
+> to close and delete io, following error check tried to access this deleted
+> structure and set its Status field to -EIO, which wasn't nice at all.
+> using IO_get again when error occured and checking whether it returned
+> NULL solved this.
+> http://www.zone.ee/myzz/dillo/patch-dillo-IO
+
+I reviewed this one too, and you're right. The only thing I
+need is your name for the Changelog entry!
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-14 13:47
+
+Hi there!
+
+On 12 Mar 2002, Jorgen Viksell wrote:
+
+> Hi,
+>
+> tis 2002-03-12 klockan 01.45 skrev madis@cy...:
+> >
+> > i use dillo-0.6.4 patched with patch-cookies-8jan (without openssl
+> > patch) and it crashed occasionally, most often on theregister.co.uk. so=
+i
+> > tried to use gdb to find out why, and yes, there was a NULL pointer
+> > reference in a_Cookies_get function (look http://www.zone.ee/myzz/dillo=
+/cookie-crash-gdb).
+> > but after reading code in cookies.c i had no clue, how this pointer cou=
+ld
+> > be NULL without segfaulting before [snip]
+>
+> I believe that I've found the problem. It's in a_Cookies_set(), where an
+> old cookie gets replaced. We remove it from the list but we never
+> re-insert the new start of the list in the hash table.
+>
+> There is a new patch up at:
+> http://w1.211.telia.com/~u21114235/patch-cookies-12mar.gz
+> Lots of changes made.
+
+Just to complete the information, specially for those that got
+eager for the original patch to be commited:
+
+I reviewed the first cookie full-patch, it was 31Kb, and found
+a big list of problems, so I gave it some hard work and ended up
+with a 35Kb patch on top of it, and there were still plenty of
+things to do! Now J=F6rgen has sent me a new patch (on top of both)
+that'll be reviewed ASAP.
+
+
+See ya'
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug 306 - ">" sign in attribute string
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-13 17:21
+
+Andreas,
+
+> I found a bug and instered it as bug 306. The good news : I also
+> have a patch. But it may be tricky, so I send it in as food for thought.
+>
+> The problem is that dillo gets confused when the > sign is in an attribute
+> string (like http://www.xwinman.org). Simply accepting a > inside a string
+> will break way too many web pages. E.g. "slahsdot->Read more" on any
+> article has
+> <INPUT TYPE="HIDDEN" NAME="op" VALUE="userlogin" %]">
+> Near the login form. Looks like broken HTML to me ...
+
+Yeah, that page is broken...
+
+But, the http://www.xwinman.org case may be different. Considering the
+XML SPEC for XHTML, we find:
+
+AttValue ::== '"' ([^<&"] | Reference)* '"' |
+"'" ([^<&'] | Reference)* "'"
+
+
+i.e. a bare '>' is allowed, but not a bare '<'.
+
+That's what I did!
+Please test the CVS and let me know how it went.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Presentation
+
+From: Tomas <tomas@pu...> - 2002-03-13 12:05
+
+Attachments: Message as HTML      
+
+Hi all,
+
+
+I'm spanish (sorry for my english in advance ;) and just finished computer =
+science,
+i'm involved in a non-profit project of a free internet workplace in
+Utrecht (Netherlands) http://www.puscii.nl and i normailly used GNU/Debian =
+as OS.
+
+First of all congratulations to all the people involved in dillo for all
+this good work, i found needed an alternative graphical web wrobser with lo=
+w-resources
+requirements in the free-software scene so i think dillo cover this
+hole. And is quite usefull now even thought is in alpha state.
+
+Now that i have time i will like to contribute to dillo project so
+i'm subscribed to dillo-dev list and now i'm reading and trying to understa=
+nd
+the code of dillo, also reading gtk manual and html specifications as
+you wrote in the documentation. I've found the code quite clean but i need
+some time to understand it all, i also need time to be fluence with gdb, CV=
+S and=20
+other tools normailly used (any sugestion is apreciated :)
+
+greets
+
+Tomas 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: <madis@cy...> - 2002-03-13 01:41
+
+On 11 Mar 2002, Lars Clausen wrote:
+
+> Yes, we've noticed that NULL bug, and how there doesn't seem to be a way to
+> get a NULL cookie in the first place. I'm leaning towards an explanation
+> of general memory corruption. Did you try running without the cookies
+> patch, but linked with efence? I notice that a_Dicache_set_cmap is called
+> only from gif.c, and there with num_colors = 256 rather than
+> gif->NumColors. That could cause the memcpy to run over the edge of cmap,
+> maybe.
+
+i tried now dillo without cookies and with efence, and the memcpy bug
+didn't go away with cookies ;) anyway, replacing this constant 256 in 
+gif.c with "gif->NumColors < 256 ? gif->NumColors : 256" seems to 
+solve this memory corruption problem, but since i don't know exactly why 
+this constant was put there in first place i'm not sure, whether this is a 
+good fix (or is this < 256 check needed at all, i put it there because 
+gifs shouldn't have more colors and suspected that constant 256 was 
+there because some invalid gif caused NumColors go over 256).
+http://www.zone.ee/myzz/dillo/patch-dillo-gif
+
+but fixing this gif issue didn't fixed segfault totally - when i went to 
+http://www.delfi.ee site the efence linked dillo crashed happily again and i 
+discovered bug in IO.c function IO_callback: when IO_read function decided 
+to close and delete io, following error check tried to access this deleted 
+structure and set its Status field to -EIO, which wasn't nice at all.
+using IO_get again when error occured and checking whether it returned 
+NULL solved this.
+http://www.zone.ee/myzz/dillo/patch-dillo-IO
+
+i'll try this new cookies patch tomorrow night... currently morning is 
+too close :) 
+
+
+
+[Dillo-dev]Multidimensional Bookmarks
+
+From: Bruce Alon King <balon@cy...> - 2002-03-13 01:26
+
+I've been using Dillo for a couple of months now, resorting to Opera or
+Mozilla when necessary. I started running it because of low memory; now
+that I've upgraded my RAM I run it because I want to. So: KUDOS!
+
+So: I've always wanted some sort of reading system. Basically, I want
+a bookmark system that saves state so that I can not only remember the
+page, but where I was on that page, as well as a history of the pages
+visited. That way, say I'm browsing through Gtk documentation, I read
+through several pages, skip around, and then have to go to bed. I can
+save my bookmark in a .bkmk file (or whatever) and the next morning,
+bright and early, start exactly where I left off. I can even click the
+back button, yada yada.
+
+I'm trying to find some time to read through the source code and start
+contributing to this project so I'm perfectly willing to implement it
+sooner or later. I just wondered, does this idea interest anybody else
+or is it just me? I've been reading more and more books online
+(Structure and Interpretation of Computer Programs, Baen Free Library,
+et al) and I find it increasingly frustrating that I have to spend time
+navigating to where I once was in order to start reading again. In a
+paper book, I turn to my bookmark and there I am, within millimeters of
+the correct location.
+
+The other question is: any guesses on how hard this would be to
+implement? It seems like it should be pretty simple, but I haven't yet
+had the time to go through any of the dillo source code.
+
+-- 
+Bruce Alon King <balon@cy...>
+
+The frogs are dancing and
+frollicking among the weeds.
+They smile. 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-03-12 20:35
+
+Hi,
+
+tis 2002-03-12 klockan 01.45 skrev madis@cy...:
+>=20
+> i use dillo-0.6.4 patched with patch-cookies-8jan (without openssl=20
+> patch) and it crashed occasionally, most often on theregister.co.uk. so i=
+=20
+> tried to use gdb to find out why, and yes, there was a NULL pointer=20
+> reference in a_Cookies_get function (look http://www.zone.ee/myzz/dillo/c=
+ookie-crash-gdb).
+> but after reading code in cookies.c i had no clue, how this pointer could=
+=20
+> be NULL without segfaulting before [snip]
+
+I believe that I've found the problem. It's in a_Cookies_set(), where an
+old cookie gets replaced. We remove it from the list but we never
+re-insert the new start of the list in the hash table.
+
+There is a new patch up at:
+http://w1.211.telia.com/~u21114235/patch-cookies-12mar.gz
+Lots of changes made.
+
+Cheers,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Dillo on Debian/Hurd - Compiled (see below) but malfunctions...
+
+From: Sam Dennis <sam@ma...> - 2002-03-12 19:40
+
+Some time around 7 o'clock PM on March 12, a Tuesday, Sammy Mannaert wrote:
+> "B. Douglas Hilton" wrote:
+> > 
+> > 
+> > It cheerfully complied with no problems, loads up the default
+> > window in X, and then kind of goes out to lunch if you try
+> > to open a file or url.
+> 
+> you can also compile dillo by changing defines in src/dns.c
+> (outcommenting #define G_DNS_THREADED)
+> this way dillo will not use multithreading :)
+
+Unfortunately, asynchronous DNS is not the only thing dillo uses threads for.
+IO/file.c contains other code, and no alternative method.
+
+-- 
+r@,,+2 'a,kd" 
+
+
+
+Re: [Dillo-dev]Dillo on Debian/Hurd - Compiled (see below) but malfunctions...
+
+From: Sammy Mannaert <nstalkie@tv...> - 2002-03-12 18:21
+
+"B. Douglas Hilton" wrote:
+> 
+> 
+> It cheerfully complied with no problems, loads up the default
+> window in X, and then kind of goes out to lunch if you try
+> to open a file or url.
+
+you can also compile dillo by changing defines in src/dns.c
+(outcommenting #define G_DNS_THREADED)
+this way dillo will not use multithreading :) 
+
+
+
+Re: [Dillo-dev]Dillo library, and binding
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-03-12 18:11
+
+Attachments: test_dw.c      
+
+Hi Christophe,
+
+On Fri, Mar 08, 2002 at 10:42:30PM +0000, Christophe Baillon wrote:
+> I am working on a Ada 95 binding of Dillo widgets. (In GPL of course!)
+> To realize it, I need to isolate widgets in a C library.
+> I have almost achieved it.
+> 
+> Libdw contains only dillo widget, without IO and cache (I removed
+> Dw_Image at the moment) I kept few important dillo file,
+> like url.c, findtext.c ...
+> 
+> The goal is to profit of specific dillo widget to make
+> rendering in embedded applications.
+
+Just a few warnings before: 1. Dw is very immature, and will change
+often. 2. Dw contains many ad hoc implementations, partly only
+suitable for the code of dillo. E.g., there are problems when adding
+other widgets than DwPage's to a table (will change a bit).
+
+Of course, if you have suggestions or improvements, send them to me.
+
+> I've done a C test program . It can create new dw_style,
+> but there is a "segmentation fault" when using
+> a_Dw_gtk_scrolled_window_set_dw to set a dw children (Dw_Ruler for
+> instance).
+> [...]
+
+The attached example works. See comments for details (especially: a
+widget must always have a style).
+
+Sebastian 
+
+
+
+[Dillo-dev]Dillo on Debian/Hurd - Compiled (see below) but malfunctions...
+
+From: B. Douglas Hilton <doug.hilton@en...> - 2002-03-12 01:02
+
+Just thought I'd post a heads up on what I did. A few
+weeks ago I made an experimental patch to GNU Posix
+Threads (Pth), which provides a non-preemptive pthread
+compatibility layer, so that it would compile on the GNU
+Hurd OS.
+
+Hurd only has c-threads built into the gnumach microkernel,
+and several high-powered Debian developers are working
+on making the ultimate pthreads implementation, which
+will likely be a while before its ready :-)
+
+So, hacker that I am, I made some really dangerous hacks
+to pth and got it to compile (not saying it works right), and
+used that to build Dillo on Hurd.
+
+It cheerfully complied with no problems, loads up the default
+window in X, and then kind of goes out to lunch if you try
+to open a file or url.
+
+Still, I thought it was pretty cool. Like the browser, it is
+awesome... right on with the nix philosophy: make a small
+powerfull tool to do exactly one thing, and then make it
+ubiquitous because its so small and fast!
+
+Later!
+
+- Doug 
+
+
+
+Re: [Dillo-dev]crash & efence
+
+From: Lars Clausen <lrclause@cs...> - 2002-03-12 00:45
+
+On Tue, 12 Mar 2002, madis@cy... wrote:
+>=20
+> i use dillo-0.6.4 patched with patch-cookies-8jan (without openssl patch)
+> and it crashed occasionally, most often on theregister.co.uk. so i tried
+> to use gdb to find out why, and yes, there was a NULL pointer reference
+> in a_Cookies_get function (look
+> http://www.zone.ee/myzz/dillo/cookie-crash-gdb). but after reading code
+> in cookies.c i had no clue, how this pointer could be NULL without
+> segfaulting before and tried linking with electric fence memory debugger
+> using -lefence. when linked with efence dillo segfaulted on all web pages
+> with gif images in a_Dicache_set_cmap function
+> (http://www.zone.ee/myzz/dillo/cache-crash-gdb). sorrily i had not enough
+> understanding about dicache to debug it... but seems that there is some
+> bug.
+
+Yes, we've noticed that NULL bug, and how there doesn't seem to be a way to
+get a NULL cookie in the first place. I'm leaning towards an explanation
+of general memory corruption. Did you try running without the cookies
+patch, but linked with efence? I notice that a_Dicache_set_cmap is called
+only from gif.c, and there with num_colors =3D 256 rather than
+gif->NumColors. That could cause the memcpy to run over the edge of cmap,
+maybe.=20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]crash & efence
+
+From: <madis@cy...> - 2002-03-12 00:35
+
+i use dillo-0.6.4 patched with patch-cookies-8jan (without openssl 
+patch) and it crashed occasionally, most often on theregister.co.uk. so i 
+tried to use gdb to find out why, and yes, there was a NULL pointer 
+reference in a_Cookies_get function (look http://www.zone.ee/myzz/dillo/cookie-crash-gdb).
+but after reading code in cookies.c i had no clue, how this pointer could 
+be NULL without segfaulting before and tried linking with electric fence 
+memory debugger using -lefence. when linked with efence dillo segfaulted 
+on all web pages with gif images in a_Dicache_set_cmap function 
+(http://www.zone.ee/myzz/dillo/cache-crash-gdb). sorrily i had not enough 
+understanding about dicache to debug it... but seems that there is some 
+bug. 
+
+
+
+Re: [Dillo-dev]'&nbsp'; or '&nbsp ': Comforming to standart
+
+From: Eduardo Marcel <macan@co...> - 2002-03-11 11:32
+
+I guess we should support the standard. Adopting this kind of workaround =
+on such=20
+common mistakes would only make the mistakes more common. IMHO It's the o=
+ther
+browsers' mistake. Dillo is correct :) =20
+
+Regards,
+
+Eduardo.
+
+On Mon, 11 Mar 2002 16:59:06 +0600 "Nikita V. Borodikhin" <eliterr@tk...=
+> wrote:
+> Hello, All !
+>=20
+> Should Dillo follow to official standart, where non-breakable
+> space is '&nbsp;' only or it should follow de-facto standart,
+> where such a space could be written as '&nbsp' + any non-letter
+> chacter, e.g. a ' ' sharacter ?
+>=20
+> That non-official form of nonbreakable space is succesfully eaten
+> by IE, NS, Opera, links, lynx and may be many others and is widely
+> used in the WEB.
+>=20
+> =3D=3D=3D
+> Nikita V. Borodikhin
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20
+
+
+--=20
+Eduardo Marcel Ma=E7an Gerente de Redes / Network Manager
+macan@co... Col=E9gio Bandeirantes 
+
+
+
+Re: [Dillo-dev]'&nbsp'; or '&nbsp ': Comforming to standart
+
+From: Grigory Bakunov <black@as...> - 2002-03-11 11:18
+
+Date |Mon, 11 Mar 2002 16:59:06 +0600
+From |"Nikita V. Borodikhin" <eliterr@tk...>
+
+Hello!
+
+NVB> Hello, All !
+
+NVB> Should Dillo follow to official standart, where non-breakable
+NVB> space is '&nbsp;' only or it should follow de-facto standart,
+NVB> where such a space could be written as '&nbsp' + any non-letter
+NVB> chacter, e.g. a ' ' sharacter ?
+
+NVB> That non-official form of nonbreakable space is succesfully eaten
+NVB> by IE, NS, Opera, links, lynx and may be many others and is widely
+NVB> used in the WEB.
+
+My vote to &nbsp;
+Look to w3c standarts. It's only one source of power ;)
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]'&nbsp'; or '&nbsp ': Comforming to standart
+
+From: Nikita V. Borodikhin <eliterr@tk...> - 2002-03-11 11:07
+
+Hello, All !
+
+Should Dillo follow to official standart, where non-breakable
+space is '&nbsp;' only or it should follow de-facto standart,
+where such a space could be written as '&nbsp' + any non-letter
+chacter, e.g. a ' ' sharacter ?
+
+That non-official form of nonbreakable space is succesfully eaten
+by IE, NS, Opera, links, lynx and may be many others and is widely
+used in the WEB.
+
+===
+Nikita V. Borodikhin 
+
+
+
+[Dillo-dev]Non iso-8859 rendering/pango
+
+From: Mark Schreiber <mark7@an...> - 2002-03-10 17:46
+
+After looking at bug #299 for an hour or two ("dillo can't render iso
+entities > 255"), I suspect that the easiest thing to do may be to
+support pango, which would provide Unicode support, but would entail a
+*lot* of work and rewriting, both in layout and in internal storage of
+string data. A great deal of logic would have to be entirely
+different, at least to do things properly. AFAIK, pango 1.0 is out
+(ftp://ftp.gtk.org/pub/gtk/v2.0), but not widely used yet.
+
+Is anyone currently doing pango support? If not, I'm thinking about
+maybe making a few small interim patches to handle 8859 approximations
+of non-iso-8859 characters, like double dashes for an mdash and
+straight quotes for printers' (aka curly) quotes.
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+[Dillo-dev]Dillo library, and binding
+
+From: Christophe Baillon <cbaillon@it...> - 2002-03-08 21:44
+
+Hi !
+First, thanks to dillo developpers for this fast browser !
+
+I am working on a Ada 95 binding of Dillo widgets. (In GPL of course!)
+To realize it, I need to isolate widgets in a C library.
+I have almost achieved it.
+
+Libdw contains only dillo widget, without IO and cache (I removed
+Dw_Image at the moment) I kept few important dillo file,
+like url.c, findtext.c ...
+
+The goal is to profit of specific dillo widget to make
+rendering in embedded applications.
+
+I've done a C test program . It can create new dw_style,
+but there is a "segmentation fault" when using
+a_Dw_gtk_scrolled_window_set_dw to set a dw children (Dw_Ruler for
+instance).
+
+What is wrong in my code ?
+
+I think everything is initialized ?
+
+Is there special things to do before adding a Dillo Widget to
+a container ?
+
+
+gdb said it fails in a_Dw_widget_realize, at :
+if (widget->parent =3D=3D NULL && widget->style->background_color !=3D NULL=
+)
+
+
+Code :
+
+
+#include "dw.h"
+#include "dw_widget.h"
+#include "dw_gtk_scrolled_window.h"
+
+
+#include "gtk/gtkscrolledwindow.h"
+
+// Compiler avec :
+// gcc -L../lib test.c -g -I ../src `gtk-config --cflags` `gtk-config
+// --libs` -ldw -o test=20
+
+main(int argc, char **argv)
+{
+=20
+GtkWidget *fenetre;
+GtkWidget *label;
+=20
+DwWidget *ma_table;
+DwWidget *ma_page;
+DwWidget *ma_ruler;
+GtkWidget *mon_scroll;
+
+DwStyle style_attrs, *mon_style;
+DwStyleFont font_attrs;
+
+=20
+gtk_init(&argc, &argv);
+gdk_rgb_init();
+a_Dw_init();
+=20
+=20
+fenetre =3D gtk_window_new (GTK_WINDOW_TOPLEVEL);
+label =3D gtk_label_new ("Bonjour, ceci est un test");
+
+ma_table =3D a_Dw_table_new();
+ma_page =3D a_Dw_page_new();
+ma_ruler =3D a_Dw_hruler_new();
+mon_scroll =3D a_Dw_gtk_scrolled_window_new();
+gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(mon_scroll),
+GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+gtk_container_add (fenetre, mon_scroll);
+
+gtk_widget_show_all(fenetre);
+
+a_Dw_gtk_scrolled_window_set_dw (GTK_DW_SCROLLED_WINDOW(mon_scroll),
+ma_ruler);
+// Here is segmentation fault=20
+=20
+
+=20
+///////////////////////////////////
+// Initialisation du Dw_Style //
+/////////////////////////////////
+=20
+
+/* Create the font and attribute for the page. */
+font_attrs.name =3D "courier";
+font_attrs.size =3D 14;
+font_attrs.bold =3D FALSE;
+font_attrs.italic =3D FALSE;
+=20
+a_Dw_style_init_values (&style_attrs, fenetre->window);
+style_attrs.font =3D a_Dw_style_font_new (&font_attrs);
+style_attrs.color =3D a_Dw_style_color_new (0x0000ff,
+fenetre->window);
+mon_style =3D a_Dw_style_new (&style_attrs,
+fenetre->window);
+//a_Dw_widget_set_style (plain->dw, plain->style);
+=20
+/////////////////////////////////////////////////////////////
+=20
+=20
+
+//a_Dw_page_add_widget (ma_page,
+// ma_ruler,
+// mon_style);
+=20
+// If i uncomment it, =3D> segmentation fault
+=20
+
+gtk_main();
+
+}
+
+
+Is anybody make similar works ?
+
+Thanks for your help !
+
+Regards
+
+
+
+--=20
+*********************************
+*** Christophe Baillon ***
+*** ITRIS ***
+*** Informatique Temps R=E9el ***
+*** Informatique Syst=E8me ***
+********************************* 
+
+
+
+Re: [Dillo-dev]dillo (0.6.4) not showing background images ?
+
+From: John Utz <john@ut...> - 2002-03-08 19:21
+
+for starters, it's a gif! so it aint gonna get displayed unless you add
+gif functionality to your copy of dillo....
+
+
+
+On Fri, 8 Mar 2002, Peter Schb wrote:
+
+> hi,
+>=20
+> i=B4m using dillo 0.6.4 on SUSE linux 7.3 (kernel 2.4.10).
+> dillo is *not* showing background images ! (other images work fine)
+>=20
+> <body background=3D"back01.gif"> ... </body>
+>=20
+> is this still a missing feature or is something wrong with my configura=
+tion ??
+>=20
+> please respond to mailto:schb@gm...
+>=20
+> thanks
+> peter
+>=20
+>=20
+
+--=20
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]dillo (0.6.4) not showing background images ?
+
+From: Peter Schb <schb@gm...> - 2002-03-08 17:59
+
+Attachments: Message as HTML      
+
+hi,
+
+i=B4m using dillo 0.6.4 on SUSE linux 7.3 (kernel 2.4.10).
+dillo is *not* showing background images ! (other images work fine)
+
+<body background=3D"back01.gif"> ... </body>
+
+is this still a missing feature or is something wrong with my =
+configuration ??
+
+please respond to mailto:schb@gm...
+
+thanks
+peter 
+
+
+
+Re: [Dillo-dev]bug track review
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-03-08 17:36
+
+On Fri, Mar 01, 2002 at 11:50:46AM -0800, Eric GAUDET wrote:
+> -- En reponse de "[Dillo-dev]bug track review" de Sebastian Geerken, le
+> >> 202
+> >> Impact: soft error
+> >> At: run time
+> >> Type: render bug
+> >> Comments: When an image is loading over a slow connection, and you
+> >> start scrolling up and down while it draws, some parts of it may not
+> >> get updated. HTReproduce: Any big image will do. For instance, try:
+> >> http://www.photo.net/photo/pcd1765/walk-away-44.tcl
+> >> WorkedBy: nobody
+> > 
+> > This is a problem of Dw_widget_queue_draw_area, which would quite hard
+> > to solve. If somebody is *really* interested in solving this, just ask
+> > me for a more detailed explanation.
+
+An exact explanation of the problem: Dw widgets should normally use
+the function Dw_widget_queue_draw_area and not draw directly, this is
+a bit more efficient. This pattern was taken from Gtk+. The
+implementation of Dw_widget_queue_draw_area is rather simple: It just
+passes the transformed area to gtk_widget_queue_draw.
+
+The problem is, that Gtk+ deals with the coordinates within the Gtk+
+widget, what are for Dw viewport coordinates (see doc/Dw.txt for the
+definitions). What has actually to be queued, are world coordinates,
+but when the viewport position changes between queueing and actual
+drawing, we get wrong world coordinates. As in this drawing:
+
+When queueing:
+
++----------------+<-- viewport
+| +----------+ |
+| | |<-+--- image
+| | | |
+| | | |
+| +----------+ |
+| | <---------- area to be redrawn
+| +----------+ |
+| |
+| |
+| |
++----------------+
+
+When drawing, after viewport position has changed:
+
++----------------+
+| |
+| |
+| +----------+ |
+| | | |
+| +----------+ |
+| | <----------- area which is redrawn
+| +----------+ |
+| +----------+ |
+| | <----------- this area should be redrawn
+| +----------+ |
++----------------+
+
+The best fix would of course to re-implement the whole queueing
+mechanism, this is what I meant with "hard to solve".
+
+> My first guess would be to add an int y_painted in the DwImage, to keep track
+> of what?s already painted, and use that as an origin and update it in
+> Dw_widget_queue_draw_area. 
+> Another possibility would be toto add a boolean that would be set when
+> scrolled, and when an image is finished loading invoke a_Dw_widget_queue_draw ?
+> (Or, I don?t like it so much, but no boolean and force a redraw for when images
+> finished downloading, perhaps after testing if they are visible)
+> ... or did I miss something?
+
+This is no image specific bug, but IIRC, DwImage is the only widget
+which calls Dw_widget_queue_draw, the others call
+Dw_widget_queue_resize, which implies a redraw, but works different.
+
+> >> 289
+> >> Impact: soft error
+> >> At: run time
+> >> Type: render bug
+> >> Comments: when an image tooltip is display and you scroll the page
+> >> with the keyboard, dillo fails to render the new scrolled content.
+> >> HTReproduce: Go to dillo home page, move the mouse cursor on the top
+> >> image, when the tooltip is displayed, press PgDown: the page scrolls
+> >> but the bottom is empty.
+> >> WorkedBy: nobody
+> > 
+> > This is a Gtk+ bug, it can be simply be reproduced (combination of
+> > tooltips and a GtkLayout, in which is painted).
+> > 
+> 
+> Ok. Is it possible to find a workaround ? Like remove the tooltip as soon as a
+> key even is received. That would also solve the sticky tooltips ?feature?.
+
+Or fix it in Gtk+ :-)
+
+The sticky tooltips are probably a dillo bug, in the Dw event system,
+probably some events are still missing.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]bug track review
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-03-08 17:04
+
+On Fri, Mar 01, 2002 at 03:11:28PM -0600, Lars Clausen wrote:
+> On Fri, 1 Mar 2002, Sebastian Geerken wrote:
+> >> 233 Impact: soft error At: run time Type: render bug Comments: dillo
+> >> doesn't render side-by-side tables (with align=left) correctly. Dillo
+> >> renders one table per line, no matter what. It seems to be a standard to
+> >> render such tables on the same line. HTReproduce:
+> >> http://www.rti-zone.org/dillo/Html.testsuite/table-side.html
+> >> http://www.dpreview.com/ WorkedBy: nobody
+> > 
+> > Such a behavior would be actually not quite standard compliant, see
+> > http://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#edef-TABLE:
+> > 
+> > align = left|center|right [CI]
+> > Deprecated. This attribute specifies the position of the table
+> > with respect to the document. Permitted values:
+> > * left: The table is to the left of the document.
+> > * center: The table is to the center of the document.
+> > * right: The table is to the right of the document.
+> > 
+> > I'm not sure whether we should follow the standard, or common
+> > use. Anyway, floats will be used for some other purposes.
+> 
+> Since this is part of an older standard, and in very frequent use, I think
+> we should support it. And since this kind of floating is (I believe) part
+> of CSS, we will need it then anyway. This is probably the most common
+> layout fault I find when using Dillo, I'd *love* to see it fixed. I even
+> looked into how to do it, but couldn't figure out how to change the
+> margins. http://www.w3.org/TR/html40/present/graphics.html#h-15.1.3 has
+> a little more info on floating.
+
+Yes, floats will be supported in the future, this is indeed a bit
+tricky (I also made some thoughts on it). The implementation will use
+a "float" member in the DwStyle (names should already be similar to
+attribute names in CSS), so this is an issue which is simple to change
+in the HTML parser (using "float" or "text_align").
+
+Sebastian 
+
+
+
+[Dillo-dev]Thanks, good work and good luck.
+
+From: Stephen Young <revoquer@gm...> - 2002-03-08 04:13
+
+To all developers of dillo,
+
+Good work. I can't even remember the first time that I used dillo(must of been a one year-two years ago).
+Each release that i've tried has been getting better and better. Up until now however using dillo wasn't
+really all that realistic for most of my browsing. However, with this release, it has been quite pleasant with
+its stability and speed. I usually use Opera/Netscape combination but now I'll be using Dillo/Netscape.
+
+Thanks,
+Stephen Young 
+
+
+
+[Dillo-dev]Dillo support
+
+From: Pradeep <pradeep@nc...> - 2002-03-07 11:48
+
+Hi ,
+
+I am trying to port Dillo to a custom board , does Dillo
+support static gray visuals , waiting for your reply.
+
+Thanks
+
+Pradeep 
+
+
+
+Re: [Dillo-dev]Small make install issue
+
+From: Michael Duelli <m.duelli@we...> - 2002-03-04 21:11
+
+D'oh!!
+
+I forgot to include the relevant part of the output :-)
+
+make install says:
+...
+make[2]: Entering directory `/usr/src/packages/SOURCES/DEV/dillo'
+make[2]: Nothing to be done for `install-exec-am'.
+if [ -d /usr/local/etc ]; then \
+/usr/bin/ginstall -c -m 644 --backup=t ./dillorc /usr/local/etc/; 
+\
+elif [ -d /etc/ ]; then \
+/usr/bin/ginstall -c -m 644 --backup=t ./dillorc /etc/; \
+fi
+/usr/bin/ginstall: option `--backup' doesn't allow an argument
+Try `/usr/bin/ginstall --help' for more information.
+make[2]: [install-data-local] Error 1 (ignored)
+make[2]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+make[1]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+
+And I don't know why but ginstall --backup gets a t value. ginstall help 
+tells me something about version control and the t value, but not with the 
+--backup flag.
+
+BTW, I only do:
+./configure
+make
+make install
+
+I don't specify any special directories or something like that.
+
+Of course, it's not a real error. dillo installs and runs just fine. I 
+just wanted to tell you.
+
+TIA,
+Michael
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net - A 3D chess interface 
+
+
+
+Re: [Dillo-dev]Small make install issue
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-04 18:53
+
+Hello Michael!
+
+Michael Duelli writes:
+> Hi all,
+> 
+> when installing dillo as root using ginstall from install (GNU fileutils) 
+> 4.0 I get this tiny error message
+
+Hum... where is the error? Isn't this the usual output for 'make
+install' (or did you accidently do 'make -n install')? Or am I missing
+something?
+
+Does it get to installing the dillorc file at all?
+
+> --------------snip----------------
+> make[1]: Entering directory `/usr/src/packages/SOURCES/DEV/dillo'
+> make[2]: Entering directory `/usr/src/packages/SOURCES/DEV/dillo'
+> make[2]: Nothing to be done for `install-exec-am'.
+> if [ -d /usr/local/etc ]; then \
+> /usr/bin/ginstall -c -m 644 --backup=t ./dillorc /usr/local/etc/; \
+> elif [ -d /etc/ ]; then \
+> /usr/bin/ginstall -c -m 644 --backup=t ./dillorc /etc/; \
+> fi
+> make[2]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+> make[1]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+> --------------snap----------------
+> 
+> It seems like you have to export the argument for backup as 
+> SIMPLE_BACKUP_SUFFIX.
+
+You have to export SIMPLE_BACKUP_SUFFIX _only_ if you'd like to
+change the default backup suffix (the default is '~').
+
+> Maybe this is different with newer versions of ginstall.
+
+Err.. I have access to three diferent machines using three diferent
+fileutils (3.6 on Solaris, 4.0l on Debian[Potato]/Linux, and 4.1-9 on
+Debian[Woody]/Linux), and they all work :( 
+
+Please try to check if the dillorc gets copied. I would like to help
+you out, but I need to understand what's wrong and how to reproduce
+your error.
+
+best regards,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Solaris & dillo
+
+From: Livio Baldini Soares <livio@im...> - 2002-03-04 18:25
+
+Jorge Arellano Cid writes:
+> 
+> Hi there!
+
+Hello Jorge!
+
+> Some of the autconf changes (in CVS) broke Solaris detection.
+> Now there's new code to fix this. It has been partly tested, but
+> there's a need for a run-test. Someone with a SunOS box please
+> test it and report back how it goes.
+
+# uname -a
+SunOS jaca 5.7 Generic_106541-04 sun4u sparc
+
+Everything seems to be just fine from here. No problems at all!
+Pthreads are now working again.
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Solaris & dillo
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-03-04 17:08
+
+Hi there!
+
+Some of the autconf changes (in CVS) broke Solaris detection.
+Now there's new code to fix this. It has been partly tested, but
+there's a need for a run-test. Someone with a SunOS box please
+test it and report back how it goes.
+
+Thanks
+Jorge.- 
+
+
+
+[Dillo-dev]Bug 306 - ">" sign in attribute string
+
+From: Andreas Schweitzer <andy@ph...> - 2002-03-04 04:46
+
+Attachments: html.c.diff      
+
+Hi,
+I found a bug and instered it as bug 306. The good news : I also
+have a patch. But it may be tricky, so I send it in as food for thought.
+
+The problem is that dillo gets confused when the > sign is in an attribute
+string (like http://www.xwinman.org). Simply accepting a > inside a string
+will break way too many web pages. E.g. "slahsdot->Read more" on any
+article has
+<INPUT TYPE="HIDDEN" NAME="op" VALUE="userlogin" %]">
+Near the login form. Looks like broken HTML to me ...
+
+Anyways, I attach a patch which looks ahead to determine the order
+of ", > and < 
+What do you think ?
+
+Cheers,
+Andreas
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]bug track review
+
+From: Lars Clausen <lrclause@cs...> - 2002-03-01 21:11
+
+On Fri, 1 Mar 2002, Sebastian Geerken wrote:
+> Hi,
+>=20
+> I just took some time to take a look on the bug tracking engine. Here
+> are some comments on a few.
+[...]
+>> 233 Impact: soft error At: run time Type: render bug Comments: dillo
+>> doesn't render side-by-side tables (with align=3Dleft) correctly. Dill=
+o
+>> renders one table per line, no matter what. It seems to be a standard =
+to
+>> render such tables on the same line. HTReproduce:
+>> http://www.rti-zone.org/dillo/Html.testsuite/table-side.html
+>> http://www.dpreview.com/ WorkedBy: nobody
+>=20
+> Such a behavior would be actually not quite standard compliant, see
+> http://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#edef-=
+TABLE:
+>=20
+> align =3D left|center|right [CI]
+> Deprecated. This attribute specifies the position of the table
+> with respect to the document. Permitted values:
+> * left: The table is to the left of the document.
+> * center: The table is to the center of the document.
+> * right: The table is to the right of the document.
+>=20
+> I'm not sure whether we should follow the standard, or common
+> use. Anyway, floats will be used for some other purposes.
+
+Since this is part of an older standard, and in very frequent use, I thin=
+k
+we should support it. And since this kind of floating is (I believe) par=
+t
+of CSS, we will need it then anyway. This is probably the most common
+layout fault I find when using Dillo, I'd *love* to see it fixed. I even
+looked into how to do it, but couldn't figure out how to change the
+margins. http://www.w3.org/TR/html40/present/graphics.html#h-15.1.3 has
+a little more info on floating.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+RE: [Dillo-dev]bug track review
+
+From: Eric GAUDET <eric.gaudet@vn...> - 2002-03-01 19:52
+
+-- En reponse de "[Dillo-dev]bug track review" de Sebastian Geerken, le
+01-Mar-2002 :
+> Hi,
+>=20
+> I just took some time to take a look on the bug tracking engine. Here
+> are some comments on a few.
+>=20
+>> 202
+>> Impact: soft error
+>> At: run time
+>> Type: render bug
+>> Comments: When an image is loading over a slow connection, and you
+>> start scrolling up and down while it draws, some parts of it may not
+>> get updated. HTReproduce: Any big image will do. For instance, try:
+>> http://www.photo.net/photo/pcd1765/walk-away-44.tcl
+>> WorkedBy: nobody
+>=20
+> This is a problem of Dw_widget_queue_draw_area, which would quite hard
+> to solve. If somebody is *really* interested in solving this, just ask
+> me for a more detailed explanation.
+>=20
+
+My first guess would be to add an int y_painted in the DwImage, to keep t=
+rack
+of what=B4s already painted, and use that as an origin and update it in
+Dw_widget_queue_draw_area.=20
+Another possibility would be toto add a boolean that would be set when
+scrolled, and when an image is finished loading invoke a_Dw_widget_queue_=
+draw ?
+(Or, I don=B4t like it so much, but no boolean and force a redraw for whe=
+n images
+finished downloading, perhaps after testing if they are visible)
+... or did I miss something?
+
+>> 233
+>> Impact: soft error
+>> At: run time
+>> Type: render bug
+>> Comments: dillo doesn't render side-by-side tables (with align=3Dleft)
+>> correctly. Dillo renders one table per line, no matter what. It seems
+>> to be a standard to render such tables on the same line.
+>> HTReproduce: http://www.rti-zone.org/dillo/Html.testsuite/table-side.h=
+tml
+>> http://www.dpreview.com/
+>> WorkedBy: nobody
+>=20
+> Such a behavior would be actually not quite standard compliant, see
+> http://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#edef-=
+TABLE:
+>=20
+> align =3D left|center|right [CI]
+> Deprecated. This attribute specifies the position of the table
+> with respect to the document. Permitted values:
+> * left: The table is to the left of the document.
+> * center: The table is to the center of the document.
+> * right: The table is to the right of the document.
+>=20
+> I'm not sure whether we should follow the standard, or common
+> use. Anyway, floats will be used for some other purposes.
+>=20
+
+I=B4m affraid I see that in a lot of sites. I=B4d prefer we support it.
+
+>> 289
+>> Impact: soft error
+>> At: run time
+>> Type: render bug
+>> Comments: when an image tooltip is display and you scroll the page
+>> with the keyboard, dillo fails to render the new scrolled content.
+>> HTReproduce: Go to dillo home page, move the mouse cursor on the top
+>> image, when the tooltip is displayed, press PgDown: the page scrolls
+>> but the bottom is empty.
+>> WorkedBy: nobody
+>=20
+> This is a Gtk+ bug, it can be simply be reproduced (combination of
+> tooltips and a GtkLayout, in which is painted).
+>=20
+
+Ok. Is it possible to find a workaround ? Like remove the tooltip as soon=
+as a
+key even is received. That would also solve the sticky tooltips =B4featur=
+e=B4.
+
+Best,
+------------------------------------------------------------------------
+Eric GAUDET <eric.gaudet@vn...>
+Le 01-Mar-2002 a 11:32:55
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+[Dillo-dev]bug track review
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-03-01 18:21
+
+Hi,
+
+I just took some time to take a look on the bug tracking engine. Here
+are some comments on a few.
+
+> 202
+> Impact: soft error
+> At: run time
+> Type: render bug
+> Comments: When an image is loading over a slow connection, and you
+> start scrolling up and down while it draws, some parts of it may not
+> get updated. HTReproduce: Any big image will do. For instance, try:
+> http://www.photo.net/photo/pcd1765/walk-away-44.tcl
+> WorkedBy: nobody
+
+This is a problem of Dw_widget_queue_draw_area, which would quite hard
+to solve. If somebody is *really* interested in solving this, just ask
+me for a more detailed explanation.
+
+> 231
+> Impact: soft error
+> At: run time
+> Type: misbehaviour
+> Comments: dillo doesnt render http://www.fuckedcompany.com the leftmost 5% of
+> the page appears to be cut off HTReproduce: view http://www.fuckedcompany.com
+> WorkedBy: nobody
+
+Dillo does render it, but below the main part of the page. Same as the
+following:
+
+> 233
+> Impact: soft error
+> At: run time
+> Type: render bug
+> Comments: dillo doesn't render side-by-side tables (with align=left)
+> correctly. Dillo renders one table per line, no matter what. It seems
+> to be a standard to render such tables on the same line.
+> HTReproduce: http://www.rti-zone.org/dillo/Html.testsuite/table-side.html
+> http://www.dpreview.com/
+> WorkedBy: nobody
+
+Such a behavior would be actually not quite standard compliant, see
+http://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#edef-TABLE:
+
+align = left|center|right [CI]
+Deprecated. This attribute specifies the position of the table
+with respect to the document. Permitted values:
+* left: The table is to the left of the document.
+* center: The table is to the center of the document.
+* right: The table is to the right of the document.
+
+I'm not sure whether we should follow the standard, or common
+use. Anyway, floats will be used for some other purposes.
+
+> 289
+> Impact: soft error
+> At: run time
+> Type: render bug
+> Comments: when an image tooltip is display and you scroll the page
+> with the keyboard, dillo fails to render the new scrolled content.
+> HTReproduce: Go to dillo home page, move the mouse cursor on the top
+> image, when the tooltip is displayed, press PgDown: the page scrolls
+> but the bottom is empty.
+> WorkedBy: nobody
+
+This is a Gtk+ bug, it can be simply be reproduced (combination of
+tooltips and a GtkLayout, in which is painted).
+
+
+Sebastian 
+

@@ -1,0 +1,2015 @@
+[Dillo-dev]Home page (ASCII version)
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-31 13:27
+
+==============================================================================
+Here's the new home page:
+==============================================================================
+
+
+The Dillo Web Browser
+_________________________________________________________________
+
+Welcome to Dillo project!
+
+What's Dillo?
+
+Dillo is a web browser project based upon gzilla-0.2.2 and
+Armadillo-0.3.10.
+It aims to be a multiplataform browser alternative that's stable,
+developer-friendly, usable, fast, and extensible (Dillo is a free-SW
+project in the terms of the GNU public license).
+_________________________________________________________________
+
+Fast links:
+
+* Achieved goals
+* Naming&Coding design
+* Bug-track engine
+* Authors
+_________________________________________________________________
+
+News:
+
+Dec 30, 1999
+
+Updated the web site, wrote new patching directions, updated the
+bug-track engine, incorporated several patches, and currently planning
+a new tarball release.
+
+Dec 18, 1999
+
+Naming&Coding, Stage 2, is finished, completely!!!
+_________________________________________________________________
+
+Current goals 
+
+Our primary concerns by now are (Dec 30, 1999):
+* Fix and stabilize Dillo to be at least as stable as gzilla-0.2.2,
+but faster. (this is our main and first goal by now)
+* Fix the rendering bugs that affect GIF and JPG files (Those that
+were working good in gzilla-0.2.2).
+* Document Dillo internals within the source (every function).
+
+Future Goals (these may change in the future)
+* Make '#' anchors work. (The rendering part of it) Currently those
+anchors leave you at page's top
+* Incorporate the FTP plugin (I tested it, it works but I just need
+to put it there)
+* Define a simple plugin API (stdout based)
+* Begin designning a dynamic loadable plugin scheme
+* Fix and improve rendering
+* Begin working on TABLE support!
+
+That's enough work for now!
+_________________________________________________________________
+
+Developer info
+
+Brief Program Overview
+
+Dillo is a browser purely written in C; that helps to make it very
+fast and produces a smaller binary file than what would be achieved
+with C++. The trade off is that inheritance gets more complex cause it
+must be implemented with C code. That's a bit scary at the very
+beginning, but is not as bad at it seems.
+
+Dillo internals are not of a simple nature. A Web browser is an
+inherently complex application. Just think of every thing that needs
+to be coordinated to get the job done. And at the very same time!
+
+Dillo's main libraries are gtk+ (gimp tool kit) for widgets and glib
+for almost everything else (as memory management). So, if you happen
+to be developing new code, please try to find what glib has to offer
+you, amd use it. Needless to say, you must use g_malloc, g_free,
+g_realloc and friends.
+
+Dillo's SW-techniques include threads, callbacks, signal driven IO
+(input/output), a bytesink abstraction layer and an IO engine that
+cares file descriptor activity (including sockets). Ah, there's also a
+widget abstraction layer that serves as an internal ADT (abstract data
+type) to gtk+; It's called Dillo widget (Dw_ within function names).
+
+I'll try to document those later. Please be patient.
+
+Now you know what you'll face when digging inside the code.
+
+Patching
+
+Patching is very welcome. Specially if the patched bug comes from the
+bug-track engine. But beware, only high quality patches will be
+accepted.
+Dillo is following an evolving software-model where every new version
+of it, should be better than the former; there's no place for unstable
+releases!
+
+So, if you want to submit a patch, please make sure:
+
+It passes a 30 minutes stress test
+A stress test is a testing situation where you put the newly
+implemented routines under heavy workload (more than what's
+expected under normal circumstances).
+
+It passes your own custom testing functions
+An alternative to the former point. If the stress test is hard
+to implement, or the new functionality is better covered with
+this kind of test, chose this way!
+
+It follows Dillo's Naming&Coding design
+Every patch must strictly follow our coding standar. Just to
+keep our code clean, and to simplify the patch-reviewing task.
+
+It fixes the problem and doesn't cover the symptoms.
+Sometimes the problem itself lies in a deeper layer; take your
+time, investigate and fix it the right way.
+
+You submit your patches following a "one bug, one patch" scheme.
+Don't submit a huge monolithic patch that fixes several things.
+Split it into smaller patches, one for each bug.
+
+You strive for clean code, not for hacks.
+Although it's very cool to write fancy solutions, they are
+harder to understand and to maintain; please avoid them.
+
+You let others know what you're doing
+Don't do silent patching; use the bug-track engine, make a bug
+report and update your progress regularly. Ask for help if you
+need it.
+
+Contributing
+
+If you're planning to contribute and stay with the project as part of
+the development staff, please subscribe to the mailing list, and email
+me your expertise areas and interests; keep reviewing the bug-track
+engine and the Web site, participate, and have fun!
+
+The bug-track engine
+
+It explains it's purpose by itself, go and take a look at it at:
+
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/Dbugtrack.html
+
+USE IT!
+
+
+========================================================================
+
+Jorge.- 
+
+
+
+[Dillo-dev]Server is down
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-31 13:12
+
+Hello there,
+
+
+I had just finished updating the website, the bug-track
+engine, the patching process directives and several other things,
+and when trying to commit them, I noticed that the Web server was
+turned down... But it was worst, the whole university net was
+turned down, on purpose, without a notice nor a warning: they
+turned it off just like that...
+
+I cant express how ashamed I feel; all I can say is that I
+know people there that had helped us a lot (with servers, advice
+and the like) and this 'decision' was on someone else's hands...
+I thank God for having this mailing list running on another
+machine (I was offered a mailing list...), and to have a
+communication channel with you.
+
+As I wrote before, they didn't warn anyone, so I don't know
+when it will be up; maybe January 3... If this is not the case,
+I'll start moving the site to so....net and start working
+from there.
+
+Please receive my apologies, and let's try to coordinate the
+project with the mailing list these days.
+
+BTW, I was trying to make a new tarball release before Y2K,
+and now it will have to wait; personally I'll use this time to
+continue digging deep to the roots of the image rendering bug.
+
+
+sincerely
+Jorge.- 
+
+
+
+[Dillo-dev]bug #23
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-30 13:49
+
+With regard to bug #23, I sent this lines to Luca:
+
+
+-----------------------------------------------------------------
+With regard to your ideas request for the preferences menu, I
+have several, but most of them are not implemented yet, so you'll
+have to think of it, as a module that will be heavily changing
+over time.
+
+* User selected preferences must be saved to a file
+'preferences.rc' (readable config) inside .dillo/ directory.
+* Actually, there's code inside the new tarball that
+implements a gentle background-alternative to WHITE. (I always
+thought it must be in the preferences menu :)
+* The new progress bar code lets choices on fonts and colors
+(to be considered in the near future).
+
+Not yet implemented, but desirable:
+
+* Text font (and size) preference
+* Load images (YES/NO) Def: YES
+* Use decompressed image cache (YES/NO) Def: YES
+* Save preferences on exit (YES/NO) Def: NO
+* Save preferences functionality
+
+
+I know this is mostly 'vaporware' and probably will be easier
+to handle and implement in the future; you choose!
+-----------------------------------------------------------------
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]News (lots)
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-24 01:48
+
+Hi!
+
+
+Although I haven't wrote much to the list, my work has been
+divided into several areas; some quite interesting!
+
+Let's start:
+
+* There are several changes and patches already integrated to
+the code; current changelog looks like this:
+
+
+dillo-0.0.4.tar.gz
+
+- Added more comments to the source
+- Removed dw_test
+- Implemented rendering for <OL> </OL> tags
+- Implemented background colors
+- Changed some ADTs to glib
+- Added PNG image format support
+- Fixed a compilation crash that affected RedHat 6.1 systems
+
+
+* I still have some (very interesting) patches in my queue and
+when they make their way into the code, you'll notice the BIG
+difference. (Luca made neat changes to the UI and he also
+implemented the 'View source' functionallity among others! You'll
+find that detailed in the final Changelog.)
+
+* I've been patching too. Most of it can be tracked at the
+engine.
+
+* There're still more patches to include!!!
+
+* The Web server was behaving erratically so I had to get to
+it (lots of time). Now it's working better and I hope that to
+last. If you experience problems with it, please let me know.
+
+* I've been to the University were I studied, and they granted
+me access to several machines (that's why I had the chance to
+test with redhat 6.1 among others). Several things are happening,
+and all I can tell you by now is: cross your fingers! Excellent
+news could spring from that.
+
+* While testing dillo on Redhat 6.1 (glibc2) I found critical
+races (problems). That's good and bad: good cause now I know the
+obscure cause of some erratic behavior, and bad, cause it's not
+simple.
+
+* What else? I continued testing, and compared gzilla-0.2.2
+select-based IO (polling) routines against SIGIO (introduced by
+Randall Maas into armadillo), and ... guess what?
+
+I'll have to design a more detailed test cause, with that
+kernel, the former method was significatively faster than the new
+one! The test was as simple as averaging a few page loads from an
+specific address (freshmeat) with both browsers, gzilla-0.2.2 and
+dillo-0.0.3. 
+
+Once again, that's good and bad :)
+
+Good: 
++ If the test is right (I mean, it remains TRUE most of
+the time), we'll end up with a browser that's faster than what we
+actually have (by changing the IO engine).
++ The internal implementation is very much simpler with
+the former method, and that leads to code thats much easier to
+understand and maintain.
+
+Bad:
++ (think about it...)
+
+* I also focused my efforts on project security concerns.
+There'll be new plans, most of them introduced next year... BTW,
+please bear in mind that current project status is not secret,
+but private (I know this is a complicated area to discuss, but
+please think about how many browser projects you knew, and after
+that, focus on what we have here...)
+
+* CVS stuff: I want to start working with it. Just to keep
+track of project history, and to keep a detailed Changelog of it.
+I'm curently designing a patching submition scheme to help us
+keep it clear and useful (not the highest priority though).
+
+
+Finally, I want to thank everyone here, just as accurately as
+my english allows me, for the excellent spirit this project has
+shown in this first month of work.
+Let's keep it that way!
+
+I also hope it not to be too late, to wish you an excellent
+Christmas, and a joyfull new year celebration!
+
+
+sincerely
+Jorge.- 
+
+
+
+[Dillo-dev]News
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-21 23:42
+
+Hi there!
+
+
+The work here has been up to full capacity!
+
+* The patch that removes gzw_test is applied (thanks Sammy)
+* The Background feature patch also made its way into the code!
+(thanks James and Luca)
+* Luca sent me some patches more that I'll start working on...
+* I have also been working out the code and made some fixes.
+
+
+
+I know the Web server is working awfully slow. I'll try to get
+to that machine tomorrow and see what's happenning. Please be patient.
+
+
+best regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]remove test gzw ?
+
+From: Rota Luca <drake@fr...> - 1999-12-21 20:00
+
+On Mon, 20 Dec 1999, nightstalker wrote:
+
+> should i get rid of the 'test gzw' feature or not ?
+
+Yes!
+Well, I think so :)
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]remove test gzw ?
+
+From: nightstalker <nstalkie@tv...> - 1999-12-20 19:25
+
+i was just cleaning up some stuff from commands.c .. and i was wondering
+..
+
+should i get rid of the 'test gzw' feature or not ?
+
+sammy.
+
+ps: answer as soon as you can please :) 
+
+
+
+Re: [Dillo-dev]how to use ddd or gdb with dillo
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-20 00:27
+
+Sammy,
+
+> how can i use ddd or gdb with dillo ? i think it had to do with
+> uncommenting two lines ?
+
+You can debug it without any changes using local files but, if
+you need to debug it, using the dns stuff, then go to 'dns.c',
+line 42, and comment it out. That's all!
+
+
+Thanks for commiting yourself to fix some bugs.
+
+
+Sincerely
+Jorge.- 
+
+
+
+[Dillo-dev]how to use ddd or gdb with dillo
+
+From: nightstalker <nstalkie@tv...> - 1999-12-19 22:28
+
+how can i use ddd or gdb with dillo ? i think it had to do with
+uncommenting two lines ?
+
+sammy. 
+
+
+
+[Dillo-dev]announce dillo to the public ?
+
+From: nightstalker <nstalkie@tv...> - 1999-12-19 22:18
+
+hi all,
+
+
+i think this is a time when we can announce the project to the public
+...
+(for example via freshmeat)
+
+now that the name changing / indenting has ended, i think we have a good
+
+basis for further development ! the name change actually worked,
+something
+we never achieved with gzilla/armadillo :)
+
+sammy. 
+
+
+
+[Dillo-dev]Update
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-18 22:23
+
+Hello everyone!
+
+I updated the website once more. Visit it thoroughly!
+BTW: The bug-track engine has new load :)
+
+Good luck!
+Jorge.- 
+
+
+
+[Dillo-dev]Another tarball release!!!
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-18 18:37
+
+Hi!
+
+dillo-0.0.3.tar.gz is ready at the web site!
+(following patches must be against this version)
+
+It features several improvements; read them in the ChangeLog
+inside the tarball. This will be our code base for bug fixing.
+
+Finally, our house is clean and we can start removing bugs from
+Dillo. I'll flood the bug-track engine soon...
+
+
+Jorge.-
+
+
+Pd: I'm very happy to be at this point; as fast as we did. 
+
+
+
+Re: [Dillo-dev]Stage two
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-18 10:30
+
+Daniel,
+
+> I'll do it. I think I have more access time to computers from now on.
+> Perhaps (holds breath) I might even have Linux up and running...
+
+well, I already did it but...
+
+> Just give me the details and what you want me to do.
+
+Would you mind making some changes in the future? i.e. I send
+you the ASCII with the contents and you email me back the html
+pages?
+
+> Jorge Arellano Cid escribió:
+> ...
+
+¡Con acento y todo!
+Felicitaciones.
+
+
+Gracias
+Jorge.- 
+
+
+
+[Dillo-dev]**** Stage 2 ****
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-18 01:46
+
+Hi there!
+
+It seems that Luca has done 90% of the Stage 2 work with a
+couple of nice scripts!!!
+
+I run them and found minor problems that I want to polish
+before releasing a new tarball!!!
+
+The good new is that you won't have to do anything, stage 2 is
+almost complete!
+
+Some files didn't pass the object files test, so I'll check
+those tomorrow, fix a couple more things and voila, new tarball.
+From then and on we'll focus on BUG fixing.
+
+These ARE good news!
+
+Thank you very much Luca.
+
+Jorge.- 
+
+
+
+[Dillo-dev]*** Stage 2 ***
+
+From: Jorge Arellano Cid <jcid@in...> - 1999-12-18 01:25
+
+Hi there!
+
+It seems that Luca has done 90% of the Stage 2 work with a
+couple of nice scripts!!!
+
+I run them and found minor problems that I want to polish
+before releasing a new tarball!!!
+
+The good new is that you won't have to do anything, stage 2 is
+almost complete!
+
+Some files didn't pass the object files test, so I'll check
+those tomorrow, fix a couple more things and voila, new tarball.
+From then and on we'll focus on BUG fixing.
+
+These ARE good news!
+
+Thank you very much Luca.
+
+Jorge.-
+
+
+Pd: This message comes from another server cause mailtag is down. 
+
+
+
+Re: [Dillo-dev]Stage two
+
+From: Daniel Moore <ant@so...> - 1999-12-17 21:30
+
+I'll do it. I think I have more access time to computers from now on.
+Perhaps (holds breath) I might even have Linux up and running...
+
+Just give me the details and what you want me to do.
+
+Cheers,
+Daniel.
+
+Jorge Arellano Cid escribió:
+
+> Hi!
+>
+> Good news are:
+>
+> * I'm planning to release the new tarball today.
+> * Luca has plenty of patches
+> * The tarball has many many changes (you'll see)
+> * I have stage two directives written
+> (just need to put them on the web site)
+>
+> Bad news are:
+>
+> * Jarrod has no time now to arrange the web site.
+> * I'll have to do that (delay root...)
+>
+> Jorge.-
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Updated web site
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-17 20:37
+
+Hello!
+
+Finally, the new Web site is up and running.
+Go take a look at it; several things changed.
+
+I wrote a bit of everything there :)
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]New tarball release
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-17 17:42
+
+Hi!
+
+Is official now, there's a new tarball: dillo-0.0.2.tar.gz
+Grab it from the site!
+
+Luca tested it and it works fine...
+(dillo-0.0.2.tar.gz is exactly the same as d2.tar.gz)
+
+enjoy
+Jorge.-
+
+
+Pd: Feedback? 
+
+
+
+Re: [Dillo-dev]New tarball test oportunity :)
+
+From: Rota Luca <drake@fr...> - 1999-12-17 16:42
+
+On Fri, 17 Dec 1999, Jorge Arellano Cid wrote:
+
+> I really hate a tarball that doesn't compile, so the first one
+> to answer this mail, will be replied with the alfa tarball URL,
+> and I'll wait online for him to reply me the results. OK?
+
+d2.tar.gz compile fine and work fine on my box.
+I get only a pair of warning (but they're in the previous tarball, too).
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]tarball alpha test
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-17 14:26
+
+Hi!
+
+
+Well, I waited online, but nothing happened..
+The alpha tarball is name d2.tar.gz.
+I'll check your answers ASAP; got to go out now....
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]New tarball test oportunity :)
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-17 13:00
+
+Hi!
+
+I just finished the new tarball. We're only one step aside
+from dillo-0.0.2 release: the alfa test.
+
+I really hate a tarball that doesn't compile, so the first one
+to answer this mail, will be replied with the alfa tarball URL,
+and I'll wait online for him to reply me the results. OK?
+
+(Yes, I tested it thoroughly here, but it always seems to run
+perfect on the packager's machine...)
+
+I'll be right here!
+(updating the web site)
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Stage two
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-17 10:23
+
+Hi!
+
+
+Good news are:
+
+* I'm planning to release the new tarball today.
+* Luca has plenty of patches
+* The tarball has many many changes (you'll see)
+* I have stage two directives written
+(just need to put them on the web site)
+
+Bad news are:
+
+* Jarrod has no time now to arrange the web site.
+* I'll have to do that (delay root...)
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Stage two
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-16 00:08
+
+Hi!
+
+
+Jarrod is arranging the web site now, and I'm setting the
+framework to start with stage two; I have to finish the tarball
+too... I hope it to be ready in a couple of days.
+
+James: I was talking about the patch that you described
+writing:
+"All this patch does is fix the bug where hitting reload before
+loading any pages crashes the browser. It also adds some
+consistency to initialization of dillo objects."
+
+
+Sammy: I referred the patch that:
+"changes: bookmarks add shortcut is now <ctrl+d>
+changed gzilla menu to file menu (heh)
+changed help - gzilla home and gzilla manual to
+dillo home/manual :)
+reindented source
+made the name changes for the functions : a_Menu_
+etc ..."
+
+if you have an actualized version of it, GOOD! :-)
+
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]News
+
+From: nightstalker <nstalkie@tv...> - 1999-12-15 17:46
+
+Jorge Arellano Cid wrote:
+
+> Hello everyone!
+>
+
+hi :)
+
+>
+> The big menu patch from sammy (45 Kb) will remain queued until
+> stage two completes. I hope stage two effort not to take more
+> than one week.
+>
+
+be careful when applying that .. it also has a .h file that is changed
+.. (because one of the
+a_Menu things should be dumped from .h and changed to Menu... )
+
+anyways, the patch is so big cause i also did reindenting in that one.
+i didn't make a lot of changes to the code .. 
+
+
+
+[Dillo-dev]News
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-15 12:14
+
+Hello everyone!
+
+
+Today I'm very happy and maybe in a couple of weeks I'll have
+very good news for the project (even more)... Hold on, if it
+happens, I tell you!
+
+Now I have some work to do but, after that, I'll go to the Web
+site console and make some updating there; the stage one of the
+naming&coding effort is about to finish, and now is time to set
+a framework for stage two.
+
+I'd be very happy to have a Web site maintainer (or
+volunteer), someone that I could send ASCII text with the Web
+site contents, and from whom I can get back the HTML (well,
+there's some site arranging and design work involved). That way
+it would be much easier for me to keep fresh contents there...
+But if you're able to do patching or BUX fixing work, I'd
+rather prefer you to work on those areas!
+
+Stage two will be cleanning time (discussed on the list) and
+time for fixing (improving and wiping) all those rough edges you
+had taken notes on, while working out the sources.
+
+For instance, when facing the IO module, I found an incredible
+mess there! It was so impressive that I decided to block every
+single source with my name at the progress-track-monitor, just to
+work it out heavily; you'll see what I did in the next Dillo
+tarball.
+
+The same happened when a got to the URL module; but this time
+it didn't take me by surprise. BTW I was led there by a BUG! (one
+more). And it was cloaked with some fancy stuff! There were
+function definitions within the header files (__inline__); that
+makes them invisible to a debugger...
+
+So I decided to rearrange the whole thing. Once I was ready
+with that, bug hunting was a pleasure! Thanks to you all!!!
+
+I'll try to release the tarball for stage two as soon as
+possible. It'll include several improvements, as the ones I
+described before, plus some compile time warnings fixes, updated
+automake stuff, some other bugs fixed, indented code,
+more documentation within the source, some patching I have queued
+(from James).
+
+The big menu patch from sammy (45 Kb) will remain queued until
+stage two completes. I hope stage two effort not to take more
+than one week. 
+
+
+After stage two succeeds, I'll try to start working with the
+CVS repository (don't worry, you'll always have a tarball
+alternative).
+
+
+Best regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]#ifdef USE_GZW
+
+From: <jamesm@gt...> - 1999-12-14 22:18
+
+We should definitely get rid of these #ifdefs. They were probably
+useful when the gzw module was under development, but now it simply
+adds more bytes to the source tree.
+
+-James McCollough 
+
+
+
+Re: [Dillo-dev]#ifdef USE_GZW
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-14 22:13
+
+Hello!
+
+
+On Tue, 14 Dec 1999, Rota Luca wrote:
+
+> 
+> Hi,
+> 
+> I notice that in some files (gzilla{html,plain,web}) there is often the
+> code:
+> 
+> #ifdef USE_GZW
+> gzw_function();
+> #else
+> gtk_function();
+> #endif
+> 
+> Maybe, we could keep the gzw version only, to make the code more readable.
+> What do you think about it?
+
+I think just as you and Sammy, let's wipe that at the second stage!
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]#ifdef USE_GZW
+
+From: nightstalker <nstalkie@tv...> - 1999-12-14 19:00
+
+Rota Luca wrote:
+
+> Hi,
+>
+> I notice that in some files (gzilla{html,plain,web}) there is often the
+> code:
+>
+> #ifdef USE_GZW
+> gzw_function();
+> #else
+> gtk_function();
+> #endif
+>
+> Maybe, we could keep the gzw version only, to make the code more readable.
+> What do you think about it?
+>
+> Ciao,
+> Luca
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+yep, i think we should keep only one of those ... it makes the source more
+readable,
+and we don't have to support old stuff we won't use anymore :)
+
+i found this too in some files (this had to do with supporting gtk 1.1)
+
+sammy. 
+
+
+
+[Dillo-dev]#ifdef USE_GZW
+
+From: Rota Luca <drake@fr...> - 1999-12-14 18:12
+
+Hi,
+
+I notice that in some files (gzilla{html,plain,web}) there is often the
+code:
+
+#ifdef USE_GZW
+gzw_function();
+#else
+gtk_function();
+#endif
+
+Maybe, we could keep the gzw version only, to make the code more readable.
+What do you think about it?
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]I am in doubt what to do!
+
+From: Rota Luca <drake@fr...> - 1999-12-12 21:44
+
+On Sat, 11 Dec 1999, Jorge Arellano Cid wrote:
+
+> > 1. a_gtk_Dw_view_new
+> > 2. a_Dw_gtk_view_new
+> > 3. a_Dw_view_new
+> > Which do you want?
+
+> Number 2.
+
+OK!! I like it, too.
+
+> Pd: Haven't seen your vote on braces placement yet!
+
+I prefer:
+
+if( x == y ) 
+{
+x++;
+y--; 
+} 
+else 
+{
+x--;
+y++;
+}
+
+But it's not so important for me :).
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]Re: reindenting
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-12 13:06
+
+Hi,
+
+Thank you very much for answering Jarrod's email Sammy.
+I'll just add a bit to it...
+
+
+> > Jarrod
+> Sammy
+Me
+
+
+> > I've got a little (Very little) experience in
+> > C++, but let me tell you what I would like to see..
+> > could someone do some sort of heavy commenting on the
+> > code? 
+
+Have you been there?
+The code is commented, not heavily, but up to a good amount
+IMHO. Comments aim to unveil the algorithms, or the internals,
+not to explain every single detail...
+
+Why?
+
+Because programming expertise is an scarce resource, and
+solid programming expertise is even more rare, so when a project
+happens to count with one of those star-developers, the trade off
+is to sacrifice documentation for highly-valued SW.
+I'm not putting this to black or white, please don't get me
+wrong; it IS a trade off.
+
+
+
+> > Or at least do a cflow with a quick
+> > description? I understand C a bit, but I need to see
+> > some type of roadmap, and "read the archives" is a bit
+> > too vague..
+
+I'd very much like to see a quick description too, so I tried
+to put such an introduction at the web site. I know it was
+appreciated cause I can feel a strong collaborative spirit within
+this project, and I'm very delighted with that; the efforts this
+guys are putting in are not unnoticed by me, the work is tough
+and their commitment has been generous to the bone.
+
+Have you wondered why the naming&coding change effort is
+taking place?
+
+Please, be fair on us and don't blame we put you to "read the
+archives".
+
+
+> > I know it seems like a lot, but if I'm
+> > ever going to help on the coding end (or if any one
+> > else is, for that matter) we kinda need to know what's
+> > going on..
+> 
+> you are right ! Dillo is a BIG program and you need to see
+> some kind of flow in the source. i don't know a lot about
+> the internals of Dillo yet too :(. 
+
+Knowing the whole functionning of Dillo is hard even for a
+core developer. And maybe I'm the one that has been more
+thoroughly to the code at this point, so I designed the
+naming&coding style, layer abstractions, changing algorithm,
+progress tracker and I'm also doing the patch integration task...
+
+Once we succeed with this, it will be *very* much easier for
+everyone to step into the code and to find out what's going on
+there, and then, based on individual specific-areas expertise
+we'll get to document it.
+
+But that will be after bug chasing, cause that's the highest
+priority (stability), and with the extra knowledge gained from
+that stage, the documentation will be more clean, accurate and
+pertinent.
+
+
+> i was thinking about
+> making some kind of overview that lists every module and
+> every function together with what it is supposed to do/does)
+> this way we can also try to avoid reimplementing thins like
+> lists etc ... and: if you find a bug in a function, you can easily
+> lookup which functions performs a similar task to see if the
+> bug is there too ...
+
+Sammy is right, that's the idea. 
+(although it needs polishing work)
+
+
+
+Ok, that's what I needed to say about that. Please don't get
+distracted with this and let's continue working on the naming
+effort. We still have a lot of work to do finishing the first
+stage.
+
+Whe we get to the second stage (remember the notes I asked
+you to take when reviewing the modules), and those new changes
+are integrated, it will be celebration time!
+
+It took a long time to write this answer, and I have plenty
+of patches waiting at my queue, but I thought this information
+about near-future-plans, would be very useful to us all.
+
+
+OK, now I'll get back to work those patches in...
+
+
+Sincerely
+Jorge.-
+
+
+Pd:
+
+> i always use braces, even for one line of code ...
+
+OK Sammy, you convinced me, I'll try to add the braces.
+
+
+Pd2:
+
+> > Also.. one other odd thing.. Dillo does not like
+> > glibc2.1 systems. I recall there being some sorta
+> > manual fix for gzilla, and I know it'd work on my
+> > system.. but I can't recall WHAT that fix was. It
+> > involved (If I recall correctly) something with the
+> > LDL. Anyone manage to save that?
+
+Please let us know what compile time errors you got.
+I know it works ok with glibc2 systems but extra info is
+welcomed.
+
+> i don't know about this one ...something i wanted to add :
+> i tried out the new tarball today (dillo-0.0.1) and it
+> compiled fine again on my system (with the 0.0.0 i had to
+> type make inside the src/ dir .. make would fail in the
+> dillo-0.0.0 dir (due to a configure it did). i'm happy this is
+> fixed :)
+
+I made the autoheader, autoconf, automake stuff again, I hope
+that was the fixing root :-) 
+
+
+
+[Dillo-dev]extended cvs explanation
+
+From: <jamesm@gt...> - 1999-12-11 20:41
+
+Here's an outline as to how to use dillo's CVS repository:
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Anonymous CVS Access
+
+This project's SourceForge CVS repository can be checked out through
+anonymous (pserver) CVS with the following instruction set. When prompted
+for a password for anonymous, simply press the Enter key.
+
+set the environment variable CVSROOT to :pserver:anonymous@cv...:/cvsroot/dillo
+
+then execute:
+
+$ cvs login
+$ cvs checkout dillo
+
+this will create a directory in the current directory called dillo with
+a duplicate of the source in the repository.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Developer CVS Access via SSH 
+
+***NOTE: this is only for Jorge right now
+
+Only project developers can access the CVS tree via this method. SSH1
+must be installed on your client machine. Substitute username with the 
+proper values. Enter your site password when prompted.
+
+set the environment variable CVS_RSH to ssh and the CVSROOT variable to
+username@cv...:/cvsroot/dillo
+
+first, execute:
+$ cvs checkout dillo
+
+to have a copy in sync with the CVS server. the apply your patches to
+your local 'dillo' directory that was created with the checkout
+command. Once you are comfortable with the changes, and they have
+been tested, update the repository to reflect your changes with this
+command:
+
+$ cvs commit dillo
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Browse the CVS Tree 
+
+Browsing the CVS tree gives you a great view into the current status of
+this project's code. You may also view the complete histories of any
+file in the repository.
+* http://cvs.so....net/cgi-bin/cvsweb.cgi?cvsroot=dillo 
+
+
+
+Re: [Dillo-dev]Re: reindenting
+
+From: nightstalker <nstalkie@tv...> - 1999-12-11 17:31
+
+Jarrod Henry wrote:
+
+> Granted, I am VERY new to C. In fact I doubt I could
+> understand coding at all on this project, I'm just
+> trying to help in whatever meager ways I can. I've
+
+you can help in a lot of ways ! for example the name changing
+we are doing at the moment. you don't need a lot of c
+experience to do that. Some bugs will also be somewhat
+easy stuff to do (for example the menu changes i did once, and
+the UI things).
+
+anyways: your c knowledge will improve :) (if you don't give
+up too soon :)) an advice : be sure you understand pointers
+very well ! it's one of the more important things in c and also
+THE trickiest thing :) many bugs result from having NULL pointers
+or from not calling free when using malloc etc ...
+
+
+>
+> not really been able to work much at all outside the
+> very initial website frontpage due to finals at
+> school. I've got a little (Very little) experience in
+> C++, but let me tell you what I would like to see..
+> could someone do some sort of heavy commenting on the
+> code? Or at least do a cflow with a quick
+> description? I understand C a bit, but I need to see
+> some type of roadmap, and "read the archives" is a bit
+> too vague.. I know it seems like a lot, but if I'm
+> ever going to help on the coding end (or if any one
+> else is, for that matter) we kinda need to know what's
+> going on..
+
+you are right ! Dillo is a BIG program and you need to see
+some kind of flow in the source. i don't know a lot about
+the internals of Dillo yet too :(. i was thinking about
+making some kind of overview that lists every module and
+every function together with what it is supposed to do/does)
+this way we can also try to avoid reimplementing thins like
+lists etc ... and: if you find a bug in a function, you can easily
+lookup which functions performs a similar task to see if the
+bug is there too ...
+
+one of the better ways to learn something about the code is
+reading doc/bytesink.txt or something like that. it explains
+what a bytesink is and how it is used in gzilla/Dillo. it also
+explains what happens when between the time you enter an url
+and when dillo displays your html page.
+i think we need more docs like this (btw: this doc needs
+updating when the name change is done)
+
+another way to find out something is by stepping through it with
+a debugger (for example ddd, a nice frontend for gdb)
+
+
+
+> --- nightstalker <nstalkie@tv...> wrote:
+> > > I really don't like this format:
+> > >
+> > > > if( blah == blahblah )
+> > > > {
+> > > > hello();
+> > > > }
+>
+
+btw: i didn't write this :)) it was a reply to a message i sent where
+i said the opposite :)
+
+>
+> I like this. One statement per line. The ultimate
+> reason I like this format is because the {'s are
+> matched. I know a lot of editors will source
+> highlight around the mismatched braces/parens, but
+> this makes the code readable without using those
+> editors. Just MHO. I mean, we can use indent *.[ch]
+> if we really wanna set it up our own ways :)
+>
+
+i like this form better too :) the number of lines of the code
+go up, but i think this is more readable than the other form.
+btw: this way of indenting is called BSD-style indenting i
+believe.
+
+
+>
+> > > > if( blah == blahblah ) {
+> > > > hello();
+> > > > }
+>
+> I don't. First off, it's bad form :) It's a single
+> line of code following a test. That means you don't
+> need the braces. But that's just my compsci
+> instructor speaking through me. The bad part about
+> this code is that the braces aren't matched up. Throw
+> another function around that , and it gets really hard
+> to read. Ex:
+>
+
+i always use braces, even for one line of code .. i'll try to explain
+why ...
+when you want to add something, sometimes a guy will not pay
+attention and just add it :) then you get something like : (using
+my preferred indenting :)
+
+if( blah == blahblah )
+hello();
+hello2();
+
+i also do it because it just looks better in my opinion :)
+
+
+>
+> void somefunc(int count, float& average)
+> {
+> if (count <= 200) {
+> printf("Count is less than or equal to 200");
+> average+=count;
+> }
+> return;
+> }
+>
+> My problem with this is on a glance over, it doesn't
+> look like the decision was exited correctly. Or it
+> could appear unclear that the average+= line is part
+> of the true case. Or a variety of other things. The
+> purpose (as this beginner) sees to indenting is to
+> make the code readable. Lining up the braces and
+> parens help to isolate blocks on quick run-throughs.
+> I already have a ton of work to do once I get free of
+> school this semester to learn the ins and outs of
+> Dillo.
+>
+
+code like that is the reason why we want to re-indent :)
+
+
+>
+> Also.. one other odd thing.. Dillo does not like
+> glibc2.1 systems. I recall there being some sorta
+> manual fix for gzilla, and I know it'd work on my
+> system.. but I can't recall WHAT that fix was. It
+> involved (If I recall correctly) something with the
+> LDL. Anyone manage to save that?
+>
+
+i don't know about this one ...something i wanted to add :
+i tried out the new tarball today (dillo-0.0.1) and it
+compiled fine again on my system (with the 0.0.0 i had to
+type make inside the src/ dir .. make would fail in the
+dillo-0.0.0 dir (due to a configure it did). i'm happy this is
+fixed :)
+
+
+>
+> Jarrod
+> 
+
+
+
+Re: [Dillo-dev]Re: reindenting
+
+From: Jarrod Henry <magnwa@ya...> - 1999-12-11 17:03
+
+Granted, I am VERY new to C. In fact I doubt I could
+understand coding at all on this project, I'm just
+trying to help in whatever meager ways I can. I've
+not really been able to work much at all outside the
+very initial website frontpage due to finals at
+school. I've got a little (Very little) experience in
+C++, but let me tell you what I would like to see..
+could someone do some sort of heavy commenting on the
+code? Or at least do a cflow with a quick
+description? I understand C a bit, but I need to see
+some type of roadmap, and "read the archives" is a bit
+too vague.. I know it seems like a lot, but if I'm
+ever going to help on the coding end (or if any one
+else is, for that matter) we kinda need to know what's
+going on..
+
+
+Now..
+
+--- nightstalker <nstalkie@tv...> wrote:
+> > I really don't like this format:
+> >
+> > > if( blah == blahblah )
+> > > {
+> > > hello();
+> > > }
+
+I like this. One statement per line. The ultimate
+reason I like this format is because the {'s are
+matched. I know a lot of editors will source
+highlight around the mismatched braces/parens, but
+this makes the code readable without using those
+editors. Just MHO. I mean, we can use indent *.[ch]
+if we really wanna set it up our own ways :)
+
+> > > if( blah == blahblah ) {
+> > > hello();
+> > > }
+
+I don't. First off, it's bad form :) It's a single
+line of code following a test. That means you don't
+need the braces. But that's just my compsci
+instructor speaking through me. The bad part about
+this code is that the braces aren't matched up. Throw
+another function around that , and it gets really hard
+to read. Ex:
+
+void somefunc(int count, float& average)
+{
+if (count <= 200) { 
+printf("Count is less than or equal to 200");
+average+=count;
+}
+return;
+} 
+
+My problem with this is on a glance over, it doesn't
+look like the decision was exited correctly. Or it
+could appear unclear that the average+= line is part
+of the true case. Or a variety of other things. The
+purpose (as this beginner) sees to indenting is to
+make the code readable. Lining up the braces and
+parens help to isolate blocks on quick run-throughs. 
+I already have a ton of work to do once I get free of
+school this semester to learn the ins and outs of
+Dillo. 
+
+Also.. one other odd thing.. Dillo does not like
+glibc2.1 systems. I recall there being some sorta
+manual fix for gzilla, and I know it'd work on my
+system.. but I can't recall WHAT that fix was. It
+involved (If I recall correctly) something with the
+LDL. Anyone manage to save that?
+
+Jarrod
+
+__________________________________________________
+Do You Yahoo!?
+Thousands of Stores. Millions of Products. All in one place.
+Yahoo! Shopping: http://shopping.yahoo.com 
+
+
+
+Re: [Dillo-dev]Re: reindenting
+
+From: nightstalker <nstalkie@tv...> - 1999-12-11 16:45
+
+Jorge Arellano Cid wrote:
+
+> Hello,
+>
+> I really don't like this format:
+>
+> > if( blah == blahblah )
+> > {
+> > hello();
+> > }
+>
+> I prefer this method:
+>
+> > if( blah == blahblah ) {
+> > hello();
+> > }
+>
+> That's my argument.
+> -James McCollough
+>
+> Me too!
+> -Jorge Arellano Cid
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO :)
+
+sammy.
+
+ps: i'll learn to live with it :) 
+
+
+
+Re: [Dillo-dev]I am in doubt what to do!
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-11 11:41
+
+Luca,
+
+Good to see you posting here!
+(I was very worried about the list failing to reach it's
+susbscribers) 
+
+
+> Hello World,
+> 
+> I have to patch gtkgzwview.c but I don't know what to do.
+> 
+> I thought, from gtk_gzw_view_new to:
+> 1. a_gtk_Dw_view_new
+> 2. a_Dw_gtk_view_new
+> 3. a_Dw_view_new
+> 
+> Which do you want?
+
+Number 2.
+
+Why?
+Cause as a wrote before, when asked the same, (I don't remember
+where; blesses to the list), I see Dillo Widget as a whole
+module. So, from #2 it would be clear that the module is Dillo
+Widget, that the functionality is view_new and that it's gtk
+based. Finally I should name the source 'dillogtkview.c' later...
+
+
+
+Jorge.-
+
+
+Pd: Haven't seen your vote on braces placement yet! 
+
+
+
+[Dillo-dev]I am in doubt what to do!
+
+From: Rota Luca <drake@fr...> - 1999-12-11 10:44
+
+Hello World,
+
+I have to patch gtkgzwview.c but I don't know what to do.
+
+I thought, from gtk_gzw_view_new to:
+1. a_gtk_Dw_view_new
+2. a_Dw_gtk_view_new
+3. a_Dw_view_new
+
+Which do you want?
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]Re: reindenting
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-10 10:37
+
+Hello,
+
+I really don't like this format:
+
+> if( blah == blahblah )
+> {
+> hello();
+> }
+
+I prefer this method:
+
+> if( blah == blahblah ) {
+> hello();
+> }
+
+to quote from the CodingStyle document in the linux kernel
+documentation:
+
+Chapter 2: Placing Braces
+
+The other issue that always comes up in C styling is the placement of
+braces. Unlike the indent size, there are few technical reasons to
+choose one placement strategy over the other, but the preferred way, as
+shown to us by the prophets Kernighan and Ritchie, is to put the opening
+brace last on the line, and put the closing brace first, thusly:
+
+if (x is true) {
+we do y
+}
+
+However, there is one special case, namely functions: they have the
+opening brace at the beginning of the next line, thus:
+
+int function(int x)
+{
+body of function
+}
+
+Heretic people all over the world have claimed that this inconsistency
+is ... well ... inconsistent, but all right-thinking people know that
+(a) K&R are _right_ and (b) K&R are right. Besides, functions are
+special anyway (you can't nest them in C). 
+
+Note that the closing brace is empty on a line of its own, _except_ in
+the cases where it is followed by a continuation of the same statement,
+ie a "while" in a do-statement or an "else" in an if-statement, like
+this:
+
+do {
+body of do-loop
+} while (condition);
+
+and
+
+if (x == y) {
+..
+} else if (x > y) {
+...
+} else {
+....
+}
+
+Rationale: K&R. 
+
+Also, note that this brace-placement also minimizes the number of empty
+(or almost empty) lines, without any loss of readability. Thus, as the
+supply of new-lines on your screen is not a renewable resource (think
+25-line terminal screens here), you have more empty lines to put
+comments on. 
+
+(end quote)
+
+That's my argument.
+-James McCollough
+
+Me too!
+-Jorge Arellano Cid 
+
+
+
+[Dillo-dev]CVS information
+
+From: <jamesm@gt...> - 1999-12-10 02:18
+
+Here's a brief explanation of CVS, as well as links to additional
+information.
+
+CVS is a beautiful thing. It allows a set of developers to work on a
+single set of sources, and allows users to get daily updates to the
+source. Generally you have anonymous read access set up, so anyone can
+get the sources, and you also have write access for a select few who
+can make changes.
+
+quoted from the cvs man page:
+
+CVS is a version control system, which allows you to keep
+old versions of files (usually source code), keep a log of
+who, when, and why changes occurred, etc., like RCS or
+SCCS. Unlike the simpler systems, CVS does not just oper-
+ate on one file at a time or one directory at a time, but
+operates on hierarchical collections of directories con-
+sisting of version controlled files. CVS helps to manage
+releases and to control the concurrent editing of source
+files among multiple authors. CVS allows triggers to
+enable/log/control various operations and works well over
+a wide area network.
+
+cvs keeps a single copy of the master sources. This copy
+is called the source ``repository''; it contains all the
+information to permit extracting previous software
+releases at any time based on either a symbolic revision
+tag, or a date in the past.
+
+links:
+
+the homepage of cyclic software, makers of CVS:
+http://www.cyclic.com
+
+a page with links to documentation and other tools:
+http://www.loria.fr/~molli/cvs-index.html 
+
+
+
+[Dillo-dev]Reindenting
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-10 02:13
+
+Hi!
+
+
+I don't know why, but my former message got to the list
+incomplete... 
+
+I'm polling you on the '{', '}' placement as ilustrated in the
+former msg. 
+Everyone in the name change has a vote!
+
+Vote here, to the list.
+
+
+Jorge.-
+
+
+Pd: I don't know if you're receiving this messages, so please
+acknowledge it to my by email. Subject: dillo-dev OK 
+
+
+
+[Dillo-dev]Re: reindenting
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-10 02:01
+
+On Thu, 9 Dec 1999, nightstalker wrote:
+
+> What's the way you are going to use for the re-indenting ? (i know it's
+> a topic of it's own but .. :)
+> 
+> i prefer :
+> 
+> if( blah == blahblah )
+> {
+> hello();
+> }
+> 
+> i hate:
+> 
+> if( blah == blahblah ) {
+> hello();
+> }
+> 
+> :))
+> 
+> if you decide to re-indent the source like the second style, i'll live
+> with it :) i was just a bit curious :))
+> 
+> 
+> 
+> 
+
+
+
+[Dillo-dev]Halfway advanced tarball
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-09 23:29
+
+Hello!
+
+I'm just uploading the "new" tarball to the website. It has
+every single patch I received integrated & tested; chances are
+you'll like it very much.
+
+The effort is not completed though...
+
+With this second half of the naming process, let's start it
+over again, i.e. unpack the new tarball, ./configure; make,
+create the obj/ dir, copy the objects there, strip them and start
+the patching process.
+
+Please do it by module, don't concatenate patches.
+And if your patch needs to modify one of the sources within
+the src/ subdirectories (IO, MIME, URL or Cache), attach the
+patches for those as normal patch files, one patch, one source.
+Just issue a normal 'diff -bu' on them.
+
+
+Enjoy!
+Jorge.-
+
+
+Pd:
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/dillo-0.0.1.tar.gz 
+
+
+
+[Dillo-dev]Patching news
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-09 19:23
+
+Hi,
+
+For those of you that're still praying, relax, I succeeded
+with every single patch (thanks above).
+
+Now I'm cleanning my source tree and when finished, I'll put
+it at the website so we can continue working from it. That'll be
+very soon (give me 4 hours). I'll announce it here, OK?
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Patching hell!
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-09 12:11
+
+Hello everyone!
+
+Currently I have a patching hell here!!!
+
+...but Don't worry, I can handle that; the fact that matters
+is that I *do* dislike it very much.
+
+Please: stop sending me patches for now. I'll try to integrate
+the ones I have now (Sammy's & James') and will put out an
+intermediate level source tarball to continue from.
+
+Please don't send me a huge integrated radioactive patch :-)
+That's really hard to manage. Send me "per module" patches.
+
+I'm currently struggling a 55 Kb. patch....
+
+
+Well, I feel the need to thank everyone collaborating with
+this effort, cause I've been there and I know how hard it is, and
+what a tough work it requires.
+
+I've had the pleasure of a short debugging session with the
+halfway-completed-tarball and it really pays off. You'll
+experience that soon, when I slay the big dragon in!
+
+We're cleanning the house, and it really looks&feels better
+although not completed yet; wait until I show you the identated
+version after the patching effort succeeds! That will be
+Champaigne time!!!
+
+
+Jorge.-
+
+
+Pd: Sammy, I'm putting my best efforts on it. 
+
+
+
+[Dillo-dev]CVS up
+
+From: <jamesm@gt...> - 1999-12-09 01:52
+
+hello,
+
+A CVS repository for dillo is up, consisting of the dillo-0.0.0
+release. to have anonymous read access, set your CVSROOT environment
+variable to:
+
+pserver:anonymous@cv...:/cvsroot/dillo
+
+and do a 'cvs login'. at the password prompt, simply hit enter.
+
+to checkout, do a 'cvs checkout dillo'.
+
+to obtain write access, please contact either jorge or me for details.
+
+-James McCollough
+
+P.S. if cvs.dillo.so....net doesn't resolve, use
+cvs1.so....net:/cvsroot/dillo 
+
+
+
+[Dillo-dev]name change within subdirectories
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-09 01:47
+
+Hi,
+
+I've been told that the progress monitor doesn't work with
+subdirectories...
+But it does!
+Just submit the file name, not including the directory and
+that'll do it. I've put an example there.
+
+(if I'm wrong, let me know)
+Jorge.- 
+
+
+
+[Dillo-dev]Patching hint
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-08 20:53
+
+Hi,
+
+I just managed to integrate gzwimage.c patch (by Luca) in a
+secure way. I mean, with identical object files. Here's what I
+found: g_print() and g_return_if_fail() integrate a function name
+to the object file (as a way of being able to provide that info
+at run time), and that's why the object files differ.
+
+A simple way of avoiding this object file incongruencies, is
+to change those functions, commenting them out in the original
+file (unpatched), making the object for it (save it stripped to
+obj/) and do the naming change process as usual. You'd eventually
+end up with identical object files. If that's true, submit the
+original patch to me with a note about that.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Naming&coding, hints and News
+
+From: Jorge Arellano Cid <jcid@ma...> - 1999-12-08 14:56
+
+Hello World!
+
+This is my first message to the list. We have a mailing list!!!
+Thanks James, your work has saved me precious time that I put to
+the patching effort.
+
+I'm very happy cause now you'll get more informed about project
+activities and related stuff. (I told James to add the "crew" to
+the list but, if you're feeling spammed, please let him know and
+to remove you (you can do that yourself too))
+
+
+============
+News & Hints
+============
+
+------------------------------------------------
+
+As the patches began to flow to my email account (keep sending
+them to me, not to the list), I noticed that sometimes the patch
+fails, even though it was done right, that's why I changed the
+diff format to 'unified'. It works better for me.
+
+Edit your 'mkpatch' script an before the last line you'll find:
+
+diff -b patch/ ./ > ptch
+
+change it to:
+
+diff -bu patch/ ./ > ptch
+
+that's all (or if you hesitate, download the new version from
+the web site).
+
+That'll make things simpler on the patching side ;)
+
+------------------------------------------------
+
+If you compile and get undefined references to renamed
+functions, that's just cause you forgot to erase the stripped
+object file.
+
+------------------------------------------------
+
+If you get to the progress-tracker and see the word 'DONE', it
+means I already succeeded integrating it to the new tarball.
+
+------------------------------------------------
+
+James as ked me what to do with structs, here's a quote:
+
+> for structs, does the 'a_' prefix show up at all?
+
+That's a good idea!
+
+I haven't included that things (neither the gzilla named
+structs and vars), and I think that it was good not doing it.
+Why?
+Because the current naming process is complex enough to scare
+our developers, and that kind of extra work would narrow our
+scope of collaborating people working on it.
+
+But that is to be accomplished on a second stage, and frankly I
+haven't thought of the struct-naming based on scope; that's why I
+found your idea good.
+
+Yes, probably that will be the future naming convention for it.
+I do like it that way.
+
+I.E. Exported structs prefixed with 'a_' and internal ones
+named freely, but declared static!
+
+Perfect.
+Don't do it now though, let it happen at the second stage.
+
+
+> Would GzillaImgSink struct become ImgSink or a_ImgSink?
+
+As long as it is exported, and following the former directives,
+it would be renamed 'a_ImgSink'.
+
+But, let's think of another exported struct, that's named
+simply 'mystery', then it should become 'a_Imgsink_mystery' just
+to show where it came from. Nice!!!
+
+
+------------------------------------------------
+
+Please remember that the naming effort is concurrent and very
+very fragile. We need to make it exactly as the 'manual' says. As
+a matter of fact, I put the manual on a VC an actually use it
+when making the changes!!!
+
+------------------------------------------------
+
+Luca: I tried to integrate your gzwimage.c patch, but the
+object files differ. I went thorough the patch itself, and found
+nothing suspicious :(, I tried from a clean source, but failed
+again so, would you mind sending me a new version? (using the new
+mkpatch); otherwise it will have to wait every other single patch
+to get in :(
+
+------------------------------------------------
+
+thankful
+Jorge.-
+
+
+
+
+Pd: Does anyone know what LOL means? :) 
+
+

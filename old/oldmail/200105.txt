@@ -1,0 +1,2469 @@
+Re: [Dillo-dev]authentification
+
+From: Alexey F. Bekish <admin@of...> - 2001-05-31 17:09
+
+How from all it nsubscribe????
+----- Original Message ----- 
+From: "Didier Bretin" <dbr@in...>
+To: <dillo-dev@li...>
+Sent: Thursday, May 31, 2001 6:32 PM
+Subject: [Dillo-dev]authentification
+
+
+> Hello,
+> 
+> Dillo looks good :o). Go on !!!!
+> Have you planned to deal with authentification ?
+> 
+> Regards
+> -- 
+> .------------------------------------------------.
+> .^. | Didier Bretin, France | dbr@in... |
+> /V\ |-----------------------| http://www.informactis.com |
+> // \\ | `------------------------|
+> /( )\ | Visit: http://www.linuxfr.org/ |
+> ^^-^^ `------------------------------------------------'
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]authentification
+
+From: Didier Bretin <dbr@in...> - 2001-05-31 14:32
+
+Hello,
+
+Dillo looks good :o). Go on !!!!
+Have you planned to deal with authentification ?
+
+Regards
+-- 
+.------------------------------------------------.
+.^. | Didier Bretin, France | dbr@in... |
+/V\ |-----------------------| http://www.informactis.com |
+// \\ | `------------------------|
+/( )\ | Visit: http://www.linuxfr.org/ |
+^^-^^ `------------------------------------------------' 
+
+
+
+[Dillo-dev]0.5.1 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-05-30 18:40
+
+Hi!
+
+dillo-0.5.1 is ready for download!
+
+Note that this version doesn't have tables (delayed to 0.6.0),
+but it carries a bunch of enhancements that make it worth a
+download.
+
+
+Good luck
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Tables!
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-28 14:59
+
+On Sun, May 27, I wrote:
+> [...]
+> A major bug is that image maps often don't work, there will
+> have to be some changes in the structure of DwPage and DilloHtml (see
+> my posting "Image Maps" some weeks ago), this is what I'll do next.
+
+Oh, and the find function does not work, it has to search
+recursively. Another reason to deactivate tables ... :-(
+
+Sebastian 
+
+
+
+[Dillo-dev]Tables!
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-27 11:07
+
+Hi all.
+
+A first version of table implementation is in the CVS! As promised, it
+is completely incremental, no waiting for huge-page-layout-tables is
+necessary.
+
+It is still incomplete, especially borders, colors etc. are not
+supported at all, read the comments at the beginning of
+dw_table.c. Furthermore, there are few pages which do not render as
+expected. A major bug is that image maps often don't work, there will
+have to be some changes in the structure of DwPage and DilloHtml (see
+my posting "Image Maps" some weeks ago), this is what I'll do next.
+
+All table parsing is currently done within #ifdef directives, so you
+can simply deactivates tables by commenting the line "#define
+USE_TABLES" at the beginning of html.c.
+
+
+Sebastian 
+
+
+
+[Dillo-dev]M17n (was: Re: Hi.)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-26 11:16
+
+On Fri, May 25, Jorge Arellano Cid wrote:
+> [...]
+> Some time ago, I received a small patch to enable Korean!, but
+> it required a True Type X server, and the proper fonts intalled.
+> Most probably it doesn't work with forms.
+
+The patch won't work for dillo >= 0.5.0. You'll have to change
+Dw_style_font_realize in dw_style.c. It should be simple to adjust,
+but I cannot test it since I only have latin fonts installed.
+
+> [...]
+> Dillo is small browser, and adding support for every single
+> posibility is certainly not its goal. When it comes to character
+> sets, the situation is: if there's a simple way of supporting at
+> least a certain range, it will most probably be done.
+
+Since Gtk+ 2.0 depends anyway on Pango, there should be no problem to
+use it. I haven't looked at it at all, but as I've understood, Gtk+
+2.0 plus Pango will provide an abstraction layer to handle all
+problems (encoding, rendering, text direction etc.) as simple as
+possible. There are some changes necessary, perhaps in the html
+parser, and definitely in the rendering (e.g. text directions). My
+first idea is to use Pango as much as possible, and otherwise, copy
+ideas from Pango and Gtk+ 2.0.
+
+BTW, there is Gtk+ 1.3, which is (AFAIK) feature frozen, so you can
+already start with it.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Hi.
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-05-25 18:37
+
+Hi folks!
+
+
+On Wed, 23 May 2001, Michael Govorun wrote:
+>
+> > > I'm Korean. Do you know Korea?
+> > > Korea is in asia.
+> > > Of course, my charset is 'euc-kr'
+> > > It is 2 byte.
+>
+> Hi, I'm Russian. Of course, I'm not using 2-byte charset, but I'm also
+> interesting in ability to work with international content in Dillo.
+>
+> I made some minor changes to Dillo and it work nicely with most of
+> russian sites. But all of my changes are hacks. There has to be more
+> universal scheme.
+
+Yes, probably the best solution is to write a single universal
+solution for it. Character encoding is not a simple matter, and
+very often becomes a nightmare in e-mail.
+
+I tend to think as Sebastian, and let the lower layers or
+libraries handle the problem. As you can see, GTK will work with
+Pango someday...
+
+An although I'm not an expert in character encodings, it seems
+that sometimes a True Type enabled X server is also required for
+some fonts.
+
+I've also had problems with Netscape on Japanese sites! And I
+don't want to bundle dillo with a huge font set as the do...
+
+
+> What I did:
+>
+> 1. First of all, I've inserted "Accept-Charset: koi8-r" in request
+> headers. After that step most of russian sites gives me pages in
+> koi8-r.
+>
+> 2. I have koi8-r fonts installed in X before others and Dillo renders
+> good russian text for me.
+>
+> 3. I encounter a problem inputing russian text in forms. Then I've
+> inserted gtk_set_locale(); before gtk_init(&argc, &argv);
+> in main(). And it works for me.
+>
+> But there is some problems at least with russian sites:
+> A. Some sites sending windows-1251 pages despite of my Accept-Charset
+> and such behavior is not RFC violation.
+> B. There is some broken sites sending me pages with charset not
+> corresponding to specified one. Many russian sites not specify
+> charset at all.
+> C. In russia we have more than 5 different charsets and (in theory)
+> each can be used by web-server. Oh.
+
+Some time ago, I received a small patch to enable Korean!, but
+it required a True Type X server, and the proper fonts intalled.
+Most probably it doesn't work with forms.
+
+(The patch is appended to this mail, just in case it proves
+useful for someone. The author is Yong-iL Joh, and can be reached
+at: tolkien __ mizi.com. He wasn't very wordy when I asked
+though, but he pointed me to: http://www.li18nux.org/)
+
+:)
+
+> I'm not a gtk+ expert :( and just started to learn it (with problem
+> N3). Also I'm newbie in Linux C programming. And I had no C/C++
+> programming practice for 3 years. (Last time PHP mostly). So I can't
+> solve all problems right now by myself quickly and in the best
+> universal way :(
+
+I believe the best way to go is, first, to check what GTK has
+to offer us (i.e. Pango), go there, read the docs, find out the
+whats and whys, and then reconsider the problem.
+
+In the short term, a hacked dillo may be the fastest solution.
+
+> Charset-related problems are not in "primary concerns" and not in
+> "Future Goals". What Dillo developers think about it?
+
+Just that!
+
+> Is it will be
+> easy to solve them in the future without reconstructing of Dillo
+> internals? I'm meaning all charsets, including CJK. Wouldn't it be
+> simplier to make some steps now? Or this question requires study?
+
+Dillo is small browser, and adding support for every single
+posibility is certainly not its goal. When it comes to character
+sets, the situation is: if there's a simple way of supporting at
+least a certain range, it will most probably be done.
+
+
+Jorge.-
+
+
+PS: patch follows:
+
+--- dillo.orig/src/dw_page.c Mon Mar 5 23:38:06 2001
++++ dillo/src/dw_page.c Tue Mar 13 12:23:34 2001
+@@ -1403,12 +1403,12 @@
+while (current && (font->font == NULL)) {
+comma = strchr(current, ',');
+if (comma) *comma = 0;
+- sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*",
++ sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*,-*-gulim-medium-*-*-*-12-*-*-*-*-*-ksc5601.1987-*",
+font->name,
+font->bold ? "bold" : "medium",
+font->italic ? ItalicChar : "r",
+font->size);
+- font->font = gdk_font_load(fontname);
++ font->font = gdk_fontset_load(fontname);
+
+if (comma) {
+current = comma + 1;
+@@ -1419,22 +1419,22 @@
+g_free(name);
+
+if (font->font == NULL && font->italic) {
+- sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*",
++ sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*,-*-gulim-medium-*-*-*-12-*-*-*-*-*-ksc5601.1987-*",
+font->name,
+font->bold ? "bold" : "medium",
+(*ItalicChar == 'o') ? "i" : "o",
+font->size);
+- font->font = gdk_font_load(fontname);
++ font->font = gdk_fontset_load(fontname);
+}
+if (font->font == NULL) {
+/* Can't load the font - substitute the default instead. */
+font->font =
+- gdk_font_load("-adobe-helvetica-medium-r-normal--*-100-*-*-*-*-*-*");
++ gdk_fontset_load("-adobe-helvetica-medium-r-normal--*-100-*-*-*-*-*-*,-*-gulim-medium-*-*-*-12-*-*-*-*-*-ksc5601.1987-*");
+}
+if (font->font == NULL) {
+/* Try another platform-font that should be available. (iPaq) */
+font->font =
+- gdk_font_load("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-1");
++ gdk_fontset_load("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-1,-*-gulim-medium-*-*-*-12-*-*-*-*-*-ksc5601.1987-*");
+}
+if (font->font == NULL) {
+g_print("Can't load any fonts!\n"); 
+
+
+
+[Dillo-dev]dillo 0.5.0 configure problem
+
+From: Finlay Dobbie <finlay.dobbie@bt...> - 2001-05-24 20:10
+
+[ note: i am not subscribed to the list, any replies will have to go 
+directly back to me :-) ]
+configure ignores with --with-jpeg-inc parameter. I have a tree of 
+software inside /sw, and setting --with-jpeg-inc=/sw/include still 
+doesn't find the headers. they ARE there.
+
+Also, it says *** disabling jpeg support, and goes ahead to compile it 
+in anyways. it then dies with a link error later on because it didn't 
+add -ljpeg to the linker flags.
+
+so, basically, 2 errors. 1) --with-jpeg-inc ignored, 2) jpeg support 
+disablement doesn't actually work.
+
+my quick fix is this patch:
+
+diff -ru dillo-0.5.0/configure.in dillo-0.5.0-patched/configure.in
+--- dillo-0.5.0/configure.in Sat Apr 21 23:46:44 2001
++++ dillo-0.5.0-patched/configure.in Thu May 24 20:38:57 2001
+@@ -48,10 +48,11 @@
+if test -z "$LIBJPEG_LIB"; then
+AC_CHECK_LIB(jpeg, jpeg_destroy_decompress, jpeg_ok=yes, jpeg_ok=no
+AC_MSG_WARN(*** JPEG support will not be included ***))
+- if test "$jpeg_ok" = yes; then
+- AC_CHECK_HEADERS(jpeglib.h jconfig.h jerror.h jmorecfg.h,
+- jpeg_ok=yes, jpeg_ok=no)
+- fi
++dnl *** THIS IS BROKEN ***
++dnl if test "$jpeg_ok" = yes; then
++dnl AC_CHECK_HEADERS(jpeglib.h jconfig.h jerror.h jmorecfg.h,
++dnl jpeg_ok=yes, jpeg_ok=no)
++dnl fi
+AC_MSG_RESULT($jpeg_ok)
+if test "$jpeg_ok" = yes; then
+JPEG='jpeg'; LIBJPEG_LIB='-ljpeg'
+
+which then works, but that's of no use to you, obviously :)
+
+-- Finlay 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-23 13:24
+
+Michael, I think I'll freeze the discussion at this point. I'll start
+with a simple implementation, which will halfway usable, and later
+check it for compliance with the HTML spec.
+
+In the future, "width" and "height" attributes will be equivalent to
+the CSS attributes, so I'll check this, too. But this will probably
+take a while.
+
+Thanks for your ideas.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Killed Bug #160 (memory leak detection)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-23 13:24
+
+On Tue, May 22, Jorge Arellano Cid wrote:
+> This doesn't happen with cached images! So it is probably in
+> the DwPage code.
+
+It *does* also happen with plain text pages, so it could be either
+DwPage, or DwStyle (DwImage has no style when the URL is the image
+itself).
+
+I looked at all g_new, g_free, and friends in dw_page.c and
+dw_style.h, and fixed one leak in Dw_style_font_remove. Anything else
+seems ok, although there is no code opposed to gdk_color_alloc, but
+AFAIK, only X resources are allocated in this case.
+
+However, when I repeated the test with plain texts, the differences in
+memory usage remained the same, before and after the fix
+(Dw_style_font_remove was probably not called).
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Hi.
+
+From: Kim Jonguk <bjkju@ya...> - 2001-05-23 13:23
+
+On Wed, 23 May 2001, Michael Govorun wrote:
+
+> Hi, I'm Russian. Of course, I'm not using 2-byte charset, but I'm also
+> interesting in ability to work with international content in Dillo.
+>
+
+Nice to meet you.
+
+> I'm not a gtk+ expert :( and just started to learn it (with problem
+> N3). Also I'm newbie in Linux C programming. And I had no C/C++
+> programming practice for 3 years. (Last time PHP mostly). So I can't
+> solve all problems right now by myself quickly and in the best
+> universal way :(
+
+You are better than me. I'm novice at gtk+ & os..
+(I'm a FreeBSD user. I've heard FreeBSD is popuar in Russia. is it true?)
+I have no power.
+
+So, I request that dillo-developers take care of charset problem.
+Thank you very much.
+
+-- end. --
+
+Kim Jonguk. Korea.
+/--) --- /_ --- Band Jinsil Leader.
+/___) ) /\ ) /_) Ajou Univ. CS. THiS. 
+
+
+
+Re: [Dillo-dev]Hi.
+
+From: Michael Govorun <mike@sh...> - 2001-05-23 08:31
+
+> > I'm Korean. Do you know Korea?
+> > Korea is in asia.
+> > Of course, my charset is 'euc-kr'
+> > It is 2 byte.
+
+Hi, I'm Russian. Of course, I'm not using 2-byte charset, but I'm also
+interesting in ability to work with international content in Dillo.
+
+I made some minor changes to Dillo and it work nicely with most of
+russian sites. But all of my changes are hacks. There has to be more
+universal scheme. What I did:
+
+1. First of all, I've inserted "Accept-Charset: koi8-r" in request
+headers. After that step most of russian sites gives me pages in
+koi8-r.
+
+2. I have koi8-r fonts installed in X before others and Dillo renders
+good russian text for me.
+
+3. I encounter a problem inputing russian text in forms. Then I've
+inserted gtk_set_locale(); before gtk_init(&argc, &argv);
+in main(). And it works for me.
+
+But there is some problems at least with russian sites:
+A. Some sites sending windows-1251 pages despite of my Accept-Charset
+and such behavior is not RFC violation. 
+B. There is some broken sites sending me pages with charset not
+corresponding to specified one. Many russian sites not specify
+charset at all.
+C. In russia we have more than 5 different charsets and (in theory)
+each can be used by web-server. Oh.
+
+I'm not a gtk+ expert :( and just started to learn it (with problem
+N3). Also I'm newbie in Linux C programming. And I had no C/C++
+programming practice for 3 years. (Last time PHP mostly). So I can't
+solve all problems right now by myself quickly and in the best
+universal way :(
+
+Anyway I'm trying to expirement with charset recoding now.
+I've added charset pointer to DilloHtml struct. I wrote function
+for charset extraction from Content-Type header and I've inserted this
+extraction to a_Html_text(). Next version of Glib will contain
+g_convert() function for charset recoding. But now I'm using
+iconv(). I've inserted recoding to Html_write() function, only from
+windows-1251 to koi8-r. It works nicely.
+Now I recieved next problem with forms: some servers don't properly
+recode my input.
+
+
+> > 
+> > I saw that dillo will be able to show us frame & table.
+> > but, I could not see that dillo will be able to show me multibyte
+> > characters.
+> > There is no font selection....
+> > 
+> > Can you help me?
+> 
+> Personally, I'd like it if dillo could be able to render different
+> character sets, this will increase the amount of possible users quite
+> much :-). In Gtk+ 1.2, this is quite hard to implement, but Gtk+ 2.0
+> will depend on the Pango library, which purpose is to handle all
+> different kinds of languages. I haven't taken a look at it yet, but I
+> think that using Pango is indeed an option.
+
+As I understand GTK+ 2.0 should come out before the end of the
+year. Is it true? 
+
+Charset-related problems are not in "primary concerns" and not in
+"Future Goals". What Dillo developers think about it? Is it will be
+easy to solve them in the future without reconstructing of Dillo
+internals? I'm meaning all charsets, including CJK. Wouldn't it be
+simplier to make some steps now? Or this question requires study?
+
+-- 
+-Michael Govorun 
+
+
+
+[Dillo-dev]More leaks (Html linkblock)
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-23 06:36
+
+Hello!
+
+I think I've found a couple of more of leaks in the html linkblock
+codes. The main problem is that html->linkblock isn't freed
+automatically (on Html_close), because the info for FORMS and their
+respective callbacks need to be around in case the form is used
+(i.e. clicked). On the other hand, they *do* need to be expunged at
+some time...
+
+After hours of experimenting a best solution, I think I've found a
+very stable and "clean" one. Also there was a small leak in Html_close
+(it wasn't freeing linkblock->base_url).
+
+Finally I removed a check from a_Web_free():web.c, which (to me)
+doesn't make sense. Since the patch has more than 20 lines, I'm not
+sending it attached, but you can get it at:
+
+http://www.linux.ime.usp.br/~livio/dillo/linkblock_leak.diff
+
+The good news os that on pages with forms it leaks less than it used
+to, but the bad news is Dillo is still not 100% consistent with it's
+memory management. I'll keep hunting for more... (but not tonight :-)
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Michael Govorun <mike@sh...> - 2001-05-22 22:19
+
+> and DwTable. But what about this example:
+> 
+> <table>
+> <tr>
+> <td><img width="100%"></td>
+> <td><img width="100%"></td>
+> </tr>
+> </table>
+> 
+
+At first I wrote here the letter about normalizing that has to be
+there. 
+But then I understand that there must be no limit to viewport size!
+And no normalizing at all.
+Some sites use horizontal scrolling scheme and they need to rule
+it! 100%+100% must be 200% and there has to be horizontal scrolling in
+this case.
+
+One use 100%+100% in case of:
+1. He need it.
+2. He made mistake.
+
+> In this case, it makes more sense that both images get 50% of the
+> viewport width (I think so).
+> 
+> I've played with the code, and changed Dw_page_extremes to return (so
+> to say) infinity as maximal width in this case (equivalent to 1fil in
+> Tex), and got indeed this result:
+> 
+> ,---------------------.
+> | |<- viewport
+> |########## ##########|
+> |########## ##########<-- images
+> |########## ##########|
+> | |
+> `---------------------'
+
+there has to be
+
+,---------------------.
+| image 1 | image 2
+|#####################|#####################
+|#####################|#####################
+|#####################|#####################
+| |
+`---------------------'
+<=---- scroller ---=> 
+
+> 
+> The following:
+> 
+> <table>
+> <tr>
+> <td><img width="10%"></td>
+> <td><img width="100%"></td>
+> </tr>
+> </table>
+> 
+> will result in
+> 
+> ,- empty space
+> ,-----|---------------.
+> | | |
+> |# V ##########|
+> |# ##########|
+> |# ##########|
+> | |
+> `---------------------'
+
+and there has to be:
+
+,---------------------.
+| |
+|# ###################|#
+|# ###################|#
+|# ###################|#
+| |
+`---------------------'
+<=---- scroller ---=> 
+
+
+
+-- 
+-Michael Govorun 
+
+
+
+Re: [Dillo-dev]Killed Bug #160 (memory leak detection)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-22 16:56
+
+On Tue, May 22, Jorge Arellano Cid wrote:
+> [memory leaks]
+> On Apr 18, Sebatian wrote
+> > "Soon" has taken a bit longer, but at least the interface and the
+> > modifications of html.c and dw_page.c are finished. The implementation
+> > of styles (which are currently mainly the same) is still buggy (but
+> > stable, mainly only memory leaks), and I'll test several variations of
+> > implementation details for speed and memory usage.
+> 
+> So this is the place to start hunting.
+
+I just fixed one (GCs were not freed) :-), but the problem is still
+there, and I meant something different in the mail you quoted.
+
+DwStyle has a built-in check for memory leaks, all structures are
+either stored in a hashtable, or counted. a_Dw_style_freeall tests if
+some are not removed properly, and prints a warning in this case.
+
+From time to time, I get this warning; fonts and colors are always ok
+(note that the remaining styles hold references on them), only styles
+are left. From the leaks I fixed in the last time, most were referred
+to widgets, so I guess that this is still buggy.
+
+However, this occurs rather rarely, and the problem also arises if all
+styles are removed properly.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Hi.
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-22 16:56
+
+Hi Kim,
+
+On Wed, May 23, Kim Jonguk wrote:
+> [...]
+> I installed 'Dillo-0.4.0'. 5 min before.
+
+I'd suggest to install 0.5.0, it provides some advantages. There are
+no "instable" versions of dillo.
+
+> [...]
+> I'm Korean. Do you know Korea?
+> Korea is in asia.
+> Of course, my charset is 'euc-kr'
+> It is 2 byte.
+> 
+> I saw that dillo will be able to show us frame & table.
+> but, I could not see that dillo will be able to show me multibyte
+> characters.
+> There is no font selection....
+> 
+> Can you help me?
+
+Personally, I'd like it if dillo could be able to render different
+character sets, this will increase the amount of possible users quite
+much :-). In Gtk+ 1.2, this is quite hard to implement, but Gtk+ 2.0
+will depend on the Pango library, which purpose is to handle all
+different kinds of languages. I haven't taken a look at it yet, but I
+think that using Pango is indeed an option.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Killed Bug #160 (memory leak detection)
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-05-22 15:36
+
+Hi there!
+
+
+> Hello people!
+>
+> After long hours of bug hunting, I've finally found bug #160 (dillo
+> caches the same file more than once). Well, is doesn't!
+> [...]
+> So here's the tiny patch , which fixes a big problem:
+
+> [...]
+
+> Have I missed something?
+>
+> It seems that Dillo's memory usage has become a lot better now, but
+> I fear some more leaks are still around :-(
+
+Yes they are.
+
+> Does anyone know of a good/usable library or tool for memory profiling
+> or memory leak detection? I've heard of libsafe from AmayaLabs, but it
+> seems to be designed for buffer overflow detection. And I'be also
+> heard of others like mpatrol, memprof, Electric Fence, ccmalloc, and
+> even glib is supposed to support memory profiling, but I've never
+> worked with any of them (and it's about time I do :-). So before I
+> choose one, I'd like to here your opinions on these. Hopefully using
+> one these will make make leak chasing a lot easier. I'll be glad to
+> here any suggestions!
+
+We can use g_mem_check and g_mem_profile among others.
+BTW: there's code in dillo modules for freeing their resources
+in order to make more sense out of this functions. Anyway, you
+can use what suits better to you.
+
+Regarding the memory leak problem, a small leak remains: if you
+go BACK and then FORWARD on a page, it will show.
+
+Just try: 'ps aux | grep dillo' to check it.
+
+This doesn't happen with cached images! So it is probably in
+the DwPage code. Even more:
+
+On Apr 18, Sebatian wrote
+> "Soon" has taken a bit longer, but at least the interface and the
+> modifications of html.c and dw_page.c are finished. The implementation
+> of styles (which are currently mainly the same) is still buggy (but
+> stable, mainly only memory leaks), and I'll test several variations of
+> implementation details for speed and memory usage.
+
+So this is the place to start hunting.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Hi.
+
+From: Kim Jonguk <bjkju@ya...> - 2001-05-22 15:02
+
+Nice to meet you.
+
+First. understand my poor english.
+I'm Korean.
+
+This is my first mail to you.
+I installed 'Dillo-0.4.0'. 5 min before.
+
+It's very nice & fast.
+Because my computer is very slow, I become to favor.
+
+but...
+
+I'm Korean. Do you know Korea?
+Korea is in asia.
+Of course, my charset is 'euc-kr'
+It is 2 byte.
+
+I saw that dillo will be able to show us frame & table.
+but, I could not see that dillo will be able to show me multibyte
+characters.
+There is no font selection....
+
+Can you help me?
+
+Thank you for reading my mail.
+Enjoy my poor english. :)
+
+-- end. --
+
+Kim Jonguk. Korea.
+/--) --- /_ --- Band Jinsil Leader.
+/___) ) /\ ) /_) Ajou Univ. CS. THiS. 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-22 14:20
+
+On Tue, May 22, Michael Govorun wrote:
+> > At toplevel: yes (the latter). The width of the viewport is passed as
+> > width hint to the DwPage. This width is used by DwPage for (i) word
+> > wrapping, and (ii) for calculating percentages. The real width of the
+> > page is, of course, different in most cases. The question is how to
+> > calculate (ii) in further nested widgets.
+> 
+> introduce "available_space" parameter (available_width)
+> and pass it with hint from parent to child. It can be used in cases: 
+> 1. to calculate percentages when there is no defined width.
+> 2. for word wraping when there is no defined width.
+> 
+> in our lovely example there is no self-referring:
+> <table> available_width=600 (from parent)
+> <tr>
+> <td> available_width=600 (-border -margins) 
+> <img width="100%"> available_width=600 (-padding) => width=600
+> </td>
+> </tr>
+> </table>
+
+This available_width already exists, look at the definitions of DwPage
+and DwTable. But what about this example:
+
+<table>
+<tr>
+<td><img width="100%"></td>
+<td><img width="100%"></td>
+</tr>
+</table>
+
+In this case, it makes more sense that both images get 50% of the
+viewport width (I think so).
+
+I've played with the code, and changed Dw_page_extremes to return (so
+to say) infinity as maximal width in this case (equivalent to 1fil in
+Tex), and got indeed this result:
+
+,---------------------.
+| |<- viewport
+|########## ##########|
+|########## ##########<-- images
+|########## ##########|
+| |
+`---------------------'
+
+The following:
+
+<table>
+<tr>
+<td><img width="10%"></td>
+<td><img width="100%"></td>
+</tr>
+</table>
+
+will result in
+
+,- empty space
+,-----|---------------.
+| | |
+|# V ##########|
+|# ##########|
+|# ##########|
+| |
+`---------------------'
+
+This seems halfway plausible, IMHO. The code I sent you will instead
+show nothing.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Michael Govorun <mike@sh...> - 2001-05-22 11:22
+
+> At toplevel: yes (the latter). The width of the viewport is passed as
+> width hint to the DwPage. This width is used by DwPage for (i) word
+> wrapping, and (ii) for calculating percentages. The real width of the
+> page is, of course, different in most cases. The question is how to
+> calculate (ii) in further nested widgets.
+
+introduce "available_space" parameter (available_width)
+and pass it with hint from parent to child. It can be used in cases: 
+1. to calculate percentages when there is no defined width.
+2. for word wraping when there is no defined width.
+
+in our lovely example there is no self-referring:
+<table> available_width=600 (from parent)
+<tr>
+<td> available_width=600 (-border -margins) 
+<img width="100%"> available_width=600 (-padding) => width=600
+</td>
+</tr>
+</table>
+
+-- 
+-Michael Govorun 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-21 20:12
+
+Hi Michael,
+
+I fear this has become more complicated than really needed ... ;-)
+
+First of all, widgets are mostly resized from top to down. There are
+only few exceptions (e.g. if an image has an unspecified size which
+gets known later), but this is also delivered to the toplevel
+widget. Of course, the parent widget may honor size requests of the
+child.
+
+On Mon, May 21, Michael Govorun wrote:
+> [...]
+> > However, for calculating the column widths, the minimal and maximal
+> > width has to be known (this is done by an additional function, for
+> > efficiency), and if an image is embedded in the page, with a size of
+> > 100%, the maximal width is of course infinitive, but this would
+> > confuse the algorithm. Furthermore, n1 * infinity equals n2 *
+> > infinity, also if n1 and n2 are different. A good solution would
+> > perhaps to adapt the idea how TeX deals with different "levels" of
+> > infinity.
+
+I meant this "fil" could be useful as a "mathematical unit".
+
+> I think percentage means "Look at size of parent". And so if we have
+> percentage in size of child we should get it's maximum
+> width from it's parent.
+
+The problem is, that this is often self-referring. *Maximum* could be
+an option. I'll think about it.
+
+> As I understand, there has to be two ways of size info interchange:
+> from parent to child when we have undefined child size, and way to
+> calculate size of parent when we have undefined parent size and know
+> sizes of childs.
+
+Yes, see above. But this case (and most other cases) is the first you
+mentioned.
+
+> [...]
+> How can we pass what we don't know yet!!? We can only pass info about
+> the fact that width of DwPage [1] is not defined yet. Or(and?) pass
+> default maximum (it can be size of visible area or whatever?).
+
+At toplevel: yes (the latter). The width of the viewport is passed as
+width hint to the DwPage. This width is used by DwPage for (i) word
+wrapping, and (ii) for calculating percentages. The real width of the
+page is, of course, different in most cases. The question is how to
+calculate (ii) in further nested widgets.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Michael Govorun <mike@sh...> - 2001-05-21 17:25
+
+Hi Sebastian
+
+> I haven't uploaded anything until now. My current work is very
+> unstable, and committing it to the CVS would disturb developers
+> working on other parts. However, I can send a patch to anyone who is
+> interested.
+Yes, I'm interesting.
+
+> The table structure in short:
+> 
+> - The HTML parser is extended to write text into different DwPage
+> widgets.
+> 
+> - There is a new widget DwTable, embedding other DwPage
+> widgets. (So you have a widget structure halfway close to the
+> document structure, see also my other posting, "Ideas on CSS".)
+> 
+> - The DwPage widget gets a new mode to deal with embedded widgets.
+> 
+> A widget can define how to deal with "size hints". Currently, the
+> viewport size is used to set the size of the toplevel DwPage widget
+> _by_hints_ (by the set_... functions), not directly (this would be
+> done by size_allocate), and DwPage uses this to recalculate its size
+> (returned by size_request). There is some documentation in the doc/
+> directory, start with Dw.txt.
+> 
+> DwPage knows two modes now how to deal with children:
+> 
+> - For simple widgets, like images, the size is set directly via
+> size_allocate.
+> 
+> - For more complex images, like tables, hints are used.
+> 
+> The DwTable widget itself calculates the column widths from the hinted
+> width, and passes them further to the child widgets.
+> 
+> However, for calculating the column widths, the minimal and maximal
+> width has to be known (this is done by an additional function, for
+> efficiency), and if an image is embedded in the page, with a size of
+> 100%, the maximal width is of course infinitive, but this would
+> confuse the algorithm. Furthermore, n1 * infinity equals n2 *
+> infinity, also if n1 and n2 are different. A good solution would
+> perhaps to adapt the idea how TeX deals with different "levels" of
+> infinity.
+
+I think percentage means "Look at size of parent". And so if we have
+percentage in size of child we should get it's maximum
+width from it's parent.
+
+As I understand, there has to be two ways of size info interchange:
+from parent to child when we have undefined child size, and way to
+calculate size of parent when we have undefined parent size and know
+sizes of childs.
+
+
+> 
+> (BTW, the algorithm to calculate the column widths is quite
+> uninteresting, I've already modified it a few times.)
+> 
+> About the examples: The first one will result in
+> 
+> DwPage [1]
+> `-DwTable
+> `-DwPage [2]
+> `-DwImage
+> 
+> where the DwPage [1] passes its width as a hint to DwTable, but
+
+How can we pass what we don't know yet!!? We can only pass info about
+the fact that width of DwPage [1] is not defined yet. Or(and?) pass
+default maximum (it can be size of visible area or whatever?). Then
+when we reach last child and if there is still indefinite size of
+parent - we can use it.
+Otherwize, if we need to start rendering earlier than all sizes will
+be set we can use that default maximum (or minimum?) and later do
+resizing. What do you think about it?
+
+
+> DwTable does not know what width DwPage [2] should have. The second
+> will look like
+> 
+> DwPage [1]
+> _____`-DwTable [1]_________
+> `-DwPage [2]
+> `-DwTable [2]
+> `-DwPage [3]
+> `-DwImage
+> 
+> and DwTable [1] will probably pass 70% of its width (received by
+> DwPage [1]) to DwPage [2]. So the problem is equivalent, the part
+> below the line equals the example above.
+
+
+
+> I haven't looked at the CSS spec in detail, but it contains much more
+> about this problem. I'll have to take a more comprehensive look at it.
+> 
+> BTW, I plan indeed to implement any attributes, which are deprecated
+> and will replaced by CSS equivalents, quite close to the CSS spec. In
+> the near future (i.e. before starting with CSS implementation), I'll
+> extend more and more the structure DwStyle for this. Later, it becomes
+> a fundamental structure for CSS. Deprecated attributes will only
+> mapped on the CSS implementation.
+I think, it is good plan.
+
+-- 
+-Michael Govorun 
+
+
+
+Re: [Dillo-dev]Killed Bug #160 (memory leak detection)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-21 15:10
+
+On Mon, May 21, Livio Baldini Soares wrote:
+> [...]
+> So here's the tiny patch , which fixes a big problem:
+> [...]
+
+Done, together with another leak (page->shapes[i].data.poly).
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Which space is available in a table cell?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-21 14:42
+
+Hi Michael,
+
+On Mon, May 21, Michael Govorun wrote:
+> > Hi,
+> >
+> > I wonder how to calculate lengths, specified by percentages, within
+> > table cells, e.g. for images. The HTML spec only says that it should
+> > be calculated from the "available space".
+> >
+> > Currently, such lengths are calculated from the viewport
+> > size. Calculating element sizes from the sizes of the containing
+> > elements is self-referring, and so hardly defined. E.g. in
+> >
+> > <table>
+> > <tr><td><img src="maj00s.gif" width="100%"></td></tr>
+> > </table>
+> >
+>
+> I think we should calculate it from available space in next outer layer
+> (img->td->table->...->viewport) where it defined.
+> In the example above it defined at viewport level.
+>
+> But in this example:
+>
+> <html>
+> <table width="70%"><tr><td>
+> <table>
+> <tr><td><img src="maj00s.gif" width="100%"></td></tr>
+> </table>
+> </td></tr></table>
+> </html>
+>
+> available space for image defined in level of the outer table, but in
+> turn, width of the outer table must be calculated from viewport width.
+
+There is currently no support for the width attribute (I've just
+started), but this will (probably) result in the same problem, see
+below.
+
+> I can contribute my ideas of full algoritm, but I have no info about
+> current table structure :(
+> and I'm pretty new to dillo development
+
+I haven't uploaded anything until now. My current work is very
+unstable, and committing it to the CVS would disturb developers
+working on other parts. However, I can send a patch to anyone who is
+interested.
+
+The table structure in short:
+
+- The HTML parser is extended to write text into different DwPage
+widgets.
+
+- There is a new widget DwTable, embedding other DwPage
+widgets. (So you have a widget structure halfway close to the
+document structure, see also my other posting, "Ideas on CSS".)
+
+- The DwPage widget gets a new mode to deal with embedded widgets.
+
+A widget can define how to deal with "size hints". Currently, the
+viewport size is used to set the size of the toplevel DwPage widget
+_by_hints_ (by the set_... functions), not directly (this would be
+done by size_allocate), and DwPage uses this to recalculate its size
+(returned by size_request). There is some documentation in the doc/
+directory, start with Dw.txt.
+
+DwPage knows two modes now how to deal with children:
+
+- For simple widgets, like images, the size is set directly via
+size_allocate.
+
+- For more complex images, like tables, hints are used.
+
+The DwTable widget itself calculates the column widths from the hinted
+width, and passes them further to the child widgets.
+
+However, for calculating the column widths, the minimal and maximal
+width has to be known (this is done by an additional function, for
+efficiency), and if an image is embedded in the page, with a size of
+100%, the maximal width is of course infinitive, but this would
+confuse the algorithm. Furthermore, n1 * infinity equals n2 *
+infinity, also if n1 and n2 are different. A good solution would
+perhaps to adapt the idea how TeX deals with different "levels" of
+infinity.
+
+(BTW, the algorithm to calculate the column widths is quite
+uninteresting, I've already modified it a few times.)
+
+About the examples: The first one will result in
+
+DwPage [1]
+`-DwTable
+`-DwPage [2]
+`-DwImage
+
+where the DwPage [1] passes its width as a hint to DwTable, but
+DwTable does not know what width DwPage [2] should have. The second
+will look like
+
+DwPage [1]
+_____`-DwTable [1]_________
+`-DwPage [2]
+`-DwTable [2]
+`-DwPage [3]
+`-DwImage
+
+and DwTable [1] will probably pass 70% of its width (received by
+DwPage [1]) to DwPage [2]. So the problem is equivalent, the part
+below the line equals the example above.
+
+> > the image can have any width. The same with other examples.
+> >
+> > Should we refer to the CSS specification?
+> My opinion: yes, and we should take into account all margins,
+> paddings, borders, etc.
+
+I haven't looked at the CSS spec in detail, but it contains much more
+about this problem. I'll have to take a more comprehensive look at it.
+
+BTW, I plan indeed to implement any attributes, which are deprecated
+and will replaced by CSS equivalents, quite close to the CSS spec. In
+the near future (i.e. before starting with CSS implementation), I'll
+extend more and more the structure DwStyle for this. Later, it becomes
+a fundamental structure for CSS. Deprecated attributes will only
+mapped on the CSS implementation.
+
+
+Sebastian 
+
+
+
+[Dillo-dev]Killed Bug #160 (memory leak detection)
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-21 14:24
+
+Hello people!
+
+After long hours of bug hunting, I've finally found bug #160 (dillo
+caches the same file more than once). Well, is doesn't!
+Actually it's a (not so small ;-) memory leak in dw_page.c
+(Dw_page_destroy).
+The patch actually is very simple. (It's impressive how *after* hunting
+a bug with a small patch, it seems soooo easy and obvious :-)
+
+So here's the tiny patch , which fixes a big problem:
+
+********************
+--- dillo/src/dw_page.c Mon May 21 10:35:03 2001
++++ dillo.new/src/dw_page.c Mon May 21 10:52:26 2001
+@@ -277,7 +277,7 @@ static void Dw_page_destroy (GtkObject *
+
+g_free(page->lines);
+page->num_words = 0; /* make sure we don't own widgets anymore */
+-
++ g_free(page->words);
+g_free(page->shapes);
+
+for (link_index = 0; link_index < page->num_links; link_index++) {
+************************
+
+Have I missed something? 
+
+It seems that Dillo's memory usage has become a lot better now, but
+I fear some more leaks are still around :-( 
+Does anyone know of a good/usable library or tool for memory profiling
+or memory leak detection? I've heard of libsafe from AmayaLabs, but it
+seems to be designed for buffer overflow detection. And I'be also
+heard of others like mpatrol, memprof, Electric Fence, ccmalloc, and
+even glib is supposed to support memory profiling, but I've never
+worked with any of them (and it's about time I do :-). So before I
+choose one, I'd like to here your opinions on these. Hopefully using
+one these will make make leak chasing a lot easier. I'll be glad to
+here any suggestions!
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Which space is available in a table cell?
+
+From: Michael Govorun <mike@sh...> - 2001-05-21 12:39
+
+> Hi,
+> 
+> I wonder how to calculate lengths, specified by percentages, within
+> table cells, e.g. for images. The HTML spec only says that it should
+> be calculated from the "available space".
+> 
+> Currently, such lengths are calculated from the viewport
+> size. Calculating element sizes from the sizes of the containing
+> elements is self-referring, and so hardly defined. E.g. in
+> 
+> <table>
+> <tr><td><img src="maj00s.gif" width="100%"></td></tr>
+> </table>
+> 
+
+I think we should calculate it from available space in next outer layer
+(img->td->table->...->viewport) where it defined.
+In the example above it defined at viewport level.
+
+But in this example:
+
+<html>
+<table width="70%"><tr><td>
+<table>
+<tr><td><img src="maj00s.gif" width="100%"></td></tr>
+</table>
+</td></tr></table> 
+</html>
+
+available space for image defined in level of the outer table, but in
+turn, width of the outer table must be calculated from viewport width.
+
+I can contribute my ideas of full algoritm, but I have no info about
+current table structure :( 
+and I'm pretty new to dillo development
+
+
+> the image can have any width. The same with other examples.
+> 
+> Should we refer to the CSS specification?
+My opinion: yes, and we should take into account all margins,
+paddings, borders, etc. 
+
+
+-- 
+-Michael Govorun 
+
+
+
+Re: [Dillo-dev]Bug in IO_read's
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-05-21 06:47
+
+Livio,
+
+>
+> I've discovered some more about this...
+> > [...]
+> > IO_read ERROR: Resource temporarily unavailable
+> >
+> > Not only has this error been systematic but now causes a Segv on my
+> > system, because when it happens while `reading', we get thrown into
+> > a_Cache_ccc with OpAbort (and since we're reading, we're in Branch
+> > 2... as I see it writing is Branch 1 and reading Branch 2, right
+> > Jorge?). From there we get thrown into a_Cache_callback(IOAbort,
+> > NULL). And in a_Cache_callback, we do: const DilloUrl * Url =
+> > io->CbData... except io is NULL :-(
+>
+> Ok, this error seems to manifest itself only on SMP systems, and not
+> in UP systems. The patch I sent (in the previous e-mail) definately
+> fixes this misbehaviour. For the unbeliever I have copied a compiled
+> copy (*with* debugging symbols, i.e. not stripped) to
+> shell.so....net (usw-pr-shell1.so....net is a SMP, with 2
+> CPUs).
+
+Actually, the problem MAY manifest on single processors too,
+that depends on several things. The EAGAIN error, or EWOULDBLOCK
+on BSDs, is meant for a temporary delay on the operation (for
+instance while the kernel waits for a stopped HD to resume its
+available condition --this may vary on different OSs though...).
+
+I was thinking that threads in the detached state, freeing
+their allocated resources upon end, may be temporarily blocking
+file descriptors activity. That's good, the problem was that the
+code was not handling EAGAIN, as the 'todo:' stated!
+
+I'll check the code after fixing the new Url handling issues.
+
+Good research Livio, that will surely improve dillo's stability
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Cache question (about process queue)
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-05-21 06:47
+
+Livio,
+
+> Hello!
+>
+> Does anybody know why {a_}Cache_open_url(), uses
+> Cache_delayed_process_queue(), instead of calling
+> Cache_process_queue()?
+
+Yes man: a_Cache_open_url returns a client-key (identifier) to
+the calling function. The caller MUST receive the key before the
+client queue is processed. That's the delay for.
+
+> I mean, is there any use in making a 1 second
+> timeout before retrieving the desired data, besides making the user
+> wait longer? ;-)
+
+No, there's no need for the 1 second wait!
+(except for what's stated above)
+
+> Can anybody help me?
+
+Keep on reading...
+
+> I tried to get rid of it, and Dillo "feels" faster (root-url and
+> images seem to load faster). The only reason I can guess the delay is
+> there is to avoid concurrency in ClientQueue, but I don't think that
+> that's a good way to do it. If that's the reason then we can device a
+> better way to eliminate concurrency. I made a "hack" for this, which
+> seems better then what we have now, but maybe a better solution can be
+> discussed? Any ideas?
+
+Thinking twice about it, and assuming that the GTK idle
+functions are processed in the main GTK cycle, after all the
+other "normal" functions are done, and considering that delayed
+processing is used only for cached answers, using a plain idle
+function seems to be a good solution.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Which space is available in a table cell?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-20 16:49
+
+Hi,
+
+I wonder how to calculate lengths, specified by percentages, within
+table cells, e.g. for images. The HTML spec only says that it should
+be calculated from the "available space".
+
+Currently, such lengths are calculated from the viewport
+size. Calculating element sizes from the sizes of the containing
+elements is self-referring, and so hardly defined. E.g. in
+
+<table>
+<tr><td><img src="maj00s.gif" width="100%"></td></tr>
+</table>
+
+the image can have any width. The same with other examples.
+
+Should we refer to the CSS specification?
+
+I'm hoping on hints and ideas.
+
+Sebastian 
+
+
+
+[Dillo-dev]Ideas on CSS
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-20 14:45
+
+Hi all,
+
+although I'm currently working mainly on tables, I've tried to
+summarize my ideas on an implementation of CSS. It is not a detailed
+design, but only a collection of vague ideas. Any kind of comments are
+welcome.
+
+Sebastian
+
+----------------------------------------------------------------------
+
+Ideas on an Implementation of CSS
+=================================
+
+Document Tree, Widget Tree, Document-Widget Interface
+-----------------------------------------------------
+The HTML parser is extended to build a tree, which should be
+consistent all the time (i.e. between two calls of Html_write).
+Furthermore, there will be an interface to the Dw widget structure,
+mapping document elements on lists of widgets or parts of widgets. A
+simple, incomplete example could look like this:
+
+HTML Document Widget Structure
+
+<html>
+<head>
+<title>
+Simple Example
+</title>
+</head>
+<body> ----------------------> DwPage
+<h1>Simple Example</h1> ----> { +- DwPageWord
+{ +- DwPageWord
+<table> -------------------> `- DwTable
+<tr> |
+<td>No. 1</td> --------> +- DwPage
+| `- ...
+<td>No. 2</td> --------> +- DwPage
+| `- ...
+</tr> |
+<tr> |
+<td>No. 3</td> --------> +- DwPage
+| `- ...
+<td>No. 4</td> --------> `- DwPage
+`- ...
+</tr>
+</table>
+
+[This is very incomplete, this interface has to be worked out
+completely.]
+
+Note that the interface also includes _parts_ of a widget, because
+this may make more efficient implementations possible (example:
+DwPageWord instead of a widget DwWord). Widgets get consistent
+interface to access parts of a widget, e.g. referencing and applying
+style attributes. (Idea: perhaps this can be simplified, by making
+widgets a special case of widget parts.)
+
+
+CSS
+---
+Of course, there is the need for a CSS parser. It can be as simple as
+possible (e.g. generated by yacc), there is no need for an incremental
+parser, as used for HTML. Instead, the CSS text can be written into a
+buffer, and then parsed as a whole.
+
+In this text, "CSS" means the internal representation of the CSS text,
+after parsing.
+
+
+Styles and Blocks
+-----------------
+There is already now the structure DwStyle, used as a uniform
+structure for presentation attributes of widgets and parts of
+widgets. It is extended, by attributes, as well as by general
+rendering functions for borders, backgrounds etc. (Although the
+DwStyle structure is uniform, it is probably not possible to achieve
+the same for the code.)
+
+A CSS block is represented by a style and a bit mask containing
+specified attributes. The CSS module will provide a function for
+calculating the style of a specific HTML element, by evaluating rules
+and combining blocks, to get a DwStyle.
+
+
+Applying a CSS to the Document/Widget Tree
+------------------------------------------
+There are two methods necessary:
+
+1. Incrementally, while the HTML document is read. In this case,
+the styles are calculated, when the widgets/widget parts are
+created.
+
+2. Instantly, by applying styles to all widgets/widget parts of the
+(currently existing) document/widget tree.
+
+Each HTML document has a CSS. Initially, it is the user defined
+one. The HTML parser will modify it in two cases:
+
+- When <style ...> is read: in this case, the text is stored in the
+stash, and then parsed. After this, styles are applied
+incrementally.
+
+- When <link ref="style" ...> is read: in this case, the CSS
+document is retrieved and stored in a buffer, while the HTML
+parser continues to use the old CSS for rendering. After the
+CSS text has been read and parsed, the new CSS is applied on the
+HTML document instantly. After then, styles are applied
+incrementally. 
+
+
+
+[Dillo-dev]Cache question (about process queue)
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-20 00:14
+
+Hello!
+
+Does anybody know why {a_}Cache_open_url(), uses
+Cache_delayed_process_queue(), instead of calling
+Cache_process_queue()? I mean, is there any use in making a 1 second
+timeout before retrieving the desired data, besides making the user
+wait longer? ;-)
+
+Can anybody help me?
+
+I tried to get rid of it, and Dillo "feels" faster (root-url and
+images seem to load faster). The only reason I can guess the delay is
+there is to avoid concurrency in ClientQueue, but I don't think that
+that's a good way to do it. If that's the reason then we can device a
+better way to eliminate concurrency. I made a "hack" for this, which
+seems better then what we have now, but maybe a better solution can be
+discussed? Any ideas?
+
+My patch can be found at:
+http://www.linux.ime.usp.br/~livio/dillo/no_delay.diff
+
+
+best regards!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug in IO_read's
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-19 19:38
+
+Hi,
+
+I've discovered some more about this...
+
+Livio Baldini Soares writes:
+> Hi all (Jorge)!
+> 
+
+(...)
+
+> IO_read ERROR: Resource temporarily unavailable
+> 
+> Not only has this error been systematic but now causes a Segv on my
+> system, because when it happens while `reading', we get thrown into
+> a_Cache_ccc with OpAbort (and since we're reading, we're in Branch
+> 2... as I see it writing is Branch 1 and reading Branch 2, right
+> Jorge?). From there we get thrown into a_Cache_callback(IOAbort,
+> NULL). And in a_Cache_callback, we do: const DilloUrl * Url =
+> io->CbData... except io is NULL :-(
+
+Ok, this error seems to manifest itself only on SMP systems, and not
+in UP systems. The patch I sent (in the previous e-mail) definately
+fixes this misbehaviour. For the unbeliever I have copied a compiled
+copy (*with* debugging symbols, i.e. not stripped) to
+shell.so....net (usw-pr-shell1.so....net is a SMP, with 2
+CPUs). 
+
+For anyone who has an account in sourceforge (and you've got a pretty
+good internet connection), just do:
+
+$ cd ~livio/tmp
+$ gdb ./dillo
+
+And browse to hosts "far away" from sourceforge,
+http://www.rti-zone.org/dillo, for example. I get:
+
+> Cache CCC (OpEnd) [0]
+> IO_read ERROR: Resource temporarily unavailable
+> [Switching to Thread 1270 (initial thread)]
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x80529ce in a_Cache_callback (Op=4, VPtr=0x0) at cache.c:412
+
+90% of the time.
+
+I also copied a fixed version (with EAGAIN in
+DILLO_TEMP_FAILURE_RETRY, like in my patch). You can try it:
+
+$ gdb ./dillo.fixed
+
+I can't get that version to make a Segv :-)
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bookmarked pages
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-05-18 01:31
+
+Hi!
+
+> I think doing a fflush() on the file _should_ fix this. For me it
+> did. Jorge what do you think? Here's the diff:
+> [...]
+
+Done.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Bookmarked pages
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-17 21:01
+
+Hi all!
+
+Sometimes while I'm testing Dillo, I have to bookmark a page to test
+it faster. But right after I bookmark it, and follow a link, *if*
+Dillo gets a Segv, my bookmark aren't commited to the bookmark file,
+therefore I have to open Dillo again, go to the page, bookmark it, and
+close dillo to make sure the bookmark is saved (or edit bookmarks.html
+by hand :-P).
+
+I think doing a fflush() on the file _should_ fix this. For me it
+did. Jorge what do you think? Here's the diff:
+
+******************
+--- dillo/src/bookmark.c Sat May 12 21:29:19 2001
++++ dillo.new/src/bookmark.c Thu May 17 17:54:15 2001
+@@ -268,6 +268,7 @@ static void Bookmarks_save_to_file(FILE 
+D_QUOTE, url_str);
+}
+fwrite(buf, strlen(buf), 1, fp);
++ fflush(fp);
+g_free(buf);
+g_free(url_str);
+}
+******************
+
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Bug in IO_read's
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-17 14:33
+
+Hi all (Jorge)!
+
+I found a little bug in IO_read (well, not actually IO_read, but
+DILLO_TEMP_FAILURE_RETRY). This bug has been following me from time to
+time. But it was *very* occasional, so I ignored it. But after CVS
+changes today in IO and pthread, this problem has become
+systematic. The problem was the following error:
+
+IO_read ERROR: Resource temporarily unavailable
+
+Not only has this error been systematic but now causes a Segv on my
+system, because when it happens while `reading', we get thrown into
+a_Cache_ccc with OpAbort (and since we're reading, we're in Branch
+2... as I see it writing is Branch 1 and reading Branch 2, right
+Jorge?). From there we get thrown into a_Cache_callback(IOAbort,
+NULL). And in a_Cache_callback, we do: const DilloUrl * Url =
+io->CbData... except io is NULL :-(
+
+I printed out the number of the error that the IO thread was
+getting. It was 11 (on my system), and it corresponds to EAGAIN.
+#define EAGAIN 11 /* Try again */
+And here is a snippet from {read,write}v:
+
+EAGAIN Non-blocking I/O had been selected in the open()
+call, and reading or writing could not be done
+immediately.
+
+So that's what I did, changed DILLO_TEMP_FAILURE_RETRY to accept
+EAGAIN. Here's the diff:
+
+********************
+--- dillo/src/IO/IO.c Thu May 17 10:08:54 2001
++++ dillo.new/src/IO/IO.c Thu May 17 11:27:34 2001
+@@ -36,7 +36,7 @@
+
+# define DILLO_TEMP_FAILURE_RETRY(st, expression) \
+{ do st = (glong) (expression); \
+- while (st == -1L && errno == EINTR); }
++ while (st == -1L && (errno == EINTR || errno == EAGAIN) ); }
+
+/*
+* Forward declarations
+***********************
+
+I've been browsing now for a good half hour and everything seems
+fine. Except that I think that Dillo initialization seems slower after
+Jorge's changes in IO and pthreads... but it might just be the
+University computer (low funds for grad students :-(((
+
+What do you guys think?
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Historical Question ;-)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-16 15:12
+
+Hi!
+
+Once (I think it was a 0.3.x version), someone changed the rendering
+of lists: before, the rendering looked like:
+
+* There's a dillorc file within the tarball; copy it to
+~/.dillo/ directory.
+^
+aligned
+
+and now it is:
+
+* There's a dillorc file within the tarball; copy it to
+~/.dillo/ directory.
+^
+same indent
+
+I think the problem was that following paragraphs were not rendered
+correctly, like:
+
+* There's a dillorc file within the tarball; copy it to
+~/.dillo/ directory.
+
+Imagine more and more and more and more and more and more and
+more and more and text.
+^
+paragraph should start here
+
+since the left_indent_first attribute was also applied on this
+paragraph, so the current solution is probably the "minor evil". As a
+side-effect, left_indent_first and left_indent_rest have now always
+the same values.
+
+I don't like the current rendering very much, and will try to find a
+fix for this (with the "<li><p>" problem in mind). However, I'd like
+to remove the distinction of left_indent_first and left_indent_rest,
+and simply replace it by left_indent, this would make many things
+simpler. I just post this to receive some objections, in case that it
+could have a purpose I did not note.
+
+
+Sebastian 
+
+
+
+[Dillo-dev]about bug #157 (another bug :-(
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-15 19:51
+
+Hi,
+
+if anyone wants to check out the site in bug #157
+(http://www.wotsit.org/download.asp?f=afm), they'll have to apply this
+patch to current CVS code (or use 0.5.0 vanilla version). I have
+introduced a bug in the redirection scheme, namely when the
+redirection is a /relative/ URL. I'll fix this soon with Jorge. But
+first I guess I have to make a series of "improvements" in the current
+URL module, sorry guys... 
+
+Here's the patch (to be applied against src/cache.c).
+
+*************
+--- cache.c Tue May 15 16:35:49 2001
++++ ../../dillo/src/cache.c Sun May 13 19:21:20 2001
+@@ -322,7 +322,7 @@ char *Cache_parse_field(const char *head
+void Cache_parse_header(CacheData_t *entry, IOData_t *io, gint HdrLen)
+{
+gchar *header = entry->Header->str;
+- gchar *Length, *Type, *location_str, *url_str;
++ gchar *Length, *Type, *location_str;
+
+/* Get Content-Type */
+Type = Cache_parse_field(header, "Content-Type");
+@@ -335,9 +335,7 @@ void Cache_parse_header(CacheData_t *ent
+/* 301 Moved Permanently */
+entry->Flags |= CA_ForceRedirect;
+location_str = Cache_parse_field(header, "Location");
+- url_str = a_Url_string(entry->Url);
+- entry->Location = a_Url_new(location_str, url_str, 0, 0);
+- g_free(url_str);
++ entry->Location = a_Url_new(location_str, NULL, 0, 0);
+g_free(location_str);
+
+} else if ( strncmp(header + 9, "404", 3) == 0 ) {
+****************
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Support for gzipped html
+
+From: Sam Dennis <sam@ma...> - 2001-05-15 16:07
+
+On Mon, May 14, 2001 at 10:41:48PM -0300, Livio Baldini Soares wrote:
+> > It would be nice to support it all the same, though.
+> 
+> I agree! Right now I have some bug fixes to remove from the URL
+> module which are pending. As soon as I'm done, and nobody's in the
+> mood, I'll give it a shot.
+> 
+> Jorge, how do you think encondings would be handled in Dillo. I was
+> thinking of adding a layer between IO and Cache, so the cached data is
+> already "clean" (unencoded). I think that another approach would be to
+> add the encoding layer between Cache and mime_viewer_funtion. But I
+> think the first choice is cleaner to implement and should be more
+> generic. What do you think?
+
+Just my opinion, but it seems to me that it should go in the IO system, as
+it's actually part of HTTP... except that for some reason, the header parsing
+code is in the cache. Something to change, maybe? Especially with the handling
+of more protocols. 
+
+
+
+Re: [Dillo-dev]Support for gzipped html
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-15 01:41
+
+Sam Dennis writes:
+> On Sat, May 12, 2001 at 05:24:30PM -0300, Livio Baldini Soares wrote:
+
+<snip>
+
+> > Boy was I surprised! I had no knowledge that this type of thing
+> > existed... gzipped htmls!?!?! 
+> 
+> Indeed, encodings are defined in both RFC 1945 and 2616 (HTTP/1.[01])
+> 
+> We can probably blame sourceforge for this particular problem, though. It
+> responds with a compressed file even if you specifically exclude the
+> gzip/x-gzip encodings.
+
+Yeah, I read RFC 2616 concerning this issue. Looks like Sourceforge's
+WebServer is ignoring the existence of Accept-Enconding field. The
+RFC specifies that if no Accept-Enconding field is given on the
+header, the server should respond with `identity` encoding (i.e. no
+encoding). Futhermore Itried to explicitly ask for no gzip enconding,
+using:
+
+Accept-Encoding:
+and
+Accept-Encoding: identity; q=1.0, *;q=0
+
+And nothing seemed to work. My guess is that it's ignoring it.
+
+> It would be nice to support it all the same, though.
+
+I agree! Right now I have some bug fixes to remove from the URL
+module which are pending. As soon as I'm done, and nobody's in the
+mood, I'll give it a shot.
+
+Jorge, how do you think encondings would be handled in Dillo. I was
+thinking of adding a layer between IO and Cache, so the cached data is
+already "clean" (unencoded). I think that another approach would be to
+add the encoding layer between Cache and mime_viewer_funtion. But I
+think the first choice is cleaner to implement and should be more
+generic. What do you think?
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Support for gzipped html
+
+From: Sam Dennis <sam@ma...> - 2001-05-14 17:37
+
+On Sat, May 12, 2001 at 05:24:30PM -0300, Livio Baldini Soares wrote:
+> Hi folks!
+> 
+> I've been working hard with Jorge these past few weeks to implement
+> a new URL parsing module in Dillo. While I was testing a version that
+> I thought seemed to be stable I innocently entered Sourceforge's home
+> page (so....net), and dillo rendered a bunch of garbage (random
+> chars)... And I thought "Damn! My code is that bad :-(". After
+> thoroughly searching IO/caching/rendering modules for any changes
+> (bugs ;-) I could have introduced, I tried to make a telnet on port 80
+> and make the request myself... I got garbage too!
+> 
+> So my last alternative was to use `wget http://so....net/`. I
+> got an index.html, but when I `file index.html`:
+> index.html: gzip compressed data, deflated, last modified: Wed Dec 31 21:00:00 1969,
+> 
+> Boy was I surprised! I had no knowledge that this type of thing
+> existed... gzipped htmls!?!?! 
+
+Indeed, encodings are defined in both RFC 1945 and 2616 (HTTP/1.[01])
+
+We can probably blame sourceforge for this particular problem, though. It
+responds with a compressed file even if you specifically exclude the
+gzip/x-gzip encodings.
+
+It would be nice to support it all the same, though. 
+
+
+
+[Dillo-dev]Support for gzipped html
+
+From: Livio Baldini Soares <livio@li...> - 2001-05-12 20:24
+
+Hi folks!
+
+I've been working hard with Jorge these past few weeks to implement
+a new URL parsing module in Dillo. While I was testing a version that
+I thought seemed to be stable I innocently entered Sourceforge's home
+page (so....net), and dillo rendered a bunch of garbage (random
+chars)... And I thought "Damn! My code is that bad :-(". After
+thoroughly searching IO/caching/rendering modules for any changes
+(bugs ;-) I could have introduced, I tried to make a telnet on port 80
+and make the request myself... I got garbage too!
+
+So my last alternative was to use `wget http://so....net/`. I
+got an index.html, but when I `file index.html`:
+index.html: gzip compressed data, deflated, last modified: Wed Dec 31 21:00:00 1969,
+
+Boy was I surprised! I had no knowledge that this type of thing
+existed... gzipped htmls!?!?! 
+
+Apparently the header field Content-Type comes as regular text/html,
+but the Content-Encoding field comes as `gzip'. I know netscape does
+support gzipped htmls. Just try it on a local html.gz (-:
+
+This is just a message to let all of you guys (like me) who were
+ignorant about this fact. I left a bug in the bugtrack (#156). Maybe
+I'll get to doing this if I have some time later. We can probably use
+zlib, right? It's pretty `standard' under Unices, isn't it?
+
+Oh, and should this and other MIME types be implemented as plugins?
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]!!
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-05-11 16:32
+
+Sebastian,
+
+> On Thu, May 10, Jorge Arellano Cid wrote:
+> >
+> > Ladies and Gentleman:
+> >
+> > I just finished releasing dillo 0.5.0!!!
+>
+> A few notes:
+>
+> - I noticed sometimes rendering problems in older versions, which
+> caused areas to be cleared suddenly. My last fix on the CVS
+> version, included in the release, is a *possible* fix of this
+> (modification of a_Dw_widget_queue_draw,
+> a_Dw_widget_queue_draw_area, a_Dw_widget_queue_clear and
+> a_Dw_widget_queue_clear_area), but I haven't examined the problem
+> enough to be sure that this is *the* solution. From a few "field
+> tests" this seems to be true. Feedback is very welcome.
+
+I made some tests with it too, but found no problems. Although
+I didn't know exactly what to look for, I assumed it could be
+drawing problems due to badly calculated intersection areas.
+Sometime ago, in older versions, making a sudden jump to a
+distant position in a large page, it may produce a black page; I
+haven't seen this in months.
+
+> - Jorge, what happened with bug #154? I've attached a test page to
+> reproduce it. Dillo 0.5.0 only renders the word "foo".
+
+I tried to reproduce the bug, but unsuccessfuly. When using
+dillo-0.4.0 it happened, so I thought It was fixed. Now I know it
+happens when the page doesn't have the ending tags nor a final
+newline (pretty weird!). Anyway, I fixed it :-), but haven't
+commited it yet.
+
+> - BTW, the splash pages are quite strange. After having started the
+> 0.5.0-pre version numerous times, dillo 0.5.0 (release) starts
+> with a "Version 0.5.0-pre". I had to remove
+> ~/.dillo/Splash050.html to get the correct version number (aside
+> from the growing ~/.dillo dir ;-).
+
+Yes, that's true.
+Everybody (that has played with CVS versions):
+
+rm ~/.dillo/Splash050.html
+
+Everything will be fine then. Amen!
+
+> What about adding an
+> "about:splash", and passing the text to the html parser, instead
+> of writing it into a file? Just an idea ...
+
+That's a good idea, but when I first chose the file method, it
+wasn't easy to do it otherwise. Now it's time to change it.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]!!
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-11 12:30
+
+Attachments: bug2.html      
+
+On Thu, May 10, Jorge Arellano Cid wrote:
+> 
+> Ladies and Gentleman:
+> 
+> I just finished releasing dillo 0.5.0!!!
+
+A few notes:
+
+- I noticed sometimes rendering problems in older versions, which
+caused areas to be cleared suddenly. My last fix on the CVS
+version, included in the release, is a *possible* fix of this
+(modification of a_Dw_widget_queue_draw,
+a_Dw_widget_queue_draw_area, a_Dw_widget_queue_clear and
+a_Dw_widget_queue_clear_area), but I haven't examined the problem
+enough to be sure that this is *the* solution. From a few "field
+tests" this seems to be true. Feedback is very welcome.
+
+There is an other rendering bug occurring with tooltips. How to
+reproduce: Go to a page, focus the viewport, move the pointer
+over an image, wait until the tooltip pops up, and move the
+viewport by the arrow keys. Or move the pointer over a button in
+the button bar, this is the same for Gtk+ tooltips. At a first
+thought, this may be a Gtk+ bug, I'll try to reproduce it in a
+small test program, and in the case of a positive result, send it
+to the Gtk+ developers.
+
+- Jorge, what happened with bug #154? I've attached a test page to
+reproduce it. Dillo 0.5.0 only renders the word "foo".
+
+- BTW, the splash pages are quite strange. After having started the
+0.5.0-pre version numerous times, dillo 0.5.0 (release) starts
+with a "Version 0.5.0-pre". I had to remove
+~/.dillo/Splash050.html to get the correct version number (aside
+from the growing ~/.dillo dir ;-). What about adding an
+"about:splash", and passing the text to the html parser, instead
+of writing it into a file? Just an idea ...
+
+Sebastian 
+
+
+
+[Dillo-dev]!!
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-05-11 00:22
+
+Ladies and Gentleman:
+
+I just finished releasing dillo 0.5.0!!!
+
+Enjoy!
+Jorge.- 
+
+
+
+[Dillo-dev]Voice Interface
+
+From: andew ecu <andrewecu@ho...> - 2001-05-10 02:21
+
+Yes Sebastian, I'm in my final year at university studying computer science 
+and i'm seeing if i can implementing a voice recognition interface on an 
+internet browser for my final year project:)
+
+I was orginally going to use Mozilla, but after looking at the code it was 
+too complicated for what i wanted to do, so i decided to changed it to 
+dillo.
+
+Playing around with dillo, i've learnt a great deal about how web browsers 
+actually work, and also how much more functionality is needed for disabled 
+people to use software without a mouse and keyboard.
+
+Thanks for the help guys, especially Sebastian :)
+Later
+Andrew
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+Re: [Dillo-dev]current bw
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-08 19:27
+
+On Tue, May 08, andew ecu wrote:
+> Since there are several browser windows that can be open at the same time, 
+> is there a way to find out which is the browser window that is currently 
+> "active".. ie user is using it?
+
+All windows are active all the time. ;-)
+
+All commands are called after specific events have been received, and
+the browser window is passed as an argument to these functions.
+
+> Also is there a way to switch between the different browser windows? or is 
+> there a way to implement it?
+
+This is under the control of the window manager. There are probably
+ways to influence this, this is a X11/Gtk+ question.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Y location and coordinates of a link
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-08 19:27
+
+Hi Andrew,
+
+just a question: does this have to do with your posting to
+gtk-app-devel-list (voice recognition interface)?
+
+On Tue, May 08, andew ecu wrote:
+> Hi just got a few questions :)
+> 
+> Firstly..
+> I asked previously about scrolling up and down the current viewport. I was 
+> wondering is there a way to find out the current Y position that the 
+> viewport is currently, and also would it be possible to do this if i wanted 
+> to say go down 10 down(this would be in a module in a_DW_widget)?
+> 
+> current_y_loc = get current y location
+
+You can use
+
+current_y_loc = GTK_SCROLLED_WINDOW (bw->doc_win)->vadjustment->value;
+
+> Dw_gtk_viewport_scroll_to (GTK_Dw_viewport(widget->viewport), current_y_loc 
+> + 10 )
+
+Dw_gtk_viewport_scroll_to is intended for internal use, if you want to
+hack on dw_*. There is indeed a difference between internal changes
+(anchors), and changes caused by the user (scrollbars, keys, and mouse
+button 2 dragging). In the latter case, Dw_gtk_viewport_remove_anchor
+must be called, to stop queued changes of the former case (see
+dw_gtk_scrolled_window.c).
+
+Simple example: If you load a page foo.html#bar, you'll first see the
+text from the beginning. As soon as the <a name="bar"> tag is read,
+the text is scrolled to this position. *Except*: If you move the text
+down, before <a name="bar"> has been read, the position won't change
+anymore automatically.
+
+I'd suggest to use some not yet existing higher level functions, like:
+
+current_y_loc = GTK_SCROLLED_WINDOW (bw->doc_win)->vadjustment->value;
+a_Dw_scrolled_window_set_vadjustment_value (
+GTK_DW_SCROLLED_WINDOW (bw->doc_win), current_y_loc + 10);
+
+a_Dw_scrolled_window_set_vadjustment_value is very simple to add.
+
+> Second question is..
+> Is there a way to find out the x,y coordinates of a link on the page? and if 
+> so is it then possible to find the url from the x,y coordinates?
+
+To find the coordinates of a link (index in DwPage::links), you'll
+have to search in the lines and words. To find a link from the
+coordinates, there is an internal function, Dw_page_find_link, but
+(currently) no external interface.
+
+Sebastian 
+
+
+
+[Dillo-dev]current bw
+
+From: andew ecu <andrewecu@ho...> - 2001-05-08 18:06
+
+Since there are several browser windows that can be open at the same time, 
+is there a way to find out which is the browser window that is currently 
+"active".. ie user is using it?
+
+Also is there a way to switch between the different browser windows? or is 
+there a way to implement it?
+
+thanks again
+andrew over and out :)
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+[Dillo-dev]Y location and coordinates of a link
+
+From: andew ecu <andrewecu@ho...> - 2001-05-08 17:49
+
+Hi just got a few questions :)
+
+Firstly..
+I asked previously about scrolling up and down the current viewport. I was 
+wondering is there a way to find out the current Y position that the 
+viewport is currently, and also would it be possible to do this if i wanted 
+to say go down 10 down(this would be in a module in a_DW_widget)?
+
+current_y_loc = get current y location
+Dw_gtk_viewport_scroll_to (GTK_Dw_viewport(widget->viewport), current_y_loc 
++ 10 )
+
+
+
+Second question is..
+Is there a way to find out the x,y coordinates of a link on the page? and if 
+so is it then possible to find the url from the x,y coordinates?
+
+
+
+thanks heaps :)
+andrew
+
+
+
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+Re: [Dillo-dev]Html Source Code
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-05-05 16:02
+
+Andrew,
+
+> Just another quick question.
+>
+> Is there an array of char in dillo that stores the entire source code of the
+> html file? What is it called?
+
+You can get it with a_Cache_url_read(), just get sure the whole
+page has been got before calling it.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Html Source Code
+
+From: andew ecu <andrewecu@ho...> - 2001-05-03 18:52
+
+Just another quick question.
+
+Is there an array of char in dillo that stores the entire source code of the 
+html file? What is it called? If not then where does it store it once it 
+recieves the requested webpage?
+
+Thanks
+Andrew
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+Re: [Dillo-dev]Interface Questions..
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-03 16:57
+
+Hi Andrew,
+
+I don't have any idea what you want to do :-), but here are some
+answers.
+
+On Thu, May 03, andew ecu wrote:
+> Hi i'm new to dillo and i've been playing around with it. Which has been a 
+> big learning experience.
+> 
+> But i have a few questions.
+> 
+> Firstly i wanted to know if i had a string of the url how would i display it 
+> on the location text area? This is where it says "new". I want to know where 
+> abouts that a string is passed to a function to display it, but not 
+> necessarily executing it. (I HOPE THAT MADE SENSE :)
+
+If you have a BrowserWindow, (either in an Interface callback, or as
+html->bw etc.), you can simply call
+
+gtk_entry_set_text(GTK_ENTRY(bw->location), url);
+
+"Executing" is done by a_Nav_push.
+
+> Next i want to know what actually happens when a scroll is done on the page 
+> of the main window. How would i adjust the vertical and horizontal, which 
+> functions deal with this.
+
+There are several functions: a_Dw_widget_scroll_to is used if you want
+to scroll to a specific position within a widget. If your position is
+absolute, use Dw_gtk_viewport_scroll_to. The latter should only be
+used in the Dw module (see doc/NC_design.txt in the distribution).
+
+Furthermore, there are are several functions dealing with anchors,
+document-wide named positions which may change (used for <a name="...">
+and headers).
+
+All these functions only affect the vertical scroll position, there is
+currently nothing for horizontal adjustments, simply because it isn't
+needed, but if you can convince me that it is necessary, it should be
+simple to add it. ;-)
+
+I hope this helps.
+
+Sebastian 
+
+
+
+[Dillo-dev]Image Maps
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-05-03 16:57
+
+Hi.
+
+Does anyone plan to implement client-side image maps fully, i.e. also
+urls different of the url of the doc containing the image? This
+doesn't seem that widely supported, the only browser I found (but I
+didn't test the newest versions), was -- lynx ;-). And probably it is
+_used_ even less often.
+
+If yes, the implementation will require large changes, if no, I'll do
+the following changes in the near future:
+
+1. This step is necessary for step 2:
+
+The link list will move into the Html linkblock, and the
+"link_..." signals will only pass an integer, perhaps also the
+DwPageWord(s). In future, these signals may then also be used
+for event handling of other words than links, currently the
+workaround for changing the color of visited links prevents
+this.
+
+2. The list of image maps will move into the linkblock, too, and
+probably the handling of image maps will be done by the image
+widget (the latter should make the code a bit more simple).
+
+The current implementation will not work for documents like:
+
+<map name="foo">...</map>
+<table>
+<tr>
+<td><img src="bar.jpg" usemap="#foo"></td>
+</tr>
+</table>
+
+since the <map> and the <img> are in two different DwPage's.
+
+Sebastian 
+
+
+
+[Dillo-dev]Interface Questions..
+
+From: andew ecu <andrewecu@ho...> - 2001-05-03 11:31
+
+Hi i'm new to dillo and i've been playing around with it. Which has been a 
+big learning experience.
+
+But i have a few questions.
+
+Firstly i wanted to know if i had a string of the url how would i display it 
+on the location text area? This is where it says "new". I want to know where 
+abouts that a string is passed to a function to display it, but not 
+necessarily executing it. (I HOPE THAT MADE SENSE :)
+
+Next i want to know what actually happens when a scroll is done on the page 
+of the main window. How would i adjust the vertical and horizontal, which 
+functions deal with this.
+
+I hope these questions aren't ambigous :)
+Thanks
+Andrew
+
+
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+

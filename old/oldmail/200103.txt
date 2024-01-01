@@ -1,0 +1,1492 @@
+[Dillo-dev]Dpi1 Development
+
+From: <sirver@gm...> - 2001-03-31 23:06
+
+Attachments: dpi1.first.test.tar.gz      
+
+Hi there,
+
+i started implementing the dpi1 plugins.
+With the patch and the files included in the tar.gz (is it ok to attach
+files on this list, when they <50k ??) dillo searches the paths
+"(all listed in rcfile under plugins_dirs):~/.dillo/plugins:/usr/local/share/dillo/plugins" for files named *.dpi1. Those are treated as plugins.
+the plugin engine already registers Prefix plugins.
+I also included DNS support throu dillo (for caching).
+I ran into problems with HTML output: a dpiSendData should have some
+HTML tags in his data field. Now, dillo should read them and treat them
+like a normal HTML site. I tried this (see the Answer_handling
+functions), but dillo coredumps (in cache.c, callback function). I don't
+know why and how to change this. Do somebody know a better/working way?
+In the attachement ist also a perl script which is my testing plugin. I
+hope it will help you.
+
+Thanks.
+Holger 
+
+
+
+Re: [Dillo-dev]Font modifying tags
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-31 13:14
+
+Hi,
+
+I intended to post this in a few days, since I'm currently working on
+attributes. I wondered what has happened with the implementation of
+the <font> tag.
+
+I'll soon upload a few changes, which are a first simple step towards
+my (currently still a bit vague) idea of a common style scheme. Some
+time ago, Sean posted a problem to the list: handling lists of fonts
+(as "Arial, Helvetica, sans-serif") is quite difficult with the
+current code. This will solved by the change, the font loading code
+will be rewritten to handle lists quite simply.
+
+More on this after finishing the code, and please look at the changes
+in a few days.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Update on Alt patch
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-31 13:14
+
+Hi,
+
+I've committed the patch, after making some changes, extensions, and
+cleanups:
+
+- I've made an own submodule of it, so it can be also used for
+other purposes.
+
+- I copied the drawing code from gtktooltip.c, so the tooltips look
+(but do not behave) exactly like Gtk+ tooltips. This includes
+drawing functions and tooltip size.
+
+I also fixed two bugs in Dw:
+
+1. It sometimes happened that a leave_notify "event" was sent to a
+widget already destroyed.
+
+2. Crossing events of the viewport are now recognized (this was
+mentioned as a "todo" in the sources).
+
+On Fri, Mar 30, Livio Baldini Soares wrote:
+> [...]
+> * I tried adding a Dw_image_destroy function, and in the end adding a
+> parent_class->destroy (initializing parent_class in
+> Dw_image_class_init), but I must have done something wrong because I
+> couldn't get it to work... all I got was Segmentation Fault :-(
+
+This may also have been by the first bug I mentioned above?
+
+> [...]
+> * Now to tooltip "feels" better. It takes almost one second to appear
+> (if the cursor is stoped), and it will disappear immediately when
+> you move it.
+
+I changed the delay to 500 ms, this is the standard of Gtk+.
+
+> Well I think that's all. The only problem (at least in my opinion)
+> is that the placement of the tooltip inside the image should be better
+> chosen then (x+10, y+10) like I currently do. I looked at
+> gtktooltips.c and it kind of sucks (at least this part about chosing
+> tooltip position). It considers that widget's size is small, but
+> working with images is a totally diferent issue (they are too big, and
+> can sometimes cover up more than half the screen, and in these case
+> Gtk's toolips do badly).
+
+Yes, this is true. I did not change it, since I don't have a better
+idea.
+
+On Fri, Mar 30, Jorge Arellano Cid wrote:
+> [...]
+> - ALT for the IMG element is an alternative for non visual user
+> agents. i.e. there's no need to show the ALT text and the image.
+> I know that some users like it, just add the necessary toggle in
+> dillorc and send me the patch when done.
+
+Yes, the tooltip implementation is indeed not what ALT is intended
+for. Nevertheless the code might be used for other purposes, and the
+changes in dw_image.c are minimal.
+
+However, ALT may also used by visual user agents, e.g. the text could
+be drawn before the image data is retrieved, what is especially useful
+if the image URI is broken.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Bug #116 (alt tags for images)
+
+From: Livio Baldini Soares <livio@li...> - 2001-03-31 08:46
+
+Hi Jorge and all!
+
+Jorge Arellano Cid writes:
+> 
+> Hi,
+> 
+> This issue seems to be almost done, but I just wanted to add a
+> couple of comments:
+> 
+> - ALT for the IMG element is an alternative for non visual user
+> agents. i.e. there's no need to show the ALT text and the image.
+> I know that some users like it, just add the necessary toggle in
+> dillorc and send me the patch when done.
+
+Ok, done! New features are:
+
+* "show_alt"=[Yes/No] option in dillorc as preference.
+
+* Fixed Dw_image_motion_notify() return value. Seems that I had to
+return FALSE and not TRUE, otherwise I could break the detection of
+motion events of other widgets which you need them (like in
+viewport, to detect if there's motion in an image which is also a
+link, and therefore draw a "hand" cursor).
+
+* Finally got right the Dw_image_destroy() function. The problem I had
+before was that was freeing image->buffer, but, as I saw later,
+that's a pointer to a Dicache entry :-(
+
+> - The Cache is not related to widget allocations/deallocations,
+> it just caches URL contents, and nothing else!
+
+Yes, you're right! Thanks for the tip.
+
+I've sent my patch to Jorge, but the eager ones can always get my
+Dillo patches at: http://www.linux.ime.usp.br/~livio/dillo/
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Re: Dillo UI
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-31 02:50
+
+Terry,
+
+> Jorge:
+>
+> You seem to be the man in charge...
+>
+> Below is a quick, _clean_ addition to the UI that is half of what Dillo is
+> missing. It adds four lines to the
+> file menu.c,
+> function a_Menu_popup_new,
+> line 177:
+>
+> This adds Ctrl-H and Alt-H as Back and Forward hot keys:
+>
+> Menu_add(menu, "Back", "<ctrl>H", bw,
+> a_Commands_back_callback, bw);
+> Menu_add(menu, "Forward", "<alt>H", bw,
+> a_Commands_forw_callback, bw);
+>
+> This was a 'quick' fix and took at least several hours to track down. Could
+> NOT figure out how to get that fscking BackSpace key to work so I used Ctrl-H
+> instead. Hint hint :-)
+
+I'll check that and try to find out a mnemonic key combination
+(Maybe Ctrl + '<' and Ctrl + '>') Please be patient because I'm
+working on several areas...
+
+
+> The other thing that is needed from a basic UI perspective is for the Web page
+> position to be stacked for recall upon return. Really hate it when I have a
+> 1/4 meg web page up, am half way down it, hit a link and then have to find
+> where I was all over again after a Back operation. I would contemplate trying
+> to fix it, but in view of how long it took just to add a
+> couple of accelerator keys,
+> you guys will have it fixed before I could even figure it out. But all of this
+> is just a
+> _minor_ quibble.
+
+Yes, this has being going in my mind from a long time too.
+I think a good implementation is to keep the vertical scrolling
+position within the history record (within the URL structure that
+we're working with Livio). From there it will be a simple matter
+to implement. We're working on it now. BTW: I'll try to answer
+Livio's request tomorrow (Yes Livio, I've made some progress!).
+
+
+> Really Fine Work! This is what a browser is supposed to be. Don' need no
+> steenkin' key clicks, this is fast enough to make its own sonic crack (Slack
+> 7.05 [7.0+2.2.18 kernel] 233Mhz PIII, 64 Meg RAM). Keep up the good work, and
+> the speed, and the small size and...oh what the hell, _keep_ producing a
+> miracle.
+>
+> Regards,
+> Terry Loveall
+
+Thanks a lot for your comments Terry.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Re: dillo
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-31 02:49
+
+Jon,
+
+> Hello, I've been using dillo for the past couple of months. The dillo
+> browser is absolutely great, it does not crash, and it is very fast on any
+> machine I run it on. I beleive the 0.4.0 version is more stable then my
+> netscape.
+>
+> I just thought I'd put in a good word for the browser because I like it
+> alot. One thing I'd like to see, although, is a way to use the mailto:
+> command. I use Balsa GNOME email client, it has a command to just bring up
+> a 'new message' and let you compose. The command is 'balsa
+> --compose=user@ho...' the entire program does not come up, just the 'new
+> message' window... Would it not be easy enough to add this feature to
+> dillo, allowing to write a responce to a mailto:?
+
+It will be easy when plugins get implemented. A simple task
+really. We're working on the plugins implementattion, and I hope
+it to begin working soon, at least with the basic functionality.
+You'll have to wait until then.
+
+> Thanks again for creating the dillo browser!
+
+You're welcome.
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #116 (alt tags for images)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-31 02:49
+
+Hi,
+
+This issue seems to be almost done, but I just wanted to add a
+couple of comments:
+
+- ALT for the IMG element is an alternative for non visual user
+agents. i.e. there's no need to show the ALT text and the image.
+I know that some users like it, just add the necessary toggle in
+dillorc and send me the patch when done.
+
+- The Cache is not related to widget allocations/deallocations,
+it just caches URL contents, and nothing else!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]IO progress
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-31 02:49
+
+Hi again,
+
+The last weeks I've been trying to devote most of my time to
+finishing the IO engine error control design. This had been a
+several times procrastinated task, and I wish to push it forward
+as much as I can this time.
+
+The good news is that I've progressed a lot. The whole
+querying branch of the browser has been checked, re-structured
+and modified to integrate the concomitant control-chain (CCC)
+that manages and defines all the data-passing and messaging
+between modules.
+
+This is working pretty good on my machine, and solves the
+overcaching bug.
+
+I haven't commited my changes to the CVS yet, because I want
+to work with the answering branch before I make definitive
+changes.
+
+
+Please be patient.
+Jorge.- 
+
+
+
+[Dillo-dev]Update on Alt patch
+
+From: Livio Baldini Soares <livio@li...> - 2001-03-30 08:39
+
+Hi everyone!
+
+Thanks so much for all the feedback (learned a lot ;-)!
+Now I have a new version (hopefully improved) for you guys to try
+out. It's in the same place:
+http://www.linux.ime.usp.br/~livio/dillo/alt.diff 
+
+I'll comment the changes, hopefully including everyone's remarks and
+opinions: 
+
+Jörgen, your patch worked nicely so I included it along with mine!
+
+Sebastian,
+
+* I replicated "somewhat" the timeout function used in gtktooltips.c
+and it worked nicely! With that I even enabled
+Dw_image_motion_notify events to remove the timeout (this goes along
+with Eric's suggestion to remove the alt if the cursor has motion).
+The timeout "slice" I put is 700 miliseconds which feels fine in my
+computer.
+
+* I tried adding a Dw_image_destroy function, and in the end adding a
+parent_class->destroy (initializing parent_class in
+Dw_image_class_init), but I must have done something wrong because I
+couldn't get it to work... all I got was Segmentation Fault :-(
+
+Eric,
+
+* Now the tooltip has borders (and almost looks like a shadows...)
+Seems that the correct function to call was gtk_paint_box() and not
+gtk_paint_flat_box() which I was using before :-( gtk's
+documentation sucks!).
+
+* I removed tooltips arraising when no "alt" is defined.
+
+* Now to tooltip "feels" better. It takes almost one second to appear
+(if the cursor is stoped), and it will disappear immediately when
+you move it.
+
+
+Well I think that's all. The only problem (at least in my opinion)
+is that the placement of the tooltip inside the image should be better
+chosen then (x+10, y+10) like I currently do. I looked at
+gtktooltips.c and it kind of sucks (at least this part about chosing
+tooltip position). It considers that widget's size is small, but
+working with images is a totally diferent issue (they are too big, and
+can sometimes cover up more than half the screen, and in these case
+Gtk's toolips do badly).
+
+Any ideas or comments about anything said is always appreciated!
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Font modifying tags
+
+From: Livio Baldini Soares <livio@li...> - 2001-03-30 04:39
+
+Hi all, hi Sean,
+
+I accidently started implementing font tags again :-( I was looking
+through Eric's new Html.testsuite when I noticed some tags weren't
+implemented, so I eagerly starting hacking...
+Then I remembered: "Shit! Sean is doing that already...". 
+So Sean, if it isn't any trouble, could you list the tags that you've
+already implemented? (The ones I did were the <big> and <small>... I
+cheated and implemented then both under one Html_tag_open_*() function
+;-)
+
+Please don't think I'm rushing you to finish or commit your code!
+I'm just curious to what you've already done and also it will help me
+not forget to stay away from certain places in Dillo... :^P
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug #116 (alt tags for images)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-29 14:43
+
+Hi Livio, Eric, and all.
+
+A few answers about the patch.
+
+First of all, tooltips may be used also in other contexts, e.g. for
+the "title" attribute of several tags, so I'll perhaps move the code
+to a lower level. More on this later.
+
+On Wed, Mar 28, Livio Baldini Soares wrote:
+> [...]
+> I was going to implement the alt text as a simple tooltip, but after
+> trying a little I realized that that would take more time/trouble than
+> creating my own little "tooltip" window. So I did it from
+> scrap...
+
+Gtk+ tooltips are intended for Gtk+ widgets, so adopting them is hard.
+After trying this, too, I think I'll agree you, that it is simpler to
+reimplement them.
+
+> [...]
+> The first is that on other browsers the alt takes a while to show,
+> but the way I've made it, it shows up immediately. What should we do?
+> I didn't even bother to think up a way to have this "wait" time before
+> activating alt text, but I guess it could be done...
+
+It should be simple, you just have to add a timeout function, and take
+care to remove it when the pointer leaves the image before the tooltip
+is shown. I think the best way is simply to imitate the behavior of
+Gtk+ tooltips, and copy code from gtktooltips.c.
+
+> The second thing is that in Dw_image_enter_notify() I alloc() a new
+> alt-window and in Dw_image_leave_notify() I free() it. It might not
+> sound good, but I've got a (crude) reason. Generally, what we think to
+> do in this case is on Dw_image_init(), alloc() everything we need and
+> in Dw_image_{enter,leave}_notify() we just call
+> gtk_window_{show,hide}(). But the problem is, when do we destroy it?
+> As a matter of fact this is a problem I've seen in Dillo... there
+> seems to be more *_new() functions than *_destroy(). But of course
+> this would have to be associated with the Cache scheme getting rid of
+> unwanted (old-)structs and therefore calling those destroys. My
+> question is, what to do now? Leave it the way I did it, or is it
+> better to prepare it for when the Cache starts doing some struct
+> (data) destruction?
+
+You can add a Dw_image_destroy function. Note that
+Dw_image_leave_notify may not have been called when the image widget
+is destroyed, so this is a memory leak.
+
+On Wed, Mar 28, Eric GAUDET wrote:
+> [...]
+> - tooltips are generally drawn in pale yellow, grey looks strange. What about a
+> dillorc option for that ?
+
+Livio called the widget "Image alt", so you can modify your ~/.gtkrc.
+Perhaps the name should be changed to "gtk-tooltips", like Gtk+ tooltips.
+
+> - I'd prefer the tooltip window to have a border so it looks detached from the
+> page. (better yet: if you could draw a shadow, it would be perfect)
+
+This should be the purpose of gtk_paint_flat_box, but it somehow does
+not work. Replacing it with
+
+gdk_draw_rectangle (image->img_alt->window,
+style->fg_gc[GTK_STATE_NORMAL],
+FALSE, 0, 0, width + 7, ascent + descent + 7);
+
+works, but won't honor different themes.
+
+> [...]
+> - A tooltip window can hide another image on the right and prevent it to catch
+> enter_notify (see the "screenshot" below ;-). If you mouve the mouse cursor
+> from "img1" to "img2" passing over the "tooltip" window, the tooltip for img2
+> will show only when crossing the rightmost border of the "tooltip" (dran with
+> '#'). 
+> 
+> +-------+ +---------+
+> | | | |
+> | +---------+ |
+> | | tooptip # |
+> | +---------+ |
+> | | | |
+> | | | |
+> +-------+ +---------+
+> img1 img2
+
+This is because some events get lost, they are sent to the tooltip,
+not to the viewport (which is furthermore *not* the parent of the
+tooltip window).
+
+If you look at Gtk+ tooltips, you'll notice that this problem does not
+occur, since the tooltips are placed outside the widgets. Perhaps this
+is a useful possibility.
+
+Furthermore, the Dw event mechanism isn't complete yet.
+
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Bug #116 (alt tags for images)
+
+From: Jörgen Viksell <vsksga@ho...> - 2001-03-28 23:27
+
+Attachments: patch-alt      
+
+>.... Well the only trouble I was having was to transform strings
+>sizes into pixel sizes... it depends on the case, the font and
+>sometimes even the letter (like, "i" is narrower than "w").. but then
+>browsing through gtk's 1.2.7 source code, I discovered
+>gdk_string_{width,height}(), and my life got much better ;-)
+
+I believe you should use gdk_string_extents() instead.
+The ascent you get from that function is the strings and thus makes the 
+string middle-aligned.
+The attached patch does that. (I hope! :-))
+
+>--
+> Livio <livio@li...>
+>
+
+Cheers,
+Jörgen
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+RE: [Dillo-dev]Bug #116 (alt tags for images)
+
+From: Eric GAUDET <egaudet@in...> - 2001-03-28 05:59
+
+Hi Livio :-)
+
+-- En reponse de "[Dillo-dev]Bug #116 (alt tags for images)" de Livio Baldini
+Soares, le 28-Mar-2001 :
+> Hi guys!
+> 
+> Finally I got the time to make the alt text for images like I
+> promised. I had already done them (but badly) before Sebastian's new
+> Dw, but wanted to wait for it. Now I'm glad I did... it was so much
+> easier and it's more stable... thanks Sebastian!
+> 
+
+Ok, I "carefully reviewed" this feature ;-) and here's what I think (you may
+or may not agree with each):
+- tooltips are generally drawn in pale yellow, grey looks strange. What about a
+dillorc option for that ?
+- I'd prefer the tooltip window to have a border so it looks detached from the
+page. (better yet: if you could draw a shadow, it would be perfect)
+- a tooltip is drawn even if there's no "atl" attribute for the image ! It
+shows "png for a png image, etc. I don't like it so much. (If you print the
+image size, 320x200 (png), I could like it ;-)
+- A tooltip window can hide another image on the right and prevent it to catch
+enter_notify (see the "screenshot" below ;-). If you mouve the mouse cursor
+from "img1" to "img2" passing over the "tooltip" window, the tooltip for img2
+will show only when crossing the rightmost border of the "tooltip" (dran with
+'#'). 
+
++-------+ +---------+
+| | | |
+| +---------+ |
+| | tooptip # |
+| +---------+ |
+| | | |
+| | | |
++-------+ +---------+
+img1 img2
+
+...
+> 
+> The first is that on other browsers the alt takes a while to show,
+> but the way I've made it, it shows up immediately. What should we do?
+> I didn't even bother to think up a way to have this "wait" time before
+> activating alt text, but I guess it could be done...
+> 
+
+I'd prefer the tooltip to appear only when the mouse cursor hasn't moved for
+one seconde or so over an image, and disapear as soon as the mouse is moved.
+This would solve the above issue with tooltip overlapping an image.
+
+...
+> 
+> The patch can be found at:
+> http://www.linux.ime.usp.br/~livio/dillo/alt.diff
+> 
+> Please send any comments on it. If you have trouble downloading,
+> tell me and I can send it by email.
+> 
+
+Best,
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Mar-2001 a 14:41:04
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Bug #116 (alt tags for images)
+
+From: Livio Baldini Soares <livio@li...> - 2001-03-28 04:01
+
+Hi guys!
+
+Finally I got the time to make the alt text for images like I
+promised. I had already done them (but badly) before Sebastian's new
+Dw, but wanted to wait for it. Now I'm glad I did... it was so much
+easier and it's more stable... thanks Sebastian!
+
+I was going to implement the alt text as a simple tooltip, but after
+trying a little I realized that that would take more time/trouble than
+creating my own little "tooltip" window. So I did it from
+scrap... Well the only trouble I was having was to transform strings
+sizes into pixel sizes... it depends on the case, the font and
+sometimes even the letter (like, "i" is narrower than "w").. but then
+browsing through gtk's 1.2.7 source code, I discovered
+gdk_string_{width,height}(), and my life got much better ;-)
+The final result is that my code is simpler then the tooltip one (but
+I guess tooltip must be more robust...), and I think it's ok, except
+for the details I bring up below.
+
+The first is that on other browsers the alt takes a while to show,
+but the way I've made it, it shows up immediately. What should we do?
+I didn't even bother to think up a way to have this "wait" time before
+activating alt text, but I guess it could be done...
+
+The second thing is that in Dw_image_enter_notify() I alloc() a new
+alt-window and in Dw_image_leave_notify() I free() it. It might not
+sound good, but I've got a (crude) reason. Generally, what we think to
+do in this case is on Dw_image_init(), alloc() everything we need and
+in Dw_image_{enter,leave}_notify() we just call
+gtk_window_{show,hide}(). But the problem is, when do we destroy it?
+As a matter of fact this is a problem I've seen in Dillo... there
+seems to be more *_new() functions than *_destroy(). But of course
+this would have to be associated with the Cache scheme getting rid of
+unwanted (old-)structs and therefore calling those destroys. My
+question is, what to do now? Leave it the way I did it, or is it
+better to prepare it for when the Cache starts doing some struct
+(data) destruction?
+
+The patch can be found at:
+http://www.linux.ime.usp.br/~livio/dillo/alt.diff
+
+Please send any comments on it. If you have trouble downloading,
+tell me and I can send it by email.
+
+By the way, I've also been busy doing a new URL-passing scheme,
+which Jorge asked for some time ago... This was really tough to do and
+is still very bad :-( But anyway I got a "working" patch.
+Jorge did you receive the e-mail I sent to you last weekend (I think
+Saturday)? I send it to jcid@em... and attached the patch (it's
+big). If you haven't then tell me and I'll repost it. (I mean no rush
+in sending a comment, it's just that you said you were having emails
+problems lately).
+
+Anyone interested and bave enough ;-) can get it at:
+http://www.linux.ime.usp.br/~livio/dillo/urlparse.diff
+http://www.linux.ime.usp.br/~livio/dillo/urlparse.c
+http://www.linux.ime.usp.br/~livio/dillo/urlparse.h
+
+That's all for now. Best regards to all and I promise I'll try to
+write shorter posts from now on :^P
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Re: dillo developing
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-28 02:06
+
+Holger,
+
+> Hey there
+>
+> my name is holger rapp. lookibg around for alternatives. I was
+> mentally ready to start a new browser project of the ground.
+
+Oh, that's a big enterprise to undertake!
+
+> but
+> then, i found dillo, which is not yet great but it shows good
+> ideas.
+
+What ideas do you like of it?
+
+> Now, i'm asking if i might join in development.
+
+That's simple. It a matter of expertise and respecting the
+development model we're following (described in the web site).
+
+> I read throu the source and i'm intrested in getting the
+> plugins done. especially the ftp plugin is a mustdone for
+> useability.
+
+Yeah, sure. Don't miss the plugin draft:
+http://dillo.so....net/dpi1.txt
+
+Ah, as for the FTP plugin, I wrote that code a long time ago,
+and it worked nicely with the former plugin scheme. Now, after
+the new scheme is implemented, it would be a matter of adding the
+datagram encapsulation and cleanning it a bit.
+If you're willing to do that, I'd gladly send you the code I
+have.
+
+> I saw in the code, that the plugins are searched in
+> /usr/local/bin which is not useable, methinks. But b4 i start
+> doing anything that wouldn't fit in the ideas of other plugin
+> developers i thought, i better drop you a note.
+
+You'll probably find the answers in dpi1.txt.
+I'm not sure, but Eric was willing to review the draft and
+start implementing the protocolo. He may have informed you
+better though.
+
+> Thanks a lot for dillo.
+> Holger
+
+you're welcome
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Introduce myself
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-03-28 02:06
+
+Holger,
+
+> ...
+> For this i have some questions:
+> a) in IO/proto.c a_Proto_get_url: After forking the process there is this strange lines:
+> io = g_new(IOData_t, 1);
+> io->Op = IORead;
+> io->IOVec.iov_base = g_malloc(4096);
+> io->IOVec.iov_len = 4096;
+> io->Callback = a_Cache_callback;
+> io->CbData = (void *) Url;
+> io->FD = filedes[0];
+> a_IO_submit(io);
+> I got, that those lines should install a callback for when data
+> is there to read. But a_Chache_callback doesn'tz define an action
+> for IORead. Is this callback just a placeholder for a usefull
+> plugin callback, who cares about the communication with the
+> plugin.
+
+a_Chache_callback defines explicit actions for IOClose and
+IOAbort, but if neither the case, IORead is assumed and the
+control flow continues within the function.
+
+i.e. this is the function that handles the incoming data.
+
+> And the seconde question:
+> the forked process stdout gets connected to the parents FD for
+> this io with a unnamed pipe. But this way, the parents proecess
+> is not able to send any data to the client, just the client can
+> send. How should a good plugin run without the voice of his
+> master?
+
+That's why we're definning a new protocol. The answer to your
+question can be found at http://dillo.so....net/dpi1.txt.
+
+> I'm thinking of implementing plugins over named sockets, like
+> xmms does (/tmp/dilloXXXXXX or so). It's not secure andjust
+> portable under *Xes, but, well, it's something to start with.
+
+Portability is very important in this project.
+
+> Would really like to know, what you think about this all.
+
+I hope this helps.
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Introduce myself
+
+From: Eric GAUDET <egaudet@in...> - 2001-03-27 01:45
+
+Hi,
+I've been working on a patch for plugins with the previous design. This patch
+answers some of you questions. This can be a good start for you, as it already
+have the callback mecanism and pipes working.
+I plan to start from here when the plugin design is completely discussed: I
+still have some suggestions I want to submit to Jorge.
+
+Here's where you can download the patch and some explanations:
+http://www.rti-zone.org/dillo/
+
+Note that this patch and plugin protocol are deprecated and the new plugin
+design submitted by Jorge is what we want to implement.
+
+Feel free to contact me if you have any question.
+
+Best,
+Eric
+
+-- En reponse de "[Dillo-dev]Introduce myself" de Holger Rapp, le 26-Mar-2001 :
+> Hi,
+> 
+> my name is holger. I'm new at dillo development. I plan to hack the simple
+> plugins, especially the ftp plugin is in my interest.
+> For this i have some questions:
+> a) in IO/proto.c a_Proto_get_url: After forking the process there is this
+> strange lines:
+> io = g_new(IOData_t, 1);
+> io->Op = IORead;
+> io->IOVec.iov_base = g_malloc(4096);
+> io->IOVec.iov_len = 4096;
+> io->Callback = a_Cache_callback;
+> io->CbData = (void *) Url;
+> io->FD = filedes[0];
+> a_IO_submit(io);
+> I got, that those lines should install a callback for when data is there to
+> read. But a_Chache_callback doesn'tz define an action for IORead. Is this
+> callback just a placeholder for a usefull plugin callback, who cares about
+> the communication with the plugin.
+> And the seconde question:
+> the forked process stdout gets connected to the parents FD for this io with a
+> unnamed pipe. But this way, the parents proecess is not able to send any data
+> to the client, just the client can send. How should a good plugin run without
+> the voice of his master? 
+> I'm thinking of implementing plugins over named sockets, like xmms does
+> (/tmp/dilloXXXXXX or so). It's not secure andjust portable under *Xes, but,
+> well, it's something to start with.
+> 
+> Would really like to know, what you think about this all.
+> Greets
+> Holger
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 27-Mar-2001 a 10:39:31
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Introduce myself
+
+From: Holger Rapp <sirver@us...> - 2001-03-26 18:26
+
+Hi,
+
+my name is holger. I'm new at dillo development. I plan to hack the simple plugins, especially the ftp plugin is in my interest.
+For this i have some questions:
+a) in IO/proto.c a_Proto_get_url: After forking the process there is this strange lines:
+io = g_new(IOData_t, 1);
+io->Op = IORead;
+io->IOVec.iov_base = g_malloc(4096);
+io->IOVec.iov_len = 4096;
+io->Callback = a_Cache_callback;
+io->CbData = (void *) Url;
+io->FD = filedes[0];
+a_IO_submit(io);
+I got, that those lines should install a callback for when data is there to read. But a_Chache_callback doesn'tz define an action for IORead. Is this callback just a placeholder for a usefull plugin callback, who cares about the communication with the plugin.
+And the seconde question:
+the forked process stdout gets connected to the parents FD for this io with a unnamed pipe. But this way, the parents proecess is not able to send any data to the client, just the client can send. How should a good plugin run without the voice of his master? 
+I'm thinking of implementing plugins over named sockets, like xmms does (/tmp/dilloXXXXXX or so). It's not secure andjust portable under *Xes, but, well, it's something to start with.
+
+Would really like to know, what you think about this all.
+Greets
+Holger 
+
+
+
+[Dillo-dev]Html.testsuite Updated
+
+From: Eric GAUDET <egaudet@in...> - 2001-03-24 06:09
+
+Hi all,
+I just updated the Html test suite. New version indicates what's working in
+tarball 0.4.0, and a reference image for all HTML4 named entities.
+
+enjoy !
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Mar-2001 a 15:07:35
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Simple plugins
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-22 16:05
+
+Hi,
+
+For those interested in plugins, the fourth draft is finished,
+you can find it at:
+
+http://dillo.so....net/dpi1.txt
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Miscellanea
+
+From: Ron Farrer <rbf@fa...> - 2001-03-18 16:19
+
+Attachments: Message as HTML      
+
+Jorge Arellano Cid (jcid@em...) wrote:
+
+> Dillo on the Alpha:
+>=20
+> A few days ago, I played with an old Alpha server; the compiler
+> raised some warnings due to different data type-sizes, so I fixed
+> them. That Alpha is still not able to run dillo (it produces the
+> binary, but dillo hangs), so I'll try to check it out next week.
+> If anyone here has an Alpha at hand, please let me know if
+> dillo runs ok on it, and what compiler/version was used.
+
+Yes it runs. I have personally run it on an AS200 (233MHz, 64MB) and
+a Ruffian (600MHz, 256MB). Runs great on both. 0.4.0 works VERY well
+(kudos).
+
+gcc version 2.95.2 20000220 (Debian GNU/Linux)
+
+Ron
+--=20
+Email: <rbf@fa...> or <rbf@de...>
+Home: <http://www.farrer.net/~rbf/>
+Alpha Linux Powered: <http://www.alphalinux.org> 
+
+
+
+[Dillo-dev]Miscellanea
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-18 16:06
+
+Hi!
+
+
+Here's a miscellanea by topic:
+------------------------------
+
+Dillo weekly news:
+
+A long time ago, Allan wrote me telling he was going on
+holidays to Australia, and that he could not maintain the dillo
+weekly news of our site. He should be back in June, so if anyone
+here wants to take charge of that while he travels, just drop me
+a note please (Dillo weekly news is a very appreciated thread).
+
+
+Dillo on the Alpha:
+
+A few days ago, I played with an old Alpha server; the compiler
+raised some warnings due to different data type-sizes, so I fixed
+them. That Alpha is still not able to run dillo (it produces the
+binary, but dillo hangs), so I'll try to check it out next week.
+If anyone here has an Alpha at hand, please let me know if
+dillo runs ok on it, and what compiler/version was used.
+
+
+URIs with entities:
+
+Finally I got into the problem of entities-parsing inside
+SGML-URI-attribute-values. As you may remember, the URI/URL rfc
+says nothing about entities, but when an URI appears as an
+attribute value inside a SGML application (HTML 4.01), they must
+be parsed.
+In brief, dillo parses them inside the "href" attribute-value
+in <A>, <BASE> and <AREA> elements, and inside "src" for <IMG>.
+
+
+Plugins:
+
+Eric sent me his latest draft (on the plugin design), and I'm
+studying it in detail. There'll be two types of plugins, a simple
+one that is very similar to CGIs, and a full blown that
+interacts with widgets.
+We're working on the first type, and the second one will have
+to wait, at least, until dillo renders TABLES and FRAMES.
+Eric: The the draft is better than my first impression. I'll
+simplify it, and make the new draft available ASAP.
+
+
+IO Error control:
+
+Yes, I've been busy, but I made some progress anyway! I hope to
+work on it full time after I finish the simple-plugins draft.
+
+
+
+That's all folks!
+Jorge.-
+
+
+PS [Pablo]: Did you receive my email on BUG#78 and the quoted
+parsing problem? 
+
+
+
+RE: [Dillo-dev]bug in some pages
+
+From: Eric GAUDET <egaudet@in...> - 2001-03-16 02:37
+
+The problem is you page uses tables, and Dillo doesn't support tables yet.
+Several people are working on it, and Dillo is likely to support tables for
+version 0.5, which might be in a couple of monthes.
+
+Best,
+Eric
+
+
+-- En reponse de "[Dillo-dev]bug in some pages" de lqx, le 16-Mar-2001 :
+> Hi,Eric
+> 
+> Did you received the page I sent you?Did you see the bug in it? Does anybody
+> to fix it?
+> 
+> regards,
+> 
+> Qiaoxia Li
+> 
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Mar-2001 a 11:38:48
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]bug in some pages
+
+From: lqx <liqx@st...> - 2001-03-16 02:14
+
+Attachments: Message as HTML      
+
+Hi,Eric
+
+Did you received the page I sent you?Did you see the bug in it? Does =
+anybody to fix it?
+
+regards,
+
+Qiaoxia Li 
+
+
+
+Re: [Dillo-dev]Newcomer
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-13 11:46
+
+On Sun, Mar 11, Xavier Ordoquy wrote:
+> [...]
+> However, the rendering engine has not been documented until now.
+> I've start browsing the code, I think I'm going to document what I
+> understand and you'll check this after.
+
+There is doc/Dw*.txt describing a rendering framework mainly
+independent of (although, of course, designed for) dillo, based on
+Gtk+. The widgets provided by Dw are fed by several other modules
+(Html, Plain, Image ...), but do not refer to the other modules
+(well, there is one reference, but my goal is to remove it in
+future). If it is incomplete, I'll ask your questions, on the list or
+privately.
+
+There are several layers, which I don't know that detailed, and they
+are indeed not perfectly well documented. Track down the functions,
+starting in the Nav module.
+
+> Moreover I'll closly looking for
+> the table implementation. I really want to see it done very soon ;)
+
+I recently posted some ideas about it. I'm currently not working on
+it, but instead involved in cleaning up the page widget.
+
+A note if you want to start: I plan to implement margins, borders,
+and padding at the level of DwWidget, quite close to the CSS spec.
+They will anyway needed for other purposes (except CSS in future:
+e.g. floating objects).
+
+> Another point the about plugins. I'm going to have a look a the way the
+> are implemented in mozilla and konqueror.
+> I do understand that one will not be able to use the netscape plugin
+> system for other processor than x86, but I'de like to see this implemented
+> for the architecture so that I can remove netsape/mozilla/konqueror from
+> my desktop ;)
+
+There is already a simple framework: functions for creating
+DwWidget's, and for feeding them with data, look at mime.c for
+details. The plugin scheme should be bound to this. The simplest
+solution could be .so files, with the disadvantage of decreasing
+stability (AFAIK Netscape does this). Any other system could perhaps
+be included by wrappers, however, there are several free
+implementations we could use.
+
+> I fully agree it's another issue, but it might be very interessting to
+> have a full gtk browser for gnome for ex.
+
+Dillo is already mostly capable of rendering pages conforming to
+"typical" recommendations (no frames, no dependences on javascript,
+embedded objects etc.), except that tables are rendered different
+(which is IMHO only a real handicap when tables are used as
+_tables_). ;-)
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]jpeg images
+
+From: Eric GAUDET <egaudet@in...> - 2001-03-12 10:01
+
+-- En reponse de "[Dillo-dev]jpeg images" de lqx, le 12-Mar-2001 :
+> Hi,
+> 
+> I found a bug when dillo dealt with more than two jpeg images in a
+> line,please visit http://startman.start.com.cn and you will see the
+> fault.Will anybody fix this bug?I used dillo v0.4.0.
+> 
+> regards,
+> 
+
+Unfortunatly, I can't acces the page. It seems there's a route loop in the way:
+7 205.158.0.71 (205.158.0.71) 9.846 ms 9.600 ms 9.742 ms
+8 fe9-1-0.core1.scl-ca.us.xo.com (207.88.3.193) 9.605 ms 11.087 ms 22.777
+ms
+9 205.158.0.71 (205.158.0.71) 11.273 ms 10.330 ms 16.958 ms
+
+Did you see the error with other pages ?
+Can you send me the page (along with the images) by email, so I can include it
+in the testsuite and developpers can investigate the problem ?
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Mar-2001 a 19:00:57
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]jpeg images
+
+From: lqx <liqx@st...> - 2001-03-12 09:21
+
+Attachments: Message as HTML      
+
+Hi,
+
+I found a bug when dillo dealt with more than two jpeg images in a =
+line,please visit http://startman.start.com.cn and you will see the =
+fault.Will anybody fix this bug?I used dillo v0.4.0.
+
+regards, 
+
+
+
+Re: [Dillo-dev]Newcomer
+
+From: Xavier Ordoquy <xordoquy@au...> - 2001-03-11 10:45
+
+> Frankly, the best way to get involved, and to know what's dillo
+> project about, is the one I described above (we put a big effort
+> in creating those docs.).
+> 
+> Jorge.-
+
+However, the rendering engine has not been documented until now.
+I've start browsing the code, I think I'm going to document what I
+understand and you'll check this after. Moreover I'll closly looking for
+the table implementation. I really want to see it done very soon ;)
+
+Another point the about plugins. I'm going to have a look a the way the
+are implemented in mozilla and konqueror.
+I do understand that one will not be able to use the netscape plugin
+system for other processor than x86, but I'de like to see this implemented
+for the architecture so that I can remove netsape/mozilla/konqueror from
+my desktop ;)
+I fully agree it's another issue, but it might be very interessting to
+have a full gtk browser for gnome for ex.
+
+---
+Xavier Ordoquy,
+Aurora-linux, http://www.aurora-linux.com 
+
+
+
+Re: [Dillo-dev]Newcomer
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-11 01:16
+
+Xavier,
+
+> Hi,
+
+Hi!
+
+> I just tried dillo, and it seems very nive to me because it seems fast.
+> I whish I can join the project and help you.
+> My goal is to make a browser small and usable on desktop as well as
+> embedded devices with netscape plugins.
+
+Be careful. Dillo has a very different rendering engine than
+Netscape. I don't know if currently netscape plugins are
+independent from the invoking program, but sometime ago they were
+based on a Netscape protocol that was specific to that browser.
+
+We're just defining a way of implementing simple plugins (as
+described in the [Project Notes] link), and full blown plugins
+(those that integrate with rendering functions) are far away in
+the future...
+
+On the other hand, dillo has been reported to run on the IPaq
+and StrongArm based machines.
+
+> Can I have more information about the ongoing developpements ??
+
+Sure, just take a look at the bug track, skim the mailing list
+and read what's inside the doc/ directory.
+
+> What about joining the team ?
+
+That's free!
+
+Frankly, the best way to get involved, and to know what's dillo
+project about, is the one I described above (we put a big effort
+in creating those docs.).
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Tables
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-09 15:49
+
+On Tue, Mar 06, 2001 at 06:58:32PM -0300, Jorge Arellano Cid wrote:
+> 
+> Hi!
+> 
+> On 4 Mar 2001, Sebastian Geerken wrote:
+> 
+> > [...]
+> > This should make it possible to render tables incrementally, the
+> > basic mechanism is the same as the one currently used for simple
+> > pages: when the page widget grows, this will delivered to the table
+> > widget, which will then recalculates its size. It may be (an
+> > approximation is difficult, the best is to test the final
+> > implementation) that this takes quite much CPU time, in this case, it
+> > may be convenient to find an other priority mechanism instead of Gtk+
+> > idle functions. But we'll see ...
+> 
+> As an alternative, the rendering can be tuned with timeout
+> functions (e.g. Table rendering with a 3 seconds interval).
+
+Rendering of tables will be done in the "main" (i.e. the GUI) thread.
+If it gets too slow two, two problems arise:
+
+1. it blocks the user interface, and
+2. it hogs the CPU in an unreasonable way.
+
+2 could be solved by a timeout, but 1 won't, the only way to solve it
+is to do some parts in another thread.
+
+> The problem of rendering cached pages can be solved with an
+> idle rendering that's triggered when the whole page has been
+> parsed;
+
+... or the </table> tag was read ...
+
+> the idle rendering request must cancel any queued
+> timeout. That way, if the page has completed downloading, and the
+> timeout is still waiting, no noticeable delays would be perceived
+> by the user.
+
+If the page is read from the cache, rendering will only be done once,
+since idle functions have a lower priority. So, the timeout function
+should not be started when the table has been finished. Instead, the
+current mechanism via idle functions is used. However, there may be
+changes after the table/page has been finished, e.g. by images, which
+will cause the table to be resized.
+
+Anyway, the resizing mechanism may be changed without modifying the
+widgets itself, so I don't bother about it, but will see whether a
+change is really necessary after implementing the table widget.
+
+Sebastian 
+
+
+
+[Dillo-dev]Newcomer
+
+From: Xavier Ordoquy <xordoquy@au...> - 2001-03-09 13:24
+
+Hi,
+
+I just tried dillo, and it seems very nive to me because it seems fast.
+I whish I can join the project and help you.
+My goal is to make a browser small and usable on desktop as well as
+embedded devices with netscape plugins.
+
+Can I have more information about the ongoing developpements ??
+What about joining the team ?
+
+Xave.
+
+---
+Xavier Ordoquy,
+Aurora-linux, http://www.aurora-linux.com 
+
+
+
+Re: [Dillo-dev]Tables
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-06 22:06
+
+Hi!
+
+On 4 Mar 2001, Sebastian Geerken wrote:
+
+> [...]
+> This should make it possible to render tables incrementally, the
+> basic mechanism is the same as the one currently used for simple
+> pages: when the page widget grows, this will delivered to the table
+> widget, which will then recalculates its size. It may be (an
+> approximation is difficult, the best is to test the final
+> implementation) that this takes quite much CPU time, in this case, it
+> may be convenient to find an other priority mechanism instead of Gtk+
+> idle functions. But we'll see ...
+
+As an alternative, the rendering can be tuned with timeout
+functions (e.g. Table rendering with a 3 seconds interval).
+The problem of rendering cached pages can be solved with an
+idle rendering that's triggered when the whole page has been
+parsed; the idle rendering request must cancel any queued
+timeout. That way, if the page has completed downloading, and the
+timeout is still waiting, no noticeable delays would be perceived
+by the user.
+
+Just an idea...
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Tables
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-03-04 20:57
+
+Hi!
+
+Just a few words about tables. The implementation should be tricky,
+but quite interesting, and if nobody else feels a strong desire to do
+this ;-), I'll start with it soon (aside from some other things).
+
+So far, this is the current state of what I've thought about it.
+
+A simple overview what to do:
+
+1. Write a table widget. It will be a general purpose Dw container,
+but will indeed only used for DwPage's.
+
+2. Extend the HTML parser by a page stack, so that it can write
+into different DwPage's. This is quite simple, and I already
+have the code somewhere lying around on my harddisk.
+
+This should make it possible to render tables incrementally, the
+basic mechanism is the same as the one currently used for simple
+pages: when the page widget grows, this will delivered to the table
+widget, which will then recalculates its size. It may be (an
+approximation is difficult, the best is to test the final
+implementation) that this takes quite much CPU time, in this case, it
+may be convenient to find an other priority mechanism instead of Gtk+
+idle functions. But we'll see ...
+
+Table rendering is not trivial. I've made a few thoughts about it,
+and later found notes how it is implemented in w3m
+(http://ei5nazha.yz.yamagata-u.ac.jp/~aito/w3m/eng/STORY.html,
+section "Table rendering algorithm in w3m"), which are quite similar
+to my ideas.
+
+For nested tables, there is the need for minimizing the number of
+calculations of the real column widths. It should be possible to do
+this by knowing only the minimal/maximal width of cells (which are
+widgets), and calculating the latter should be quite fast.
+
+Integrating this idea into Dw will look like following:
+
+1. There will be an other way how DwPage allocates the child
+widgets. The current is suitable for simple widgets like images
+and hrules, but the table widget will have to know the page
+width, an extended scheme will make use of set_width etc.
+
+2. DwWidget will be extended by signals returning the minimum and
+maximum width. For most widgets, this will be simple and will
+done by Dw_widget_real_... implementations. For DwPage's without
+child widgets, this is mainly the width of the widest word, and
+the width of the widest line, respectively (both should be
+stored in DwPage for speed). When there are child widgets, the
+minimum/maximum widths of them have to be regarded.
+
+The minimal/maximal width of a table is simply the sum of all
+minimal/maximal column widths, and the minimal/maximal column
+width are the maxima of all minimal/maximal column cell widths.
+
+Sebastian 
+
+
+
+[Dillo-dev]dillo CVS
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-04 16:24
+
+Hi!
+
+Today I succeded merging back 0.4.0 branch into the main trunk
+of the CVS.
+
+What does that mean? Simply stated, that what we used to call
+0.4.0 branch (or "Dw-040") has become our main line of
+development, and that it has to be accessed at the main trunk (in
+other words: no more '-r Dw-040' arguments).
+
+How to get it from CVS? Just:
+
+cvs -d:pserver:anonymous@cv...:/cvsroot/dillo login
+cvs -z8 -d:pserver:anonymous@cv...:/cvsroot/dillo co dillo
+
+That's all!
+
+
+Cheers
+Jorge.-
+
+
+Ps: [Sebastian]: Needless to say, any new changes
+go in the main trunk now! 
+
+
+
+[Dillo-dev]0.4.0 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-03-04 01:42
+
+Hi there!
+
+I'm exhausted, but finally dillo-0.4.0 is there, ready for
+download!!!
+
+The web site was updated, also project notes, primary concerns
+and documentation inside the tarball.
+
+040 bugtrack will not be used anymore, just keep using the main
+one because 0.4.0 is now our main development branch. That's it!
+
+Eric: Please submit me (or to Sebastian) your HR patch, because
+none of us received it.
+
+Well, I'll try to merge 0.4.0 branch into the main trunk of the
+CVS tomorrow.
+
+Mark: There's a short overview of the plugin scheme that's to
+be implemented in [Project Notes] link.
+
+
+
+Good night!
+Jorge.- 
+

@@ -1,0 +1,3635 @@
+[Dillo-dev]Skript for keeping a history
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-12-30 20:19
+
+Hi,
+
+here's a little ruby script that starts dillo and saves a 
+browsing history (tested with 0.6.3).
+
+Regards,
+Johannes Hofmann
+
+
+
+#!/usr/local/bin/ruby
+excludes = /history.html|about:|slashdot/
+
+input = IO.popen("dillo")
+output = open(".dillo/history.html", "a+")
+
+if output.stat.size == 0 then
+output.write("""
+<html>
+<head>
+<title>History</title>
+</head>
+<body>
+""")
+end
+
+re = /Nav_open_url: Url=>([^<]+)</
+while line = input.gets 
+url = re.match (line)
+if url and not excludes.match(url[1]) then
+d = Time.new
+output.write(d.to_s+"<a href=\"" + url[1] + "\">" + url[1] + "</a><br>\n")
+output.flush
+end
+end 
+
+
+
+[Dillo-dev]Compiling 0.6.3 png trouble ?
+
+From: Richard <hebertrich@ya...> - 2001-12-28 14:51
+
+I feel like having a beer.. ( who dosen't ? : ) 
+
+Ok, here it is .. 
+This morning i took my courage in one hand and my trackball in the other.
+Got the latest Dillo pack and tried to compile it.
+At first i realised i needed some libs..so here i went and installed libjpeg-devel pack 
+libpng and it's devel pack .. but o surprise.. ( gotta love em suckers in the holidays ) 
+
+This is what i get when i run make..I need to know what is causing this.
+If anyone has an idea im interrested in knowing how to correct it .
+
+Richard 
+
+
+
+" hacking in the morning , hacking in the evening .. hacking my life away " 
+( sang to an old western beat ) 
+
+here's the listing 
+
+gcc -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include -g -O2 -D_REENTRANT -Wall -Waggregate-return -o dillo chain.o commands.o cache.o dw.o dw_bullet.o dw_container.o dw_embed_gtk.o dw_gtk_scrolled_frame.o dw_gtk_scrolled_window.o dw_gtk_statuslabel.o dw_gtk_viewport.o dw_hruler.o dw_image.o dw_marshal.o dw_page.o dw_style.o dw_table.o dw_tooltip.o dw_widget.o findtext.o web.o progressbar.o dillo.o bookmark.o dicache.o dns.o gif.o jpeg.o png.o html.o image.o misc.o interface.o nav.o plain.o menu.o prefs.o colors.o bitvec.o klist.o url.o IO/libDio.a -ljpeg -lpthread -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
+png.o: In function `Png_error_handling':
+/home/ric/dillo-0.6.3/src/png.c:108: undefined reference to `png_get_error_ptr'
+png.o: In function `Png_datainfo_callback':
+/home/ric/dillo-0.6.3/src/png.c:130: undefined reference to `png_get_progressive_ptr'
+/home/ric/dillo-0.6.3/src/png.c:133: undefined reference to `png_get_IHDR'
+/home/ric/dillo-0.6.3/src/png.c:147: undefined reference to `png_get_valid'
+/home/ric/dillo-0.6.3/src/png.c:151: undefined reference to `png_set_expand'
+/home/ric/dillo-0.6.3/src/png.c:155: undefined reference to `png_set_strip_16'
+/home/ric/dillo-0.6.3/src/png.c:161: undefined reference to `png_get_gAMA'
+/home/ric/dillo-0.6.3/src/png.c:162: undefined reference to `png_set_gamma'
+/home/ric/dillo-0.6.3/src/png.c:167: undefined reference to `png_set_gray_to_rgb'
+/home/ric/dillo-0.6.3/src/png.c:172: undefined reference to `png_set_interlace_handling'
+/home/ric/dillo-0.6.3/src/png.c:176: undefined reference to `png_read_update_info'
+/home/ric/dillo-0.6.3/src/png.c:178: undefined reference to `png_get_IHDR'
+/home/ric/dillo-0.6.3/src/png.c:181: undefined reference to `png_get_rowbytes'
+/home/ric/dillo-0.6.3/src/png.c:182: undefined reference to `png_get_channels'
+png.o: In function `Png_datarow_callback':
+/home/ric/dillo-0.6.3/src/png.c:218: undefined reference to `png_get_progressive_ptr'
+/home/ric/dillo-0.6.3/src/png.c:220: undefined reference to `png_progressive_combine_row'
+png.o: In function `Png_dataend_callback':
+/home/ric/dillo-0.6.3/src/png.c:280: undefined reference to `png_get_progressive_ptr'
+png.o: In function `Png_callback':
+/home/ric/dillo-0.6.3/src/png.c:321: undefined reference to `png_destroy_read_struct'
+/home/ric/dillo-0.6.3/src/png.c:349: undefined reference to `png_check_sig'
+/home/ric/dillo-0.6.3/src/png.c:355: undefined reference to `png_create_read_struct'
+/home/ric/dillo-0.6.3/src/png.c:361: undefined reference to `png_create_info_struct'
+/home/ric/dillo-0.6.3/src/png.c:366: undefined reference to `png_set_progressive_read_fn'
+/home/ric/dillo-0.6.3/src/png.c:380: undefined reference to `png_process_data'
+collect2: ld returned 1 exit status
+make[3]: *** [dillo] Error 1
+make[3]: Leaving directory `/home/ric/dillo-0.6.3/src'
+make[2]: *** [all-recursive] Error 1
+make[2]: Leaving directory `/home/ric/dillo-0.6.3/src'
+make[1]: *** [all-recursive] Error 1
+make[1]: Leaving directory `/home/ric/dillo-0.6.3'
+make: *** [all-recursive-am] Error 2
+[root@ric dillo-0.6.3]# rpm -q libpng
+libpng-1.0.12-2
+[root@ric dillo-0.6.3]# rpm -q libpng-devel
+libpng-devel-1.0.12-2
+
+... - - - ...
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com 
+
+
+
+[Dillo-dev]dillo freezing up in some sites, proxy involved
+
+From: Jyri Jokinen <autumn.rider@su...> - 2001-12-27 16:42
+
+This is an odd one. It seems that the way Dillo is started affects
+it's way to use a proxy. When a certain site comes straight from the
+Squid cache running on the same machine as Dillo, and Dillo is started
+in a particular way, it freezes up.
+
+Please see http://surffi.net/~arider/dillo/ for a better
+explanation and screensots.
+
+-- 
+jyri jokinen 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-24 21:38
+
+> Did you read the email?
+> 
+> We were talking about the bugtrack engine (a collection of CGI
+> programs written in python, that never use GTK+).
+
+D'oh. I thought you meant the main browser. Oops...(stupid me, 
+getting the context all wrong)
+
+---
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]0.6.3 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-23 13:00
+
+Hi!
+
+Finally, the so awaited 0.6.3 release is out. It was a long
+road, but we can be confident that our efforts ended up in an
+outstanding quality version of dillo.
+
+So those of you that still don't have it: go get it!
+
+
+Regards, and receive my best wishes for these holidays.
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-23 12:59
+
+On Sun, 23 Dec 2001, Clinton Ebadi wrote:
+
+> > Does anyone here knows python and feels like adding that?
+> > It's very simple, all the data is in a plain text file, with
+> > concurrency handling done using the voluntary file lock protocol.
+>
+> But why not Guile (the official GNU extension language) as a
+> plugin/extension language. It is the official GNU extension language.
+> It can even do threading using QuickThreads, and OO with GOOPS. I've
+> been reading the source and have tried to figure out where it would
+> work, but all the Gtk+...(since I don't know Gtk+ this is a problem).
+
+!?
+
+Did you read the email?
+
+We were talking about the bugtrack engine (a collection of CGI
+programs written in python, that never use GTK+).
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]A word of thanks
+
+From: Dan P. <danp27@ce...> - 2001-12-23 06:14
+
+Hello, Just a note to let you know how much I enjoy using Dillo. I guess
+I've tried, and cursed, just about every browser out there for years but I
+well remember my first reaction upon loading Dillo. It went something like
+"HOLY SH*T,it's loaded already!". I knew then and there that I had hit
+gold. The only thing faster is maybe lynx.
+
+I use Dillo everyday, It is my primary browser of choice. I still keep
+Netscape 4.7 and mozilla around for emergency viewing of troublesome pages
+(image maps,java,persistent cookies and the like) but it is a last resort
+that will make me fire up anything else. I look forward to a new version of 
+Dillo like a 6 year old looks forward to Christmas.
+
+Thank you very much for all your hard work, it is deeply appreciated. 
+Gotta go, Ive got a proggy to compile (0.6.3 is out). 
+
+Sincerely,
+Dan P. 
+
+
+
+[Dillo-dev]0.6.3 release
+
+From: Jorge Arellano Cid <jcid@in...> - 2001-12-23 20:18
+
+Hi!
+
+Finally, the so awaited 0.6.3 release is out. It was a long
+road, but we can be confident that our efforts ended up in an
+outstanding quality version of dillo.
+
+So those of you that still don't have it: go get it!
+
+
+Regards, and receive my best wishes for these holidays.
+Jorge.-
+
+
+-- 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-22 20:29
+
+> > Bug 238 is not a bug, if the poster is on the list, please install
+> > GNU Make, as the make provided with OpenBSD(pmake as it is often
+> > called) does not support some things that the GNU automake/autoconf
+> > tools do in the makefiles.
+> I don't think that forcing users to install gmake is a good idea. I
+> hardly beleive that it's possible to create the makefiles so both gnu
+> and bsd (and other) make utilities can do the job. I'm going to do
+> some work on this, because I'm also affected as a hardcore BSD'er :)
+
+This has been fixed in Automake 1.5 (which doesn't work with most 
+automake 1.4 setups). Of course, this bug only applies to the 
+maintainer specific portions of the makefiles, so if you don't 
+./configure --enable-maintainer-mode, it would work (I think). It has 
+to do with the automatic dependecy tracking, which was completely 
+replaced in 1.5. So, unless you are using GNU make you can't do stuff 
+like 'make dist'.
+
+---
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-22 20:29
+
+> Does anyone here knows python and feels like adding that?
+> It's very simple, all the data is in a plain text file, with
+> concurrency handling done using the voluntary file lock protocol.
+
+But why not Guile (the official GNU extension language) as a 
+plugin/extension language. It is the official GNU extension language. 
+It can even do threading using QuickThreads, and OO with GOOPS. I've 
+been reading the source and have tried to figure out where it would 
+work, but all the Gtk+...(since I don't know Gtk+ this is a problem).
+
+> By now I'm too busy too work on it, and very concerned about
+> 0.6.3 release. BTW, how has the CVS version being doing? (I have only
+> a couple of comments. Should I assume it was OK? :)
+
+the unknown_lamer thinks that 0.6.3 should have cookies. Of course, 
+it isn't a big issue since I now have 384MB of ram...(but, why waste 
+that with Mozilla when I can fill it with a thousand instances of 
+dillo instead!)
+
+---
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]Re: Font size problem with locales, and null char in text files
+
+From: Niklas Hoglund <niklas.hoglund@te...> - 2001-12-21 19:39
+
+On Wed, Dec 12, 2001 at 07:57:46PM -0300, Jorge Arellano Cid wrote in
+a private mail:
+
+> Niklas,
+>=20
+> > I'm experiencing two bugs in Dillo 0.6.2. Firstly, if I have my
+> > default locale setting, LC_ALL=3Dsv_SE, Dillo ignores the font_factor
+> > setting and displays tiny fonts. With LC_ALL=3DC it works OK.
+> >
+> > Secondly, and this is more an irritating thing than a bug, when
+> > displaying for example the changelog on Dillo's homepage every line
+> > begins with a null character (the one used when the font lacks some
+> > character). This only happens on text displayed with the fixed-width
+> > font.
+> >
+> > If it matters any, I use the Debian package of Dillo.
+>=20
+> I hope by this time you have been able to solve the problem.
+> Anyway, I've heard of font loading problems before, specially
+> from swedish guys!, and I don't know what it is, but it seems
+> that their distributions lack some fonts that others have
+> included by default, and that dillo requires.
+
+I'm using the Debian distribution. Dillo uses small font sizes if
+LC_ALL=3Dsv_SE (which is my default). It works well if I start it with
+"LC_ALL=3DPOSIX dillo", so it's really not a problem, but a bug.
+
+I still get the squares at the start of every line in a <pre>. I guess
+that's the newline being rendered or something. I found something
+about that in the mailing list archives, so maybe that's fixed. I'm
+using the debian package of dillo, which may be a bit old. (The title
+bar says 0.6.1 while it's loading, and the splash page says 0.6.2,
+which it is. :)
+
+> It works perfectly here, believe me!
+>=20
+> If you still have trouble with it, please check the mailing
+> list archives, there're plenty of swedish guys to ask, but don't
+> ask J=F6rgen (he has had trouble with it :).
+>=20
+> Finally, if you found a solution, please let me know what it
+> was, with a view to include it in the README file.
+
+I guess you already knew LC_ALL=3DPOSIX as that's in the archives. There
+seemed to be a fix for the squares in <pre> available too.
+
+By the way, it'd be nice if the mailing list archives were available
+in mbox format. I find it much more convenient to use my mailer than
+web pages with just a few unthreaded messages per page. Maybe that's
+something that can be added if Dillo is moved somewhere else.
+
+> PS: sorry for this delayed answer, but now that I have a little
+> span of time, I'm backtracking my email queue and found your
+> letter...
+
+No problem. Dillo is still usable, and for heavier browsing can always
+use Galeon. (And sometimes I even use Netscape, as Debian's Galeon
+doesn't yet support java or flash.) Galeon is a bit sluggish, though,
+so I'll be happy when Dillo gets mature enough to use for most
+surfing. (I'm mostly lacking frames and ftp downloads.)
+
+--=20
+Happy holidays,
+Niklas 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: DraX <drax@wh...> - 2001-12-21 16:18
+
+As a "hardcore" BSD user my self I can understand, but atleast half of the
+apps people compile and install need gmake anyway, one project isn't going
+to change anything, and it would be a large ammount of work because the
+make files would need to be patched everytime they were generated by
+./configure, etc. Installing gmake is easy, it's a package and it's in
+ports/pkgsrc. 
+
+
+
+On Fri, 21 Dec 2001, Miklos Magyari wrote:
+
+> DraX wrote:
+> > 
+> > Bug 238 is not a bug, if the poster is on the list, please install GNU
+> > Make, as the make provided with OpenBSD(pmake as it is often called) does
+> > not support some things that the GNU automake/autoconf tools do in the
+> > makefiles.
+> 
+> hi,
+> 
+> I don't think that forcing users to install gmake is a good idea. I
+> hardly beleive that it's possible to create the makefiles so both gnu
+> and bsd (and other) make utilities can do the job. 
+> I'm going to do some work on this, because I'm also affected as a
+> hardcore BSD'er :)
+> 
+> cheers,
+> Miki
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]Re: Dillo's bug-track engine - submitter's email
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-21 14:19
+
+Pekka,
+
+> Hi,
+>
+> On the mailinglist you asked if anyone knowing python, would like to add
+> submitters email to bug-track engine. I have coded little with python,
+> so if no one else has volunteered I could do it.
+
+Thanks for the interest, but Mallum is handling that now!
+
+
+> Another feature I would like to see in bug-track is converting urls to
+> links. It's PITA to write them manually.
+
+That's not the Bugtrack's fault, but dillo not being able (nor
+allowing) to cut&paste text from the rendered area :(
+
+Workaround tip:
+
+View source, scroll to the BUG# and copy&paste from there!!!
+At least that's what I do.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-21 14:19
+
+Mallum,
+
+On Thu, 20 Dec 2001, mallum wrote:
+
+> I know Python pretty good. Can I get at the Bug reporting code via cvs?
+
+NO, but here's how!
+
+Get:
+
+http://dillo.s...net/Bugtrack-html.tar.gz
+http://dillo.s...net/Bugtrack-dec.tar.gz
+
+Bugtrack-html.tar.gz has the HTML interface.
+Bugtrack-dec.tar.gz has the CGIs.
+
+Note that within the CGI tarball:
+
+drwsrwsr-x jcid/dillo 0 2001-11-16 08:11 bugtrack/
+-rwxrwxrwx jcid/dillo 19810 2001-12-18 06:56 bugtrack/BugTrack.DB
+-rwxrwxr-x jcid/dillo 3040 2001-01-08 20:52 bugtrack/Dillo_volunteer.cgi
+-rwxrwxrwx jcid/dillo 19498 2001-12-17 21:22 bugtrack/BugTrack.DB.tmp
+-rwxrwxr-x jcid/dillo 3036 2001-01-08 20:49 bugtrack/Dillo_insert.cgi
+-rwxrwxr-x jcid/dillo 5482 2001-01-08 21:37 bugtrack/Dillo_insert.py
+-rwxrwxr-x jcid/dillo 4060 2001-01-08 21:37 bugtrack/Dillo_query.cgi
+-rwxrwxr-x jcid/dillo 3937 2001-06-28 09:36 bugtrack/Dillo_volunteer.py
+-rwxrw-rw- jcid/dillo 3 2001-12-18 06:56 bugtrack/IDNum.DB
+-rw-rw-r-- jcid/dillo 123 2001-01-08 20:33 bugtrack/wrapper.c
+-rwxrwxr-x jcid/dillo 662 2001-01-10 19:42 bugtrack/Dillo_text.py
+-rw-r--r-- jcid/dillo 1039 2001-09-27 20:57 bugtrack/BTrm.py
+-rwxr-xr-x jcid/dillo 17323 2001-11-16 08:10 bugtrack/BugTrack.DB.BAK
+
+
+- Permissions are very important.
+- .cgi named programs are simple C wrappers to python sources
+This is not necessary! --Dillo_query.cgi is a python source,
+so it can be cleaned up.
+- BugTrack.DB is the plain text Database.
+- IDNum.DB holds the next BUG number.
+- BTrm.py serves to remove records. It isn't finished yet, and
+hopefully it should append the "deleted" records into another
+plain text Database file, so they can be queried later. For
+instance, from the query page, selecting "already fixed jobs"
+within the "Job activity search" section.
+
+- The new submitter-email camp should be optional, and not
+displayed in the query results page, when not present.
+
+- Maybe allowing a few more chars to the status camp is a good
+idea.
+
+
+Why this little bugtrack system instead of ....?
+
+Because it's specially tailored to dillo project needs,
+and it has provided a superb, clear and _fast_ interface to the
+main developers (to know the whereabouts of developing).
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo, GTK --> WINGs??
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-12-21 13:29
+
+On Mon, Dec 17, 2001 at 12:24:23PM +0530, Mayuresh Kathe wrote:
+> [...]
+> Dillo fits the bill perfectly, it is small, fast and renders HTML 
+> pretty well, but it depends heavily on glib, gdk and gtk+.
+> To make it much better integrated with WindowMaker, and at the same 
+> time even more faster and lighter it would be better to implement the 
+> UI using WINGs, the default UI set for WindowMaker.
+> 
+> Is there anyone with good programming skills who could help me out 
+> with this?
+
+This is a short (and incomplete) list, which should show that porting
+is actually a quite bad idea:
+
+1. Glib usage is spread over the whole code, and given how useful
+Glib is, it does not make any sense not to use it. Notice that
+Glib can be used independently of Gtk, it has only one tenth of
+the size Gtk has.
+
+2. In Dw, the Gtk object system is used (GtkObject). In Gtk 2.0, it
+is moved to Glib, so the same applies as in 1.
+
+3. Usage of Gtk itself: The simplest part is the interface, but
+there are also some new widgets, e.g. for the connection between
+Gtk and Dw (which contains special widgets for displaying the
+documents). Porting them is probably as difficult as rewriting
+them, also since they were designed for Gtk with all its
+interfaces and features. Dw itself uses Gdk quite much.
+
+5. There are also other references, just type: 
+
+grep -l g[dt]k_ `find -name "*.c"`
+
+Additional to the port, the affected parts are of course developed
+further, and I believe synchronisation of both trees is nearly
+impossible.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]about current state of patches
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2001-12-21 12:16
+
+fre 2001-12-21 klockan 03.52 skrev Grigory Bakunov:
+[snip]
+> 2) "Cookies patch" by Lars Clausen - all we need it. This
+> patch clean and i think it's must be inject into cvs
+> after little correction for support current url handling
+> scheme.
+
+Here is a new patch, adapted for the altered url scheme. There's also
+some changes to actually make the control rules work...
+http://w1.211.telia.com/~u21114235/patch-cookies-21dec
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Miklos Magyari <miklos.magyari@et...> - 2001-12-21 07:49
+
+DraX wrote:
+> 
+> Bug 238 is not a bug, if the poster is on the list, please install GNU
+> Make, as the make provided with OpenBSD(pmake as it is often called) does
+> not support some things that the GNU automake/autoconf tools do in the
+> makefiles.
+
+hi,
+
+I don't think that forcing users to install gmake is a good idea. I
+hardly beleive that it's possible to create the makefiles so both gnu
+and bsd (and other) make utilities can do the job. 
+I'm going to do some work on this, because I'm also affected as a
+hardcore BSD'er :)
+
+cheers,
+Miki 
+
+
+
+Re: [Dillo-dev]installation
+
+From: C. Dummy <cdummy@ro...> - 2001-12-21 05:15
+
+Thanks to all of you for help. After installing gtk dev and libraries below
+I could compile no problem. It's nice little browser but I still need netscape
+for some pages.
+Andrey
+
+"G. Rob Burgess" wrote:
+
+> Wow, you are using just about the same setup as I am, right down to
+> blackbox, blackbox is awesome. I had the same probs compiling, you need to
+> get a bunch of libraries, apt-get these:
+>
+> libjpeg62-dev
+> libpng2-dev
+> libgtk1.2-dev
+>
+> and I think
+>
+> zlib1g-dev
+>
+> and possibly some others, after you get these just look where the make
+> bombs out and try to guess the library. Just to let you know it *is*
+> possible on a Debian 2.2, if you get hung up again let me know where, good
+> luck dillo & blackbox r the best. --rob
+>
+> ps I hope you have blackbox 0.6x, much better than earlier ones
+>
+> Rob Burgess
+> Network Specialist II
+> University of Miami
+>
+> On Thu, Dec 20, 2001 at 11:48:24AM -0500, C. Dummy wrote:
+> > I'm linux newbie. I run Debian 2.2 with all dev libraries. I use
+> > Blackbox window manager. Small and fast. I'm interested in dillo 0.6.2
+> > because is small and fast. Unfortunatelly I can't install because I'm
+> > getting this errors when I do
+> > ./configure
+> > ng for GTK - version >= 1.2.0... no
+> > *** The gtk-config script installed by GTK could not be found
+> > *** If GTK was installed in PREFIX, make sure PREFIX/bin is in
+> > *** your path, or set the GTK_CONFIG environment variable to the
+> > *** full path to gtk-config.
+> > configure: WARNING: Unable to find Gtk+ with a version >= 1.2.0
+> > checking for jpeg_destroy_decompress in -ljpeg... no
+> > configure: WARNING: *** JPEG support will not be included ***
+> > no
+> > configure: WARNING: *** JPEG support will not be included ***
+> > and following after
+> > make
+> > make all-recursive
+> > make[1]: Entering directory `/temp/dillo-0.6.2'
+> > Making all in doc
+> > make[2]: Entering directory `/temp/dillo-0.6.2/doc'
+> > make[2]: Nothing to be done for `all'.
+> > make[2]: Leaving directory `/temp/dillo-0.6.2/doc'
+> > Making all in src
+> > make[2]: Entering directory `/temp/dillo-0.6.2/src'
+> > Making all in IO
+> > make[3]: Entering directory `/temp/dillo-0.6.2/src/IO'
+> > gcc -DHAVE_CONFIG_H -I. -I. -I../.. -g -O2 -D_REENTRANT -Wall
+> > -Waggregate-return -c mime.c
+> > In file included from mime.c:12:
+> > mime.h:9: gtk/gtk.h: No such file or directory
+> > In file included from mime.h:10,
+> > from mime.c:12:
+> > ../dw_widget.h:4: gtk/gtkobject.h: No such file or directory
+> > ../dw_widget.h:5: gtk/gtkwidget.h: No such file or directory
+> > ../dw_widget.h:6: gdk/gdktypes.h: No such file or directory
+> > In file included from ../dw_widget.h:8,
+> > from mime.h:10,
+> > from mime.c:12:
+> > ../dw_style.h:4: gdk/gdktypes.h: No such file or directory
+> > In file included from mime.h:11,
+> > from mime.c:12:
+> > ../cache.h:4: glib.h: No such file or directory
+> > In file included from ../cache.h:5,
+> > from mime.h:11,
+> > from mime.c:12:
+> > ../chain.h:9: glib.h: No such file or directory
+> > In file included from ../cache.h:6,
+> > from mime.h:11,
+> > from mime.c:12:
+> > ../url.h:14: glib.h: No such file or directory
+> > In file included from mime.h:12,
+> > from mime.c:12:
+> > ../IO/Url.h:7: glib.h: No such file or directory
+> > make[3]: *** [mime.o] Error 1
+> > make[3]: Leaving directory `/temp/dillo-0.6.2/src/IO'
+> > make[2]: *** [all-recursive] Error 1
+> > make[2]: Leaving directory `/temp/dillo-0.6.2/src'
+> > make[1]: *** [all-recursive] Error 1
+> > make[1]: Leaving directory `/temp/dillo-0.6.2'
+> > make: *** [all-recursive-am] Error 2
+> >
+> > Ithink errors in make are coused by errot in ./configure
+> > I have gtk installed libraries and dev. I think because I have gnome
+> > apps installed, and when I was installing
+> > Debian I marked all development libraries.
+> > Any hints and help would be very appreciate.
+> > Andrey
+> >
+> >
+> > _______________________________________________
+> > Dillo-dev mailing list
+> > Dillo-dev@li...
+> > https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]about current state of patches
+
+From: Grigory Bakunov <black@as...> - 2001-12-21 02:57
+
+Dear Dillo hackers.
+
+I need to comment some patches on my dillo patch'o'matic site.
+It's posting mainly for core developers and patch maintainers.
+
+At first for patches maintainers.
+DEAR PATCH MAKERS!
+Please don't leave patches to the mercy of fate.
+Some patches - for example realy simple but realy usefull
+"http authentefication patch" by Tor-eke Fransson now absolutely
+outdated - current cvs version use new url parser.
+Another realy good patch - cookies support by Lars Clausen.
+It's have similar problem with new url handling API.
+Many nice patches doesn't work well with current cvs version.
+Please update your works - it's realy need for all Dillo
+users.
+
+Hmm...
+DEAR DILLO PROGRAMMERS!
+
+Please look to patches on patch'o'matic.
+I comment some patches for you.
+
+1) "ANSI C patch" by ksr - this patch does nothing but it's especialy
+good - it's just normalize dillo code to ANSI C standart -
+for example change C++-like comments (" // something")
+to correct C comments ("/* something */"). I think it's
+a good idea to inject this to current cvs.
+2) "Cookies patch" by Lars Clausen - all we need it. This
+patch clean and i think it's must be inject into cvs
+after little correction for support current url handling
+scheme.
+3) IPv6 support by Tobin Fricke. - no comments. I don't use
+it but code look clean.
+4) HTTPS and Auth patches by Tor-eke Fransson. I use this
+patches for every day work. But http auth part of patch
+must be slightly correted.
+5) Charset selection patch by your humble servant. It's
+absolutely simple patch to avoid conflict of interests
+between english and non-english users. I think it's may
+be injected in cvs too ;)
+
+On patch'o'matic we have more patches than i show here -
+please look to it.
+And thanks for all dillo coders and patchers - you make
+good deed and best web browser.
+
+PS: Sorry for my terrible and unreadable english.
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: DraX <drax@wh...> - 2001-12-20 21:24
+
+:( Just PHP and sh, so I can't help.
+
+
+On Thu, 20 Dec 2001, Jorge Arellano Cid wrote:
+
+> 
+> On Wed, 19 Dec 2001, DraX wrote:
+> 
+> > Bug 238 is not a bug, if the poster is on the list, please install GNU
+> > Make, as the make provided with OpenBSD(pmake as it is often called) does
+> > not support some things that the GNU automake/autoconf tools do in the
+> > makefiles.
+> >
+> > Bug reporting system needs to supply the posters email :(
+> 
+> Yes, it wouldn't hurt.
+> 
+> Does anyone here knows python and feels like adding that?
+> It's very simple, all the data is in a plain text file, with
+> concurrency handling done using the voluntary file lock protocol.
+> 
+> By now I'm too busy too work on it, and very concerned about
+> 0.6.3 release. BTW, how has the CVS version being doing? (I have
+> only a couple of comments. Should I assume it was OK? :)
+> 
+> 
+> Cheers
+> Jorge.-
+> 
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Bug 238
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-20 21:00
+
+On Wed, 19 Dec 2001, DraX wrote:
+
+> Bug 238 is not a bug, if the poster is on the list, please install GNU
+> Make, as the make provided with OpenBSD(pmake as it is often called) does
+> not support some things that the GNU automake/autoconf tools do in the
+> makefiles.
+>
+> Bug reporting system needs to supply the posters email :(
+
+Yes, it wouldn't hurt.
+
+Does anyone here knows python and feels like adding that?
+It's very simple, all the data is in a plain text file, with
+concurrency handling done using the voluntary file lock protocol.
+
+By now I'm too busy too work on it, and very concerned about
+0.6.3 release. BTW, how has the CVS version being doing? (I have
+only a couple of comments. Should I assume it was OK? :)
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]installation
+
+From: Christophe Baillon <cbaillon@if...> - 2001-12-20 20:12
+
+Hi,
+
+Have you installed libgtk-dev ?
+If not, try apt-get install libgtk-dev
+install too libjpeg : apt-get install libjpeg62-dev
+
+
+If you prefer binary, Dillo binary package is not available in potato
+(debian 2.2).
+
+But you can find it in woody and sid (testing ans unstable).
+
+The most simple is to wait woody to become the stable distribution
+(soon).
+
+
+Regards
+
+
+On Thu, 2001-12-20 at 16:48, C. Dummy wrote:
+> I'm linux newbie. I run Debian 2.2 with all dev libraries. I use
+> Blackbox window manager. Small and fast. I'm interested in dillo 0.6.2
+> because is small and fast. Unfortunatelly I can't install because I'm
+> getting this errors when I do
+> ./configure
+> ng for GTK - version >= 1.2.0... no
+> *** The gtk-config script installed by GTK could not be found
+> *** If GTK was installed in PREFIX, make sure PREFIX/bin is in
+> *** your path, or set the GTK_CONFIG environment variable to the
+> *** full path to gtk-config.
+> configure: WARNING: Unable to find Gtk+ with a version >= 1.2.0
+> checking for jpeg_destroy_decompress in -ljpeg... no
+> configure: WARNING: *** JPEG support will not be included ***
+> no
+> configure: WARNING: *** JPEG support will not be included ***
+> and following after
+> make
+> make all-recursive
+> make[1]: Entering directory `/temp/dillo-0.6.2'
+> Making all in doc
+> make[2]: Entering directory `/temp/dillo-0.6.2/doc'
+> make[2]: Nothing to be done for `all'.
+> make[2]: Leaving directory `/temp/dillo-0.6.2/doc'
+> Making all in src
+> make[2]: Entering directory `/temp/dillo-0.6.2/src'
+> Making all in IO
+> make[3]: Entering directory `/temp/dillo-0.6.2/src/IO'
+> gcc -DHAVE_CONFIG_H -I. -I. -I../.. -g -O2 -D_REENTRANT -Wall
+> -Waggregate-return -c mime.c
+> In file included from mime.c:12:
+> mime.h:9: gtk/gtk.h: No such file or directory
+> In file included from mime.h:10,
+> from mime.c:12:
+> ../dw_widget.h:4: gtk/gtkobject.h: No such file or directory
+> ../dw_widget.h:5: gtk/gtkwidget.h: No such file or directory
+> ../dw_widget.h:6: gdk/gdktypes.h: No such file or directory
+> In file included from ../dw_widget.h:8,
+> from mime.h:10,
+> from mime.c:12:
+> ../dw_style.h:4: gdk/gdktypes.h: No such file or directory
+> In file included from mime.h:11,
+> from mime.c:12:
+> ../cache.h:4: glib.h: No such file or directory
+> In file included from ../cache.h:5,
+> from mime.h:11,
+> from mime.c:12:
+> ../chain.h:9: glib.h: No such file or directory
+> In file included from ../cache.h:6,
+> from mime.h:11,
+> from mime.c:12:
+> ../url.h:14: glib.h: No such file or directory
+> In file included from mime.h:12,
+> from mime.c:12:
+> ../IO/Url.h:7: glib.h: No such file or directory
+> make[3]: *** [mime.o] Error 1
+> make[3]: Leaving directory `/temp/dillo-0.6.2/src/IO'
+> make[2]: *** [all-recursive] Error 1
+> make[2]: Leaving directory `/temp/dillo-0.6.2/src'
+> make[1]: *** [all-recursive] Error 1
+> make[1]: Leaving directory `/temp/dillo-0.6.2'
+> make: *** [all-recursive-am] Error 2
+> 
+> Ithink errors in make are coused by errot in ./configure
+> I have gtk installed libraries and dev. I think because I have gnome
+> apps installed, and when I was installing
+> Debian I marked all development libraries.
+> Any hints and help would be very appreciate.
+> Andrey
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+
+
+______________________________________________________________________________
+ifrance.com, l'email gratuit le plus complet de l'Internet !
+vos emails depuis un navigateur, en POP3, sur Minitel, sur le WAP...
+http://www.ifrance.com/_reloc/email.emailif 
+
+
+
+Re: [Dillo-dev]New URL parsing commit + more!
+
+From: Grigory Bakunov <black@as...> - 2001-12-20 17:28
+
+Date |Mon, 17 Dec 2001 21:18:05 -0300 (CLST)
+From |Jorge Arellano Cid <jcid@em...>
+
+Hello!
+
+
+JAC> Hi there!
+
+JAC> Finally the new URL parsing prototype is on the CVS. Please get
+JAC> it and test it through; that's almost 0.6.3 release!
+
+JAC> I was willing to make the new release from a new site, but as I
+JAC> haven't received an answer yet, and as it should be done before
+JAC> Christmas, most probably it will be from SF...
+
+JAC> Well, now is a matter of knowing how the new dillo behaves,
+JAC> updating the splash, the help page and start rolling the new
+JAC> release. (Ahem, that is, if testing doesn't tell otherwise).
+
+JAC> Note that while testing I found a BUG that left dillo out of
+JAC> file descriptors, so I decided to retain the patch until finding
+JAC> what was going wrong with it; some time later the test revealed
+JAC> that "the" bug was also present on 0.6.2! -- what a relief! It
+JAC> was BUG#268 (fixed now).
+
+
+JAC> Greetings
+JAC> Jorge.-
+
+
+JAC> PS: a lot of effort was put in optimizing the speed. I bet you'll
+JAC> notice (i.e. against former CVS).
+
+
+
+Little feature request - how about to add http authorization
+to main dillo branch ? it's realy easy and donesn't bloat
+code.
+
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]installation
+
+From: Ron Farrer <rbf@fa...> - 2001-12-20 17:18
+
+Attachments: Message as HTML      
+
+C. Dummy (cdummy@ro...) wrote:
+
+> I'm linux newbie. I run Debian 2.2 with all dev libraries. I use
+> Blackbox window manager. Small and fast. I'm interested in dillo 0.6.2
+> because is small and fast.=20
+<snip>
+
+Would you like a deb of 0.6.2 built for stable/potato? I have one, you
+can grab it from http://people.debian.org/~rbf/files/potato/i386/
+
+HTH,
+Ron
+--=20
+Email: <rbf@fa...> or <rbf@de...> 
+
+
+
+Re: [Dillo-dev]Dillo preferences tool
+
+From: Grigory Bakunov <black@as...> - 2001-12-20 17:13
+
+Date |Thu, 20 Dec 2001 00:37:15 +0000 (GMT)
+From |Robert J Thomson <Robert.Thomson@ee.ed.ac.uk>
+
+Hello!
+
+
+RJT> Hi,
+
+RJT> I have just written a little Tcl/Tk script that lets you create/edit the
+RJT> Dillo preferences file using a GUI.
+
+RJT> It is just a quick hack, so don't expect wonders. 
+
+RJT> I have posted it at:
+
+RJT> http://www.ee.ed.ac.uk/~rjt/dillo/config.html
+
+RJT> Regards,
+
+RJT> Bob.
+Yes!!!
+At least!
+It's work realy fine.
+Thanks alot!
+
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]installation
+
+From: <SirVer@gm...> - 2001-12-20 17:05
+
+do yourself a favour: 
+su -
+apt-get build-dep dillo
+
+try again
+
+greets
+Holger
+
+On Thu, Dec 20, 2001 at 11:48:24AM -0500, C. Dummy wrote:
+> I'm linux newbie. I run Debian 2.2 with all dev libraries. I use
+> Blackbox window manager. Small and fast. I'm interested in dillo 0.6.2
+> because is small and fast. Unfortunatelly I can't install because I'm
+> getting this errors when I do
+> ./configure
+> ng for GTK - version >= 1.2.0... no
+> *** The gtk-config script installed by GTK could not be found
+> *** If GTK was installed in PREFIX, make sure PREFIX/bin is in
+> *** your path, or set the GTK_CONFIG environment variable to the
+> *** full path to gtk-config.
+> configure: WARNING: Unable to find Gtk+ with a version >= 1.2.0
+> checking for jpeg_destroy_decompress in -ljpeg... no
+> configure: WARNING: *** JPEG support will not be included ***
+> no
+> configure: WARNING: *** JPEG support will not be included ***
+> and following after
+> make
+> make all-recursive
+> make[1]: Entering directory `/temp/dillo-0.6.2'
+> Making all in doc
+> make[2]: Entering directory `/temp/dillo-0.6.2/doc'
+> make[2]: Nothing to be done for `all'.
+> make[2]: Leaving directory `/temp/dillo-0.6.2/doc'
+> Making all in src
+> make[2]: Entering directory `/temp/dillo-0.6.2/src'
+> Making all in IO
+> make[3]: Entering directory `/temp/dillo-0.6.2/src/IO'
+> gcc -DHAVE_CONFIG_H -I. -I. -I../.. -g -O2 -D_REENTRANT -Wall
+> -Waggregate-return -c mime.c
+> In file included from mime.c:12:
+> mime.h:9: gtk/gtk.h: No such file or directory
+> In file included from mime.h:10,
+> from mime.c:12:
+> ../dw_widget.h:4: gtk/gtkobject.h: No such file or directory
+> ../dw_widget.h:5: gtk/gtkwidget.h: No such file or directory
+> ../dw_widget.h:6: gdk/gdktypes.h: No such file or directory
+> In file included from ../dw_widget.h:8,
+> from mime.h:10,
+> from mime.c:12:
+> ../dw_style.h:4: gdk/gdktypes.h: No such file or directory
+> In file included from mime.h:11,
+> from mime.c:12:
+> ../cache.h:4: glib.h: No such file or directory
+> In file included from ../cache.h:5,
+> from mime.h:11,
+> from mime.c:12:
+> ../chain.h:9: glib.h: No such file or directory
+> In file included from ../cache.h:6,
+> from mime.h:11,
+> from mime.c:12:
+> ../url.h:14: glib.h: No such file or directory
+> In file included from mime.h:12,
+> from mime.c:12:
+> ../IO/Url.h:7: glib.h: No such file or directory
+> make[3]: *** [mime.o] Error 1
+> make[3]: Leaving directory `/temp/dillo-0.6.2/src/IO'
+> make[2]: *** [all-recursive] Error 1
+> make[2]: Leaving directory `/temp/dillo-0.6.2/src'
+> make[1]: *** [all-recursive] Error 1
+> make[1]: Leaving directory `/temp/dillo-0.6.2'
+> make: *** [all-recursive-am] Error 2
+> 
+> Ithink errors in make are coused by errot in ./configure
+> I have gtk installed libraries and dev. I think because I have gnome
+> apps installed, and when I was installing
+> Debian I marked all development libraries.
+> Any hints and help would be very appreciate.
+> Andrey
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+> 
+
+
+
+[Dillo-dev]installation
+
+From: C. Dummy <cdummy@ro...> - 2001-12-20 16:48
+
+I'm linux newbie. I run Debian 2.2 with all dev libraries. I use
+Blackbox window manager. Small and fast. I'm interested in dillo 0.6.2
+because is small and fast. Unfortunatelly I can't install because I'm
+getting this errors when I do
+./configure
+ng for GTK - version >= 1.2.0... no
+*** The gtk-config script installed by GTK could not be found
+*** If GTK was installed in PREFIX, make sure PREFIX/bin is in
+*** your path, or set the GTK_CONFIG environment variable to the
+*** full path to gtk-config.
+configure: WARNING: Unable to find Gtk+ with a version >= 1.2.0
+checking for jpeg_destroy_decompress in -ljpeg... no
+configure: WARNING: *** JPEG support will not be included ***
+no
+configure: WARNING: *** JPEG support will not be included ***
+and following after
+make
+make all-recursive
+make[1]: Entering directory `/temp/dillo-0.6.2'
+Making all in doc
+make[2]: Entering directory `/temp/dillo-0.6.2/doc'
+make[2]: Nothing to be done for `all'.
+make[2]: Leaving directory `/temp/dillo-0.6.2/doc'
+Making all in src
+make[2]: Entering directory `/temp/dillo-0.6.2/src'
+Making all in IO
+make[3]: Entering directory `/temp/dillo-0.6.2/src/IO'
+gcc -DHAVE_CONFIG_H -I. -I. -I../.. -g -O2 -D_REENTRANT -Wall
+-Waggregate-return -c mime.c
+In file included from mime.c:12:
+mime.h:9: gtk/gtk.h: No such file or directory
+In file included from mime.h:10,
+from mime.c:12:
+../dw_widget.h:4: gtk/gtkobject.h: No such file or directory
+../dw_widget.h:5: gtk/gtkwidget.h: No such file or directory
+../dw_widget.h:6: gdk/gdktypes.h: No such file or directory
+In file included from ../dw_widget.h:8,
+from mime.h:10,
+from mime.c:12:
+../dw_style.h:4: gdk/gdktypes.h: No such file or directory
+In file included from mime.h:11,
+from mime.c:12:
+../cache.h:4: glib.h: No such file or directory
+In file included from ../cache.h:5,
+from mime.h:11,
+from mime.c:12:
+../chain.h:9: glib.h: No such file or directory
+In file included from ../cache.h:6,
+from mime.h:11,
+from mime.c:12:
+../url.h:14: glib.h: No such file or directory
+In file included from mime.h:12,
+from mime.c:12:
+../IO/Url.h:7: glib.h: No such file or directory
+make[3]: *** [mime.o] Error 1
+make[3]: Leaving directory `/temp/dillo-0.6.2/src/IO'
+make[2]: *** [all-recursive] Error 1
+make[2]: Leaving directory `/temp/dillo-0.6.2/src'
+make[1]: *** [all-recursive] Error 1
+make[1]: Leaving directory `/temp/dillo-0.6.2'
+make: *** [all-recursive-am] Error 2
+
+Ithink errors in make are coused by errot in ./configure
+I have gtk installed libraries and dev. I think because I have gnome
+apps installed, and when I was installing
+Debian I marked all development libraries.
+Any hints and help would be very appreciate.
+Andrey 
+
+
+
+[Dillo-dev]Bug 238
+
+From: DraX <drax@wh...> - 2001-12-20 00:46
+
+Bug 238 is not a bug, if the poster is on the list, please install GNU
+Make, as the make provided with OpenBSD(pmake as it is often called) does
+not support some things that the GNU automake/autoconf tools do in the
+makefiles. 
+
+Bug reporting system needs to supply the posters email :( 
+
+Thanks, Alex 
+
+
+
+[Dillo-dev]Dillo preferences tool
+
+From: Robert J Thomson <Robert.Thomson@ee...> - 2001-12-20 00:37
+
+Hi,
+
+I have just written a little Tcl/Tk script that lets you create/edit the
+Dillo preferences file using a GUI.
+
+It is just a quick hack, so don't expect wonders. 
+
+I have posted it at:
+
+http://www.ee.ed.ac.uk/~rjt/dillo/config.html
+
+Regards,
+
+Bob.
+
+========
+Robert J Thomson
+Department of Electronics and Electrical Engineering
+The University of Edinburgh, King's Buildings, Mayfield Rd, Edinburgh EH9 3JL
+(Int +44) 131 650 5658, (Int +44) 131 650 6554 (FAX)
+======== 
+
+
+
+Re: [Dillo-dev]Dillo, GTK --> WINGs??
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-18 01:43
+
+> Hi,
+> 
+> I am creating a distro targetted towards the educational community,
+> for the same I have selected WindowMaker as the default and only
+> window manager.
+
+Good choice for a windowmanager (wmaker rocks!)
+
+> 
+> I figured one of the most important components of the distro would be
+> a great help system, which would be easy to use (compared to man or
+> Xman)
+
+Have you tried tkman? Tkman is a _really_ nice man page browser. It 
+can show pages as outlines, search (which you can do with normal man, 
+but you only have to press a button in tkman), and jump between 
+manuals by clicking the manual name (this is helpful when viewing 
+stuff like the curses manual).
+
+Also, you should try using GNU InfoTeX as the documentation system. A 
+nice graphical info browser is tkinfo. Pinfo is the best (IMHO) 
+console info browser. InfoTeX is also nice because you can easily 
+produce info pages, man pages, html, pdfs, and books from the same 
+file. Writing the documentation in InfoTeX opens up a lot of 
+possibilties for you.
+
+> Dillo fits the bill perfectly, it is small, fast and renders HTML
+> pretty well, but it depends heavily on glib, gdk and gtk+. To make it
+> much better integrated with WindowMaker, and at the same time even
+> more faster and lighter it would be better to implement the UI using
+> WINGs, the default UI set for WindowMaker.
+
+Why port to WINGs? Just use the GtkSTEP engine. It looks just like 
+the WINGs widgets (and both are meant to look like the old NeXT 
+widgets). 
+
+> Is there anyone with good programming skills who could help me out
+> with this?
+
+Doing so would take a long time because dillo has a lot of dependency 
+on Gtk and glib. Forking dillo is a _very_ bad idea. It is still very 
+immature (when compared to other browsers). Just use Dillo with the 
+GtkSTEP Gtk theme engine, and you may as well be using WINGs from an 
+appearance perspective. Gtk+, Gdk, and Glib only take a few megabytes 
+of disk space, and you gain access to a large number of applications 
+by including them. 
+
+As for being lighter, I don't think that using WINGs would make it 
+much lighter. Gtk+ is already a light enough toolkit for most uses. 
+Gtk+ applications run very nicely on my 233Mhz k6 with 32MB of RAM. 
+And they run fast. Gtk+ doesn't add a large amount of overhead to the 
+programs. It is also much more powerful than WINGs. The few kilobytes 
+of memory you would reclaim with WINGs isn't worth the gigantic 
+effort it would take to port Dillo to it.
+
+
+---
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]New URL parsing commit + more!
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-18 00:23
+
+Hi there!
+
+Finally the new URL parsing prototype is on the CVS. Please get
+it and test it through; that's almost 0.6.3 release!
+
+I was willing to make the new release from a new site, but as I
+haven't received an answer yet, and as it should be done before
+Christmas, most probably it will be from SF...
+
+Well, now is a matter of knowing how the new dillo behaves,
+updating the splash, the help page and start rolling the new
+release. (Ahem, that is, if testing doesn't tell otherwise).
+
+Note that while testing I found a BUG that left dillo out of
+file descriptors, so I decided to retain the patch until finding
+what was going wrong with it; some time later the test revealed
+that "the" bug was also present on 0.6.2! -- what a relief! It
+was BUG#268 (fixed now).
+
+
+Greetings
+Jorge.-
+
+
+PS: a lot of effort was put in optimizing the speed. I bet you'll
+notice (i.e. against former CVS). 
+
+
+
+[Dillo-dev]Howto: Eliminate the progressbars?
+
+From: Mayuresh Kathe <mayuresh@vs...> - 2001-12-17 07:08
+
+Hi,
+
+How do I eliminate the progress bars showed along with the toolbar?
+
+~Mayuresh 
+
+
+
+[Dillo-dev]Howto: Change Image in Toolbar?
+
+From: Mayuresh Kathe <mayuresh@vs...> - 2001-12-17 07:07
+
+Hi,
+
+How do I change the Back, Forward, Home, etc.. images in the toolbar?
+(substitute them with something else)
+
+~Mayuresh 
+
+
+
+[Dillo-dev]Dillo, GTK --> WINGs??
+
+From: Mayuresh Kathe <mayuresh@vs...> - 2001-12-17 06:54
+
+Hi,
+
+I am creating a distro targetted towards the educational community, 
+for the same I have selected WindowMaker as the default and only 
+window manager.
+
+I figured one of the most important components of the distro would be 
+a great help system, which would be easy to use (compared to man or 
+Xman)
+
+For that I selected HTML as the content display language and hence was 
+searching for a small, fast HTML viewer.
+
+Dillo fits the bill perfectly, it is small, fast and renders HTML 
+pretty well, but it depends heavily on glib, gdk and gtk+.
+To make it much better integrated with WindowMaker, and at the same 
+time even more faster and lighter it would be better to implement the 
+UI using WINGs, the default UI set for WindowMaker.
+
+Is there anyone with good programming skills who could help me out 
+with this?
+
+Awaiting your reply.
+
+~Mayuresh 
+
+
+
+Re: [Dillo-dev]font problems with new dillo versions
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-16 16:13
+
+Martynas,
+
+> Hi,
+>
+> I have a problem with Dillo since v0.6.2 and cvs versions. I'm still using
+> dillo-0.6.1-pre, because it shows me html better. It's difficult to describe
+> the problem, so I made two screenshots:
+> http://mjoc.infoseka.lt/archive/dillo/dillo_bad.png -- this is new versions
+> http://mjoc.infoseka.lt/archive/dillo/dillo_good.png -- this is 0.6.1-pre
+>
+> I use lt_LT locale (Lithuania), gtk_set_locale() is used, so everything must
+> be fine, imho. So I'm looking for this problem at my side.
+> Dillo output for mjoc.infoseka.lt (where lithuanian chars are used):
+> Setting locale to lt_LT
+> dillo_dns_init: Here we go!
+> [...]
+> Dillo: normal exit!
+>
+> It looks fine. Do anybody know what's wrong?
+
+As you may know, i18n is an epic problem, and the right way to
+address it is to modify GTK! (fortunately that's exactly what
+the GTK+ team is doing).
+
+OTOH, I fully understand the will to see "local" pages.
+
+As dillo only handles properly ISO-8859-1 encoded HTML, letting
+it work with other charsets breaks a lot of things; you have been
+warned. --but you can read those pages.
+
+Fast unsupported hack:
+
+Try adapting 061's Dw_style_font_realize to the newest CVS.
+
+
+Cheers
+Jorge.-
+
+
+PS: don't tell anyone I told you! ;) 
+
+
+
+Re: [Dillo-dev]font problems with new dillo versions
+
+From: Grigory Bakunov <black@as...> - 2001-12-16 08:57
+
+Date |Sun, 16 Dec 2001 10:57:08 +0000
+From |Martynas Jocius <mjoc@de...>
+
+Hello!
+
+MJ> Hi,
+
+MJ> I have a problem with Dillo since v0.6.2 and cvs versions. I'm still using
+MJ> dillo-0.6.1-pre, because it shows me html better. It's difficult to describe
+MJ> the problem, so I made two screenshots:
+MJ> http://mjoc.infoseka.lt/archive/dillo/dillo_bad.png -- this is new versions
+MJ> http://mjoc.infoseka.lt/archive/dillo/dillo_good.png -- this is 0.6.1-pre
+
+MJ> I use lt_LT locale (Lithuania), gtk_set_locale() is used, so everything must
+MJ> be fine, imho. So I'm looking for this problem at my side.
+MJ> Dillo output for mjoc.infoseka.lt (where lithuanian chars are used):
+MJ> Setting locale to lt_LT
+MJ> dillo_dns_init: Here we go!
+MJ> [...]
+MJ> Dillo: normal exit!
+
+MJ> It looks fine. Do anybody know what's wrong?
+MJ> Thanks.
+
+May be i so stupid ? what a problem with font you have ?
+
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]font problems with new dillo versions
+
+From: Martynas Jocius <mjoc@de...> - 2001-12-16 08:48
+
+Hi,
+
+I have a problem with Dillo since v0.6.2 and cvs versions. I'm still using
+dillo-0.6.1-pre, because it shows me html better. It's difficult to describe
+the problem, so I made two screenshots:
+http://mjoc.infoseka.lt/archive/dillo/dillo_bad.png -- this is new versions
+http://mjoc.infoseka.lt/archive/dillo/dillo_good.png -- this is 0.6.1-pre
+
+I use lt_LT locale (Lithuania), gtk_set_locale() is used, so everything must
+be fine, imho. So I'm looking for this problem at my side.
+Dillo output for mjoc.infoseka.lt (where lithuanian chars are used):
+Setting locale to lt_LT
+dillo_dns_init: Here we go!
+[...]
+Dillo: normal exit!
+
+It looks fine. Do anybody know what's wrong?
+Thanks.
+
+--
+Martynas Jocius 
+
+
+
+Re: [Dillo-dev]New version of external viewer patch
+
+From: Hayden <super_super_hero_hayden@ya...> - 2001-12-15 00:27
+
+On 08 Dec 2001 15:37:56 -0600
+Lars Clausen <lrclause@cs.uiuc.edu> wrote:
+
+> 
+> I did some more work on the external viewer patch, in particular I
+> generalized it to be a framework for calling external programs of any
+> kind, improved the cleanup, and cleaned up several parts of the code. I
+> also as an example of a difference external program made the
+> File/Preferences menu item open a shell with $EDITOR ~/.dillo/dillorc and
+> reload prefs afterwards. I think next I shall make a standalone prefs
+> editor to call instead. A quick grep of the source seems to indicate that
+> some of the preferences settings aren't always read out of the prefs
+> structure, but stored elsewhere. We should figure out how to update these
+> (don't store them, or provide callbacks, or hack in each piece).
+> 
+> I'm not including the configure.in changes in the below, only Makefile.am.
+> So if you want to compile from this, you will need to do automake &&
+> autoconf before running ./configure.
+> 
+
+Hello,
+
+It would be a good idea to implement a dialog window,which has a download or open option, that pops up when dillo comes across something it can't handle. With the download option the url would be passed to the download agent the user has previously configured (I guess a "download_agent=" option in dillorc or alike). When the open option is chosen it would open the external viewer with the file. If the mime doesn't have an external viewer then you could just display an error msg in dillo's status bar somewhere along the lines of "mime has no associated external viewer: mime/type".
+Ofcourse then you could add an option to dillorc that allows dillo to execute immediately anything with an external viewer assigned in mailcap.
+
+
+Hayden 
+
+
+
+Re: [Dillo-dev]Re: Cookies
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-13 02:35
+
+> > great for me, with one problem--the cookies don't work until I 
+exit
+> > and restart the browser.
+> 
+> That's real odd, it shouldn't work that way. Can you point to a
+> specific (simple) place where it does that?
+
+slashdot, k5 (its down now), tpu.org, newsforge, freshmeat, pretty 
+much everywhere that doesn't use a session only cookie.
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]Re: Url resolving --Dont panic!
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-12 22:07
+
+Hi,
+
+Sometime ago, I wrote:
+
+> A few days ago I finished coding the regular-expressions-based
+> URL parsing and resolving routines. It's a couple of lines from
+> being 100% RFC 2396 compliant, but unfortunately too slow.
+>
+> I'm absolutely aware of the importance of the speed here. After
+> all, there's no point in optimizing the Dw engine and networking
+> to our best, while letting the URL resolver take 60% (or more)
+> of the rendering time.
+>
+> I tried to make it faster, developing a new ADT for strings
+> (faster than GStrings), but the performance impact was too small
+> to make it worth.
+>
+> A few tests more, and it was clear that the time was being
+> dominated by RE parsing.
+>
+> It was a big effort, but I'm afraid that the way to go now is
+> to try to develop a new parser/resolver, without REs, that's as
+> RFC compliant as possible.
+
+
+The good news is that I developed another prototype, without
+RE, that's as RFC compliant as the former, but 4 times faster!
+
+In brief, if it passes further stress testing, dillo will
+retain its traditional performance, but with a full blown parser.
+
+Note: while working on this solution, I can't help to mention
+that's kind of funny to know I rejected my own patch, twice!!
+First, the fully tested RE-based one, and later the optimized
+version. OTOH I'm happy the maintainer is not accepting crappy
+stuff, neither making concesions to any guy!
+
+
+Let's keep up the good work
+Jorge.- 
+
+
+
+Re: [Dillo-dev]image scaling?
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-12-12 17:48
+
+Hi,
+
+On Tue, Dec 11, 2001 at 10:22:53AM -0300, Jorge Arellano Cid wrote:
+> 
+> 
+> On Fri, 7 Dec 2001, Lee, Kwan wrote:
+> 
+> > Hi Jorge,
+> >
+> > is there a simple hack you suggest?
+> 
+> I have thought of scaling 'width' and 'height' by an image size
+> factor could do the trick. This is non trivial as all the details
+> have to be carefully considered before.
+
+There are for the simplest solution only two changes necessary:
+1) Dw_image_size_request must return a scaled size, and 2) "width" and
+"height" attributes of <img> must be scaled. However, this will use
+quite much memory, since currently each DwImage has its own buffer for
+the scaled image data (unscaled DwImage's share buffers). This is
+currently reasonable, since scaled images are rare, and mostly scaled
+different, so sharing would not be possible.
+
+Simple example: If you have 10 100x100 images with the same URL, you
+need 3*100*100 = 30000 bytes for the one buffer. If you scale all at,
+say, 50%, you need 3*100*100 + 10*3*50*50 = 105000 bytes, most for the
+scaled buffers. If they can be shared, you only need 37500 bytes.
+
+Since there are some other problems with images, I've thought of
+encapsulating the representation of images into a new type, which
+provides functions for:
+
+* Copying data into the buffer. This also affects the related
+scaled buffer (see next point).
+
+* Scaling: the root buffer will keep track of the scaled buffers,
+so that sharing could be implemented in a transparent way.
+
+* Drawing: this is used by the DwImage widget.
+
+The interface should be designed that way, that the implementation can
+be changed quite simply, and perhaps even several implementations can
+be used parallel. This would e.g. make the following possible:
+
+1. Transparent images are currently often not rendered
+correctly. This new image buffer will support transparency per
+se, the implementation will be secondary. A first implementation
+e.g. will probably use clipping bitmaps, but otherwise, it might
+be interesting to take a look at the development of complete
+alpha support in X.
+
+2. The current implementation, based on GdkRGB, is rather slow,
+since quite much data has to be transferred from the client to
+the server. A faster (but more memory consuming) way may be to
+use pixmaps.
+
+Another topic are BTW background images, this is not related to this,
+but probably the simplest solution to reuse the current code is to put
+an abstract interface between the DICache and the DwImage widget,
+which is then also implemented by some code for handling
+backgrounds. Interfaces should in C be implemented simply by a list of
+function pointers.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Re: Cookies
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-12 01:33
+
+> Currently, the decision to move from SF to cipsga (Brazil) is
+> almost made. Probably we'll move, and quicly release 0.6.3 from
+> there. After that there'll be time to review the cookies patch.
+> 
+> Hopefully the move and 0.6.3 release, will happen before
+> Christmas.
+
+Are there any plans for cookies in 0.6.3? The cookies patch works 
+great for me, with one problem--the cookies don't work until I exit 
+and restart the browser.
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+[Dillo-dev]RE: image scaling?
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-11 14:25
+
+On Fri, 7 Dec 2001, Lee, Kwan wrote:
+
+> Hi Jorge,
+>
+> is there a simple hack you suggest?
+
+I have thought of scaling 'width' and 'height' by an image size
+factor could do the trick. This is non trivial as all the details
+have to be carefully considered before.
+
+> Is there a way to modify dillorc to do
+> this image scaling option?
+
+No.
+
+> do I have to hack the source code, recompile for
+> the arm and then install it on the ipaq?
+
+All of it, and of course, after having developed the solution!
+
+> is there an easier way, such as an
+> ipkg distribution available? :)
+
+No.
+
+Cheers
+Jorge.-
+
+
+> thank you.
+>
+> -kwan
+>
+> -----Original Message-----
+> From: Jorge Arellano Cid [mailto:jcid@em...]
+> Sent: Friday, December 07, 2001 6:09 AM
+> To: Lee, Kwan
+> Subject: Re: image scaling?
+>
+>
+>
+>
+> On Thu, 6 Dec 2001, Lee, Kwan wrote:
+>
+> > Hi,
+>
+> Hi!
+>
+> > I was wondering if dillo is going to support or has the capabilities to
+> > scale images so that larger image can be scaled down to kind of fit on the
+> > screen of the ipaq.
+> >
+> > Thank you.
+>
+> Currently dillo is able to scale images. Maybe a simple hack
+> can do the trick for you while waiting for a more definitive
+> solution.
+>
+>
+> Greetings
+> Jorge.-
+>
+> 
+
+
+
+[Dillo-dev]Re: Cookies
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-11 14:25
+
+J=F6rgen,
+
+> Hi Jorge!
+>
+> As You may know, me and Lars combined our efforts to make cookies fully
+> supported.
+
+Sure I know!
+
+> We have received some good reviews
+
+Nice.
+
+> (and patches for that not so good)
+
+Yes J=F6rgen, it seems that's almost unevitable. And it doesn't
+feel good to reject a patch too, especially when you know it was
+contributed in the hope of helping... But including it in the
+distribution anyway is certainly the wrong decision, so I guess
+that's one of the bitter tasks for the in-charge developer.
+
+
+> ... from people using it and we feel that it would be nice to
+> include it in the main branch.
+> Do You have a spot open for inclusion in the near future? :-)
+
+Sure.
+
+Currently, the decision to move from SF to cipsga (Brazil) is
+almost made. Probably we'll move, and quicly release 0.6.3 from
+there. After that there'll be time to review the cookies patch.
+
+Hopefully the move and 0.6.3 release, will happen before
+Christmas.
+
+
+Best
+Jorge.- 
+
+
+
+Re: [Dillo-dev]odd segfault
+
+From: TANAKA Keishiro <ksr@lp...> - 2001-12-10 11:39
+
+>I'm making some pretty big changes to Dillo for a medical informatics
+>project here (we absolutely need ssl, meta refresh, basic auth, and cookies;
+>trying to integrate Lars' cookies and auth patches with our locally-developed
+>ssl patches.)
+>
+>I'm getting a segfault in Cache_process_queue on forms submission (from weblogin.washington.edu):
+Hi, see http://todo.org/download/dillo/dillo-0.6.2-uo-branch-2.tar.gz
+
+Maybe it fixes the problem. But it changes a lot, so it could not help
+you. The following paragraph is described what is problem.
+
+cache.c should not use array of CacheData. CacheData should keep the
+fixed position for its life range. But at this implementation, the
+cache list might be allocated unexpectedly in
+a_List_resize(a_List_add). It is undecided when
+Cache_delayed_process_queue_callback is called. A pointer to CacheData
+is used as argument as callback function. But there is delayed time,
+in the period (between when argument is passed to callback and when
+callback is called), reallocation of cache list might occur. If
+reallocation occurs, the callback function would access the freed
+memory(CacheData) after reallocation. So cache.c had better using array
+of pointer to CacheData...... 
+
+
+
+[Dillo-dev]New version of external viewer patch
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-08 21:38
+
+I did some more work on the external viewer patch, in particular I
+generalized it to be a framework for calling external programs of any
+kind, improved the cleanup, and cleaned up several parts of the code. I
+also as an example of a difference external program made the
+File/Preferences menu item open a shell with $EDITOR ~/.dillo/dillorc and
+reload prefs afterwards. I think next I shall make a standalone prefs
+editor to call instead. A quick grep of the source seems to indicate that
+some of the preferences settings aren't always read out of the prefs
+structure, but stored elsewhere. We should figure out how to update these
+(don't store them, or provide callbacks, or hack in each piece).
+
+I'm not including the configure.in changes in the below, only Makefile.am.
+So if you want to compile from this, you will need to do automake &&
+autoconf before running ./configure.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile ~/src/external.patch=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff -rbBu dillo-orig/src/IO/mime.h dillo-mime/src/IO/mime.h
+--- dillo-orig/src/IO/mime.h Sun Mar 4 10:03:44 2001
++++ dillo-mime/src/IO/mime.h Thu Dec 6 18:21:39 2001
+@@ -26,6 +26,9 @@
+void **Data);
+DwWidget* a_Gif_image (const char *Type,void *web, CA_Callback_t *Call,
+void **Data);
++DwWidget* a_Extern_viewer (const char *Type, void *web, CA_Callback_t *Cal=
+l,
++ void **Data);
++void a_External_set_viewers();
+=20
+/*
+* Functions defined inside Mime module
+@@ -33,5 +36,8 @@
+void a_Mime_init(void);
+DwWidget* a_Mime_set_viewer(const char *content_type, void *Ptr,
+CA_Callback_t *Call, void **Data);
++gint Mime_add_minor_type(const char *Key, Viewer_t Method);
++gint Mime_add_major_type(const char *Key, Viewer_t Method);
++
+=20
+#endif
+diff -rbBu dillo-orig/src/Makefile.am dillo-mime/src/Makefile.am
+--- dillo-orig/src/Makefile.am Mon Aug 27 16:44:12 2001
++++ dillo-mime/src/Makefile.am Sat Dec 8 15:17:55 2001
+@@ -87,6 +87,8 @@
+url.c \
+url.h \
+list.h \
+- pixmaps.h
++ pixmaps.h \
++ external.c \
++ external.h
+=20
+EXTRA_DIST =3D pixmaps_old.h chg srch
+diff -rbBu dillo-orig/src/commands.c dillo-mime/src/commands.c
+--- dillo-orig/src/commands.c Fri Nov 16 05:01:33 2001
++++ dillo-mime/src/commands.c Sat Dec 8 15:05:21 2001
+@@ -26,6 +26,7 @@
+#include "commands.h"
+#include "prefs.h"
+#include "menu.h"
++#include "external.h"
+=20
+/*
+* Local data
+@@ -66,10 +67,21 @@
+}
+=20
+/*
+- * ?
++ * Callback invoked when the prefs are done being edited.
++ * Note: If prefs contents are stored outside the prefs structure
++ * anywhere, they need to be updated.
++ */
++static void Commands_prefs_done_callback(int status, void *data) {
++ a_Prefs_init();
++}
++
++/*
++ * You will need to export (or setenv) EDITOR for this to work.
+*/
+void a_Commands_prefs_callback(GtkWidget *widget, gpointer client_data)
+{
++ a_External_make_process("xterm -e $EDITOR ~/.dillo/dillorc",=20
++ Commands_prefs_done_callback, NULL);
+}
+=20
+/*
+diff -rbBu dillo-orig/src/external.c dillo-mime/src/external.c
+--- dillo-orig/src/external.c Fri Dec 7 13:22:27 2001
++++ dillo-mime/src/external.c Sat Dec 8 15:29:05 2001
+@@ -0,0 +1,364 @@
++/*
++ * File: external.c
++ *
++ * Copyright (C) 2001 Lars Clausen (lrclause@cs.uiuc.edu)
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++/* Functions for handling calling external programs (in particular,
++ * external mime handlers and stand-alone programs).
++ */
++
++#include <string.h>
++#include <gtk/gtk.h>
++#include <stdio.h>
++#include <stdarg.h>
++#include <sys/types.h>
++#include <sys/time.h>
++#include <sys/resource.h>
++#include <sys/wait.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <signal.h>
++
++#include "dillo.h"
++#include "dw.h"
++#include "IO/mime.h"
++#include "debug.h"
++#include "list.h"
++#include "interface.h"
++#include "progressbar.h"
++
++/* I'm loath to hack mime.c to add callback data for this, since I don't
++ understand where the CBData comes from. Instead I (for now) hold a list
++ here of the commands. Not fast, but hey, neither is spawning an
++ external viewer.
++*/
++
++typedef struct {
++ char *mime_type;
++ char *command;
++} Dillo_External_Mime_Handler_t;
++
++typedef struct {
++ int offset;
++ int temp_fd;
++ char *temp_file_name;
++ BrowserWindow *bw;
++ char *command;
++} Dillo_External_Writer_t;
++
++typedef void (External_Callback_t)(int retval,=20
++ void *callback_data);
++
++typedef struct {
++ int pid;
++ External_Callback_t *callback;
++ void *callback_data;
++} Dillo_External_Process_t;
++
++
++gint ExternalViewersSize =3D 0, ExternalViewersMax =3D 8;
++Dillo_External_Mime_Handler_t *ExternalViewers =3D NULL;
++gint ExternalProgramsSize =3D 0, ExternalProgramsMax =3D 8;
++Dillo_External_Process_t *ExternalPrograms =3D NULL;
++
++gboolean a_External_make_process(char *Command,
++ External_Callback_t *CB,
++ void *CBData);
++static void External_reap_process(int signum);
++static void External_viewer_callback(int Op, CacheClient_t *Client);
++static Dillo_External_Writer_t *External_viewer_new(BrowserWindow *bw,
++ char *command);
++static void External_viewer_reap_callback(int status,=20
++ void *data);
++static char *External_viewer_find_command(const char *Type);
++static DwWidget *External_viewer(const char *Type, void *Ptr,
++ CA_Callback_t *Call, void **Data);
++static void External_set_viewers_from_file(char *filename);
++void a_External_set_viewers();
++
++/*
++ * Start an external process using system(), calling the callback function
++ * when the process dies. Returns TRUE if the fork was successfull.
++ */
++gboolean=20
++a_External_make_process(char *Command, External_Callback_t *CB, void *CBDa=
+ta) {
++ /* va_list args;*/
++ int pid;
++
++ pid =3D fork();
++
++ if (pid < 0) {
++ DEBUG_MSG(10, "Error starting external program %s\n", Command);
++ return FALSE;
++ }
++ if (pid =3D=3D 0) {
++ /* va_start(args, command);*/
++ int retval;
++
++ signal(SIGCHLD, _exit);
++
++ retval =3D system(Command);
++ if (retval =3D=3D -1)=20
++ DEBUG_MSG(10, "Error executing external program %s: %s\n",=20
++ Command, strerror(errno));
++ DEBUG_MSG(3, "Returned from %s, return value=3D%d\n", Command, retva=
+l);
++ exit(retval);
++ } else {
++ signal(SIGCHLD, External_reap_process);
++ DEBUG_MSG(1, "New external PID is %d\n", pid);
++ a_List_add(ExternalPrograms, ExternalProgramsSize,=20
++ sizeof(*ExternalPrograms), ExternalProgramsMax);
++ ExternalPrograms[ExternalProgramsSize].callback =3D CB;
++ ExternalPrograms[ExternalProgramsSize].callback_data =3D CBData;
++ ExternalPrograms[ExternalProgramsSize].pid =3D pid;
++ ExternalProgramsSize++;
++
++ return FALSE;
++ }
++}
++
++/*=20
++ * Signal handler: Reaps dead children of external processes.
++ * Since internal processes never die (they are just reused), we only
++ * need to do this for external processes, which should all be created
++ * through a_External_make_process().
++ */
++static void=20
++External_reap_process(int signum) {
++ int status;
++ int dead_pid;
++ int i;
++
++ for (i =3D 0; i < ExternalProgramsSize; i++) {
++ if ((dead_pid =3D waitpid(ExternalPrograms[i].pid, &status, WNOHANG)) =
+> 0) {
++ DEBUG_MSG(1, "Reaping child %d\n", dead_pid);
++ if (ExternalPrograms[i].callback !=3D NULL) {
++ (*ExternalPrograms[i].callback)(status,
++ ExternalPrograms[i].callback_data);
++ }
++ a_List_remove(ExternalPrograms, i, ExternalProgramsSize);
++ return;
++ }
++ }
++}
++
++/*
++ * Below here are the more specific external MIME viewers.
++ */
++
++/*
++ * The callback function for external MIME viewers as cache clients.
++ */
++static void=20
++External_viewer_callback(int Op, CacheClient_t *Client) {
++ Dillo_External_Writer_t *external =3D Client->CbData;
++ int bufsize =3D Client->BufSize;
++
++ if ( Op !=3D CA_Send) {
++ char *commandbuf;
++ /* Close or Abort */
++=20=20=20=20
++ /* Do the last line: */
++ if (external->offset < bufsize) {
++ write(external->temp_fd, Client->Buf+external->offset, bufsize-external-=
+>offset);
++ external->offset =3D bufsize;
++ }
++ /* remove this client from our active list */
++ a_Interface_close_client(external->bw, Client->Key);
++ /* set progress bar insensitive */
++ a_Progressbar_update(external->bw->progress, NULL, 0);
++
++ /* Start a new process and remember its filename */
++ commandbuf =3D g_new(char, strlen(external->command)+
++ strlen(external->temp_file_name));
++ sprintf(commandbuf, external->command,=20
++ external->temp_file_name);
++ a_External_make_process(commandbuf, External_viewer_reap_callback,
++ external->temp_file_name);
++=20=20=20=20=20=20
++ g_free(commandbuf);
++ close(external->temp_fd);
++ g_free(external);
++ } else {
++ int written;
++ written =3D write(external->temp_fd, Client->Buf+external->offset, b=
+ufsize-external->offset);
++ external->offset =3D bufsize;
++ }
++}
++
++/*
++ * Creates a new cache client structure, including a temporary file
++ * for downloading.
++ */
++static Dillo_External_Writer_t *
++External_viewer_new(BrowserWindow *bw, char *command) {
++ Dillo_External_Writer_t *external;
++ char *tmp_name_buf =3D g_strdup("/tmp/dillo_XXXXXX");
++
++ external =3D g_new(Dillo_External_Writer_t, 1);
++ external->command =3D command;
++ /* Have to use mkstemp rather than tmpfile, since we want to get at the
++ filename afterwards to give to the external app.
++ */
++ external->temp_fd =3D mkstemp(tmp_name_buf);
++ external->temp_file_name =3D tmp_name_buf;
++ external->bw =3D bw;
++ external->offset =3D 0;
++
++ return external;
++}
++
++/*
++ * The callback for when an external viewer exits. Removes the temporary
++ * file.
++ * We might want to have a function to remove them in the case where Dillo
++ * dies before its children.
++ */
++static void=20
++External_viewer_reap_callback(int status, void *data) {
++ char *filename =3D (char *)data;
++
++ if (filename !=3D NULL) {
++ unlink(filename);
++ g_free(filename);
++ }
++}
++
++/*
++ * Finds the command corresponding to a particular MIME type.
++ * This function is unnecessary is mime.c allows us to use callback data.
++ */
++static char *
++External_viewer_find_command(const char *Type) {
++ int i;
++ char *slashindex;
++ char *major_type;
++ int major_len;
++
++ for (i =3D 0; i < ExternalViewersSize; i++) {
++ if (strcmp(ExternalViewers[i].mime_type, Type) =3D=3D 0)
++ return ExternalViewers[i].command;
++ }
++
++ slashindex =3D strchr(Type, '/');
++ if (slashindex !=3D NULL)
++ major_type =3D g_strndup(Type, slashindex-Type);
++ else=20
++ major_type =3D g_strdup(Type);
++ major_len =3D strlen(major_type);
++
++ for (i =3D 0; i < ExternalViewersSize; i++) {
++ if (strncmp(ExternalViewers[i].mime_type, major_type, major_len) =3D=
+=3D 0) {
++ g_free(major_type);
++ return ExternalViewers[i].command;
++ }
++ }
++ g_free(major_type);
++ return NULL;
++}
++
++/*
++ * Callback function for a mime type.
++ */
++static DwWidget *
++External_viewer(const char *Type, void *Ptr,
++ CA_Callback_t *Call, void **Data) {
++ char *command =3D External_viewer_find_command(Type);
++ DilloWeb *Web =3D (DilloWeb*)Ptr;
++
++ Dillo_External_Writer_t *ext;
++
++ DEBUG_MSG(1, "Found command %s for %s\n", command, Type);
++
++ if (command =3D=3D NULL) {
++ DEBUG_MSG(3, "Not really a viewer for '%s' after all?\n", Type);
++ return NULL;
++ }
++
++ /* Get the data into a temporary file */
++ ext =3D External_viewer_new(Web->bw, command);
++
++ *Call =3D (CA_Callback_t)External_viewer_callback;
++ *Data =3D (void *)ext;
++
++ /* Always return NULL, as these don't use the Dillo window */
++ DEBUG_MSG(5, "Starting external viewer %s for type %s\n", command, Type=
+);
++ return NULL;
++}
++
++/*
++ * Adds an external viewer for a particular mime type.
++ */
++static void=20
++External_viewer_add(const char *Type, const char *command) {
++ DEBUG_MSG(1, "Adding viewer for `%s': %s\n", Type, command);
++ if (strchr(Type, '/') !=3D NULL) {
++ Mime_add_minor_type(Type, External_viewer);
++ } else {
++ Mime_add_major_type(Type, External_viewer);
++ }
++ a_List_add(ExternalViewers, ExternalViewersSize, sizeof(*ExternalViewer=
+s),
++ ExternalViewersMax);
++ ExternalViewers[ExternalViewersSize].mime_type =3D g_strdup(Type);
++ ExternalViewers[ExternalViewersSize].command =3D g_strdup(command);
++ ExternalViewersSize++;
++}
++
++/*
++ * This is a very simple mailcap parser, ignores all print, test etc
++ * and other remarks.
++ */
++static void=20
++External_set_viewers_from_file(char *filename) {
++ FILE *file;
++ char *buf;
++ int buflen =3D 200;
++
++ file =3D fopen(filename, "r");
++ if (file =3D=3D NULL) return;
++
++ buf =3D g_new(char, buflen);
++
++ while (!feof(file)) {
++ int offset =3D 0;
++ char *semi1, *semi2;
++ while (fgets(buf, buflen+offset, file) !=3D NULL) {
++ if (buf[buflen] =3D=3D '\0') {
++ char *buf2;
++ buf2 =3D g_new(char, buflen*2);
++ strncpy(buf2, buf, buflen);
++ buflen *=3D 2;
++ g_free(buf);
++ buf =3D buf2;
++ } else break;
++ }
++ if (*buf =3D=3D '\0' || *buf =3D=3D '#') continue;
++ semi1 =3D strchr(buf, ';');
++ if (semi1 =3D=3D NULL) continue;
++ *semi1 =3D '\0';
++ semi1++;
++ semi2 =3D strchr(semi1, ';');
++ if (semi2 !=3D NULL) *semi2 =3D '\0';
++ semi1 =3D g_strchomp(semi1);
++ External_viewer_add(g_strdup(buf), g_strdup(semi1));
++ }
++ g_free(buf);
++ fclose(file);
++}
++
++/* Sets up external viewers taken from the users mailcap, then from
++ * the system mailcap. Since mime viewers are checked in order,
++ * the users settings have preference (but this is called after Dillos
++ * own viewers are checked).
++ */
++void=20
++a_External_set_viewers() {
++ External_set_viewers_from_file("/home/lrclause/.mailcap");
++ External_set_viewers_from_file("/etc/mailcap");
++}
+diff -rbBu dillo-orig/src/external.h dillo-mime/src/external.h
+--- dillo-orig/src/external.h Sat Dec 8 14:45:43 2001
++++ dillo-mime/src/external.h Sat Dec 8 15:17:44 2001
+@@ -0,0 +1,13 @@
++#ifndef __DILLO_EXTERNAL_H__
++#define __DILLO_EXTERNAL_H__
++
++typedef void (External_Callback_t)(int retval,=20
++ void *callback_data);
++
++extern gboolean a_External_make_process(char *Command,
++ External_Callback_t *CB,
++ void *CBData);
++extern void a_External_set_viewers();
++
++
++#endif
+diff -rbBu dillo-orig/src/menu.c dillo-mime/src/menu.c
+--- dillo-orig/src/menu.c Fri Dec 7 13:23:44 2001
++++ dillo-mime/src/menu.c Sat Dec 8 14:33:32 2001
+@@ -132,10 +132,8 @@
+a_Commands_openfile_callback, bw);
+Menu_add(file_menu, "Open _URL...", "<ctrl>L", bw,
+a_Commands_openurl_callback, bw);
+- /*
+Menu_add(file_menu, "_Preferences", "<ctrl>E", bw,
+a_Commands_prefs_callback, bw);=20
+- */
+Menu_add(file_menu, "Close Window", "<ctrl>Q", bw,
+a_Commands_close_callback, bw);
+Menu_sep(file_menu);
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-08 01:46
+
+> - Clinton Ebadi had offered his future CD store's site, but it has
+> yet to be started and set.
+
+Which now appears as if it will never start. Funding is hard to get, 
+so probably a no go (at least not until mid-year next year). I am 
+still planning to get a 1U rackmount server and colocate it somewhere 
+(if I can find something that will make up for the colo fees). Now, 
+to find a way to cover 80 bucks a month...
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]Getting data from buffer, what goes wrong?
+
+From: Clinton Ebadi <unknown_lamer@ha...> - 2001-12-08 01:44
+
+> > I'm working on a little Christmas present for Dillo (don't tell
+> > it:): External viewers. I've got it pretty well set up, but when I
+....
+
+Why not resume work on plugins? Then you could implement an External 
+Viewer plugin. I tried to integrate dillo with libguile, but that 
+quickly failed (maybe I should finish reading the Gtk tutorial...). 
+
+
+-------------------------------
+#umbclinux on irc.openprojects.net
+lamer.hackedtobits.com
+unknown_lamer@ha...
+AIM: unknownlamer ICQ: 41087914 
+
+
+
+Re: [Dillo-dev]More on the external viewer front
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-07 19:30
+
+On 07 Dec 2001, Lars Clausen wrote:
+
+>=20
+> After getting over my galloping stupidity yesterday, I mostly have the
+> external viewer patch ready. Only one slight problem: I'm supposed to
+> return a DwWidget* from the mime type handler. Since I don't use the
+> browser window (except I'd like to do the progress bar thing), I have
+> been hoping to just return NULL or the old contents. However, NULL fails
+> to an assert immediately, and I can't find the 'old contents' as a
+> DwWidget* in the DilloWeb structure I get passed. What would be the
+> right direction, removing the NULL assert and make sure web.c handles
+> NULL returns, or is there some way I can get my hands on a DwWidget*?
+
+So it turns out that the assertion doesn't really stop anything (it just
+looks really scary, CRITICAL and all). I got the crashing to stop by
+catching SIGCHLD in the child (huh?). It now works quite nicely. The
+locations of the mailcap files (/etc/mailcap, ~/.mailcap) are hardcoded,
+we might want to add a prefs thing to override this. The attached patch
+adds external handling. Enjoy. And please let me know if I broke any of
+the coding practices, I'm trying to stick to them.
+
+> I'll also be doing some profiling to see if the checking for mime types
+> is becoming a problem -- the list becomes rather long when including
+> ~/.mailcap and /etc/mailcap.
+
+Not a problem, it barely registers in gprof. Cool.
+
+-Lars, who thinks aloud too much:)
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile ~/src/external.patch=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff -rubB dillo-orig/src/IO/mime.c dillo-mime/src/IO/mime.c
+--- dillo-orig/src/IO/mime.c Sun Mar 4 10:03:44 2001
++++ dillo-mime/src/IO/mime.c Fri Dec 7 13:24:48 2001
+@@ -107,9 +107,16 @@
+Mime_add_minor_type("image/jpg", a_Jpeg_image);
+Mime_add_minor_type("image/png", a_Png_image);
+Mime_add_minor_type("text/html", a_Html_text);
++ /* Add minor types for text styles we know we can handle, but that
++ mailcap tends to overwrite */
++ Mime_add_minor_type("text/plain", a_Plain_text);
++ Mime_add_minor_type("text/C", a_Plain_text);
+=20
+/* Add a major type to handle all the text stuff */
+Mime_add_major_type("text", a_Plain_text);
++
++ /* Add external viewers as defined in mailcap files */
++ a_External_set_viewers();
+}
+=20
+=20
+diff -rubB dillo-orig/src/IO/mime.h dillo-mime/src/IO/mime.h
+--- dillo-orig/src/IO/mime.h Sun Mar 4 10:03:44 2001
++++ dillo-mime/src/IO/mime.h Thu Dec 6 18:21:39 2001
+@@ -26,6 +26,9 @@
+void **Data);
+DwWidget* a_Gif_image (const char *Type,void *web, CA_Callback_t *Call,
+void **Data);
++DwWidget* a_Extern_viewer (const char *Type, void *web, CA_Callback_t *Cal=
+l,
++ void **Data);
++void a_External_set_viewers();
+=20
+/*
+* Functions defined inside Mime module
+@@ -33,5 +36,8 @@
+void a_Mime_init(void);
+DwWidget* a_Mime_set_viewer(const char *content_type, void *Ptr,
+CA_Callback_t *Call, void **Data);
++gint Mime_add_minor_type(const char *Key, Viewer_t Method);
++gint Mime_add_major_type(const char *Key, Viewer_t Method);
++
+=20
+#endif
+diff -rubB dillo-orig/src/Makefile.am dillo-mime/src/Makefile.am
+--- dillo-orig/src/Makefile.am Mon Aug 27 16:44:12 2001
++++ dillo-mime/src/Makefile.am Wed Dec 5 16:00:10 2001
+@@ -87,6 +87,7 @@
+url.c \
+url.h \
+list.h \
+- pixmaps.h
++ pixmaps.h \
++ external.c
+=20
+EXTRA_DIST =3D pixmaps_old.h chg srch
+diff -rubB dillo-orig/src/Makefile.in dillo-mime/src/Makefile.in
+--- dillo-orig/src/Makefile.in Sun Oct 21 12:22:26 2001
++++ dillo-mime/src/Makefile.in Wed Dec 5 16:00:45 2001
+@@ -75,7 +75,7 @@
+=20
+dillo_LDADD =3D IO/libDio.a @LIBJPEG_LIB@
+=20
+-dillo_SOURCES =3D acconfig.h chain.h chain.c commands.c commands.h =
+cache.c cache.h debug.h dw.h dw.c dw_bullet.c dw_bullet.h dw_contain=
+er.c dw_container.h dw_embed_gtk.c dw_embed_gtk.h dw_gtk_scrolled_frame=
+.c dw_gtk_scrolled_frame.h dw_gtk_scrolled_window.c dw_gtk_scrolled_wind=
+ow.h dw_gtk_statuslabel.c dw_gtk_statuslabel.h dw_gtk_viewport.c dw_gtk=
+_viewport.h dw_hruler.c dw_hruler.h dw_image.c dw_image.h dw_marshal.c=
+dw_marshal.h dw_page.c dw_page.h dw_style.c dw_style.h dw_table.c d=
+w_table.h dw_tooltip.c dw_tooltip.h dw_widget.c dw_widget.h findtext.c=
+findtext.h web.c web.h progressbar.c progressbar.h dillo.c dillo.h =
+bookmark.c bookmark.h browser.h dicache.c dicache.h dns.c dns.h gif=
+.c jpeg.c png.c html.c html.h image.c image.h misc.c misc.h interf=
+ace.h interface.c nav.c nav.h plain.c menu.c menu.h prefs.c prefs.h=
+colors.c colors.h bitvec.c bitvec.h klist.c klist.h url.c url.h l=
+ist.h pixmaps.h
++dillo_SOURCES =3D acconfig.h chain.h chain.c commands.c commands.h =
+cache.c cache.h debug.h dw.h dw.c dw_bullet.c dw_bullet.h dw_contain=
+er.c dw_container.h dw_embed_gtk.c dw_embed_gtk.h dw_gtk_scrolled_frame=
+.c dw_gtk_scrolled_frame.h dw_gtk_scrolled_window.c dw_gtk_scrolled_wind=
+ow.h dw_gtk_statuslabel.c dw_gtk_statuslabel.h dw_gtk_viewport.c dw_gtk=
+_viewport.h dw_hruler.c dw_hruler.h dw_image.c dw_image.h dw_marshal.c=
+dw_marshal.h dw_page.c dw_page.h dw_style.c dw_style.h dw_table.c d=
+w_table.h dw_tooltip.c dw_tooltip.h dw_widget.c dw_widget.h findtext.c=
+findtext.h web.c web.h progressbar.c progressbar.h dillo.c dillo.h =
+bookmark.c bookmark.h browser.h dicache.c dicache.h dns.c dns.h gif=
+.c jpeg.c png.c html.c html.h image.c image.h misc.c misc.h interf=
+ace.h interface.c nav.c nav.h plain.c menu.c menu.h prefs.c prefs.h=
+colors.c colors.h bitvec.c bitvec.h klist.c klist.h url.c url.h l=
+ist.h pixmaps.h external.c
+=20
+=20
+EXTRA_DIST =3D pixmaps_old.h chg srch
+@@ -96,7 +96,7 @@
+dw_tooltip.o dw_widget.o findtext.o web.o progressbar.o dillo.o \
+bookmark.o dicache.o dns.o gif.o jpeg.o png.o html.o image.o misc.o \
+interface.o nav.o plain.o menu.o prefs.o colors.o bitvec.o klist.o \
+-url.o
++url.o external.o
+dillo_DEPENDENCIES =3D IO/libDio.a
+dillo_LDFLAGS =3D=20
+CFLAGS =3D @CFLAGS@
+@@ -117,10 +117,10 @@
+.deps/dw_gtk_scrolled_window.P .deps/dw_gtk_statuslabel.P \
+.deps/dw_gtk_viewport.P .deps/dw_hruler.P .deps/dw_image.P \
+.deps/dw_marshal.P .deps/dw_page.P .deps/dw_style.P .deps/dw_table.P \
+-.deps/dw_tooltip.P .deps/dw_widget.P .deps/findtext.P .deps/gif.P \
+-.deps/html.P .deps/image.P .deps/interface.P .deps/jpeg.P .deps/klist.P \
+-.deps/menu.P .deps/misc.P .deps/nav.P .deps/plain.P .deps/png.P \
+-.deps/prefs.P .deps/progressbar.P .deps/url.P .deps/web.P
++.deps/dw_tooltip.P .deps/dw_widget.P .deps/external.P .deps/findtext.P \
++.deps/gif.P .deps/html.P .deps/image.P .deps/interface.P .deps/jpeg.P \
++.deps/klist.P .deps/menu.P .deps/misc.P .deps/nav.P .deps/plain.P \
++.deps/png.P .deps/prefs.P .deps/progressbar.P .deps/url.P .deps/web.P
+SOURCES =3D $(dillo_SOURCES)
+OBJECTS =3D $(dillo_OBJECTS)
+=20
+diff -rubB dillo-orig/src/external.c dillo-mime/src/external.c
+--- dillo-orig/src/external.c Fri Dec 7 13:22:27 2001
++++ dillo-mime/src/external.c Fri Dec 7 13:28:33 2001
+@@ -0,0 +1,298 @@
++/*
++ * File: external.c
++ *
++ * Copyright (C) 2001 Lars Clausen (lrclause@cs.uiuc.edu)
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++/* Functions for handling calling external programs (in particular,
++ * external mime handlers and stand-alone programs).
++ */
++
++#include <string.h>
++#include <gtk/gtk.h>
++#include <stdio.h>
++#include <stdarg.h>
++#include <sys/types.h>
++#include <sys/time.h>
++#include <sys/resource.h>
++#include <sys/wait.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <signal.h>
++
++#include "dillo.h"
++#include "dw.h"
++#include "IO/mime.h"
++#include "debug.h"
++#include "list.h"
++#include "interface.h"
++#include "progressbar.h"
++
++/* I'm loath to hack mime.c to add callback data for this, since I don't
++ understand where the CBData comes from. Instead I (for now) hold a list
++ here of the commands. Not fast, but hey, neither is spawning an
++ external viewer.
++*/
++
++typedef struct {
++ char *mime_type;
++ char *command;
++} DilloExternalMimeHandler;
++
++typedef struct {
++ int offset;
++ int temp_fd;
++ char *temp_file_name;
++ BrowserWindow *bw;
++ char *command;
++} DilloExternalWriter;
++
++typedef struct {
++ int pid;
++ char *filename;
++} DilloExternalProgram;
++
++gint ExternalViewersSize =3D 0, ExternalViewersMax =3D 8;
++DilloExternalMimeHandler *ExternalViewers =3D NULL;
++gint ExternalProgramsSize =3D 0, ExternalProgramsMax =3D 8;
++DilloExternalProgram *ExternalPrograms =3D NULL;
++
++static char *External_viewer_find_command(const char *Type);
++static DilloExternalProgram *External_make_process(char *command, char *fi=
+lename);
++static void External_callback(int Op, CacheClient_t *Client);
++static DilloExternalWriter *External_new(BrowserWindow *bw,
++ char *command);
++DwWidget *a_External_viewer(const char *Type, DilloWeb *Web,
++ CA_Callback_t *Call, void **Data);
++void a_External_check_dead_children();
++static void External_viewer_add(const char *Type, const char *command);
++void a_External_set_viewers();
++
++static
++char *External_viewer_find_command(const char *Type) {
++ int i;
++ char *slashindex;
++ char *major_type;
++ int major_len;
++
++ for (i =3D 0; i < ExternalViewersSize; i++) {
++ if (strcmp(ExternalViewers[i].mime_type, Type) =3D=3D 0)
++ return ExternalViewers[i].command;
++ }
++
++ slashindex =3D strchr(Type, '/');
++ if (slashindex !=3D NULL)
++ major_type =3D g_strndup(Type, slashindex-Type);
++ else=20
++ major_type =3D g_strdup(Type);
++ major_len =3D strlen(major_type);
++
++ for (i =3D 0; i < ExternalViewersSize; i++) {
++ if (strncmp(ExternalViewers[i].mime_type, major_type, major_len) =3D=
+=3D 0) {
++ g_free(major_type);
++ return ExternalViewers[i].command;
++ }
++ }
++ g_free(major_type);
++ return NULL;
++}
++
++static DilloExternalProgram *External_make_process(char *command, char *fi=
+lename) {
++ /* va_list args;*/
++ int pid;
++
++ pid =3D fork();
++
++ if (pid < 0) {
++ DEBUG_MSG(10, "Error starting external program %s\n", command);
++ return NULL;
++ }
++ if (pid =3D=3D 0) {
++ /* va_start(args, command);*/
++ char *commandbuf =3D g_new(char, strlen(command)+strlen(filename));
++ int retval;
++
++ signal(SIGCHLD, _exit);
++
++ sprintf(commandbuf, command, filename);
++ retval =3D system(commandbuf);
++ if (retval =3D=3D -1)=20
++ DEBUG_MSG(10, "Error executing external program %s: %s\n",=20
++ commandbuf, strerror(errno));
++ DEBUG_MSG(3, "Returned from %s, return value=3D%d\n", commandbuf, re=
+tval);
++ g_free(commandbuf);
++ unlink(filename);
++ exit(retval);
++ } else {
++ DEBUG_MSG(1, "New external PID is %d\n", pid);
++ a_List_add(ExternalPrograms, ExternalProgramsSize,=20
++ sizeof(*ExternalPrograms), ExternalProgramsMax);
++ ExternalPrograms[ExternalProgramsSize++].pid =3D pid;
++ return &ExternalPrograms[ExternalProgramsSize-1];
++ }
++}
++
++static void External_callback(int Op, CacheClient_t *Client) {
++ DilloExternalWriter *external =3D Client->CbData;
++ DilloExternalProgram *ext_prog;
++ int bufsize =3D Client->BufSize;
++
++ if ( Op !=3D CA_Send) {
++ /* Close or Abort */
++=20=20=20=20
++ /* Do the last line: */
++ if (external->offset < bufsize) {
++ write(external->temp_fd, Client->Buf+external->offset, bufsize-external-=
+>offset);
++ external->offset =3D bufsize;
++ }
++ /* remove this client from our active list */
++ a_Interface_close_client(external->bw, Client->Key);
++ /* set progress bar insensitive */
++ a_Progressbar_update(external->bw->progress, NULL, 0);
++
++ /* Start a new process and remember its filename */
++ ext_prog =3D External_make_process(external->command,
++ external->temp_file_name);
++ if (ext_prog !=3D NULL) {
++ ext_prog->filename =3D external->temp_file_name;
++ }
++=20
++ close(external->temp_fd);
++ g_free(external);
++ } else {
++ int written;
++ written =3D write(external->temp_fd, Client->Buf+external->offset, b=
+ufsize-external->offset);
++ external->offset =3D bufsize;
++ }
++}
++
++static DilloExternalWriter *External_new(BrowserWindow *bw,
++ char *command) {
++ DilloExternalWriter *external;
++ char *tmp_name_buf =3D g_strdup("/tmp/dillo_XXXXXX");
++
++ external =3D g_new(DilloExternalWriter, 1);
++ external->command =3D command;
++ /* Have to use mkstemp rather than tmpfile, since we want to get at the
++ filename afterwards to give to the external app.
++ */
++ external->temp_fd =3D mkstemp(tmp_name_buf);
++ external->temp_file_name =3D tmp_name_buf;
++ external->bw =3D bw;
++ external->offset =3D 0;
++
++ return external;
++}
++
++DwWidget *a_External_viewer(const char *Type, DilloWeb *Web,
++ CA_Callback_t *Call, void **Data)
++{
++ char *command =3D External_viewer_find_command(Type);
++
++ DilloExternalWriter *ext;
++
++ DEBUG_MSG(1, "Found command %s for %s\n", command, Type);
++
++ if (command =3D=3D NULL) {
++ DEBUG_MSG(3, "Not really a viewer for '%s' after all?\n", Type);
++ return NULL;
++ }
++
++ /* Get the data into a temporary file */
++ ext =3D External_new(Web->bw, command);
++
++ *Call =3D (CA_Callback_t)External_callback;
++ *Data =3D (void *)ext;
++
++ /* Always return NULL, as these don't use the Dillo window */
++ DEBUG_MSG(5, "Starting external viewer %s for type %s\n", command, Type=
+);
++ return NULL;
++}
++
++void a_External_check_dead_children() {
++ int status;
++ int dead_pid;
++
++ while ((dead_pid =3D wait3(&status, WNOHANG, NULL)) > 0) {
++ /* Do stuff with the dead child (no, not *that* kind of stuff!:) */
++ int i;
++
++ for (i =3D 0; i < ExternalProgramsSize; i++) {
++ if (ExternalPrograms[i].pid =3D=3D dead_pid) {
++ DEBUG_MSG(1, "Reaping child %d with filename %s\n",=20
++ dead_pid, ExternalPrograms[i].filename);
++ if (ExternalPrograms[i].filename !=3D NULL) {
++ unlink(ExternalPrograms[i].filename);
++ g_free(ExternalPrograms[i].filename);
++ }
++ a_List_remove(ExternalPrograms, i, ExternalProgramsSize);
++ return;
++ }
++ }
++ DEBUG_MSG(2, "Odd, pid %d died, but wasn't found\n", pid);
++ }
++}
++
++static void External_viewer_add(const char *Type, const char *command) {
++ DEBUG_MSG(1, "Adding viewer for `%s': %s\n", Type, command);
++ if (strchr(Type, '/') !=3D NULL) {
++ Mime_add_minor_type(Type, a_External_viewer);
++ } else {
++ Mime_add_major_type(Type, a_External_viewer);
++ }
++ a_List_add(ExternalViewers, ExternalViewersSize, sizeof(*ExternalViewer=
+s),
++ ExternalViewersMax);
++ ExternalViewers[ExternalViewersSize].mime_type =3D g_strdup(Type);
++ ExternalViewers[ExternalViewersSize].command =3D g_strdup(command);
++ ExternalViewersSize++;
++}
++
++/** This is a very simple mailcap parser, ignores all print, test etc
++ * and other remarks.
++ */
++void External_set_viewers_from_file(char *filename) {
++ FILE *file;
++ char *buf;
++ int buflen =3D 200;
++
++ file =3D fopen(filename, "r");
++ if (file =3D=3D NULL) return;
++
++ buf =3D g_new(char, buflen);
++
++ while (!feof(file)) {
++ int offset =3D 0;
++ char *semi1, *semi2;
++ while (fgets(buf, buflen+offset, file) !=3D NULL) {
++ if (buf[buflen] =3D=3D '\0') {
++ char *buf2;
++ buf2 =3D g_new(char, buflen*2);
++ strncpy(buf2, buf, buflen);
++ buflen *=3D 2;
++ g_free(buf);
++ buf =3D buf2;
++ } else break;
++ }
++ if (*buf =3D=3D '\0' || *buf =3D=3D '#') continue;
++ semi1 =3D strchr(buf, ';');
++ if (semi1 =3D=3D NULL) continue;
++ *semi1 =3D '\0';
++ semi1++;
++ semi2 =3D strchr(semi1, ';');
++ if (semi2 !=3D NULL) *semi2 =3D '\0';
++ semi1 =3D g_strchomp(semi1);
++ External_viewer_add(g_strdup(buf), g_strdup(semi1));
++ }
++ g_free(buf);
++ fclose(file);
++}
++
++void a_External_set_viewers() {
++ External_set_viewers_from_file("/home/lrclause/.mailcap");
++ External_set_viewers_from_file("/etc/mailcap");
++}
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+[Dillo-dev]More on the external viewer front
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-07 17:52
+
+After getting over my galloping stupidity yesterday, I mostly have the
+external viewer patch ready. Only one slight problem: I'm supposed to
+return a DwWidget* from the mime type handler. Since I don't use the
+browser window (except I'd like to do the progress bar thing), I have been
+hoping to just return NULL or the old contents. However, NULL fails to an
+assert immediately, and I can't find the 'old contents' as a DwWidget* in
+the DilloWeb structure I get passed. What would be the right direction,
+removing the NULL assert and make sure web.c handles NULL returns, or is
+there some way I can get my hands on a DwWidget*?
+
+I'll also be doing some profiling to see if the checking for mime types is
+becoming a problem -- the list becomes rather long when including
+~/.mailcap and /etc/mailcap.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]odd segfault
+
+From: David Bliss <david@yt...> - 2001-12-07 15:25
+
+I'm making some pretty big changes to Dillo for a medical informatics
+project here (we absolutely need ssl, meta refresh, basic auth, and cookies;
+trying to integrate Lars' cookies and auth patches with our locally-developed
+ssl patches.)
+
+I'm getting a segfault in Cache_process_queue on forms submission (from weblogin.washington.edu):
+
+meta refresh: delay -> 0, url -> https://secure.cirg.washington.edu/~david-admin
+Nav_open_url: Url=>https://secure.cirg.washington.edu/~david-admin<
+meta refresh: delay -> 0, url -> https://weblogin.washington.edu/
+Nav_open_url: Url=>https://weblogin.washington.edu/<
+
+Program received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 1024 (runnable)]
+in meta
+0x40398539 in __morecore () from /lib/libc.so.6
+(gdb) bt
+#0 0x40398539 in __morecore () from /lib/libc.so.6
+#1 0x08067f1c in Cache_process_queue (entry=0x81a5744) at cache.c:785
+#2 0x08067f7f in Cache_delayed_process_queue_callback (data=0x81a5744) at cache.c:803
+#3 0x401dd66c in g_idle_dispatch () from /usr/lib/libglib-1.2.so.0
+#4 0x401dc717 in g_main_dispatch () from /usr/lib/libglib-1.2.so.0
+#5 0x401dccdb in g_main_iterate () from /usr/lib/libglib-1.2.so.0
+#6 0x401dce59 in g_main_run () from /usr/lib/libglib-1.2.so.0
+#7 0x4010a069 in gtk_main () from /usr/lib/libgtk-1.2.so.0
+#8 0x080744aa in main (argc=1, argv=0xbffff974) at dillo.c:125
+#9 0x402cd577 in __libc_start_main () from /lib/libc.so.6
+(gdb) 
+
+
+The CacheData_t looks suspicious, especially ->io==NULL.
+
+(gdb) print ((CacheData_t*)data)->Url->url_string->str
+$3 = (gchar *) 0x81affb8 "
+(gdb) print ((CacheData_t*)data)->Type 
+$4 = 0x81dfc80 "text/html"
+(gdb) print ((CacheData_t*)data)->Header->str
+$5 = (
+gchar *) 0x81db960 "HTTP/1.1 200 OK\nDate: Fri, 07 Dec 2001 15:19:12 GMT\nServer: Apache/1.3.20 (Unix) mod_pubcookie/a5release11 PHP/4.0.6 mod_ssl/2.8.4 OpenSSL/0.9.6a\nSet-Cookie: pubcookie_pre_s=fvGX4jdn9iFI1MnhD9JG4SzJpS"...
+(gdb) print ((CacheData_t*)data)->AuthRealm
+$16 = (GString *) 0x0
+(gdb) print ((CacheData_t*)data)->Location 
+$6 = (DilloUrl *) 0x0
+(gdb) print (char*)((CacheData_t*)data)->Data
+$7 = 0x81dc808 "<HTML><HEAD><meta HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=></HEAD><BODY BGCOLOR=\"#FFFFFF\"></BODY></HTML>\n"
+(gdb) print ((CacheData_t*)data)->ValidSize
+$8 = 134
+(gdb) print ((CacheData_t*)data)->TotalSize
+$9 = 134
+(gdb) print ((CacheData_t*)data)->BuffSize 
+$10 = 4096
+(gdb) print ((CacheData_t*)data)->Flags 
+$11 = 261
+(gdb) print ((CacheData_t*)data)->io 
+$12 = (IOData_t *) 0x0
+(gdb) print ((CacheData_t*)data)->CCCQuery
+$13 = (ChainLink *) 0x0
+(gdb) print ((CacheData_t*)data)->CCCAnswer
+$14 = (ChainLink *) 0x0
+(gdb) 
+
+
+But I have no idea if this is the actual problem, how it got there, or even what Cache_process_queue is supposed
+to do. Any sage advice?
+
+Thanks,
+David Bliss
+Clinical Informatics Research Group
+Univeristy of Washington 
+
+
+
+[Dillo-dev]Url resolving --Dont panic!
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-07 13:05
+
+Hi,
+
+A few days ago I finished coding the regular-expressions-based
+URL parsing and resolving routines. It's a couple of lines from
+being 100% RFC 2396 compliant, but unfortunately too slow.
+
+I'm absolutely aware of the importance of the speed here. After
+all, there's no point in optimizing the Dw engine and networking
+to our best, while letting the URL resolver take 60% (or more)
+of the rendering time.
+
+I tried to make it faster, developing a new ADT for strings
+(faster than GStrings), but the performance impact was too small
+to make it worth.
+
+A few tests more, and it was clear that the time was being
+dominated by RE parsing.
+
+It was a big effort, but I'm afraid that the way to go now is
+to try to develop a new parser/resolver, without REs, that's as
+RFC compliant as possible.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]About (leaving) SourceForge :-(
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-07 11:45
+
+Hi there!
+
+To SF or not to SF... :)
+
+Considering the alternatives we have, it has become clear that
+if we move, it'd be better to last on the new site for a while.
+It doesn't need to be "the" definitive place, but at least it
+should bring us some settlement peace to keep developing!
+
+- Clinton Ebadi had offered his future CD store's site, but it
+has yet to be started and set.
+- Berlios.de has all the services we require, but it uses SF's
+codebase, so I don't see a clear point in moving there...
+- Savannah doesn't provide CGI, nor ssh account nor statistics.
+(Loic told me). So an hybrid solution comes as the only way here.
+The good point of it is that it's meant to improve, and last.
+
+... and
+
+On Mon, 12 Nov 2001, Eduardo Marcel Ma=E7an wrote:
+
+> If a new home is needed to host dillo from now on, I can arrange for
+> it to be hosted on CIPSGA servers, which already host the
+> debian.org.br primary web mirror, and the pages of the debian-br group.
+> The Debian-br crew is responsible for the maintainance of the servers,
+> I am sure we can quickly arrange space and software to support
+> the development of the dillo web browser.
+>
+> I must say, dillo has somewhat of a cult following among us in the
+> debian-br team :)
+>
+> Regards!
+
+This looks very interesting, it hosts Debian, its devoted to
+helping the GNU/Linux cause, its maintained by the Debian-br crew
+(one less task :), and I love Brazil!
+
+So, Eduardo, please go a step further and investigate what can
+we have there. The key points are:
+
+- CGI enabled web server
+- ssh account to set and maintain it.
+
+
+Best regards
+Jorge.- 
+
+
+
+[Dillo-dev]Re: fonts, the dillo browser, gtk 2.0
+
+From: Havoc Pennington <hp@re...> - 2001-12-07 02:56
+
+Michael Taht <mtaht@mv...> writes:
+> I decided to take a stab at making the dillo web browser
+> (dillo.so....net) compile under gtk 1.3.x this afternoon. Most
+> of it compiled with a very minimal set of changes, but as I haven't
+> been keeping up with changes to GTK, I fell off the end of the world
+> pretty fast, and have since been searching the FAQ and mailing lists
+> with little success. I'm currently reading up on pango and looking in
+> example code, but any help you can provide....
+> The biggest change in GTK 1.3.x seems to be the font handling. OK,
+> style->font doesn't exist anymore. The doc says most of the functions
+> that give you a GdkFont are depriciated, presumably replaced by pango
+> versions. Is there anything resembling a cookbook for porting apps
+> forward from 1.2.x to 1.3.x?
+> 
+
+There's this guide that might be useful:
+
+http://developer.gnome.org/dotplan/porting/
+
+Havoc 
+
+
+
+Re: [Dillo-dev]Getting data from buffer, what goes wrong?
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-07 02:35
+
+On 06 Dec 2001, Lars Clausen wrote:
+
+>=20
+> I'm working on a little Christmas present for Dillo (don't tell it:):
+> External viewers. I've got it pretty well set up, but when I try to
+> download, I get corrupted files.=20
+[...]
+> Are there any tricky little issues I should be cautious about? Or did I
+> make a terrible mistake somewhere? I don't know.
+
+Now I do. I did indeed make a stupid mistake, and now it works. Still a
+few pieces to add.
+
+One thing I wanted to know: Is there any way to add callback data when
+adding a viewer for a mime type? I see callback data being passed around,
+but I'mnot sure where it originates and if I can just use that.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Getting data from buffer, what goes wrong?
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-07 00:59
+
+I'm working on a little Christmas present for Dillo (don't tell it:):
+External viewers. I've got it pretty well set up, but when I try to
+download, I get corrupted files. They are of the same length as the
+original, but differ. The client callback function I use is:
+
+
+static void External_callback(int Op, CacheClient_t *Client) {
+DilloExternalWriter *external =3D Client->CbData;
+DilloExternalProgram *ext_prog;
+int bufsize =3D Client->BufSize;
+
+if ( Op !=3D CA_Send) {
+/* Close or Abort */
+=20=20=20=20
+/* Do the last line: */
+if (external->offset < bufsize) {
+write(external->temp_fd, Client->Buf, bufsize-external->offset);
+external->offset =3D bufsize;
+}
+/* remove this client from our active list */
+a_Interface_close_client(external->bw, Client->Key);
+/* set progress bar insensitive */
+a_Progressbar_update(external->bw->progress, NULL, 0);
+
+/* Start a new process and remember its filename */
+ext_prog =3D External_make_process(external->command,
+external->temp_file_name);
+if (ext_prog !=3D NULL) {
+ext_prog->filename =3D external->temp_file_name;
+}
+=20
+close(external->temp_fd);
+g_free(external);
+} else {
+write(external->temp_fd, Client->Buf, bufsize-external->offset);
+external->offset =3D bufsize;
+}
+}
+
+Are there any tricky little issues I should be cautious about? Or did I
+make a terrible mistake somewhere? I don't know.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]fonts, the dillo browser, gtk 2.0
+
+From: Michael Taht <mtaht@mv...> - 2001-12-07 00:15
+
+I decided to take a stab at making the dillo web browser 
+(dillo.so....net) compile under gtk 1.3.x this afternoon. Most of 
+it compiled with a very minimal set of changes, but as I haven't been 
+keeping up with changes to GTK, I fell off the end of the world pretty 
+fast, and have since been searching the FAQ and mailing lists with 
+little success. I'm currently reading up on pango and looking in example 
+code, but any help you can provide....
+
+The biggest change in GTK 1.3.x seems to be the font handling. OK, 
+style->font doesn't exist anymore. The doc says most of the functions 
+that give you a GdkFont are depriciated, presumably replaced by pango 
+versions. Is there anything resembling a cookbook for porting apps 
+forward from 1.2.x to 1.3.x?
+
+make -k - reports only 12^2 lines of errors to fix... 
+
+
+
+[Dillo-dev]use dillo in other applications?
+
+From: Scott Weisman <sweisman@po...> - 2001-12-06 15:56
+
+Hello,
+
+I think Dillo is great and hope you keep up the development effort.
+
+I have a question that I haven't been able to find an answer on after a
+lot of searching.
+
+Is Dillo embeddable in other applications? I am interested in using it as
+a replacement for gtkhtml, but it seems Dillo is implemented as a
+standalone monolithic application.
+
+Can somebody clarify?
+
+Thanks for the help,
+
+Scott Weisman 
+
+
+
+Re: [Dillo-dev]newline in urlencoded
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-05 16:53
+
+On Wed, 5 Dec 2001, ksr wrote:
+
+> Hi.
+>
+> When posting, the newline character '\n' in multiline text should be
+> converted to \r\n.
+>
+> Best Regards.
+
+Please refer me the SPEC (or RFC) section where it's stated. I
+haven't found it yet :(
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]newline in urlencoded
+
+From: ksr <ksr@po...> - 2001-12-04 15:34
+
+Hi. 
+
+When posting, the newline character '\n' in multiline text should be
+converted to \r\n. 
+
+Best Regards. 
+
+
+
+Re: [Dillo-dev]special characters in URL encode
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-12-04 13:09
+
+On 3 Dec 2001, TANAKA Keishiro wrote:
+
+>
+> According to RFC 2396, special characters in URL encode should be
+>
+> static const guchar special[] = "-_.!~*'()";
+>
+> in Html_urlencode_append in html.c.
+
+Yes.
+
+That's with regard to generic URI parsing though. An
+authoritative slection can be done after studying the whole
+gateway process that the URI may traverse, and probably is not
+bad to add a few more empirically known to cause trouble...
+
+In short I decided to mimic lynx and netscape (they escape
+exactly the same set!) i.e. all but "-_.*".
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]IPv6
+
+From: Tobin Fricke <tobin@sp...> - 2001-12-03 19:17
+
+This weekend I added IPv6 support to Dillo. I'm interested in receiving
+comments on my patch, which is available from:
+
+http://splorg.org/people/tobin/projects/dillo/
+
+-- Tobin 
+
+
+
+[Dillo-dev]special characters in URL encode
+
+From: TANAKA Keishiro <ksr@lp...> - 2001-12-03 06:17
+
+According to RFC 2396, special characters in URL encode should be
+
+static const guchar special[] = "-_.!~*'()";
+
+in Html_urlencode_append in html.c. 
+
+
+
+Re: [Dillo-dev]Fake ID patch - 2nd attempt
+
+From: Lars Clausen <lrclause@cs...> - 2001-12-02 15:47
+
+On Sun, 2 Dec 2001, Andreas Schweitzer wrote:
+
+[...]
+> This one works via the preferences. This is probably
+> the best solution in Dillo's philosophy to keep it small
+> and fast. Once the preferences can be changed from within Dillo,
+> changing its ID-string should be a breeze and possible on the fly.
+
+How hard would it be to have the preferences be reloadable at run-time, but
+still from the file? It would require the same kinds of changes that an
+inline preferences dialog would, but not the bloat of an actual dialog.
+You could even have a stand-alone preferences program, if you were so
+inclined:)=20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Fake ID patch - 2nd attempt
+
+From: Andreas Schweitzer <andy@ph...> - 2001-12-02 07:45
+
+Hi everybody,
+A few weeks back I submitted a dirty hack to make Dillo
+pretend to be IE.
+
+I just submitted a much cleaner patch to the patch-o-matic
+http://haru.wom.ru/pub/dillo/patches.html
+
+For simplicity, I also include it here.
+This patch is against the CVS snapshot I downloaded
+a few hours ago.
+
+This one works via the preferences. This is probably
+the best solution in Dillo's philosophy to keep it small
+and fast. Once the preferences can be changed from within Dillo,
+changing its ID-string should be a breeze and possible on the fly.
+
+If you find it useful enough to include into the main
+source, I'd be honored.
+
+Cheers
+Andreas
+
+
+
+diff -r -u dillo-orig/dillorc dillo/dillorc
+--- dillo-orig/dillorc Fri Nov 16 08:35:34 2001
++++ dillo/dillorc Sun Dec 2 02:13:23 2001
+@@ -99,5 +99,24 @@
+# for the ION window manager.
+transient_dialogs=NO
+
++#-----------------
++# Fake Dillo's ID
++#-----------------
++# Allowed abbreviations are
++# id_string=IE
++# for pretending to be Internet Explorer 6
++# id_string=NS
++# for pretending to be Netscape 4.78
++# id_string=default 
++# for Dillo's own string
++# any other string will be used directly as ID string,
++# e.g. :
++# id_string="Mozilla/4.78 (X11; Linux 2.4.16; Nav)"
++# if this option is not given, Dillo will default to "default" - obviously
++# quotes are only needed if you want to insert spaces in the ID string
++
++#id_string=NS
++
++
+# -----------------------------------------------------------------------
+# dillorc ends here.
+diff -r -u dillo-orig/src/IO/http.c dillo/src/IO/http.c
+--- dillo-orig/src/IO/http.c Tue Nov 20 09:47:02 2001
++++ dillo/src/IO/http.c Sun Dec 2 02:11:49 2001
+@@ -31,6 +31,7 @@
+#include "../cache.h"
+#include "../web.h"
+#include "../interface.h"
++#include "../prefs.h"
+
+
+/* Used to send a message to the bw's status bar */
+@@ -105,7 +106,8 @@
+gchar *str, *ptr;
+GString *s_port = g_string_new(""),
+*query = g_string_new(""),
+- *full_path = g_string_new("");
++ *full_path = g_string_new(""),
++ *id_string = g_string_new("");
+
+/* Sending the default port in the query may cause a 302-answer. --Jcid */
+if (URL_PORT(url) && URL_PORT(url) != DILLO_URL_HTTP_PORT)
+@@ -122,17 +124,45 @@
+URL_PATH(url) ? URL_PATH(url) : "/");
+}
+
++/*
++ *
++ * #define IE_STRING "Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.0)"
++ *
++ * There could be a function, that tests if
++ * - the URL is on a blacklist
++ * - the user invoked a command line switch
++ * - the user pressed a button on the browser window
++ * this function could even return the string
++ *
++ * if ( pretend_incognito(URL_STR(url)) ){
++ * 
++ * As example there is a check if *.msn.com is accessed.
++ *
++ * if ( strstr(URL_STR(url),".msn.com") !=NULL) {
++ * g_string_sprintfa(id_string,"%s", IE_STRING);
++ * } else {
++ * g_string_sprintfa(id_string, "Dillo/%s", VERSION);
++ * }
++ *
++ * In the simplest and leanest incarnation, it simply
++ * reads the preferences. That way, it can even change
++ * its identity on the fly. At least as soon as the preferences
++ * can be changed on the fly.
++ */
++
++ g_string_sprintfa(id_string, "%s", prefs.id_string.str);
++
+if ( URL_FLAGS(url) & URL_Post ){
+g_string_sprintfa(
+query,
+"POST %s HTTP/1.0\r\n"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: %s\r\n"
+"Content-type: application/x-www-form-urlencoded\r\n"
+"Content-length: %ld\r\n"
+"\r\n"
+"%s",
+- full_path->str, URL_HOST(url), s_port->str, VERSION,
++ full_path->str, URL_HOST(url), s_port->str, id_string->str,
+(glong)strlen(URL_DATA(url)), URL_DATA(url));
+
+} else {
+@@ -141,12 +171,12 @@
+"GET %s HTTP/1.0\r\n"
+"%s"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: %s\r\n"
+"\r\n",
+full_path->str,
+(URL_FLAGS(url) & URL_E2EReload) ?
+"Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+- URL_HOST(url), s_port->str, VERSION);
++ URL_HOST(url), s_port->str, id_string->str);
+}
+
+str = query->str;
+diff -r -u dillo-orig/src/prefs.c dillo/src/prefs.c
+--- dillo-orig/src/prefs.c Fri Nov 16 06:01:33 2001
++++ dillo/src/prefs.c Sun Dec 2 02:11:49 2001
+@@ -29,6 +29,9 @@
+#include "dillo.h"
+#include "misc.h"
+
++#define IE_STRING "Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.0)"
++#define NS_STRING "Mozilla/4.78 [en] (X11; U; Linux 2.4.16 i686; Nav)"
++
+/* symbol array */
+static const struct {
+gchar *name;
+@@ -61,7 +64,8 @@
+{ "show_clear_url", DRC_TOKEN_SHOW_CLEAR_URL },
+{ "show_url", DRC_TOKEN_SHOW_URL },
+{ "show_progress_box", DRC_TOKEN_SHOW_PROGRESS_BOX },
+- { "transient_dialogs", DRC_TOKEN_TRANSIENT_DIALOGS }
++ { "transient_dialogs", DRC_TOKEN_TRANSIENT_DIALOGS },
++ { "id_string", DRC_TOKEN_ID_STRING }
+};
+
+static const guint n_symbols = sizeof (symbols) / sizeof (symbols[0]);
+@@ -192,6 +196,17 @@
+case DRC_TOKEN_TRANSIENT_DIALOGS:
+prefs.transient_dialogs = (strcmp(scanner->value.v_string, "YES") == 0);
+break;
++ case DRC_TOKEN_ID_STRING:
++ prefs.id_string=*g_string_new("");
++ if (!strcmp(scanner->value.v_string, "IE")) 
++ g_string_sprintfa(&prefs.id_string,"%s", IE_STRING);
++ else if (!strcmp(scanner->value.v_string, "NS")) 
++ g_string_sprintfa(&prefs.id_string,"%s", NS_STRING);
++ else if (!strcmp(scanner->value.v_string, "default"))
++ g_string_sprintfa(&prefs.id_string,"%s", D_ID_STRING);
++ else
++ g_string_sprintfa(&prefs.id_string,"%s", scanner->value.v_string);
++ break; 
+default:
+break; /* Not reached */
+}
+@@ -309,6 +324,7 @@
+prefs.show_url=TRUE;
+prefs.show_progress_box=TRUE;
+prefs.transient_dialogs=FALSE;
++ prefs.id_string=*g_string_new(D_ID_STRING);
+
+Prefs_load();
+}
+diff -r -u dillo-orig/src/prefs.h dillo/src/prefs.h
+--- dillo-orig/src/prefs.h Fri Nov 16 06:01:33 2001
++++ dillo/src/prefs.h Sun Dec 2 02:11:49 2001
+@@ -2,6 +2,7 @@
+#define __DILLO_RC_H__
+
+#include "url.h"
++#include "../config.h"
+
+#ifdef __cplusplus
+extern "C" {
+@@ -16,6 +17,8 @@
+#define DW_COLOR_DEFAULT_PURPLE 0x800080
+#define DW_COLOR_DEFAULT_BGND 0xd6d6c0
+
++#define D_ID_STRING "Dillo/" ## VERSION ## ""
++
+/* define enumeration values to be returned */
+enum {
+PARSE_OK = 0,
+@@ -53,6 +56,7 @@
+DRC_TOKEN_SHOW_URL,
+DRC_TOKEN_SHOW_PROGRESS_BOX,
+DRC_TOKEN_TRANSIENT_DIALOGS,
++ DRC_TOKEN_ID_STRING,
+
+DRC_TOKEN_LAST
+} Dillo_Rc_TokenType;
+@@ -89,6 +93,7 @@
+gboolean show_url;
+gboolean show_progress_box;
+gboolean transient_dialogs;
++ GString id_string;
+};
+
+/* Global Data */ 
+
+
+
+[Dillo-dev]m17n
+
+From: ksr <ksr@po...> - 2001-12-01 01:41
+
+Hello.
+
+I created Japanese support and maybe also m17n patch based on Robert Thomson's.
+
+See http://todo.org/cgi-bin/en/tiki/tiki.cgi?p=Dillo
+
+But I released only package but patch, sorry. 
+file: dillo-0.6.2-uo-branch-1.tgz 
+

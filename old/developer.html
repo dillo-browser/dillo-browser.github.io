@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  New Developer Info
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<div lang=en>
+<h1>Developer Info</h1>
+
+<div class=section>
+    <a NAME="section-2.1"></a>
+    <h3>Brief Program Overview</h3>
+    <p>
+    Dillo is a browser written in C and C++. It uses
+    <a href="http://www.fltk.org">FLTK</a> as its base widget library and it has
+    its own widget system called Dw.
+    <p>
+    We have some documentation collected
+    <a href="documentation.html">here</a>.
+    <p>
+    There's also an internal library called dlib that provides a set of
+    useful ADTs to Dillo. It is used extensively in the C part of the code.
+    You may check
+    <a href="http://hg.dillo.org/dillo/file/tip/dlib/dlib.h">dlib/dlib.h</a>
+    to get familiar with it.
+    <p>
+    Dillo's SW-techniques include inheritance, templates, callbacks, signals,
+    and an engine that takes care of file descriptor activity (including
+    sockets).
+    <p>
+    Dillo internals are not of a simple nature. A Web browser is an
+    inherently complex application. Just think of every thing that needs to
+    be coordinated to get the job done. And at the very same time!
+    <p> Now you know what you'll face when digging inside the code!
+</div>
+
+<div class=section>
+    <a NAME="section-2.3"></a>
+    <h3>Patching</h3>
+    <p>
+    Patching is very welcome, especially if the patched bug comes from the
+    bug-track engine. But be aware that only high-quality patches will be
+    accepted. 
+    <p>
+    Dillo is following an evolving software model where every new
+    version of it, should be better than the former one; there's no place for
+    unstable releases!
+
+   <h4> So, if you want to submit a patch, please make sure: </h4>
+   <p>
+   <big><font color="#403090">
+   It passes a stress test
+   </font></big>
+   <blockquote>
+     A stress test is a testing situation where you put the newly
+     implemented routines under heavy workload (more than what's expected
+     under normal circumstances).
+   </blockquote>
+
+   <big><font color="#403090">
+   It passes your own custom testing functions
+   </font></big>
+   <blockquote>
+     An alternative to the previous point. If the stress test is hard to
+     implement, or if the new functionality is better covered with this
+     kind of test, choose this way!
+   </blockquote>
+
+   <big><font color="#403090">
+    It follows Dillo's Naming&amp;Coding design
+   </font></big>
+   <blockquote>
+     Every patch must strictly follow our
+     <a href="NC_design.html">coding standard</a>
+     in order to keep our code clean and simplify patch reviewing.
+   </blockquote>
+
+   <big><font color="#403090">
+    It fixes the problem and doesn't cover the symptoms.
+   </font></big>
+   <blockquote>
+     Sometimes the problem itself lies more deeply; take your time,
+     investigate and fix it the right way.
+   </blockquote>
+
+   <big><font color="#403090">
+    You submit your patches following a "one bug, one patch" scheme.
+   </font></big>
+   <blockquote>
+     Don't submit a huge monolithic patch that fixes several things. Split
+     it into smaller patches, one for each bug.
+   </blockquote>
+
+   <big><font color="#403090">
+    You strive for clean code, not for hacks.
+   </font></big>
+   <blockquote>
+     Although it's very cool to write fancy solutions, they are harder to
+     understand and to maintain; please avoid them.
+   </blockquote>
+
+   <big><font color="#403090">
+    You let others know what you're doing
+   </font></big>
+   <blockquote>
+     Don't do silent patching; use the bug-track engine, make a bug report
+     and update your progress regularly. Ask for help if you need it.
+   </blockquote>
+</div>
+
+<div class=section>
+   <h3>Where to send patches</h3>
+   <p>
+   If your patch is <em>small</em>,
+   send it to the mailing list. If it's <em>big</em>, let the mailing list know
+   and either email it to
+   <a HREF="authors/jcid-email.html">me</a>,
+   set an URL with it,
+   or email directly to interested people.<br>
+ 
+   Finally, please submit your patches with
+   '<kbd><a href="http://mercurial.selenic.com/wiki/Mercurial">hg</a> diff</kbd>'.
+</div>
+
+<div class=section>
+   <p><a NAME="section-2.4"></a>
+   <h3>Contributing</h3>
+   <p>
+   If you're planning to contribute and stay with the project as part of the
+   development staff, please subscribe to the
+   <a HREF="MList.html">
+   mailing list</a>, and
+   <a HREF="authors/jcid-email.html">email me</a>
+   your expertise areas and interests; keep reviewing the
+   bug-track engine and the Web site, participate, and have fun!
+</div>
+
+<div class=section>
+  <p><a NAME="section-2.5"></a>
+  <h3>The bug-track engine</h3>
+  <p>
+  Self-explanatory.
+  <a href="bugtrack/Dbugtrack.html">Take a look at it</A>.
+  <p><b>USE IT!</b>
+</div>
+
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

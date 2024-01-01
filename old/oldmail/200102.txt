@@ -1,0 +1,1380 @@
+Re: [Dillo-dev]Bug #1015
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-27 21:42
+
+Hi,
+
+Solving this bug "quick and dirty" (not suitable for arbitrary nested
+widgets, only for this special case) works. I'm now developing a
+common solution.
+
+On Tue, Feb 27, 2001 at 05:27:22PM -0300, Jorge Arellano Cid wrote:
+> 
+> Sebastian,
+> 
+> > I've found the reason and I'm thinking about how to solve it best.
+> >
+> > A few details: When a widget within the page changes its size, this
+> > will (in an idle function) result in a call of
+> > a_Dw_widget_size_request for the page widget, and then
+> > a_Dw_widget_size_allocate, with the requisition becoming a part of
+> > the allocation. The latter checks whether the allocation has changed,
+> > and this is not always the case in the test page, since a few images
+> > cause the page to have its final size.
+> >
+> > So, the condition, when a_Dw_widget_size_allocate can omit sending
+> > the "size_allocate" signal, can be wrong in some cases.
+
+I forgot: emitting the "size_allocate" signal will call
+Dw_page_size_allocate, which then allocates the children. Without
+this, they have zero sizes. This was exactly the case.
+
+> It looks like the problem we have, but why it works sometimes?
+> Because the idle function can be triggered either before or after
+> the page allocation gets its final size? If this is true, then
+> we're very close to 0.4.0 release!
+
+(Actually the idle function may be triggered several times, depending
+on whether data is available from the Cache module or not.) The bug
+does not occur, when all image sizes get known at quite the same
+time. In this case, the idle function is called the last time, after
+the page widget knows the correct sizes of the image widgets.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Bug #1015
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-27 20:47
+
+Sebastian,
+
+> I've found the reason and I'm thinking about how to solve it best.
+>
+> A few details: When a widget within the page changes its size, this
+> will (in an idle function) result in a call of
+> a_Dw_widget_size_request for the page widget, and then
+> a_Dw_widget_size_allocate, with the requisition becoming a part of
+> the allocation. The latter checks whether the allocation has changed,
+> and this is not always the case in the test page, since a few images
+> cause the page to have its final size.
+>
+> So, the condition, when a_Dw_widget_size_allocate can omit sending
+> the "size_allocate" signal, can be wrong in some cases.
+
+It looks like the problem we have, but why it works sometimes?
+Because the idle function can be triggered either before or after
+the page allocation gets its final size? If this is true, then
+we're very close to 0.4.0 release!
+
+> PS: Jorge, what is the matter with your ematic account? I got a
+> failure notice mail, saying: "550 Command RCPT User
+> <jcid@em...> not OK".
+
+Ematic isn't very stable, I have some problems from time to
+time; if this persists, let me know and I'll switch back to
+nettaxi.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #1015
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-27 16:32
+
+Hi!
+
+On Fri, Feb 23, 2001 at 06:00:28PM +0100, Sebastian Geerken wrote:
+> [...]
+> I'll continue to investigate it.
+
+I've found the reason and I'm thinking about how to solve it best.
+
+A few details: When a widget within the page changes its size, this
+will (in an idle function) result in a call of
+a_Dw_widget_size_request for the page widget, and then
+a_Dw_widget_size_allocate, with the requisition becoming a part of
+the allocation. The latter checks whether the allocation has changed,
+and this is not always the case in the test page, since a few images
+cause the page to have its final size.
+
+So, the condition, when a_Dw_widget_size_allocate can omit sending
+the "size_allocate" signal, can be wrong in some cases.
+
+Sebastian
+
+PS: Jorge, what is the matter with your ematic account? I got a
+failure notice mail, saying: "550 Command RCPT User
+<jcid@em...> not OK". 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-27 12:27
+
+On Tue, 27 Feb 2001, Sam Dennis wrote:
+
+> > + DILLO_HTML_PARSE_MODE_STYLE,
+>
+> Do we really need two functionally identical parsing modes? Why not just use
+> DILLO_HTML_PARSE_MODE_SCRIPT?
+
+I agree, and with a short comment that states what _SCRIPT
+parsing mode is being used to.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-27 11:06
+
+On Tue, Feb 27, 2001 at 12:24:21AM +0000, Sam Dennis wrote:
+> On Sun, Feb 25, 2001 at 08:55:50PM +0000, Mark McLoughlin wrote:
+> > diff -ur ./dillo-old/src/html.c ./dillo/src/html.c
+> > ...
+> > + /* spec suggests STYLE is only valid inside HEAD */
+> > + if (html->InTag != DILLO_HTML_IN_HEAD)
+> > + return;
+> 
+> The style tag may only be valid inside head, but that doesn't mean that we
+> shouldn't catch it elsewhere, especially as we're just ignoring the content
+> for now.
+> 
+> > + DILLO_HTML_PARSE_MODE_STYLE,
+> 
+> Do we really need two functionally identical parsing modes? Why not just use
+> DILLO_HTML_PARSE_MODE_SCRIPT?
+
+And call it DILLO_HTML_PARSE_MODE_IGNORE? The CSS parser will
+probably read the text from the stash, and in future, we will anyway
+need to ignore parts of the doc (e.g. <noscript>).
+
+Or divide between page writing modes (BODY and PRE) and stashing
+modes (STASH and VERBATIM), and let them be combinable:
+DILLO_HTML_PARSE_MODE_STASH | DILLO_HTML_PARSE_MODE_BODY instead of
+DILLO_HTML_PARSE_MODE_STASH_AND_BODY, and simple 0 for parts totally
+ignored.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-27 11:06
+
+On Tue, Feb 27, 2001 at 09:43:26AM +0000, Mark McLoughlin wrote:
+> [...]
+> Also, does anyone have any advice on how I might hunt down BUG #1017?
+
+I don't know the Cache module in detail, but I guess that this bug is
+related to various other bugs in the mail bug-track (69 and 74) Jorge
+is working on.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Mark McLoughlin <mark@cs...> - 2001-02-27 09:42
+
+On Tue, 27 Feb 2001, Sam Dennis wrote:
+
+> The style tag may only be valid inside head, but that doesn't mean that we
+> shouldn't catch it elsewhere, especially as we're just ignoring the content
+> for now.
+>
+> > + DILLO_HTML_PARSE_MODE_STYLE,
+>
+> Do we really need two functionally identical parsing modes? Why not just use
+> DILLO_HTML_PARSE_MODE_SCRIPT?
+
+true, very true. If it turns out that they become functionally different, that
+is the time to add in the new mode. Is the patch below better?
+
+Also, does anyone have any advice on how I might hunt down BUG #1017?
+
+Cheers,
+Mark
+
+=============================================================================
+diff -ur ./dillo-old/src/html.c ./dillo/src/html.c
+--- ./dillo-old/src/html.c Wed Feb 21 01:24:09 2001
++++ ./dillo/src/html.c Tue Feb 27 09:35:36 2001
+@@ -529,7 +529,8 @@
+g_free(Pword);
+}
+
+- if ( parse_mode == DILLO_HTML_PARSE_MODE_STASH ) return;
++ if ( parse_mode == DILLO_HTML_PARSE_MODE_STASH ||
++ parse_mode == DILLO_HTML_PARSE_MODE_SCRIPT ) return;
+
+if ( parse_mode == DILLO_HTML_PARSE_MODE_VERBATIM ){
+if (html->PrevWasCR)
+@@ -738,6 +739,27 @@
+}
+
+/*
++ * Handle open STYLE
++ * store the contents to the stash where (in the future) the style
++ * sheet interpreter can get it.
++ */
++static void Html_tag_open_style(DilloHtml *html, char *tag, gint tagsize)
++{
++ Html_push_tag(html, tag, tagsize);
++ Html_stash_init(html);
++ html->stack[html->stack_top].parse_mode = DILLO_HTML_PARSE_MODE_SCRIPT;
++}
++
++/*
++ * Handle close STYLE
++ */
++static void Html_tag_close_style(DilloHtml *html, char *tag, gint tagsize)
++{
++ /* eventually the stash will be sent to an interpreter for parsing */
++ Html_pop_tag(html, tag, tagsize);
++}
++
++/*
+* <BODY>
+*/
+static void Html_tag_open_body(DilloHtml *html, char *tag, gint tagsize)
+@@ -2503,7 +2525,7 @@
+TagFunct open, close;
+} TagInfo;
+
+-#define NTAGS 54
++#define NTAGS 55
+static TagInfo Tags[NTAGS] = {
+{"a", Html_tag_open_a, Html_tag_close_default}, /* 0 */
+/* abbr */
+@@ -2574,7 +2596,7 @@
+/* span */
+{"strike", Html_tag_open_strike, Html_tag_close_default},
+{"strong", Html_tag_open_strong, Html_tag_close_default},/* 42 */
+- /* style */
++ {"style", Html_tag_open_style, Html_tag_close_style},
+{"sub", Html_tag_open_sub, Html_tag_close_default},
+{"sup", Html_tag_open_sup, Html_tag_close_default},
+/* table */ 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Sam Dennis <sam@ma...> - 2001-02-27 00:19
+
+On Sun, Feb 25, 2001 at 08:55:50PM +0000, Mark McLoughlin wrote:
+> diff -ur ./dillo-old/src/html.c ./dillo/src/html.c
+> ...
+> + /* spec suggests STYLE is only valid inside HEAD */
+> + if (html->InTag != DILLO_HTML_IN_HEAD)
+> + return;
+
+The style tag may only be valid inside head, but that doesn't mean that we
+shouldn't catch it elsewhere, especially as we're just ignoring the content
+for now.
+
+> + DILLO_HTML_PARSE_MODE_STYLE,
+
+Do we really need two functionally identical parsing modes? Why not just use
+DILLO_HTML_PARSE_MODE_SCRIPT?
+
+-- 
+Sam Dennis <sam@ma...>
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+RE: [Dillo-dev]Handling of style and script elements
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-26 01:27
+
+Please make an entry in the bugtrack engine for this, with your email followed
+by '100%', and submit your patch to Jorge.
+This way we'll all keep in mind this has been fixed and avoid duplicate work.
+
+Eric
+
+-- En reponse de "[Dillo-dev]Handling of style and script elements" de Mark
+McLoughlin, le 25-Feb-2001 :
+> Hi all,
+> The html 4.01 spec says that style sheet info shouldn't
+> be displayed if the UA cannot handle it.. I think it can also
+> be assumed that the same is true for SCRIPT elements?
+> 
+> <quote>
+> The STYLE element allows authors to put style sheet rules in the head of
+> the document. HTML permits any number of STYLE elements in the HEAD section
+> of a document.
+> </quote>
+> 
+> Attached is a small patch to do this.
+> 
+> Cheers,
+> Mark
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Feb-2001 a 10:26:40
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Handling of style and script elements
+
+From: Mark McLoughlin <mark@cs...> - 2001-02-25 20:54
+
+Attachments: HandleStyleElementsAgainst_dillo-0.4.0.update      
+
+Apologies, forgot to take out my debugging info. Attached
+is the real patch ;)
+
+Cheers,
+Mark 
+
+
+
+[Dillo-dev]Handling of style and script elements
+
+From: Mark McLoughlin <mark@cs...> - 2001-02-25 20:33
+
+Attachments: HandleStyleElementsAgainst_dillo-0.4.0.patch      
+
+Hi all,
+The html 4.01 spec says that style sheet info shouldn't
+be displayed if the UA cannot handle it.. I think it can also
+be assumed that the same is true for SCRIPT elements?
+
+<quote>
+The STYLE element allows authors to put style sheet rules in the head of
+the document. HTML permits any number of STYLE elements in the HEAD section
+of a document.
+</quote>
+
+Attached is a small patch to do this.
+
+Cheers,
+Mark 
+
+
+
+RE: [Dillo-dev]Bug #1015
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-24 01:29
+
+Humm ... sometime the page (text only) aren't rendered at all. But it's quite
+rare and I can't reproduce it. Seems to occur at the first paint of a page, not
+when resizing or reloading from the cache. (not sure)
+'Can be the same bug then.
+
+-- En reponse de "[Dillo-dev]Bug #1015" de Sebastian Geerken, le 23-Feb-2001 :
+> Hi Jorge,
+> 
+> I don't know how much you traced down bug #1015, but I've looked a
+> bit at it:
+> 
+> 1. Anything in dw_image.c works fine, the images are created,
+> resized, and get a buffer with the image data.
+> 
+> 2. I've tested a modified version, where I added "width=10%" to
+> every <img>. In this case, the bug occurs, too, but after
+> resizing the window, all images are displayed.
+> 
+> Since in the latter case resizing works different, I guess that the
+> bug lies either in DwPage, or in the resize_queue code of DwWidget.
+> I'll continue to investigate it.
+> 
+> Sebastian
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Feb-2001 a 19:26:30
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Bug #1015
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-23 16:50
+
+Hi Jorge,
+
+I don't know how much you traced down bug #1015, but I've looked a
+bit at it:
+
+1. Anything in dw_image.c works fine, the images are created,
+resized, and get a buffer with the image data.
+
+2. I've tested a modified version, where I added "width=10%" to
+every <img>. In this case, the bug occurs, too, but after
+resizing the window, all images are displayed.
+
+Since in the latter case resizing works different, I guess that the
+bug lies either in DwPage, or in the resize_queue code of DwWidget.
+I'll continue to investigate it.
+
+Sebastian 
+
+
+
+[Dillo-dev]dillo-0.3.2 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-22 22:14
+
+Hi there!
+
+I just finished releasing the code that was in the 0.3.x
+branch. The new code is worth a download and it will probably be
+the last release before 0.4.0 comes out. So, go get it!
+
+Seriously, 0.4.0 is expected to be ready very soon, after
+BUG#1015 is nailed down, and a few more things get added.
+
+
+Cheers
+Jorge.-
+
+
+Ps: Bug#124 (problems compiling png code) was deleted because
+that's a matter of updating the png-library! 
+
+
+
+Re: [Dillo-dev]Menubar & Preferences
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-21 18:58
+
+On Mon, Feb 19, 2001 at 12:49:18PM +0100, Bruno Widmann wrote:
+> 
+> I would love to have a way to quickly change certain
+> preferences Items while dillo is running (eg. force_my_colors).
+> [...] 
+> I would like to add code in dillo for such a Settings menu if nobody
+> raises some serious objections..
+
+Currently, Dw provides no possibility to change change the look of a
+widget (colors, fonts etc.) dynamically. I plan this as a part of the
+common style mechanism (it will e.g. be *one* - probably the simplest
+- step towards an implementation of asynchronously read HTML and
+CSS), but the design and implementation will take a while. So you
+could
+
+1. reread the page from the cache (will be quite fast), or
+2. write a hack to change some values in the DwPage etc, and then
+request a redraw (this would, of course, be a subject of
+change), or
+3. you start the style mechanism ;-).
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Menubar & Preferences
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-20 02:40
+
+Instead of a menu, what do you think of checkboxes in the buttons bar, say
+beside the progress bars ?
+Please keep a room for "run animations".
+
+I like the load images thing, I only hope there will be a default widget in
+place of each unloaded images should be (with a "download image" in an image
+popup-menu ?)
+
+Eric
+
+-- En reponse de "[Dillo-dev]Menubar & Preferences" de Bruno Widmann, le
+19-Feb-2001 :
+> 
+> I would love to have a way to quickly change certain
+> preferences Items while dillo is running (eg. force_my_colors).
+> 
+> I think that the Galeon browser (and also konqueror) has a good way
+> to handle it. A "Settings" Menu in the main Menubar which looks
+> like:
+> 
+> __________________________
+> ... Settings ...
+> ---+--------------------+-
+> | Load images >|
+> | [ ] Use own fonts |
+> | [ ] Use own colors |
+> | [x] other items.. |
+> |--------------------|
+> | Preferences... |
+> `--------------------'
+> 
+> So if you can't read the text on some webpage because of a bad BG
+> color you just bring up the Settings Menu and have solved the
+> problem with two mouseclicks.
+> 
+> I would like to add code in dillo for such a Settings menu if nobody
+> raises some serious objections..
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 20-Feb-2001 a 11:32:01
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Menubar & Preferences
+
+From: Bruno Widmann <bwidmann@ut...> - 2001-02-19 11:48
+
+I would love to have a way to quickly change certain
+preferences Items while dillo is running (eg. force_my_colors).
+
+I think that the Galeon browser (and also konqueror) has a good way
+to handle it. A "Settings" Menu in the main Menubar which looks
+like:
+
+__________________________
+... Settings ...
+---+--------------------+-
+| Load images >|
+| [ ] Use own fonts |
+| [ ] Use own colors |
+| [x] other items.. |
+|--------------------|
+| Preferences... |
+`--------------------'
+
+So if you can't read the text on some webpage because of a bad BG
+color you just bring up the Settings Menu and have solved the
+problem with two mouseclicks.
+
+I would like to add code in dillo for such a Settings menu if nobody
+raises some serious objections.. 
+
+
+
+[Dillo-dev]Font factor
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-18 13:50
+
+Hi there!
+
+
+Sometime ago (not much) I included a patch from Bruno, in the
+040 branch, that allows a font-factor in dillorc to scale font
+sizes in dillo.
+
+I've been playing around with it for some time and frankly,
+I'm very happy. Just download the latest CVS (or the updated
+tarball), test it and enjoy!
+
+I know that FONT size is an issue, specially with high
+screen resolutions, and bad eyes :-).
+
+Ah, some of you may notice that it would be nice to have a
+chance to change font-size on the fly, but let's wait until the
+preferences plugin can handle that...
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Getting 040 branch by CVS
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-18 11:59
+
+EG wrote:
+> [...]
+> Dillo is actually rendering the page correctly if the window is large enough,
+> which is not the case with the default size.
+
+This is a bug ;-)
+
+> It seems that dillo's having problems computing a _new_ page width when <pre>
+> text is larger than the window. Once the longest line have been fully rendered
+> by enlarging the window, shrinking it will make hsliders show when necessary.
+
+This bug occurs in indented lines, the real_width is not calculated
+correctly. Following seems to work (in Dw_page_new_word):
+
+if (new_line)
+page->real_width = MAX(page->real_width,
+line->x_size + Attr->left_indent_first);
+
+instead of
+
+if (new_line)
+page->real_width = MAX(page->real_width, line->x_size);
+
+Expect an upload soon.
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Getting 040 branch by CVS
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-18 02:06
+
+-- En reponse de "[Dillo-dev]Getting 040 branch by CVS" de Jorge Arellano Cid,
+le 18-Feb-2001 :
+> 
+> Hi there!
+> 
+> 
+> The new branch is showing excelent progress and is very close
+> to a new release.
+> 
+> Well, I just fixed a mistake on the directions for anonymous
+> downloading using CVS. I checked it also, but note that dillo
+> doesn't render the page right; you have been warned.
+> 
+
+Dillo is actually rendering the page correctly if the window is large enough,
+which is not the case with the default size.
+It seems that dillo's having problems computing a _new_ page width when <pre>
+text is larger than the window. Once the longest line have been fully rendered
+by enlarging the window, shrinking it will make hsliders show when necessary.
+
+> 
+> Cheers
+> Jorge.-
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 18-Feb-2001 a 11:01:57
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Getting 040 branch by CVS
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-18 00:32
+
+Hi there!
+
+
+The new branch is showing excelent progress and is very close
+to a new release.
+
+Well, I just fixed a mistake on the directions for anonymous
+downloading using CVS. I checked it also, but note that dillo
+doesn't render the page right; you have been warned.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]misc on Dw
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-16 11:19
+
+Jörgen Viksell wrote:
+> BTW, I have some code that moves DwPageWord down to DwPage and just defines 
+> the position in DwPageLine. It makes rewraps a bit faster. Is it something 
+> to continue to work on?
+
+Yes, definitely! I also planned this, and Allan wrote me once about
+this, too. This will not only speed up rewrapping, but also make it
+simpler in future to refer to single words. Send me your patch when
+it is usable.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]misc on Dw
+
+From: Jörgen Viksell <vsksga@ho...> - 2001-02-16 00:44
+
+>Just a few thoughts which I think are worth to share:
+>
+>- While working on bugs #1011 and #1012 (these are identical),
+
+I must have submitted #1012 a couple of seconds after You. Sorry about that! 
+;-)
+
+>- To make all the stuff with attributes and GC's simpler, I thought
+> of a common style scheme, similar to GtkStyle, or CSS styles. There
+> should be a structure DwStyle, which contains attributes and X
+> resources (fonts, colors, GC's) for drawing in a specific way. The
+> creation of such structures should be optimized in that way, that
+> several widgets, words etc. may share the same DwStyle. Memory
+> management could be done simply by reference counters.
+
+A while ago I made an experiment with adding a GC to each DwPageWord. That 
+made my poor computer reboot. So I definitly agree on the sharing! :-)
+
+BTW, I have some code that moves DwPageWord down to DwPage and just defines 
+the position in DwPageLine. It makes rewraps a bit faster. Is it something 
+to continue to work on?
+
+// Jörgen
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+[Dillo-dev]misc on Dw
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-15 13:00
+
+Hi!
+
+Just a few thoughts which I think are worth to share:
+
+- While working on bugs #1011 and #1012 (these are identical), I'm
+also trying to untie Dw from the rest of the code. The code for
+context menus etc. is not anymore inside dw_page.c, but in html.c,
+and they are connected via Gtk+ signals. This will e.g. make unit
+tests easier.
+
+- I'll probably also put the code for image maps into the image
+widget, and the <map>'s will move into the html linkblock.
+
+And two ideas for the future (after the 0.4.0 release):
+
+- Like the old Dw, the page flickers quite much while being loaded. A
+possible solution could be the use of pixmap buffers, so the
+viewport hasn't to be cleared before the redraw.
+
+- To make all the stuff with attributes and GC's simpler, I thought
+of a common style scheme, similar to GtkStyle, or CSS styles. There
+should be a structure DwStyle, which contains attributes and X
+resources (fonts, colors, GC's) for drawing in a specific way. The
+creation of such structures should be optimized in that way, that
+several widgets, words etc. may share the same DwStyle. Memory
+management could be done simply by reference counters.
+
+Furthermore, I think it is useful to distinguish between (i) look
+and (ii) behavior, e.g. a link is something which is (i) blue and
+underlined, and (ii) causes something to happen when you click on
+it. According to (ii), a link could also be used for a possible
+implementation of the <label> tag: if you click on the <label>,
+this event is delivered to the form element specified by the "for"
+attribute. (This is only a silly example, I admit that would huge
+changes in the code were necessary for this. And I don't plan a
+common "behavior scheme" in the near future.)
+
+Any comments? Further ideas? Disagreements?
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-02-14 17:36
+
+Hi,
+
+I hope this mail will arrive the list :-/
+
+Jörgen Viksell writes:
+>I am wondering about a related issue.
+>If You imagine a rectangle around all rendered text. You can't click outside 
+>of that area.
+>In the case of bug #1009 or a page that Dillo can't render, it's impossible 
+>to right click and view the source to determine the problem.
+
+This is the correct behavior of the DwWidget (will e.g. be needed for
+tables). Instead, the button press event should be connected to the
+viewport. I'm working on it.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-13 01:44
+
+-- En reponse de "Re: [Dillo-dev]Just a word about bug #1009" de Livio Baldini
+Soares, le 12-Feb-2001 :
+> Hi Eric!
+> 
+> Eric GAUDET writes:
+>> Ok, my previous patch for bug#1009 and so has problems sometimes. I think
+>> this
+>> one is better:
+> 
+> 
+> This is why I love open-source! You come up with a minimal trace of
+> the problem, and in the next day, someone already has a working patch
+> to fix it!
+> 
+> Nice work!
+> 
+
+That's what you call working around the clock ! ;-)
+
+> By the way the page in
+> http://www.rti-zone.org/dillo/Html.testsuite/jorge/A_tag.html has a
+> missing <BODY> tag after </HEAD>, but I don't know if that's not there
+> on purpose...
+> 
+
+That's because Jorge's pages are mostly live pages (pages he found on the net
+"as-is", not corrected), wether mine are built page where every mistake is made
+on purpose ;-) (there's faulty pages in the testsuite to test missing tags such
+as <body>)
+Anyway, Dillo's great at ignoring such problems.
+
+> best regards,
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 13-Feb-2001 a 10:41:38
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Just a word about bug #1009
+
+From: Livio Baldini Soares <livio@li...> - 2001-02-12 17:11
+
+Hi Eric!
+
+Eric GAUDET writes:
+> Ok, my previous patch for bug#1009 and so has problems sometimes. I think this
+> one is better:
+
+
+This is why I love open-source! You come up with a minimal trace of
+the problem, and in the next day, someone already has a working patch
+to fix it!
+
+Nice work!
+
+By the way the page in
+http://www.rti-zone.org/dillo/Html.testsuite/jorge/A_tag.html has a
+missing <BODY> tag after </HEAD>, but I don't know if that's not there
+on purpose...
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-12 15:39
+
+-- En reponse de "RE: [Dillo-dev]Just a word about bug #1009" de Jvrgen
+Viksell, le 12-Feb-2001 :
+>>Ok, my previous patch for bug#1009 and so has problems sometimes. I think 
+>>this
+>>one is better:
+> <snip>
+> 
+> Works great here!
+> 
+> I am wondering about a related issue.
+> If You imagine a rectangle around all rendered text. You can't click outside 
+> of that area.
+> In the case of bug #1009 or a page that Dillo can't render, it's impossible 
+> to right click and view the source to determine the problem.
+> 
+
+You're right: there's definitely a problem here. please make a bug entry for
+this.
+
+> Cheers,
+> Jvrgen
+> _________________________________________________________________________
+> Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com.
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 13-Feb-2001 a 00:39:15
+"In theory, there's no difference between 
+theory and practice; in practice, there is.
+------------------------------------ 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Jörgen Viksell <vsksga@ho...> - 2001-02-12 15:04
+
+>Ok, my previous patch for bug#1009 and so has problems sometimes. I think 
+>this
+>one is better:
+<snip>
+
+Works great here!
+
+I am wondering about a related issue.
+If You imagine a rectangle around all rendered text. You can't click outside 
+of that area.
+In the case of bug #1009 or a page that Dillo can't render, it's impossible 
+to right click and view the source to determine the problem.
+
+Cheers,
+Jörgen
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-12 14:01
+
+Attachments: patch.dillo-0.4.0pl2.bug#1009.2      
+
+Ok, my previous patch for bug#1009 and so has problems sometimes. I think this
+one is better:
+
+--- dillo-0.4.0pl2/src/dw_page.c Tue Feb 6 23:44:05 2001
++++ dillo-0.4.0pl2.bug#1009/src/dw_page.c Mon Feb 12 22:58:09 2001
+@@ -782,6 +783,9 @@ static void Dw_page_rewrap(DwPage *page)
+g_free(old_line->words);
+}
+g_free(old_lines);
++
++ if(page->num_lines == 1)
++ page->real_width = page->lines[0].x_size;
+}
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Feb-2001 a 23:00:06
+"In theory, there's no difference between theory and
+practice; in practice, there is.
+------------------------------------ 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-12 09:11
+
+Attachments: patch.dillo-0.4.0pl2.bug#1009      
+
+Ok, here's a patch for fixing bug#1009 and bug#1010 and bugs related to 1-line
+painting.
+I'm not sure it's the right way to do this, because I didn't look very closely
+to new_line and new_word pages, and it's quite possible I don't understand
+everything in this code.
+Anyway it seems better to compute real_witdh in new_line, after each line, than
+in new_word, after some strange tests of new_line being either hard or soft.
+
+cheers,
+Eric
+
+--- dillo-0.4.0pl2/src/dw_page.c Tue Feb 6 23:44:05 2001
++++ dillo-0.4.0pl2.bug#1009/src/dw_page.c Mon Feb 12 17:57:29 2001
+@@ -628,9 +628,6 @@ static DwPageWord *Dw_page_new_word(DwPa
+new_line = TRUE;
+}
+}
+- 
+- if (new_line)
+- page->real_width = MAX(page->real_width, line->x_size);
+}
+
+if (new_line) {
+@@ -775,6 +772,8 @@ static void Dw_page_rewrap(DwPage *page)
+} 
+}
+
++ page->real_width = MAX(page->real_width,
+page->lines[page->num_lines-1].x_size);
++
+if (old_line->hard) {
+a_Dw_page_linebreak(page);
+page->lines[page->num_lines - 1].y_space = old_line->y_space;
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Feb-2001 a 17:59:23
+"In theory, there's no difference between theory and
+practice; in practice, there is.
+------------------------------------ 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-12 08:23
+
+Ok, I've been testing a lot, and it appears that two bugs #1009 and #1010
+didn't exist in the first release of dillo 'Dw-040' tarball (d040b.tgz). 
+There was almost no change in html.c between d040b and d040d2.
+The only major difference I see is the change in the scrollers code, which is
+closely related to the pagemarks Livio was talking about: I think the page is
+parsed correctly, but for whatever reason it never paints. Or it paints but the
+scrollers are not initialized correctly and the page is painted outside the
+visible area of the viewport (but then we should be able to have a popup menu
+to see the source, and we don't, so it's probably not that).
+Anyway, I think the changes in the scroller code removed some important init
+(or miss some that weren't needed before). And it seems that a single pagemark
+(called by a H tag) or anchor does what's needed so the init is done.
+Sebastian, do you have a clue ?
+
+... hum ... maybe it's not that after all. Let's try this:
+<html>
+Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla
+</html>
+
+The page isn't drawn ... because the text fits on only one line ! Just resize
+the browser so the text is rewrapped in a second line, and the text is painted
+!!
+
+... more on this in a couple of hours ;-)
+
+
+-- En reponse de "RE: [Dillo-dev]Just a word about bug #1009" de Eric GAUDET,
+le 12-Feb-2001 :
+> 
+> All these pages are very look-alike. It seems that not all html tags do
+> what's
+> needed for the page to render. As you noticed, H1 seems to do the job! I'm
+> investigating this right now.
+> ... more on this in a couple of hours ;-)
+> 
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Feb-2001 a 16:50:24
+"In theory, there's no difference between theory and
+practice; in practice, there is.
+------------------------------------ 
+
+
+
+RE: [Dillo-dev]Just a word about bug #1009
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-12 07:26
+
+-- En reponse de "[Dillo-dev]Just a word about bug #1009" de Livio Baldini
+Soares, le 12-Feb-2001 :
+> Hi guys!
+> 
+Hi Livio, good to see you again.
+
+...
+> 
+> Just a thought about bug #1009; the bug doesn't seem to be related
+> to A-tag splitting, but worst. CVS Dw-040 doesn't even render this
+> page:
+> 
+> ----------------
+> <html>
+> <body>
+> Hello!
+> </body>
+> </html>
+> -----------------
+> 
+...
+> 
+> I can't yet tell what this means, but by the looks of things,
+> something's not being initialized correctly and that's why a "simple"
+> HTML (without <h1>, etc) doesn't render correctly. I'm pretty sure
+> that's what's causing bug #1009, and not the A-tag splitting suggested
+> in that bug report.
+> 
+
+Since you found that, I think this is _exactly_ the same with bug#1010 ! (I did
+the two entries for these bugs, only by looking at each page of the testsuite,
+no investigation in the sources)
+I did a corrected version of A_tag.html, the page that gives errors for
+bug#1009, and the bug remains.
+(see all sources of this pages at the end of this mail)
+
+All these pages are very look-alike. It seems that not all html tags do what's
+needed for the page to render. As you noticed, H1 seems to do the job! I'm
+investigating this right now.
+... more on this in a couple of hours ;-)
+
+
+
+PS: Here are the involved pages source:
+BUG#1009:(jorge/A_tag.html)
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>Test Page for Apache Installation on Web Site</TITLE>
+</HEAD>
+<P>
+The Apache
+<A
+HREF="manual/index.html"
+>documentation</A>
+has been included with this distribution.
+</P>
+</BODY>
+</HTML>
+
+BUG#1010:(jorge/fool_raw.html)
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<BODY>
+<IMG SRC="maj00s.gif">
+</BODY>
+
+Corrected page:(jorge/A_tag2.html)
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>Test Page for Apache Installation on Web Site</TITLE>
+</HEAD>
+<P>
+The Apache
+<A HREF="manual/index.html">documentation</A>
+has been included with this distribution.
+</P>
+</BODY>
+</HTML>
+
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Feb-2001 a 16:10:37
+"In theory, there's no difference between theory and
+practice; in practice, there is.
+------------------------------------ 
+
+
+
+[Dillo-dev]Just a word about bug #1009
+
+From: Livio Baldini Soares <livio@li...> - 2001-02-12 05:07
+
+Hi guys!
+
+I'm sorry about the long time absent, but I ran into some time
+consuming problems, and I think I'm finally getting rid of them. In a
+while (less then a month), I'll have some time to put into Dillo.
+
+Just a thought about bug #1009; the bug doesn't seem to be related
+to A-tag splitting, but worst. CVS Dw-040 doesn't even render this
+page:
+
+----------------
+<html>
+<body>
+Hello!
+</body>
+</html>
+-----------------
+
+But strangely adding a loose <h1> will fix things up. So this page
+Dillo will render ok:
+
+-----------
+<html>
+<body>
+Hello!
+<h1>
+</body>
+</html>
+-----------
+
+Strange, eh? I've tracked down to a call in H1 which makes the
+`Hello!' show.
+
+It seems to be the a_Menu_pagemarks_add() in
+html.c:Html_tag_open_h:(around line 766).
+
+Which calls a_Dw_page_add_anchor() in
+menu.c:a_Menu_pagemarks_add:(around line 261).
+
+And then inside in a_Dw_page_add_anchor, the "important" call seems to
+be Dw_page_new_word() (which is too long for me to trace tonight...)
+
+I can't yet tell what this means, but by the looks of things,
+something's not being initialized correctly and that's why a "simple"
+HTML (without <h1>, etc) doesn't render correctly. I'm pretty sure
+that's what's causing bug #1009, and not the A-tag splitting suggested
+in that bug report.
+
+Any one got any ideas? I'm too tired and sleepy to think
+anymore... when I have time I'll take a better look.
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Readings
+
+From: Eric GAUDET <egaudet@in...> - 2001-02-09 03:57
+
+This was on slashdot, but I think everyone of us wants to read what a good
+browser should do:
+
+http://www.w3.org/TR/2001/NOTE-cuap-20010206
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 09-Feb-2001 a 12:55:22
+"I remember Y1K, every abacus had to get another bead"
+------------------------------------ 
+
+
+
+[Dillo-dev]Dw [Message from Sebastian]
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-07 01:39
+
+Hi!
+
+A few words about two bugs:
+
+- Bug #1007 seems to be a bug of Gtk+ (tested with version 1.2.8),
+not of Dw. I've attached an example which demonstrates it. Button
+"baz" has a position > 2**31, and isn't focusable correctly.
+
+I'll submit this bug to the the Gtk+ developers, and perhaps think
+about a workaround or so.
+
+- Bug #1006 is somehow caused by the decrease of the width when the
+right scrollbar appears (this will change the allocation of the
+viewport). I've committed a workaround which sets the right
+scrollbar always visible, so this problem does not occur, but I
+think, there should be a better solution. A starting point for
+someone who wants to examine this bug, is to add some debug
+messages into Dw_gtk_size_allocate.
+
+And I've commented the line to connect the "key_press_event" signal
+of the URI location entry, so you can only scroll the viewport by
+keys by focusing it. It is simple to deactivate the old
+functionality, and, unlike in 0.3.1, focusing the viewport by keys
+works. This breaks a bit the "standard behavior" of Gtk+ GUIs, so
+what is your opinion about it?
+
+Sebastian 
+
+
+
+[Dillo-dev]Re: about dillo + libc5 (fwd)
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-02-05 13:28
+
+Hi,
+
+I'm answering this email to the list because I received it twice...
+
+Jorge.-
+
+---------- Forwarded message ----------
+Date: Thu, 1 Feb 2001 18:59:34 -0300 (CLST)
+From: Jorge Arellano Cid <jcid@in...>
+To: nikolaos roumbos <nikroub@ho...>
+Subject: Re: about dillo + libc5
+
+
+Nikolaos,
+
+Hi, I noticed you in the mailing list a long time ago, and now
+you show!
+
+> Hi my name is nikos
+> and i'm writting you from athens, greece.I'm following dillo since last
+> summer, in fact i subscribed to the list in the middle of july
+> and as this is the first time that i'm contacting with someone from this
+> project i would like to say a grate bravo to all of you for this application
+> and espacially to you the hard maintainer.
+
+Thanks indeed.
+
+> I count myself quite familiar with dillo but in general i'm supposed to be a
+> newby in the Linux world.
+> Recently i managed to compile dillo-0.3.0 statically under Red Hat 6.0 which
+> is a libc6 distribution, and afterwards i've ported it in a custom tiny
+> distribution supported with libc5 libraries.
+> Everything works fine except that dillo can't resolve domain names, it works
+> only if i give in the url entry IP adresses.
+> For example it can't resolve http://localhost but works fine
+> with http://127.0.0.1.
+> Today i found out that the problem is in the source file
+> dns.c. I commented out line 47 (as you mention in the readme file)
+> and compiled dillo but a get an error in dns.c in fuction "Dns_server".
+> My question is if it's possible to compile dillo with libc6
+> now that i've edited dns.c and then port it to a libc5 distribution,
+> or should i to compile it in libc5 distribution so as to work
+> with a libc5 distribution.
+
+OK, several things:
+
+- Use 0.3.1 or even better, the 0.3.2-pre from CVS. This will
+not solve your problem, but you'll get a better dillo ;-)
+
+- You have problems because libc5 and libc6 differ in the
+domain resolving function (reentrancy) concerns.
+
+There're two ways around it:
+
+I) Statically compile your version in a libc5 system
+(Define: G_DNS_THREADED and LIBC5; lines 46 and 51)
+or
+
+II) Leave line 46 uncommented and set 1 server on line 56.
+(and compile as you explained)
+
+Of both I) is better cause you'll have a multiple channel
+(faster) dns solver. With II) it will work but somewhat slower.
+
+
+
+> Your help will be valuable.
+> Thanks in advance, and keep up this grate work.
+
+Hope this helps
+Jorge.- 
+
+

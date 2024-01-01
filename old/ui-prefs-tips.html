@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+<title>Free software UI</title>
+</head>
+<body bgcolor="#ffffff" lang=en>
+
+<table bgcolor='#CCCCCC' border='1' cellpadding='5'>
+<tr><td>
+This is an abridgment I made of the superb article
+<a href="http://ometer.com/free-software-ui.html">Free
+software and good user interfaces</a> by
+Havoc Pennington. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small> --Jcid</small>
+</td></tr>
+</table>
+
+<br>
+<center><h1>Free software and good user interfaces</h1></center>
+
+<br>
+<h2>What is "Good UI"?</h2>
+
+<p>As far as I can tell from user posts on mailing lists and
+magazine/webzine reviews, to your average technically-inclined
+Internet resident a good UI means you have a lot of features, or
+alternatively that you have a lot of snazzy graphics, or alternatively
+that your UI is just like one that the commentator has used in the
+past.
+
+<p>I don't have any genius definition of "good UI"; I'm not a UI
+expert. But it clearly doesn't mean snazzy graphics or featuritis.  In
+the end when I think good UI I think of MacOS classic: clean, simple,
+consistent, productive. You focus on your work or play and the GUI
+isn't in the way. OS X adds the cool graphics too, but those aren't
+the part that makes it a good UI, just the part that makes it fun.
+
+<p>Another element of good UI is attention to all the little details:
+good error dialogs, setting up keyboard navigation, dealing with
+relayout when a window gets resized, accessibility,
+internationalization. People don't usually know how to evaluate these
+aspects of a UI, unless they're experienced UI designers or GUI
+programmers.
+
+<p>I suppose I have a <a
+href="http://www.joelonsoftware.com/uibook/chapters/fog0000000057.html">Cliff's
+notes</a> approach to good UI and the real UI designers will laugh,
+but ah well. It's a decent heuristic. ;-)
+
+<p>So anyhow, when I talk about a good UI that's a vague definition of
+what I mean.
+
+<br><br>
+<h2>The Question of Preferences</h2>
+
+<p>The most-often-mentioned example of bad free software UI is "too
+many preferences." This is pretty much my pet peeve; I was inspired to
+write a whole window manager on the premise that current window
+managers suffer from preferences overload.
+
+<p>A traditional free software application is configurable so that it
+has the union of all features anyone's ever seen in any equivalent
+application on any other historical platform. Or even configurable to
+be the union of all <i>applications</i> that anyone's ever seen on any
+historical platform (Emacs *cough*).
+
+<p>Does this hurt anything? Yes it does. It turns out that preferences
+have a cost. Of course, <i>some</i> preferences also have important
+benefits - and can be crucial interface features. But each one has a
+price, and you have to carefully consider its value. Many users and
+developers don't understand this, and end up with a lot of cost and
+little value for their preferences dollar.
+
+<p> [...]
+
+
+<br><br>
+<h2>So how do you decide which preferences to have?</h2>
+
+<p>On hearing that preferences have a cost, some people get upset that
+we're going to remove every preference, or that their favorite one is
+gone, or whatever.
+
+<p>Step back for a minute and think about the preferences problem.
+
+<p>For any program, there are literally an infinite number of possible
+preferences. Each one has a cost. A program with infinite preferences
+is therefore infinitely bad. But clearly some preferences are
+genuinely useful and important. So the UI developer's job is to choose
+the useful subset of possible preferences.
+
+<p>An argument that "preferences are good" or "preferences are bad" is
+clearly unproductive. Only an argument that draws a line between when
+a preference should exist, and when it should not, is a meaningful
+argument that impacts real-world developer decisions.
+
+<p>The traditional, de facto free software line between when a
+preference should exist and when it shouldn't is "a preference should
+exist if someone implements it or asks for it." No one is going to
+seriously defend this one though. At least, no one who's maintained an
+application and seen the sheer number of non-overlapping
+feature/preference requests you typically receive can take this one
+seriously.
+
+<p>Just as Linus rejects most kernel patches these days - but probably
+took more of them back in the Linux 0.1 era - as free software
+matures, more preferences will be rejected.
+
+<p>So how is the decision made? It's a judgment call. I try to go
+through some questions like these:
+
+<ul> 
+
+<li>Ask questions to find out what's really bugging someone who
+requests a preference.  What is the annoyance or inefficiency that
+prompted them to ask?
+
+<li>Can said annoyance be made to go away for all users without
+requiring a preference?  If so, just do that. You may have to think
+about the big picture of the UI to figure out how to make it Just
+Work.
+
+<li>Is the annoyance or inefficiency really significant, or did it
+cost them 1 second doing something that users do once per week on
+average? If it's just some trivial thing, then the extra feature or
+preference probably costs more than it's worth, even if you can't 
+make things Just Work.
+
+<li>Does any other OS have this feature or preference? I'm all for
+innovation, but if no one else is doing something, you should think it
+through twice to be sure there isn't a <i>reason</i> they aren't doing
+it. If you're appropriately humble you'll probably find that a lot of
+thought and user testing has gone into the currently popular
+platforms.
+
+</ul>
+
+<p>The main point is to set limits. Figure you have some fixed number
+of slots for preferences; is the preference in question worth
+"spending" one of those slots? Once spent it's hard to free a slot up
+again. Keep in mind that preferences have a cost, and demand that each
+preference have some real value.
+
+
+<br><br>
+<h2>Why all this obsession with preferences anyway?</h2>
+
+<p>I find that if you're hard-core disciplined about having good
+defaults that Just Work instead of lazily adding preferences, that
+naturally leads the overall UI in the right direction. Issues come up
+via bugzilla or mailing lists or user testing, and you fix them in
+some way other than adding a preference, and this means you have to
+think about the right UI and the right way to fix problems.
+
+<p> [...]
+
+
+<p>
+<address><small><a href="http://ometer.com">Havoc Pennington</a></small></address>
+</body>
+</html>

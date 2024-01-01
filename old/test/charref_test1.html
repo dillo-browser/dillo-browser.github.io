@@ -1,0 +1,26 @@
+<!doctype html> this is html5<br>
+&#x3f;   expect ?<br>
+&#x0x3f; should fail<br>
+&#};  should fail<br>
+&#63; expect ?<br>
+&#x3f  should fail<br>
+&#-10; should fail<br>
+&#0;  should fail<br>
+&#4;  should fail<br>
+&#x7f; should fail<br>
+&#148; error but workaround to "<br>
+&#x3fffe; should fail<br>
+&#x103000;  should be something<br>
+&#x133000; should fail<br>
+&#x1333333333333333333333333333333000; should fail<br>
+&#x416; cyrillic Zh<br>
+<br>
+&amp;  ampersand<br>
+<a href="../index.html%3Fq&amp;copy=3&amp;.html">link</a> check attrs<br>
+(w)&nGt;(w) expands to 6 bytes; would've broken under the old in-place substitution<br>
+&lang; &rang; are different in html4 and html5 (look the same)<br>
+&amp  should fail<br>
+&amp---; I left the strchr(":_.-", *s) alone. It's probably not exactly correct for html5.<br>
+& & &   bare ampersands<br>
+&apos;  expect '<br>
+&asdfghjkl;  unrecognized<br>

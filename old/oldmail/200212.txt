@@ -1,0 +1,769 @@
+Re: [Dillo-dev]BR taking extra space and problem with spaces in table
+
+From: Sebastian Geerken <s.geerken@pi...> - 2002-12-30 10:25
+
+A happy outcome is worth waiting for :-)
+
+On Fri, Jun 28, Pekka Lampila wrote:
+> On Tue, 25 Jun 2002 14:13:23 +0200
+> Sebastian Geerken <sgeerken@st...> wrote:
+> > In this case, multiple <br>'s would not be rendered properly. A
+> > solution may be to examine if this is the first <br> in series (by
+> > looking if there are DW_CONTENT_BREAK's before), but for my taste,
+> > this is somehow too hackish. (Other opinions?)
+> 
+> It's should work and is certainly better than the current situation.
+> So in my opinion, that kind of fix should be committed.
+
+Since most browsers do so, and it is rather simple, and does not break
+anything (AFAIK), I've comitted it.
+
+Sebastian 
+
+
+
+[Dillo-dev]*** IMPORTANT ***
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-19 22:35
+
+***************************
+* *
+* I M P O R T A N T ! *
+* *
+***************************
+
+
+Hi there,
+
+Don't let this pass or you'll miss the boat!
+
+After thoughtful considerations about our site's facilities,
+I've decided to move dillo project to the wearlab in Germany.
+
+That is:
+- web site
+- bug track
+- downloads
+- CVS
+- mailing lists
+
+i.e. everything.
+
+The good news is that everything is already set and working!
+
+Well, except for the mailing lists. I lost control of the
+current one a long long time ago when James administered it. So,
+please go to the new site and SUBSCRIBE YOURSELVES into the new
+mailing list (follow the links).
+
+(You may also want to unsubscribe from the current one.)
+
+We'll be running from there tomorrow, so please do it now and
+report any troubles you may find.
+
+I've updated several things. Most notably, the project Notes
+and the HTML versions for CSS and Dpi.
+
+The site is:
+
+http://dillo.auriga.wearlab.de
+
+
+Good luck!
+Jorge.-
+
+PS: Update your bookmarks. 
+
+
+
+[Dillo-dev]Dillo website statistics
+
+From: Eduardo Marcel Macan <macan@co...> - 2002-12-19 11:53
+
+Hello! The folks that take care of the particular machine where dillo
+was hosted just told me that the website stats are up again.
+
+Cipsga hosts many free software sites and projects, a lot of them
+projects from the CIPSGA group themselves. Many of these services=20
+and sites were changing servers due to administrative issues,=20
+that included the dillo website, although they tried to make this=20
+change transparent it seems that some little corners were yet to=20
+be rounded :D
+
+It is (i think) completely operational now.
+
+Regards :)
+
+--=20
+Eduardo Marcel Ma=E7an Gerente de Redes / Network Manager
+macan@co... Col=E9gio Bandeirantes 
+
+
+
+Re: [Dillo-dev]CIPSGA CVS
+
+From: Eduardo Marcel Macan <macan@co...> - 2002-12-17 19:10
+
+Well, it is not *that* difficult, now that my personal life is
+kind of stable again, I have root access in some CIPSGA
+machines and know who to poke when I don't :) Feel free to mail me
+personally, since I do not follow this list daily.
+
+I'll take a look at it.
+
+Em Ter, 2002-11-26 =E0s 12:16, Jorge Arellano Cid escreveu:
+>=20
+> Hi guys!
+>=20
+> The CIPSGA CVS server is running. Just follow the [CVS] link!
+>=20
+> I'm also considering to move our mailing list to CIPSGA. BTW
+> there're two lists for us already set. The only fact that makes
+> me hesitate is that contacting a sysadmin there is hard as hell.
+> For instance, our site statistics are down for more than a month,
+> and ASFAIK it's a matter of restarting the http server, but
+> that requires a sysadmin...
+>=20
+> The main gain in moving the mailing list is to get another
+> web interface for it (more easily searchable/browseable), and we
+> need it.
+>=20
+> The other alternative is to wait some meetings I'm having with
+> the "Universidad de Chile" to prosper, and set the lists from
+> there in a server I can see&touch with my hands!
+>=20
+> What do you think of it?
+>=20
+>=20
+> Cheers
+> Jorge.-
+>=20
+>=20
+>=20
+>=20
+> -------------------------------------------------------
+> This S...net email is sponsored by: Get the new Palm Tungsten T
+> handheld. Power & Color in a compact size!
+> http://ads.so....net/cgi-bin/redirect.pl?palm0002en
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20
+--=20
+Eduardo Marcel Ma=E7an Gerente de Redes / Network Manager
+macan@co... Col=E9gio Bandeirantes 
+
+
+
+[Dillo-dev]Re: Dillo
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-17 13:37
+
+Martin,
+
+
+> Just mailing to say thanks for working on Dillo - it's great :-)
+> Recently upgraded to a machine with 256Mb RAM running Debian and was
+> rather shocked at quite how much memory Mozilla used - it's pretty but
+> I'm not sure that it's worth the memory and dillo runs _much_ faster
+> <vbg>.
+
+Thanks for the recognition!
+
+IMHO, dillo makes a different browsing experience. It lets you
+grab information so quickly, that making quick online research is
+possible (you may like to read the project objectives).
+
+
+> Given one of my next tasks is to resurrect a pair of Sun SLCs to
+> work as simple web browsers I think Dillo is my only realistic choice.
+> One little question (and if I wasn't buried alive under coursework I'd
+> try it myself) are you going to support several pages within the same
+> window - I found the tabs feature in Opera and then Mozilla really handy
+> for fast browsing - is it likely to appear in Dillo?
+
+Very likely.
+
+Arvind already has a prototype patch for tabs, and we're
+working on the details. We don't want to hurry it, but at least
+now you know that somewhere in the world, in a certain machine
+dillo has tabs!
+
+> Keep up the good work :-)
+
+We are trying as hard as we can.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]BUG#339
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-12-17 13:34
+
+Hi Jorge,
+
+on Tue, 17 Dec 2002 10:00:27 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> 
+> Hi there!
+> 
+> Can anyone reproduce BUG#339?
+> 
+> Jorge.-
+
+
+This bug could *not* be triggered in cvs 0.7.0pre from 14 Dec 2002
+Linux 2.4.19
+gcc 2.95.4
+libc 2.2.5
+gtk 1.2.10
+
+Bye
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]BUG#339
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-17 13:04
+
+Hi there!
+
+Can anyone reproduce BUG#339?
+
+Jorge.- 
+
+
+
+[Dillo-dev]Dillo is great! (fwd)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-17 13:04
+
+---------- Forwarded message ----------
+Date: Mon, 9 Dec 2002 08:03:49 +0100
+From: Michael Mayer <michael-mayer@gm...>
+To: jcid@so...
+Subject: Dillo is great!
+
+Hello out there!
+
+This morning I read a short note about dillo and I'am really enthusiastic
+about it. I like compact coding and am really impressed by its speed: Very
+good work, thank you!
+
+I will use it as much as possible and I hope that I will find some time to
+have a look inside it. The most important thing I'am missing are more
+keyboard shortcuts. But even without this feature: I like it very much.
+
+Michael 
+
+
+
+[Dillo-dev]Dillo (fwd)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-17 13:04
+
+---------- Forwarded message ----------
+Date: Thu, 5 Dec 2002 20:23:27 +0000
+From: *** <stu@sp...>
+To: jcid@so...
+Subject: Dillo
+
+Hello
+
+First of all, wow really a neat browser!
+
+And it works just fine!! I'm using Vector Linux 2.0
+with 16 megs of RAM, and an old Cirrus Logic
+video card, and it does just fine!
+
+I tried Netscape.....I could retire if I had to load more than
+one graphic per page (turtle slow), I tried the Lynx Browser
+I can do it, but I would have to RElearn how to do stuff, and
+I did do it and can if need be.
+
+However, by chance I came across your website and browser
+and just had to give it a try! And it is eXactly what I needed!!
+
+thanks a bunch!!
+
+Stu Wilcox
+Madisonville, KY 
+
+
+
+Re: [Dillo-dev]Dillo and MIME types (2)
+
+From: Lars Clausen <lrclause@cs...> - 2002-12-10 18:13
+
+On Tue, 10 Dec 2002, Thomas Heute wrote:
+>=20
+> Sorry to bother,
+>=20
+> i still didn't fix my problem, what i'd like to do is to be able to click
+> on a jar file in Dillo and open an external file with that Jar file as
+> parameter.
+>=20
+> Or click on a PDF and launch any specified external PDF reader.
+>=20
+> Is there actually a way to do that, i don't think PI is my solution.
+
+I made a patch a while ago that uses the /etc/mailcap file to find
+readers. It's not the best way to do it, for several reasons, but it kinda
+works. See http://shasta.cs.uiuc.edu/~lrclause/dillo-patchomatic (which is
+in severe need of updating).
+
+Eventually there should be a chooser thing that reads the mailcap file
+(lazily) and remembers choices, and the actual handling should prolly be
+done via DPI.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Dillo and MIME types (2)
+
+From: Thomas Heute <thomas.heute@ni...> - 2002-12-10 17:03
+
+Sorry to bother,
+
+i still didn't fix my problem, what i'd like to do is to be able to click on 
+a jar file in Dillo and open an external file with that Jar file as parameter.
+
+Or click on a PDF and launch any specified external PDF reader.
+
+Is there actually a way to do that, i don't think PI is my solution.
+
+Thanks for your work.
+
+Thomas. 
+
+
+
+Re: [Dillo-dev]dpi bookmarks plugin
+
+From: Ben Woolley <ben@ta...> - 2002-12-08 13:27
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Jorge,
+
+> > I just tried out the dpi1 bookmarks plugin, and I really like the concept.
+>
+> Thanks!
+>
+> I've only received a couple of tiny comments that kept me
+> somewhat clueless about how it was understood/received.
+>
+> I know it's not easy to grasp and certainly studying it
+> requires some time, but as for your comments, it looks as though
+> you've got it right!
+>
+
+It seems like a graceful method, and quite powerful (especially when
+listening on tcp). Just for fun, my brother and I wrote a shell script
+that used netcat to alter our bookmarks from remote computers (I know,
+you already have a solution for that, which is why I didn't bring it up
+before)
+
+By the way, what is your IP? ;)
+
+>
+> > But I started wondering if someone could take advantage of a dpi URL to do
+> > something improper.
+> >
+> > <html>
+> > <body>
+> > <a href="dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.">test</a>
+> > <img src="dpi:/bm/modify?operation=add_url2&title=home2&url=http%3A%2F%2Fhome&submit=submit." alt="test image">
+> > </body>
+> > </html>
+> >
+> > When I load that page, not only does the image alter my bookmarks, when I
+> > click on the link the window closes (after altering my bookmarks). This
+> > seems to be an issue similar to what is discussed in the HTTP 1.1 spec
+> > section 15.1.3.
+>
+> Yes, I understand the issue.
+>
+
+I knew that you would. I am sure that developing a web browser makes one
+familiar with the spec. I just posted the numbers for reference, and
+more to prove that _I_ understood the issue. :)
+
+> > Can POST data be sent instead? Section 9.5 says that POST should be used
+> > for "extending a database through an append operation", which is what the
+> > plugin actually does.
+> >
+> > Perhaps the plugin should check for a proper referral from
+> > dpi:/bm/modify?operation=add_url&submit=submit. before modifying
+> > anything.
+>
+> Yes, POST could eventually be added...
+>
+
+I actually really like the idea of borrowing the distinction between GET
+and POST from HTTP. Web developers are already familiar with it. You could
+also have configuration options that restrict dpi executions, but that may
+just end up being bloat.
+
+> > [snip]
+
+> >
+> > Do you already have some sort of plan for this issue?
+>
+> I recognize that when designing it, I thought that having the
+> dpis running locally would cut "in gross" all of those problems.
+>
+> After reading your email, I kept thinking about it, and two
+> ideas remained:
+>
+> 1.- Only allow a dpi url from dpi-generated pages.
+> 2.- Add a dpi command that asks the dpi-server for a key, and
+> then use it to acknowledge permissions.
+>
+> The first is the easiest to implement, it just requires a check
+> before allowing the dpi command to be issued. Is not even
+> necessary to modify the protocol! (and in the event of a user
+> longing to make a custom page, accessed as file, that uses dpi
+> url references, it may then be served from an elementary dpi
+> program).
+>
+> The second option is more cumbersome, and requires two actions,
+> the key request, and including it in the dpi tag.
+>
+
+#1 had crossed my mind. Perhaps you could specify a standard URL argument
+that would tell the plugin that the request was referred from an outside
+source, and that the plugin should treat it like a typical GET request and
+not do anything special. Dillo would only allow those URLs to execute
+plugins from outside. For example:
+<a href="dpi:/mb/?submit=outside">Check your Dillo bookmarks</a>
+
+You could also just limit dpi execution to URLs with _no_ arguments, and
+specify that plugins should be written to expect that.
+
+Anyway, I want to let you know that my brother and I test all of our web
+work in Dillo. I use it regularly, even on fast computers.
+
+Laters,
+
+Ben Woolley
+http://ben.tautology.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.0 (FreeBSD)
+
+iD8DBQE980iv88ChLVDxFsIRAgLcAJwNhv+MSnLG2H0dSjM8sP2MHHbqTwCeJoLu
+gCpa56QHiw+udAsHUKP4hK4=
+=TEj+
+-----END PGP SIGNATURE----- 
+
+
+
+Re: [Dillo-dev]dpi bookmarks plugin
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-07 13:59
+
+Madis,
+
+> On Fri, 6 Dec 2002, Jorge Arellano Cid wrote:
+>
+> > I recognize that when designing it, I thought that having the
+> > dpis running locally would cut "in gross" all of those problems.
+> >
+> > After reading your email, I kept thinking about it, and two
+> > ideas remained:
+> >
+> > 1.- Only allow a dpi url from dpi-generated pages.
+> > 2.- Add a dpi command that asks the dpi-server for a key, and
+> > then use it to acknowledge permissions.
+> >
+> > The first is the easiest to implement, it just requires a check
+> > before allowing the dpi command to be issued. Is not even
+> > necessary to modify the protocol! (and in the event of a user
+> > longing to make a custom page, accessed as file, that uses dpi
+> > url references, it may then be served from an elementary dpi
+> > program).
+> >
+> > The second option is more cumbersome, and requires two actions,
+> > the key request, and including it in the dpi tag.
+>
+> keep it stupid, simple ;)
+
+BTW, I use Slackware!!!
+
+>
+> As i have understand, there are two types of dpi plugins -
+> protocol/mime handler plugins (like ftp://, https://, downloader) and
+> "feature" plugins (like bookmarks plugin). The second type uses dpi://
+> protocol in url. Is there any good reason, why links from non-dpi pages
+> to dpi:// pages should be allowed?
+
+The only one I've thought of was described above, and as the
+solution is quite simple, I don't see any good reason to allow
+links from non-dpi pages to dpi:// urls anymore.
+
+Does anyone see another reason?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]dpi bookmarks plugin
+
+From: madis <madis@cy...> - 2002-12-07 13:01
+
+On Fri, 6 Dec 2002, Jorge Arellano Cid wrote:
+
+> I recognize that when designing it, I thought that having the
+> dpis running locally would cut "in gross" all of those problems.
+> 
+> After reading your email, I kept thinking about it, and two
+> ideas remained:
+> 
+> 1.- Only allow a dpi url from dpi-generated pages.
+> 2.- Add a dpi command that asks the dpi-server for a key, and
+> then use it to acknowledge permissions.
+> 
+> The first is the easiest to implement, it just requires a check
+> before allowing the dpi command to be issued. Is not even
+> necessary to modify the protocol! (and in the event of a user
+> longing to make a custom page, accessed as file, that uses dpi
+> url references, it may then be served from an elementary dpi
+> program).
+> 
+> The second option is more cumbersome, and requires two actions,
+> the key request, and including it in the dpi tag.
+
+keep it stupid, simple ;)
+
+As i have understand, there are two types of dpi plugins - 
+protocol/mime handler plugins (like ftp://, https://, downloader) and 
+"feature" plugins (like bookmarks plugin). The second type uses dpi:// 
+protocol in url. Is there any good reason, why links from non-dpi pages 
+to dpi:// pages should be allowed?
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Dillo on NanoGtk
+
+From: Richard Tseng <rtseng@em...> - 2002-12-07 07:40
+
+Attachments: Message as HTML      
+
+Hi Mabo,
+We are developer of NanoGtk. Could you post your dillo port, so that we can
+have a look at it ? Great job on porting Dillo to NanoGTK/mips !!
+Richard Tseng
+Emsoft Limited
+http://www.emsoftltd.com
+----- Original Message -----
+From: 马波
+To: dillo-dev@li...
+Sent: Thursday, November 28, 2002 10:44 AM
+Subject: [Dillo-dev]Dillo on NanoGtk
+
+
+Hi, all
+
+Our team just ported Dillo from x86/X/Gtk+ to mips/NanoX/NanoGtk,
+everything went fine except scrolling, that is, when we browse a large page,
+we got scrollbars, but once I drag and drop the scrollbar, the page turns
+into chaos immediately. However, if I scrolled the page by using PageUP and
+PageDown buttons, everything is Ok.
+It looks like something goes wrong with the screen refreshment, which
+is to say, if you post too many screen-updating request by scrolling the
+page with scrollbar, the underlying refresh-request queue handler (NanoGDK?)
+just cannot fulfil its responsibilities, while if the request is moderate,
+the handler can manage it.
+So, based on the observation and my conjecture, I dived into NanoGtk and
+tried to resolve this problem:
+
+1.Scrolling request is sent by gtk_scrolled_window_set_vadjustment
+function
+2.gtk_scrolled_window_adjustment_changed is the scrolling signal handler,
+and it adds the window need to scrolling, scrolled_win, to resize queue by
+calling gtk_widget_queue_resize
+3.For a Container (Gtkscrolledwindow is a container)，the resizing handler
+is gtk_container_clear_resize_widgets
+5.BUT, this function just mark the container with GTK_PRIVATE_UNSET_FLAG
+(widget, GTK_RESIZE_NEEDED); and do nothing more!
+
+I was lost!!
+
+So, I came up with the second solution: Change the
+Adjustment->step_increment to Adjustment->page_increment, but it seems
+doesn't work also!
+
+Who can help me!
+
+mabo
+
+
+
+
+
+-------------------------------------------------------
+This S...net email is sponsored by: Get the new Palm Tungsten T
+handheld. Power & Color in a compact size!
+http://ads.so....net/cgi-bin/redirect.pl?palm0002en
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Dillo (fwd)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-06 23:56
+
+---------- Forwarded message ----------
+Date: Thu, 5 Dec 2002 20:23:27 +0000
+From: *** <stu@sp...>
+To: jcid@so...
+Subject: Dillo
+
+Hello
+
+First of all, wow really a neat browser!
+
+And it works just fine!! I'm using Vector Linux 2.0
+with 16 megs of RAM, and an old Cirrus Logic
+video card, and it does just fine!
+
+I tried Netscape.....I could retire if I had to load more than
+one graphic per page (turtle slow), I tried the Lynx Browser
+I can do it, but I would have to RElearn how to do stuff, and
+I did do it and can if need be.
+
+However, by chance I came across your website and browser
+and just had to give it a try! And it is eXactly what I needed!!
+
+thanks a bunch!!
+
+Stu Wilcox
+Madisonville, KY 
+
+
+
+Re: [Dillo-dev]dpi bookmarks plugin
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-12-06 23:56
+
+Ben,
+
+> I just tried out the dpi1 bookmarks plugin, and I really like the concept.
+
+Thanks!
+
+I've only received a couple of tiny comments that kept me
+somewhat clueless about how it was understood/received.
+
+I know it's not easy to grasp and certainly studying it
+requires some time, but as for your comments, it looks as though
+you've got it right!
+
+
+> But I started wondering if someone could take advantage of a dpi URL to do
+> something improper.
+>
+> <html>
+> <body>
+> <a href="dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.">test</a>
+> <img src="dpi:/bm/modify?operation=add_url2&title=home2&url=http%3A%2F%2Fhome&submit=submit." alt="test image">
+> </body>
+> </html>
+>
+> When I load that page, not only does the image alter my bookmarks, when I
+> click on the link the window closes (after altering my bookmarks). This
+> seems to be an issue similar to what is discussed in the HTTP 1.1 spec
+> section 15.1.3.
+
+Yes, I understand the issue.
+
+> Can POST data be sent instead? Section 9.5 says that POST should be used
+> for "extending a database through an append operation", which is what the
+> plugin actually does.
+>
+> Perhaps the plugin should check for a proper referral from
+> dpi:/bm/modify?operation=add_url&submit=submit. before modifying
+> anything.
+
+Yes, POST could eventually be added...
+
+
+> Perhaps change:
+> <dpi
+> cmd='open_url'
+> url='dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+> >
+> to:
+> <dpi
+> cmd='open_url'
+> url='dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+> ref='dpi:/bm/modify?operation=add_url&submit=submit.'
+> >
+> or:
+> <dpi
+> cmd='open_url'
+> url='dpi:/bm/modify'
+> post='operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+> >
+> or even:
+> <dpi
+> cmd='open_url'
+> url='dpi:/bm/modify'
+> ref='dpi:/bm/modify?operation=add_url&submit=submit.'
+> post='operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+> >
+>
+> Do you already have some sort of plan for this issue?
+
+I recognize that when designing it, I thought that having the
+dpis running locally would cut "in gross" all of those problems.
+
+After reading your email, I kept thinking about it, and two
+ideas remained:
+
+1.- Only allow a dpi url from dpi-generated pages.
+2.- Add a dpi command that asks the dpi-server for a key, and
+then use it to acknowledge permissions.
+
+The first is the easiest to implement, it just requires a check
+before allowing the dpi command to be issued. Is not even
+necessary to modify the protocol! (and in the event of a user
+longing to make a custom page, accessed as file, that uses dpi
+url references, it may then be served from an elementary dpi
+program).
+
+The second option is more cumbersome, and requires two actions,
+the key request, and including it in the dpi tag.
+
+HTH.
+
+Cheers
+Jorge.- 
+

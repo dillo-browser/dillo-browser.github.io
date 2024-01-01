@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Memory usage
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<div lang=en>
+<h1>Memory usage</h1>
+    <a NAME="section-2.1"></a>
+     <h3>Brief browser comparison</h3>
+    <p>
+    The following table summarizes results obtained using a
+    standard Ubuntu 8.10, 32bit. This numbers are explained
+    and commented briefly afterwards.
+    <br><br>
+    <table width="100%" border="1">
+     <tr>
+      <td>Browser<td>VSZ<td>RSS<td>COMMAND<td>factor
+     <tr><td rowspan="4">dillo-2.1
+      <td>8148  <td> 3872 <td>./dillo (empty)                     <td>
+     <tr>
+      <td>26936 <td>19196 <td>./dillo DragonFly.html (1.1MB HTML) <td>
+     <tr>
+      <td>178684<td>174620<td>./dillo MySQL-6.0.html (13MB HTML)  <td>
+     <tr>
+      <td>119788<td>113096<td>./dillo MySQL-6.0.html (no IMG)     <td>7.2
+     <tr><td colspan="5">&nbsp;
+     <tr><td rowspan="4">dillo-0.8.6
+      <td>16592 <td> 3960 <td>./d086  (empty)                     <td>
+     <tr>
+      <td>83784 <td>35748 <td>./d086 DragonFly.html (1.1MB HTML)  <td>
+     <tr>
+      <td>357320<td>293796<td>./d086 MySQL-6.0.html (13MB HTML)   <td>
+     <tr>
+      <td>297224<td>234344<td>./d086 MySQL-6.0.html (no IMG)     <td>16.3
+     <tr><td colspan="5">&nbsp;
+     <tr><td rowspan="4">firefox-3.0.8
+      <td>100884<td>37572 <td>./firefox (empty)                    <td>
+     <tr>
+      <td>123184<td>59688 <td>./firefox DragonFly.html (1.1MB HTML)<td>
+     <tr>
+      <td>312652<td>241016<td>./firefox MySQL-6.0.html (13MB HTML) <td>
+     <tr>
+      <td>328352<td>237560<td>./firefox MySQL-6.0.html (no IMG)    <td>15
+    </table>
+  <ul>
+   <li>The test pages are available here:
+  <a href="http://dillo.org/test/DragonFly.html.bz2">DragonFly,</a>
+  <a href="http://dillo.org/test/mysql-6.0.doc.tar.bz2">MySQL</a>
+  </ul>
+  <br>
+    This  numbers  are the basis to claim that dillo2 uses half the
+memory  footprint  of  dillo1. Just check the last row or compare
+the factor.
+  <p>
+  The "factor" is calculated with the RSS for the
+MySQL  manual  (with no images), minus the empty RSS, minus 13MB,
+all divided by 13MB. The memory-cached page is subtracted to get
+a clean HTML-to-Widgets factor.
+  <p>
+  This  is,  if  you have a 130KB html page, factor*130KB will be used
+for rendering.
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

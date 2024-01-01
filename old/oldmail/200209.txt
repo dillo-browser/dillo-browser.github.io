@@ -1,0 +1,1134 @@
+[Dillo-dev]dillo and sparc linux
+
+From: higuita <higuita@GM...> - 2002-09-30 00:12
+
+Attachments: Message as HTML      
+
+hi
+
+i tried to use dillo on a old sun ultra1.
+it have SuSE 7.3 sparc.
+
+i run the ./configure --enable-cookies and make without any
+problema, and finally make install
+
+but when i try yo run it, it crash on the startup
+
+i grabbed the gdb and the strace of the crash
+
+any tip is welcome
+
+execve("/usr/local/bin/dillo", ["dillo"], [/* 66 vars */]) = 0
+uname({sys="Linux", node="puma", ...}) = 0
+brk(0) = 0x6dd10
+open("/etc/ld.so.preload", O_RDONLY) = -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY) = 3
+fstat64(3, {st_mode=S_IFREG|0644, st_size=93571, ...}) = 0
+mmap(NULL, 93571, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7002c000
+close(3) = 0
+open("/usr/lib/libjpeg.so.62", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0- \0"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=150423, ...}) = 0
+mmap(NULL, 196432, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70044000
+mprotect(0x70064000, 65360, PROT_NONE) = 0
+mmap(0x70064000, 65536, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x10000) = 0x70064000
+close(3) = 0
+open("/usr/lib/libpng.so.2", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0[@\0"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=225905, ...}) = 0
+mmap(NULL, 268880, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70074000
+mprotect(0x700a6000, 64080, PROT_NONE) = 0
+mmap(0x700b4000, 8192, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x30000) = 0x700b4000
+close(3) = 0
+open("/lib/libz.so.1", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0\32"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=68012, ...}) = 0
+mmap(NULL, 124840, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x700b8000
+mprotect(0x700c6000, 67496, PROT_NONE) = 0
+mmap(0x700c8000, 65536, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0) = 0x700c8000
+close(3) = 0
+open("/usr/lib/libgtk-1.2.so.0", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\3)\0"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=1913958, ...}) = 0
+mmap(NULL, 1729504, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x700d8000
+mprotect(0x70260000, 123872, PROT_NONE) = 0
+mmap(0x70268000, 90112, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x180000) = 0x70268000
+mmap(0x7027e000, 992, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7027e000
+close(3) = 0
+open("/usr/lib/libgdk-1.2.so.0", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0\263"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=301871, ...}) = 0
+mmap(NULL, 318392, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70280000
+mprotect(0x702bc000, 72632, PROT_NONE) = 0
+mmap(0x702c0000, 57344, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x30000) = 0x702c0000
+close(3) = 0
+open("/usr/lib/libgmodule-1.2.so.0", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0\f\300"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0644, st_size=14956, ...}) = 0
+mmap(NULL, 75240, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x702d0000
+mprotect(0x702d4000, 58856, PROT_NONE) = 0
+mmap(0x702e0000, 16384, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0) = 0x702e0000
+close(3) = 0
+open("/usr/lib/libglib-1.2.so.0", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0|@\0"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=225843, ...}) = 0
+mmap(NULL, 253696, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x702e4000
+mprotect(0x70312000, 65280, PROT_NONE) = 0
+mmap(0x70314000, 57344, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x20000) = 0x70314000
+close(3) = 0
+open("/usr/X11R6/lib/libXi.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0\24"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=38101, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7001a000
+mmap(NULL, 94872, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70324000
+mprotect(0x7032c000, 62104, PROT_NONE) = 0
+mmap(0x70334000, 32768, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0) = 0x70334000
+close(3) = 0
+open("/usr/X11R6/lib/libXext.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0, \0"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=72547, ...}) = 0
+mmap(NULL, 124768, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x7033c000
+mprotect(0x7034a000, 67424, PROT_NONE) = 0
+mmap(0x7034c000, 65536, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0) = 0x7034c000
+close(3) = 0
+open("/usr/X11R6/lib/libX11.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\1}\300"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=1106635, ...}) = 0
+mmap(NULL, 1031984, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x7035c000
+mprotect(0x70442000, 89904, PROT_NONE) = 0
+mmap(0x7044c000, 49152, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0xe0000) = 0x7044c000
+close(3) = 0
+open("/lib/libc.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0027"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=1537287, ...}) = 0
+mmap(NULL, 1377936, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70458000
+mprotect(0x7058e000, 108176, PROT_NONE) = 0
+mmap(0x70598000, 57344, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x130000) = 0x70598000
+mmap(0x705a6000, 9872, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x705a6000
+close(3) = 0
+open("/lib/libm.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0\246"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=649398, ...}) = 0
+mmap(NULL, 621608, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x705ac000
+mprotect(0x70632000, 72744, PROT_NONE) = 0
+mmap(0x7063c000, 32768, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0x80000) = 0x7063c000
+close(3) = 0
+open("/lib/libdl.so.2", O_RDONLY) = 3
+read(3, "\177ELF\1\2\1\0\0\0\0\0\0\0\0\0\0\3\0\2\0\0\0\1\0\0!\340"..., 1024) = 1024
+fstat64(3, {st_mode=S_IFREG|0755, st_size=16900, ...}) = 0
+mmap(NULL, 75800, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x70644000
+mprotect(0x70648000, 59416, PROT_NONE) = 0
+mmap(0x70654000, 16384, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 0) = 0x70654000
+close(3) = 0
+munmap(0x7002c000, 93571) = 0
+getpid() = 13025
+--- SIGSEGV (Segmentation fault) ---
++++ killed by SIGSEGV +++
+
+
+
+
+19:41:58 ~/download/dillo-0.6.6/$gdb dillo
+GNU gdb 4.18
+Copyright 1998 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB. Type "show warranty" for details.
+This GDB was configured as "sparc-suse-linux"...
+(gdb) run dillo
+Starting program: /usr/local/bin/dillo dillo
+
+Program received signal SIGSEGV, Segmentation fault.
+0x4a0a4 in __errno_location () at errno.c:26
+26 errno.c: No such file or directory.
+(gdb) bt full
+#0 0x4a0a4 in __errno_location () at errno.c:26
+No locals.
+#1 0x7048fff4 in sigaction () from /lib/libc.so.6
+No symbol table info available.
+#2 0x48c34 in pthread_initialize () at pthread.c:482
+sa = {__sigaction_handler = {sa_handler = 0x49320 <pthread_handle_sigrestart>, sa_sigaction = 0x49320 <pthread_handle_sigrestart>}, sa_mask = {__val = {
+0 <repeats 32 times>}}, sa_flags = 0, sa_restorer = 0}
+mask = {__val = {1880140472, 0, 0, 0, 4026528480, 0, 12, 920, 916, 912, 908, 400, 1883647568, 1879155784, 60, 15, 1879157528, 82652, 1884947408, 
+1883647568, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1881619880, 1881660688}}
+#3 0x4cae4 in __do_global_ctors_aux ()
+No symbol table info available.
+#4 0x1c450 in _init ()
+No symbol table info available.
+#5 0x7047b630 in __libc_start_main () from /lib/libc.so.6
+No symbol table info available.
+(gdb) 
+
+
+-- 
+One Unix to rule them all, One Resolver to find them,
+One IP to bring them all and in the zone bind them. 
+
+
+
+[Dillo-dev]Bug #349
+
+From: Manuel Menal <mmenal@hu...> - 2002-09-29 10:51
+
+Hey,
+
+While porting Dillo to the new implementation of POSIX threads for
+GNU/Hurd (code name: "Rubbish, I asked for mine with Minced Garlic,
+Please Take this back"), I found some minor « bugs » in the Dillo
+"installation system". The first bug I found out was a bug that was
+already reported as #349 in the Dillo bug report system. It seems a
+quite simple and not so annoying bug, but in fact it is quite pervert,
+as it makes the configure misdetect what is installed in the system:
+when it checks for jpeglib.h (& others), it tries to preprocess a simple
+C file which only includes jpeglib.h, and check if there is some
+output. If there is some output, then it assumes there is no
+jpeglib.h. Which is not true in this case: the output is just warning
+of cpp, which complains about the « -I/usr/local/include » (cpp 3.1
+already has /usr/local/include it its system directories). 
+
+There is a simple way to fix it, though. And Here is a patch:
+
+diff -pru old/dillo-0.6.6/configure dillo-0.6.6/configure
+--- old/dillo-0.6.6/configure 2002-09-29 12:41:20.000000000 +0200
++++ dillo-0.6.6/configure 2002-09-29 12:40:57.000000000 +0200
+@@ -1494,8 +1494,8 @@ ac_config_headers="$ac_config_headers co
+ac_config_commands="$ac_config_commands default-1"
+
+
+-CPPFLAGS="$CPPFLAGS -I/usr/local/include"
+-LDFLAGS="$LDFLAGS -L/usr/local/lib"
++CPPFLAGS="$CPPFLAGS -idirafter=/usr/local/include"
++LDFLAGS="$LDFLAGS -idirafter=/usr/local/lib"
+
+idirafter makes cpp check /usr/local/include AFTER its system
+directories (and the other -I'ed directories), so it doesn't complain
+any more, and though it does include /usr/local/include on systems where
+cpp doesn't have it in its system directories. This seems to fix my bug
+and #349's reporter one. 
+
+HTH,
+
+-- 
+Manuel Menal 
+
+
+
+[Dillo-dev]CVS ...
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-09-26 07:52
+
+Haven't been updated on source forge for ages !
+
+Why ? 
+
+
+
+[Dillo-dev]Does this mean that the changes are in the cvs ?
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-09-26 06:43
+
+Where to get the dillo source with dpi CCC ?
+
+Is it in the cvs ? Or is there a new snapshot ?
+
+/ Lars Segerlund. 
+
+
+
+[Dillo-dev]dpi progress
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-09-26 01:21
+
+Hi there!
+
+I have two groups of news, the good ones and the bad ones, you
+choose:
+
+"Tell me the good ones"
+
+OK, I finished testing every single piece that composes the
+implementation of the dpi, and they're all OK. Even more, they
+work together showing good integration; that is: the dpi CCC, the
+new CCC functions, the pthreaded IOWrites operation, the dpi
+protocol and the test dpi-server!
+
+
+"Tell me the bad ones"
+
+My economic situation is at its worst point, the funding
+initiative hasn't raised a single dolar, my broken laptop didn't
+work with the new inverter, and I'm yet to find a place to live
+and code peacefully, so it will take more time (if ever), and I
+don't know how much.
+
+
+Sincerely
+Jorge.-
+
+
+PD1: If you are a laptop manufacturer and have some dust covered
+babies around, I'd be more than glad to adopt _one_.
+
+PD2: Considering that dillo-0.6.6 has more than 15000 downloads,
+you can expect a bigger number of persons reading about the
+happy event by the next release. 
+
+
+
+[Dillo-dev]Xft
+
+From: Tor Andersson <tor.andersson@ds...> - 2002-09-25 11:31
+
+Attachments: dillo-xft.patch      
+
+Hello all,
+
+Here is a small patch to make Dillo use Xft for text, so that
+it can use anti-aliased fonts. The patch is against 0.6.6,
+using new versions of Xft and fontconfig.
+
+Screenshot and patch can be found at
+http://www.df.lth.se/~mazirian/software/patches/
+
+Fontconfig and Xft
+http://fontconfig.org/
+
+Add the following to .fonts.conf to disable hinting:
+
+<match target="pattern">
+<edit name="hinting" mode="assign">
+<bool>false</bool>
+</edit>
+</match>
+
+/tor 
+
+
+
+[Dillo-dev]You've been hit ;)
+
+From: Nicola Girardi <nicola@g-...> - 2002-09-24 07:24
+
+For those who don't know, there's an article on LinuxToday about
+Dillo. :-)
+
+http://linuxtoday.com/news_story.php3?ltsn=2002-09-23-001-26-RV-DT-SW 
+
+
+
+[Dillo-dev]GIF
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-09-20 20:43
+
+Hi there!
+
+Is anyone libungif savvy here?
+
+The point is that I want to replace the current code inside
+gif.c because the license it carries forbids dillo from being
+included in any product sold for a fee.
+
+(Note that there's the possibility of it just being an obsolete
+remainder because a long long time ago Raph changed the decoder
+for, among others, distributing the code with a freer license.)
+
+Anyway, it may be good to use libungif (we currently use
+libjpeg and libpng) for animated GIFs.
+
+The technical point is that GIF data is to be fed in chunks to
+the decoder, and it MUST be possible to render it incrementally
+from the RGB buffer. I gave a look to the library docs, and
+source, and it seems possible.
+
+
+Cheers
+Jorge.-
+
+
+PS: I hope to write some good news on dpi by Monday. 
+
+
+
+Re: [Dillo-dev]Want to contribute
+
+From: Miernik <miernik@ct...> - 2002-09-20 11:57
+
+Attachments: Message as HTML      
+
+On Sat, Sep 14, 2002 at 01:37:04PM -0500, Parminder Singh wrote:
+
+> but there r 2 key things that are needed https and frames support. i
+> would like to contribute to dillo in some way. i am not an expert
+> programmer, but i do think i am good enough. so pls tell me where
+> should i start from. i need to understand how dillo clicks first and
+> then try adding the support for frames and https.
+
+You can look at this page:
+
+http://dillo.cipsga.org.br/cgi-bin/bugtrack/Dillo_query.cgi?what=3Dff&Submi=
+t=3DFind+It%21
+
+and contact the developers there.=20
+I'd join too, when I'll see some progress giving a chance to have it
+continued and reasonably usable in a reasonable time.=20
+
+--=20
+Miernik _____________________________________
+/ /
+tel.: +48603070983 / / mailto:miernik@ct...
+__________________/___/ ICQ UIN: 4004001 
+
+
+
+[Dillo-dev]Want to contribute
+
+From: Parminder Singh <param_mail@po...> - 2002-09-14 18:37
+
+Hi,
+First of all, thank you everyone for making such an excellent browser. but there r 2 key things that are needed https and frames support. i would like to contribute to dillo in some way. i am not an expert programmer, but i do think i am good enough.
+so pls tell me where should i start from. i need to understand how dillo clicks first and then try adding the support for frames and https.
+thanx,
+parminder singh. 
+
+
+
+[Dillo-dev]to the makers: dillo rocks!
+
+From: ben <benfoley@rc...> - 2002-09-14 09:18
+
+i'm literally just taking a break from some research that i have to 
+eventually make sense of, but the fact that i've been intimately all over 
+the world that i need to touch, extracting so much of the knowledge i need to 
+achieve my immediate goal and getting to much of it with the current deb of 
+dillo, i felt moved to leave a note to say thanks. i wish i had the 
+skill to contribute. if you should ever have need of a copy editor, send me 
+a word. i would love to help, but that's the only talent i can offer.
+
+the bottom line is
+
+thank you very much 
+
+
+
+[Dillo-dev]dillo is great! Some suggestions...
+
+From: Pablo De Napoli <pdenapo@ya...> - 2002-09-13 22:28
+
+Dear friends of the Dillo project:
+
+First let me say that I think that Dillo is a great project.
+It is is important to have a truly free web-browser, that is
+light-weighted and fast (I test is over a telephone conection
+to the internet (PPP) at it was great, much faster and stable
+that Netscape =)
+
+The most important thing that dillo is lacking (for me), is https
+and ftp support. I would love to help to implement https, but I'm
+not an expert programmer (even do I have contributed with
+patches to some free software projects). I don't know how should
+I use the open-ssl library to implement https.
+
+I've seen that the Lynx (text-mode) web-browser supports https.
+It uses a www library from the CERN and W3c , this library 
+provides an implementation of all the internet protocols.
+
+http://www.w3.org/Library/
+
+Lynx is GPL-ed software as well, so I suggest that you might
+avoid reinventing the wheel and use this library for doing the
+networking. This would be taking advantage of the free software
+concept.
+
+Besides that, you don't have to care about bugs in the networking
+layer =)
+
+Pablo De Napoli
+(from Argentina)
+pdenapo@ya...
+
+
+
+
+
+
+
+
+__________________________________________________
+Do you Yahoo!?
+Yahoo! News - Today's headlines
+http://news.yahoo.com 
+
+
+
+Re: [Dillo-dev]finding admins of CIPSGA
+
+From: Miernik <miernik@ct...> - 2002-09-13 20:15
+
+On Fri, Sep 13, 2002 at 02:24:29PM -0400, Jorge Arellano Cid wrote:
+> - Since nothing has helped to find them, please dig the CIPSGA
+> site and try to find some emails and start asking them to contact
+> me _PLEASE_! (I tried kov, hmh, dvalois, macan several times with
+> no success, and now I'm 100% on dpi implementation).
+
+If nothing helps, maybe just call them by phone?
+
+miernik@tarnica:~$ whois cipsga.org.br
+
+[...]
+
+domain: CIPSGA.ORG.BR
+owner: Comite Incentivo Prod. S. Gratuito Alternativo
+ownerid: 003.179.614/0001-70
+responsible: Djalma Valois Filho
+address: Rua Alice, 151, 102
+address: 22241-020 - Rio de Janeiro - RJ
+phone: (021) 92237832 []
+
+[...]
+
+nic-hdl-br: DVF5
+person: Djalma Valois Filho
+e-mail: dvalois@CI...
+address: Rua Alice, 151, 102
+address: 22241-020 - Rio de Janeiro - RJ
+phone: (021) 92237832 []
+created: 19991120
+changed: 20020708
+
+A call to +552192237832 should solve the problem. 
+
+-- 
+Miernik _____________________________________
+/ /
+tel.: +48603070983 / / mailto:miernik@ct...
+__________________/___/ ICQ UIN: 4004001 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Jamin W. Collins <jcollins@as...> - 2002-09-13 19:29
+
+On Fri, 13 Sep 2002 14:24:29 -0400 (CLT) Jorge Arellano Cid
+<jcid@so...> wrote:
+
+> - The Web server is not a problem because we have accounts with
+> all the required priviledges there.
+> 
+> - CVS is working at CIPSGA but only for me and Sebastian, and
+> the point is to find a CIPSGA sysadmin to enable the pserver.
+> That's why the SF CVS server look dead.
+
+If these two items are working. Why not do a periodic CVS snapshot and
+make it available on the new web site. Works around the CVS problems for
+right now.
+
+-- 
+Jamin W. Collins 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-09-13 18:30
+
+On Fri, 13 Sep 2002, Sebastian Geerken wrote:
+
+Hi Sebastian, is nice to hear from you!
+
+> On Wed, Sep 11, 2002 at 08:52:14PM +0200, Nicola Girardi wrote:
+> > If he's not going to keep up with it, I'll try to start from his
+> > patch and add anti-aliasing, but first I want to ask another
+> > question: is there any hope that the GTK2 patch goes into CVS or
+> > would I be going to maintain a separate patch all life long?
+>
+> I will review it soon, what may take some while, since I'm currently
+> horribly overworked. Dillo will be ported to Gtk+, this has already
+> been discussed some time ago on this list.
+
+Well, I tend not to answer things that have been discussed
+several times in the past, but as I've been pretty silent trying
+to finish the dpi framework (those who read my posts know the
+whole picture), I'll refresh some ideas here:
+
+- GTK2 port was discussed a long time ago (BTW it's also listed
+in the future goals), and the plan is to incorporate it into CVS
+when the main distros start to ship GTK2.
+
+- Some time ago (maybe Pekka IIRC) assembled a GTK2 patch from
+several other efforts, and I thought it'd be good to open a CVS
+branch for it a CIPSGA, but, as you may have noticed in the front
+page of our sites, we've been trying to contact CIPSGA sysadmins
+for months with Livio!!!
+
+- Since nothing has helped to find them, please dig the CIPSGA
+site and try to find some emails and start asking them to contact
+me _PLEASE_! (I tried kov, hmh, dvalois, macan several times with
+no success, and now I'm 100% on dpi implementation).
+
+- The Web server is not a problem because we have accounts with
+all the required priviledges there.
+
+- CVS is working at CIPSGA but only for me and Sebastian, and
+the point is to find a CIPSGA sysadmin to enable the pserver.
+That's why the SF CVS server look dead.
+
+- As I pointed before, you can find the whole picture reading
+my posts at the mailing list archive.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-09-13 15:50
+
+On Wed, Sep 11, 2002 at 08:52:14PM +0200, Nicola Girardi wrote:
+> If he's not going to keep up with it, I'll try to start from his
+> patch and add anti-aliasing, but first I want to ask another
+> question: is there any hope that the GTK2 patch goes into CVS or
+> would I be going to maintain a separate patch all life long?
+
+I will review it soon, what may take some while, since I'm currently
+horribly overworked. Dillo will be ported to Gtk+, this has already
+been discussed some time ago on this list.
+
+Sebastian 
+
+
+
+[Dillo-dev]New about:splash?
+
+From: MadProf <ralphtheraccoon@uk...> - 2002-09-13 12:17
+
+Hi,
+
+As with the new dillo website having the brown colour scheme, should the
+about:splash page also be updated? I have made the changes here, and 
+have a screenshot (CVS+ximian.pixmaps.h+gtk2(cool!):
+
+http://www.madprof.net/working/dillo.png
+
+I can make a patch too if anyone is interested.
+
+Dan 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Miernik <miernik@ct...> - 2002-09-13 07:49
+
+On Fri, 13 Sep 2002, Nicola Girardi wrote:
+
+> Pekka Lampila wrote:
+>
+> > Hi,
+> >
+> > My previous message doesn't seem to get through to the list. (Or it's
+> > just slow). So I'm repeating myself, and have added Nicola to CC.
+
+I didn't get Pekka's message too.
+
+> > Anyway I'm the author of the GTK2 patch. I have received additional
+> > patch from Jorgen Viksell, which implements Pango support (including
+> > AA-text) and other nice stuff.
+> >
+> > I just ported these patches against current CVS.
+>
+> I had done that meanwhile too, it's a pity that your message didn't
+> hit the dillo-dev list in time. Well it was just a few changes that
+> didn't take me long anyway...
+>
+> > Get yours from:
+> > http://kirjasto.org/medar/dillo/dillo_gtk2_2002-09-12.diff.gz
+
+So, will we have Dillo 0.6.7 for GTK2?
+
+Does Dillo correctly render Unicode with this patch (that's what Pango is
+for)?
+
+-- 
+Miernik _____________________________________
+/ /
+tel.: +48603070983 / / mailto:miernik@ct...
+__________________/___/ ICQ UIN: 4004001 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Nicola Girardi <nicola@g-...> - 2002-09-13 04:37
+
+Pekka Lampila wrote:
+
+> Hi,
+> 
+> My previous message doesn't seem to get through to the list. (Or it's
+> just slow). So I'm repeating myself, and have added Nicola to CC.
+> 
+> Anyway I'm the author of the GTK2 patch. I have received additional
+> patch from Jorgen Viksell, which implements Pango support (including
+> AA-text) and other nice stuff.
+> 
+> I just ported these patches against current CVS.
+
+I had done that meanwhile too, it's a pity that your message didn't
+hit the dillo-dev list in time. Well it was just a few changes that
+didn't take me long anyway...
+
+> Get yours from:
+> http://kirjasto.org/medar/dillo/dillo_gtk2_2002-09-12.diff.gz
+> 
+> There are surely many things left to do with GTK2-stuff. And I would
+> be pleased if someone did them :)
+
+I'm not familiar with GTK2 but these days I was seeking info about
+AA, which was, as I said, the primary aim in my GTK2 effort. Thanks
+to the guy who did it for me and to you merging his work with yours.
+
+> One cool thing would be implementing dynamical keybindings for menus,
+> with gtk_accel_map_load() etc.
+> 
+> Any questions? Just ask.
+> 
+> 
+> PS. Nicola: If this mail doesn't make it to the mailing list, could
+> you forward this to dillo-dev?
+
+I'm quoting the entire mail, just to be sure. :-) 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: <jbradford@di...> - 2002-09-12 14:21
+
+> FYI, you don't need to bother to CC me as I'm subscribed to this
+> list; thanks anyway.
+
+Sorry about that, it's a bad habbit picked up from the linux kernel dev list, where you tend to get CC'ed in on an entire thread once you've posted about it once :-)
+
+> > > > > If it's OK and nobody's working on it, I may try to do it myself;
+> > > > > with much emphasis on *try*.
+> > > > 
+> > > > Have a look at this thread on the mailing list:
+> > > > 
+> > > > http://www.geocrawler.com/archives/3/702/2002/6/0/8944485/
+> > > 
+> > > I got the patch, I'm browsing through it. The screenshot lets me
+> > > see that anti aliased fonts weren't used actually. I'd like to know
+> > > if the author of the patch is going to keep working on it.
+> > 
+> > It doesn't seem to have been updated for a few months.
+> 
+> I just updated it to work with the CVS version (still without AA),
+> but you're telling me (below) that the CVS version is outdated(?).
+
+Well, I'm not sure what is happening. The CVS server hasn't had anything updated on it for months, and there have been loads of patches sent to the mailing list, so maybe whoever is actually in charge of maintaining the CVS tree doesn't think the patches are ready yet. However, since there are quite a few trivial patches, I don't think that's the case, but when I enquired about it on this list, I got a message back that seemed to imply that the CVS server *was* up to date.
+
+So, does what will eventually become Dillo 0.6.7 exist in CVS already, or just as patches scattered around the mailing list archives? Is there a CVS server somewhere that is up to date, and we are just not seeing that at:
+
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/
+
+I personally think that it's time to commit the known working patches to CVS, and release version 0.6.7, but what do others think?
+
+By the way, I've found a bug in the view source dialogue, where occasionally text doesn't wrap on to new lines properly. I'm just trying to work out how to re-produce it reliably.
+
+John.
+
+> > > If he's not going to keep up with it, I'll try to start from his
+> > > patch and add anti-aliasing, but first I want to ask another
+> > > question: is there any hope that the GTK2 patch goes into CVS or
+> > > would I be going to maintain a separate patch all life long?
+> > 
+> > What is going on with the CVS server anyway?
+> > 
+> > I asked about it last month:
+> > 
+> > http://www.geocrawler.com/archives/3/702/2002/8/0/9397536/
+> > 
+> > but nothing here:
+> > 
+> > http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/
+> > 
+> > has been updated for months. 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Nicola Girardi <nicola@g-...> - 2002-09-12 13:31
+
+FYI, you don't need to bother to CC me as I'm subscribed to this
+list; thanks anyway.
+
+> > > > If it's OK and nobody's working on it, I may try to do it myself;
+> > > > with much emphasis on *try*.
+> > > 
+> > > Have a look at this thread on the mailing list:
+> > > 
+> > > http://www.geocrawler.com/archives/3/702/2002/6/0/8944485/
+> > 
+> > I got the patch, I'm browsing through it. The screenshot lets me
+> > see that anti aliased fonts weren't used actually. I'd like to know
+> > if the author of the patch is going to keep working on it.
+> 
+> It doesn't seem to have been updated for a few months.
+
+I just updated it to work with the CVS version (still without AA),
+but you're telling me (below) that the CVS version is outdated(?).
+
+> > If he's not going to keep up with it, I'll try to start from his
+> > patch and add anti-aliasing, but first I want to ask another
+> > question: is there any hope that the GTK2 patch goes into CVS or
+> > would I be going to maintain a separate patch all life long?
+> 
+> What is going on with the CVS server anyway?
+> 
+> I asked about it last month:
+> 
+> http://www.geocrawler.com/archives/3/702/2002/8/0/9397536/
+> 
+> but nothing here:
+> 
+> http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/dillo/
+> 
+> has been updated for months. 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Nicola Girardi <nicola@g-...> - 2002-09-11 20:05
+
+jbradford@di... wrote:
+
+> > If it's OK and nobody's working on it, I may try to do it myself;
+> > with much emphasis on *try*.
+> 
+> Have a look at this thread on the mailing list:
+> 
+> http://www.geocrawler.com/archives/3/702/2002/6/0/8944485/
+
+I got the patch, I'm browsing through it. The screenshot lets me
+see that anti aliased fonts weren't used actually. I'd like to know
+if the author of the patch is going to keep working on it.
+
+If he's not going to keep up with it, I'll try to start from his
+patch and add anti-aliasing, but first I want to ask another
+question: is there any hope that the GTK2 patch goes into CVS or
+would I be going to maintain a separate patch all life long?
+
+Thanks for the quick responses anyway. :-) 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: <jbradford@di...> - 2002-09-11 17:28
+
+> I'd just like to ask you if a switch to GTK 2 is planned; the only
+> reason why I'm asking this is because of anti aliased fonts, which
+> seem to me quite important.
+
+Plus, you get PANGO capabilities. I.E. Eastern fonts can be made to work easily.
+
+> If it's OK and nobody's working on it, I may try to do it myself;
+> with much emphasis on *try*.
+
+Have a look at this thread on the mailing list:
+
+http://www.geocrawler.com/archives/3/702/2002/6/0/8944485/
+
+it might be a good place to start.
+
+John. 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Chris Wareham <cwareham@bt...> - 2002-09-11 16:54
+
+Nicola Girardi wrote:
+> I'd just like to ask you if a switch to GTK 2 is planned; the only
+> reason why I'm asking this is because of anti aliased fonts, which
+> seem to me quite important.
+> 
+> If it's OK and nobody's working on it, I may try to do it myself;
+> with much emphasis on *try*.
+> 
+
+Someone posted a patch, or a link to a patch, which ported Dillo
+to GTK2. It was against the CVS version sometime after the last
+release, and doesn't apply cleanly to the current CVS version.
+If you poke through the mailing list archive, then you should
+be able to find the relevant post. I'm keeping my fingers crossed
+that the patch author might sort out the conflicts and post a
+new patch against the next stable release ...
+
+Chris 
+
+
+
+Re: [Dillo-dev]GTK 2
+
+From: Tomas Guemes <tomas@pa...> - 2002-09-11 16:42
+
+Hi Nicola,
+
+On Wed, 11 Sep 2002 16:49:21 +0200
+Nicola Girardi <nicola@g-...> wrote:
+
+> I'd just like to ask you if a switch to GTK 2 is planned; the only
+> reason why I'm asking this is because of anti aliased fonts, which
+> seem to me quite important.
+>
+> If it's OK and nobody's working on it, I may try to do it myself;
+> with much emphasis on *try*.
+> 
+> Thanks.
+> 
+
+There is a patch for GTK 2, i can't remember where you can get it but if
+you look into the list archive you will find the address.
+
+greetings 
+
+Tomas 
+
+
+
+[Dillo-dev]GTK 2
+
+From: Nicola Girardi <nicola@g-...> - 2002-09-11 16:29
+
+I'd just like to ask you if a switch to GTK 2 is planned; the only
+reason why I'm asking this is because of anti aliased fonts, which
+seem to me quite important.
+
+If it's OK and nobody's working on it, I may try to do it myself;
+with much emphasis on *try*.
+
+Thanks. 
+
+
+
+[Dillo-dev]dillo plugins ...
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-09-11 13:11
+
+Why not use dynamic loading ?
+
+fx. like octave functions written in c ?
+
+( dynamic binding is perhaps a better word .-) )
+
+One could still do the fork, but it would be much easier since it 
+would be possible to map callbacks and such fairly easily.
+
+Is this a 'dumb' idea or am I missing something ?
+
+I did some small tests and they seemed to work quite easily ?
+
+I was thinking of the problem of race conditions and such that was 
+mentioned previously, this should pretty much take care of that no ?
+
+/ Lars Segerlund. 
+
+
+
+[Dillo-dev]accessing yahoo/rediff/hotmail.
+
+From: Anish Somi <anishsomi@re...> - 2002-09-11 06:35
+
+Dillo is really a wonderful web browser. However I cannot access 
+emails from the following sites:
+rediff.com/yahoo.com/hotmail.com
+Is it because they use javascript and https? Any other wy to get 
+around it?
+-Regards Anurag 
+
+
+
+[Dillo-dev]Problem saving search on eBay
+
+From: Miernik <miernik@ct...> - 2002-09-09 08:33
+
+When I want to save a search on eBay, I get a page to input username &
+password. Whe I do that I get a page with URL:
+
+http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?AddSavedSearch&amp;savedsearch=http%3A%2F%2Fsearch.ebay.com%2Fsearch%2Fsearch.dll%3FGetResult%26st%3D2%26SortProperty%3DMetaEndSort%26query%3Dpci%2Bdvb%26srchdesc%3Dy%26ebaytag1%3Debayreg%26ht%3D1%26combine%3Dy&amp;domainname=&amp;attributestring=&amp;myfavlogin=0&amp;pass=ojSjnGog1aeA7Ef.li4T7/&amp;userid=miernikus
+
+(I've changed some characters in the encoded password before posting it
+here, as not to disclose my password).
+
+This page says:
+
+One of the parameters received was invalid for this function. This
+probably means that your browser had problems with the form or you invoked
+the function incorrectly.
+
+The tethereal log of this request is:
+
+Hypertext Transfer Protocol
+GET /aw-cgi/eBayISAPI.dll?AddSavedSearch&amp;savedsearch=http%3A%2F%2Fsearch.ebay.com%2Fsearch%2Fsearch.dll%3FGetResult%26st%3D2%26SortProperty%3DMetaEndSort%26query%3Dpci%2Bdvb%26srchdesc%3Dy%26ebaytag1%3Debayreg%26ht%3D1%26combine%3Dy&am
+Cache-Control: no-cache\r\n
+Pragma: no-cache\r\n
+Host: cgi1.ebay.com\r\n
+User-Agent: Dillo/0.6.6\r\n
+Cookie2: $Version="1"\r\n
+Cookie: keepmesignin=in; $Path=/; $Domain=.ebay.com; ebaysignin=in; $Path=/; $Domain=.ebay.com; nonsession=AQAAAAQAAAAIAAAAVAAAADkvfD05vKM9MDEwMzE1NDg3Mjl4NjFodHRwOi8vY2dpLmViYXkuY29tL3dzL2VCYXlJU0FQSS5kbGw/Vmlld0l0ZW0maXRlbT0xMzc5NTUwMTMy
+
+
+(The GET request got turncated here, probably by tethereal display, or my
+terminal).
+
+-- 
+Miernik _____________________________________
+/ /
+tel.: +48603070983 / / mailto:miernik@ct...
+__________________/___/ ICQ UIN: 4004001 
+
+
+
+Re: [Dillo-dev]Bug: sometimes adding spaces between parameters on eBay
+
+From: <jbradford@di...> - 2002-09-08 15:37
+
+> > Dillo works mostly OK on eBay, but sometimes I get a nasty bug, when it
+> > adds spaces between parameters when I click a link, like this:
+> > 
+> > http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?MakeTrack&item= 1379550132
+> 
+> The problem is that the source of the page looks like this :
+> 
+> http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?MakeTrack&item=
+> 1379550132
+> 
+> i.e. there is a RETURN and the RETURN gets translated into
+> a space. I haven't looked for why this happens, I only
+> noticed that, too, and found that reason. Maybe it helps
+> somebody to fix it :-)
+
+The solution is to ask the maintainer of the webpage to fix their incorrect HTML :-).
+
+I pointed a similar problem out to the people at http://www.hlj.com, and they fixed it within about a day, and thanked me for pointing it out! It is possible that other webmasters might not be as helpful, though.
+
+John. 
+
+
+
+Re: [Dillo-dev]Bug: sometimes adding spaces between parameters on eBay
+
+From: Andreas Schweitzer <Andreas.Schweitzer@hs...> - 2002-09-08 15:12
+
+Hi,
+
+> Dillo works mostly OK on eBay, but sometimes I get a nasty bug, when it
+> adds spaces between parameters when I click a link, like this:
+> 
+> http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?MakeTrack&item= 1379550132
+
+The problem is that the source of the page looks like this :
+
+http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?MakeTrack&item=
+1379550132
+
+i.e. there is a RETURN and the RETURN gets translated into
+a space. I haven't looked for why this happens, I only
+noticed that, too, and found that reason. Maybe it helps
+somebody to fix it :-)
+
+Cheers,
+Andreas
+
+-- 
+**************************** NEW ADDRESS ******************************
+Hamburger Sternwarte Universitaet Hamburg
+Gojenbergsweg 112 Tel. ++49 40 42891 4016
+D-21029 Hamburg, Germany Fax. ++49 40 42891 4198 
+
+
+
+[Dillo-dev]Bug: sometimes adding spaces between parameters on eBay
+
+From: Miernik <miernik@ct...> - 2002-09-08 00:19
+
+Hi,
+
+Dillo works mostly OK on eBay, but sometimes I get a nasty bug, when it
+adds spaces between parameters when I click a link, like this:
+
+http://cgi1.ebay.com/aw-cgi/eBayISAPI.dll?MakeTrack&item= 1379550132
+
+There shouldn't be a space in the request between item= and 1379550132
+
+P.S. Is the work on frames support getting anything forward?
+
+-- 
+Miernik _____________________________________
+/ /
+tel.: +48603070983 / / mailto:miernik@ct...
+__________________/___/ ICQ UIN: 4004001 
+
+
+
+[Dillo-dev]plugins.
+
+From: Kyle Schmitt <azephrahel@ya...> - 2002-09-07 21:54
+
+Hi,
+From reading the posts to the mailing list, I get
+the
+idea that a plugin interface exists (well from you get
+the idea there must be at least 3 unfinished
+attempts),
+but that it hasn't been released in any way
+whatsoever.
+...but from the web pages I get the idea the plugin
+interface IS in there right now, but not being used...
+
+Soooo, is it there? Is it partiall there? Can a
+patch
+to enable at least simple simple plugins be
+downloaded?
+
+I don't particularly care if it changes so much that a
+plugin written for 6.6 wont' work with 6.7, I just
+wanna
+try writing some plugins.
+
+Thanks -- Kyle
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Finance - Get real-time stock quotes
+http://finance.yahoo.com 
+
+
+
+[Dillo-dev]dillo (fwd)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-09-03 23:36
+
+---------- Forwarded message ----------
+Date: Thu, 29 Aug 2002 22:35:09 -0700
+From: David Tarsi <dtarsi@pr...>
+To: jcid@ma...
+Subject: dillo
+
+Hello ;
+My name is Dave. I have downloaded and installed Dillo on my Red Hat 7.3
+system running on a Compaq 2700T laptop. Wonderful!!!!!!!!!!
+Thank you!!!!!!! It's fast , it's simple , it's easy to install. Thank
+you so much for your efforts!!!!!.
+
+
+Sincerely , Dave T. 
+

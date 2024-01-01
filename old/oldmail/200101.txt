@@ -1,0 +1,311 @@
+[Dillo-dev]Frames
+
+From: Sam Dennis <sam@ma...> - 2001-01-31 15:24
+
+Apologies to anyone who's thinking of working on frames, but I've started.
+
+Expect patches Very Soon.
+
+-- 
+Sam Dennis <sam@ma...>
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]0.4.0 devel-branch
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-01-29 23:55
+
+--------------------------------------
+This message is from Sebastian Geerken
+--------------------------------------
+
+Hi!
+
+Just a few words: The most important task is now to make 0.4.0
+stable, but in future there will also be a few enhancements, in speed
+and code structure (both esp. in dw_page.c).
+
+Livio, I tried to answer your question, but my mail got lost twice:
+> Recently I've inserted bug #116, to support ALT attributes in `img'
+> tags. Starting out the code, I realized that some of the needed
+> changes would go in dw_page.c and possibly html.c. Well I just read in
+> Allan's News, that Sebastian is planning to release his new Dw...
+>
+> Sebastian, have you done anything about the ALT attribute? And if
+> not should I wait a while for you to release what your doing before
+> trying to support ALT?
+
+There are the signal functions "enter_notify" and "leave_notify"
+which should be used for this. Just insert your code into
+Dw_image_enter_notify and Dw_image_leave_notify.
+
+Sebastian
+
+PS: Bugs No. 1002 and 1003 are no segfaults, I just forgot to change
+the menus in the form. 
+
+
+
+Re: [Dillo-dev]0.4.0 development branch
+
+From: Sam Dennis <sam@ma...> - 2001-01-29 18:29
+
+On Sun, Jan 28, 2001 at 10:30:46AM -0300, Jorge Arellano Cid wrote:
+> The new DwWidget will be the base for TABLE and FRAME support.
+> 
+> 
+> Any questions?, just ask!
+
+Er, just one, really. How will it actually be easier to implement tables and
+frames with the changes than without?
+
+-- 
+Sam Dennis <sam@ma...>
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]0.4.0 development branch
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-01-28 13:36
+
+Hi there!
+
+
+It's been a long time without any posts, but dillo has
+continued evolving silently!
+
+The good news is that finally the new widget set (DwWidget),
+by Sebastian, is available from CVS. It is not yet the main
+branch, but we're strongly working to that goal. Just review the
+updated web site and you'll find the details.
+
+We need all our developing efforts concentrated in making this
+new branch, as stable and featured as dillo-0.3.1 in order to
+make a new release based upon it.
+
+The new DwWidget will be the base for TABLE and FRAME support.
+
+
+Any questions?, just ask!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]New Dw
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-01-11 16:29
+
+Sebastian,
+
+Finally I get news from you!!!
+(I know it is NOT your fault)
+
+
+> Ok, this is the fourth trial. There are a some news: the new Dw is
+> now up-to-date with dillo-0.3.1,
+
+Does it mean that it currently implements the same
+functionallity?
+
+> including the changes in dw_page.c
+> (esp. find text and image maps), and I ported the hruler and the
+> bullet widget.
+
+Good.
+
+------------
+
+> Hi Jorge,
+>
+> did you receive my mail from Dec 14 (which was already a copy of a
+> mail sent at Dec 12)? I send it again, since I know you have had
+> severe problems with your mail server.
+
+I never did receive one until now :(
+
+> ------
+>
+> Hi Jorge,
+>
+> I've come to a point where the new Dw has a final interface, and is
+> already usable enough (although buggy and a bit incomplete, and not
+> very well tested), from outside (e.g. the html parser) as well as for
+> someone who writes a new widget. Currently I'm reviewing the sources,
+> adding comments and writing some documentation. I plan to make this
+> state available for other dillo developers, together with comments
+> about current bugs.
+
+Yes, documentation is a big need because it constitutes
+everyone else's starting point. When you finish the documentation
+it will be the right moment to try the integration.
+
+> [...]
+> My changes outside of Dw are marginal, so coordination with the
+> official release should be possible simply by patches. Dw has mostly
+> been rewritten (except DwPage, but it was heavily modified), but I'll
+> try to include relevant modifications on the old Dw into the new one,
+> at every release (I won't regard the CVS versions).
+>
+> The reason I wrote this is the question "Tarball vs. CVS": I don't
+> have experiences in using CVS and think that updating a tarball from
+> time to time should work well enough. But I don't really prefer one
+> of both. A further problem is the coordination of the further work,
+> should e.g. the bug tracking engine be used? Anyway, I don't think
+> that the problems will be that big, because the work will continue in
+> a quite closed manner, until the Dw becomes part of the official
+> release.
+
+Well, my plan for the integration/polishing process is to
+freeze dillo development into a bux-fixing state (no new-feature
+additions), and try to work out the new Dw until it supports the
+same functionallity (or more) of the 0.3.1 release.
+
+Obviously we need the new-Dw to be potentially capable of
+undertaking all the required functionallity before we start
+merging.
+
+The idea behind this is to keep a single development branch (we
+have little manpower and past experiences had shown that is
+better to keep focused on a single tree...), and to emerge with a
+new source tree that includes the new-Dw and also provides the
+older features with at least the same stability degree that 0.3.1
+has now (that's the way I replaced the whole IO engine, the whole
+cache system, and also the way the new internal layers got into
+the code!).
+
+Once we start with this, we'll all be working the CVS tree
+(You and I with write access), and you reviewing the patches (if
+you accept, of course).
+
+On the coordination effort, I can easily set a new bug-track
+for the CVS branch, so once we finish producing the 0.4.0 release
+we can get back into the older one.
+
+Up to this point, the key questions are:
+
+Is the new Dw able to handle all the current functionallity?
+Is the new-Dw potentially able to handle tables and frames?
+Is it faster or slower than the current one?
+Do you foresee any problems if we start now?
+Is the documentation ready?
+Do you feel like taking responsibility for patch reviewing and
+integration for Dw related code, at least at this integration
+stage?
+
+
+Needless to say, I feel very motivated with this effort and I
+only hope that our scarce, but very appreciated developers join
+us in this big step!
+
+
+Sincerely
+Jorge.- 
+
+
+
+[Dillo-dev]New bug-track
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-01-10 23:36
+
+Hi,
+
+I just finished porting the bug-track to python and moving it
+to sourceforge; I hope this results in better response times for
+everyone.
+
+You may experiment some problems due to intermediate network
+caches. If you receive a message saying that the requested url
+doesn't exist (for a cgi), a simple reload of the previous page
+solves it! i.e. a single reload of the three links in Dbugtrack
+will solve the problem forever.
+
+Unfortunately, dillo does not perform end-to-end reload
+(BUG-64), so you'll need lynx or anyother to do the reloads. Once
+this is done you can keep using dillo.
+
+BTW: Bug-64 is very easy to hack-fix (a few sprinkled lines),
+but the plan is to fix the URL data-passing scheme with a view to
+have the required basis to solve a bunch of related problems
+(We are working with Livio on it).
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]jcid's nettaxi email account
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2001-01-09 04:02
+
+On 08-Jan-2001 Jorge Arellano Cid wrote:
+> 
+> Hi,
+> 
+> Unfortunately jcid*nettaxi.com seems to be down since the
+> first day of 2001; I can send but not receive any email there, if
+> anyone has sent me some emails this year, please resend them to
+> my jcid*ematic.com address.
+> 
+> I'll appreciate it very much because one of the things I
+> really dislike is to loose email, and appear as I'm the one that
+> doesn't answer them.
+> 
+
+I can hear the list and you just fine. 
+
+
+
+[Dillo-dev]jcid's nettaxi email account
+
+From: Jorge Arellano Cid <jcid@em...> - 2001-01-09 00:57
+
+Hi,
+
+Unfortunately jcid*nettaxi.com seems to be down since the
+first day of 2001; I can send but not receive any email there, if
+anyone has sent me some emails this year, please resend them to
+my jcid*ematic.com address.
+
+I'll appreciate it very much because one of the things I
+really dislike is to loose email, and appear as I'm the one that
+doesn't answer them.
+
+
+Thank you very much.
+Jorge.- 
+
+
+
+[Dillo-dev]First post?
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-01-08 18:10
+
+Hi there!
+
+
+I hope you had enjoyed your Christmas and New year festivities.
+For those of us that remeain tuned (not on vacation yet), I would
+like to remind that dillo-0.3.1 was released and that its ready
+for download at the regular place.
+
+Well, it seems that this 2001 year has troubled computers a bit
+more than the so publicited Y2k. Some servers are working partly
+and frankly I don't know if our mailing list is up. BTW: I
+haven't received mail from developers since Dec 2000...
+Particularly, I want to contact Sebastian (I wrote hime twice
+before this mailing-list-try).
+
+Sourceforge still has problems with hit counters (page and
+downloads), but everything else seems fine.
+
+
+Cheers
+Jorge.- 
+
+

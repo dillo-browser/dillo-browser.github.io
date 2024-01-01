@@ -1,0 +1,670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Cascading Style Sheets
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<div lang=en>
+<h1>CSS in Dillo</h1>
+
+<div class=section>
+<h3>Finished</h3>
+<ul>
+  <li>Switch dillo style handling to CSS based infrastructure.
+  <li>Support loading of style sheets and embedded CSS.
+  <li>Handle "child" and "descendant" selector combinators.
+  <li>Apply CSS rules according to their specificity.
+  <li>Support @import rule.
+  <li>Support class definitions and selectors with multiple class names
+      (e.g. .foo.bar should match &lt;div class="foo dillo bar"&gt;).
+  <li>Support the "display" property.
+  <li>Handle "adjacent sibling" selector combinator.
+</ul>
+</div>
+
+<div class=section>
+<h3>Pending</h3>
+<ul>
+  <li>Support attribute selectors.
+  <li>Support floating objects.
+  <li>Handle dynamic pseudo-classes :hover, :active, and :focus.
+      (or maybe not wanted?)
+</ul>
+</div>
+<small>20150101</small>
+
+<hr>
+
+ We are following this <a href=
+"http://lists.dillo.org/pipermail/dillo-dev/2008-October/005274.html"
+ >implementation plan</a> <small>20081022</small><br>
+Developers with CSS expertise are greatly appreciated!
+<p>
+<b>Everything below this line is <em>many years old</em>.</b>
+<hr>
+There is an <a href="https://www.dillo.org/download/dillo-0.8.0-css-3.tar.gz">ancient prototype</a>
+which includes this text as documentation. See README in the tarball
+for more details.
+
+<pre>
+===================================
+ Cascading Style Sheets (Overview)
+===================================
+
+   Sebastian Geerken &lt;s.geerken@ping.de&gt;
+
+   Apr 2002: first version, posted to the developer's list      
+   Oct 2003: revised and extended, while implementing phase 1, adopted
+             as developer's documentation
+   Nov 2003: small corrections
+
+
+About
+=====
+
+This is an overview of the implementation of CSS in dillo, without
+details on the internals of the single modules, they are described in
+separate documents.
+
+This text does furthermore not cover the problems how to render
+particular attributes, since this is the task of the Dw module. Most
+attributes can already be rendered, some of them (e.g floats, fixed
+positions) have to be implemented, which can be done bit by bit.
+
+
+Modus Operandi
+==============
+
+The implementation of CSS is splitted into two phases. After phase 2,
+dillo will hopefully support full CSS, and it should be simple to add
+interesting features like XML/CSS parsing. Phase 1 concentrates on the
+general structure, and will have the following limitations:
+
+   1. There will be a distinction between simple and complex CSS
+      properties. A complex attribute is, in this context, defined as
+      an attribute, which change (after it has already been rendered)
+      will make structural changes in the widget tree necessary,
+      e.g. when changing the attribute "display" from "inline" to
+      "block", some words of the parent DwPage will have to be
+      replaced by a newly created DwPage, which furthermore will
+      contain these replaced words. On the other hand, changing simple
+      attributes like fonts, colors etc. will at most involve
+      recalculating sizes. [1]
+
+      In phase 1, the Doctree module will support the construction of
+      elements with complex properties, but no changes. Since HTML
+      rendering and CSS processing is done in in asynchronous way (see
+      below), this means that complex properties are only allowed in
+      the user agent and the user stylesheet.
+
+   2. The CSS module will only handle style sheets with very simple
+      selectors, we will first focus on a fast implementation.
+      Supported selectors only regard the element in question, and do
+      not support attributes, only (HTML) classes.
+
+      In phase 2, dillo will get a complete CSS engine, either written
+      from scratch, or an already existing one (e.g. RCSS by Raph
+      Levien).
+
+
+The User's View
+===============
+
+An important goal is asynchronous HTML/CSS parsing: when the HTML
+parser reads a &lt;LINK&gt; tag referring to an external style sheet, it
+continues to render the document _without_ the style sheet, while the
+style sheet (if it is not already in the cache) is retrieved and
+parsed parallel to this, and then applied on the current rendered part
+of the document. If the time difference is large enough, the user will
+notice a sudden change of colors, fonts, etc., but will be able to
+read the content with less delay time (which may be several seconds).
+
+
+Overview
+========
+
+The following diagram shows the associations between the data
+structures, and there multiplicities, for parsing HTML documents.
+Worth to notice is that for every document (represented by SgmlDoc),
+there is one document tree (Document) and one CSS context.
+
+   +------------+       +-------------+
+   | CssContext |&lt; - - -| Css_doctree |
+   +------------+       +-------------+
+      1 ^                   ^     |
+        |  , - - - - - - - -'     `- - - - - - - - - - - .
+      1 |  |                                             V
+    +---------+ 1                             1 +-----------------+
+    | SgmlDoc | ------------------------------&gt; | DoctreeDocument |
+    +---------+                                 +-----------------+
+         ^ 1                                              | 1
+         |                                                |
+         | 0..1                                           | *
+   +------------+ 1   *  +-----------+ 0..1  1  +----------------+ 0..1
+   | SgmlParser | -----&gt; | SgmlState | -------&gt; | DocTreeElement |---.
+   +------------+        +-----------+          +----------------+   |
+         .                     .                           * |       |
+        /_\                   /_\                            `-------'
+         |                     |
+         |                     |
+   +------------+        +-----------+
+   | HtmlParser |        | HtmlState |
+   +------------+        +-----------+
+         | 0..1
+         |
+         V 1
+     +--------+
+     | HtmlLB |
+     +--------+
+
+For more information about the SGML and the HTML parser, see
+"SGML.txt". In short, the purposes:
+
+   - HtmlParser exists as long as the HTML document is parsed, and is
+     inherited from SgmlParser, which contains all data for the
+     general SGML/XML parsing, while HtmlParser adds some HTML
+     specific data.
+
+   - SgmlDoc exists as long as a document is shown (partly, when the
+     SgmlParser still exists, or fully, after the SgmlParser has
+     already been destroyed). CSS operations are done related to this
+     structure, since CSS documents may be applied even if the
+     document has already been retrieved fully, and so the SgmlParser
+     does not exist anymore.
+
+   - HtmlLB exists as long as SgmlDoc exists. It adds some more data
+     like links and forms.
+
+The way how CssContext works in detail, is described in "CSS.txt"; its
+purpose, and details on the other structures are described below.
+
+A further role plays the module "Css_doctree", which provides no data
+structures, but provides some functions to prepare CSS values for the
+document tree.
+
+
+CssValue and DwStyle
+====================
+
+There are two ways style attributes are handled: CssProperty/CssValue
+and DwStyle. The first is used by the CSS module: CssProperty is an
+enumeration type, and CssValue a union, which represents values
+exactly in the way they have been parsed (i.e. the value may only
+depend on the property itself, not e.g. on the context, see below).
+
+Both, the document tree, and the dillo widget, use the structure
+DwStyle, which is created by the module "css_doctree", when the
+attributes for an element are evaluated. The representation of values
+differs generally from CssValue, a particular property is in one of
+the following categories (for the exact terminology, see [CSS2]
+chapter 6.1):
+
+    1. Absolute values are represented directly. Examples are absolute
+       lengths. The value "auto" is handled the same way.
+
+    2. Some relative values are immediately computed, this may depend
+       on attributes of the parent element. Examples are relative line
+       heights, i.e. "line-height: 150%" will be computed into an
+       absolute (pixel) value.
+
+    3. Other relative sizes are represented this way in DwStyle,
+       examples are relative widths and heights.
+
+Whether a specific attribute falls into category 2 or 3, is determined
+by two factors:
+
+    1. If the attribute value is independent of certain values, which
+       changes affect only the level of Dw (important: window size),
+       they can, for simplicity, put into category 2. Otherwise, they
+       must belong to 3. The latter may not be inherited, for the
+       reason, see next point.
+
+    2. Since only *computed* values may be inherited, attributes,
+       which values are inherited, may not be part of category 2,
+       since Dw will not be able to handle them correctly.
+
+
+The Document Tree
+=================
+
+The document tree has two purposes:
+
+   1. representation of the document structure, needed (in phase 2)
+      for the evaluation of CSS selectors, and
+   2. near-complete encapsulation of the dillo widget.
+
+The SGML parser accesses only the document tree, and not anymore Dw,
+only the HTML parser must, in some cases, refer to Dw directly.  The
+interface is similar to a small subset of the Document Object Model
+(see [DOM2]) [2], and provides methods for the following purposes:
+
+   1. construction of nodes (mainly elements and text), adding them to
+      other nodes,
+   2. examining the structure (e.g. for evaluating CSS selectors),
+   3. assigning style attributes,
+   4. drawing, and
+   5. changing the pseudo class.
+
+Some notes about the latter three points: The document tree is in most
+cases able to construct and access the Dw structures simply by style
+attributes. E.g., if the attribute "display" has the value "table", it
+"knows" that it must create a DwTable and add it to the DwPage
+associated with the parent node. This way, the SGML/HTML parser may be
+simplified, much functionality can be replaced by a user-agent-defined
+style sheet, as in [CSS2] appendix A.
+
+Since this is not in all cases possible, two back-doors are kept open:
+
+   1. It is possible to add a special type of element to the tree,
+      with a specified DwWidget. The &lt;img&gt; tag is processed this
+      way.
+
+   2. Both, DwStyle and CssProperty/CssValue, are extended by
+      non-standard attributes, when necessary. For better distinction,
+      they are preceded by "x_".  Examples are "x_link" and "x_colspan".
+
+An element may have a pseudo class, which is used in the style
+evaluation (see below). Changing this is e.g. done when the user
+clicks on a not yet visited link, the pseudo class then switches from
+"link" to "visited".
+
+
+Changes in Dw
+-------------
+(This is only relevant for phase 2.)
+
+Dw will certainly change for CSS, but some restrictions, which are
+inherent to the basic design, will not attempted to be overcome, since
+this would make Dw over-complicated. Instead the complexity is
+apportioned on both modules, Dw and the document tree. Some
+restrictions to consider:
+
+   - The allocation (this is the space a widget a widget allocates at
+     a time) of a dillo widget is always rectangular, so that e.g. an
+     inline section cannot be represented as a widget, but only as a
+     part of a widget. (Furthermore, a dillo widget is rather complex,
+     so that the number of widgets should be limited.)
+
+   - The allocation of a child widget must be a within the allocation
+     of the parent widget. In some cases, this leads to a widget tree,
+     which order differs from the document tree; e.g. since the HTML
+     document snippet
+
+        &lt;ul&gt;
+          &lt;li&gt;Some text.&lt;/li&gt;
+          &lt;li&gt;
+            &lt;div style="float:right; width=50%"&gt;Some longer text, so
+              that the effect described in this passage can be
+              demonstrated.
+            &lt;/div&gt;
+            Some more and longer text.&lt;/li&gt;
+          &lt;li&gt;Final text.&lt;/li&gt;
+        &lt;/ul&gt;
+
+     may be rendered like this:
+
+         - - - - - - - - - - - - - - - - - - - - - - - - - .
+        |   * Some text.                                    
+            * Some more and      - - - - - - - - - - - - -.|
+        |     longer text.      |Some longer text, so that  
+            * Final text.        the effect described     ||
+        ` - - - - - - - - - - - |above in this passage can '
+                                 be demonstrated.         |
+                                ` - - - - - - - - - - -  -  
+
+     Dw will render this as a DwPage (for the &lt;ul&gt;, which contains
+     three DwListItem's (for the &lt;li&gt;'s), and the &lt;div&gt; section will
+     be a DwPage, too. However, due to the restriction mentioned
+     above, this DwPage cannot be a child of the second DwListItem,
+     since the allocation of the DwPage exceeds the one of the
+     DwListItem. Instead, it must be a child of a widget higher in the
+     tree.
+
+     (Notice that floats are not implemented yet.)
+
+   - Dw handles some state changes quite well, namely changes of
+     dimensions (e.g. sizes of images) and style changes of words.
+     More complex changes (see remarks on "complex attributes" in
+     "Modus Operandi" above), as they will be necessary with CSS,
+     affect the widget tree itself. Dw may be extended by operations
+     making this conversion possible at all, but switching is
+     generally the task of the document tree.
+
+
+The CSS Context (and the Css_doctree Module)
+============================================
+
+The CSS module is responsible for parsing style sheets, and evaluating
+CSS selectors ([CSS2] chapter 5). The current design will change when
+switching from phase 1 to phase 2, but some of the functions are only
+accessible by the Css_doctree submodule ("p_" prefix), which will
+absorb most design changes.
+
+The evaluation function (within Css_doctree) gets the element node,
+and the default attributes (DwStyle) as argument, and returns a
+DwStyle with the values described in the section "CssValue and
+DwStyle". The caller is responsible to determine the default
+attributes (those which are not changed, if no rule is found), either
+by setting them to default values, or copying them from the parent
+element.
+
+A "context" may combine several style documents, from different
+origins (see [CSS2] chapter 6.4), so that the parser always adds rules
+to a context. There is no need for an incremental parser, instead, a
+document is always parsed as a whole (see below).
+
+In some cases, it is necessary to add element-specific rules to the
+context, either for evaluating the "style" attribute, or to process
+(mostly deprecated) HTML elements and attributes.
+
+
+Pseudo Elements and Generated Content
+=====================================
+
+(Except list items, content generation is planned for phase 2, so most
+of this is irrelevant for phase 1.)
+
+Content is generated in two cases:
+
+   1. if the ":before" and ":after" pseudo elements are used ([CSS2]
+      chapter 5.12.3), and
+   2. for list items.
+
+Content generation is the task of the document tree. For dealing with
+":before" and ":after", one document element refers to three DwStyle:
+
+     (i) two from the evaluation of ":before" and ":after", and
+    (ii) one actual style.
+
+The actual style may be affected by the pseudo class of the element.
+
+(There are many things missing for pseudo elements, they have to be
+specified, and some may not be implemented in dillo.).
+
+
+What Actually Happens in Different Situations
+=============================================
+
+Adding Elements to the Tree
+---------------------------
+This happens after the parser has read an opening tag:
+
+   1. The HTML parser evaluates the element attributes to create one
+      or two new, element-specific rules, and inserts them into the
+      CSS context.
+
+   2. The SGML parser adds a new element to the current document
+      element.
+
+   3. From the CSS context, the style is determined, based on the
+      style of the parent, where some attributes are set to default
+      values.
+
+   4. This style is attached to the new element, and the element is
+      drawn (e.g. the appropriate DwWidget methods are called).
+
+Handling the &lt;STYLE&gt; Element
+----------------------------
+The content of &lt;STYLE&gt; is written into the stash. When &lt;/STYLE&gt; is
+read, following is done:
+
+   1. The HTML parser passes the stash content to the CSS parser,
+      which inserts the new rules into the CSS context.
+
+   2. The styles for the whole document are recalculated, and the
+      document is redrawn.
+
+Handling the &lt;LINK&gt; Element
+---------------------------
+An external style sheet is read by a special cache client, which
+writes the content into a buffer, and is associated with the document
+tree and the CSS context. If the data has been fully retrieved, the
+process is similar to &lt;STYLE&gt;, described above.
+
+What is important is to preserve the order the documents have been
+specified in the document, e.g. for
+
+   &lt;link href="style1.css" rel="stylesheet" type="text/css"&gt;
+   &lt;style&gt;
+     /* style sheet 2 */
+   &lt;/style&gt;
+
+it is likely that the content of &lt;style&gt; will be processed earlier,
+although it has been specified later in the HTML document. This is
+done by assigning numbers to the style sheet documents, which are
+increased each time &lt;link&gt; or &lt;style&gt; is processed.
+
+
+CSS/XML Parsing
+===============
+
+An interesting feature is handling XML documents and render them in a
+way defined by CSS, and specified in the XML document by the
+&lt;?xml-stylesheet?&gt; processing instruction (see [XML-SS]). This will be
+done by a new XML parser, which will be based on the current SGML
+parser, and handle generic XML documents, for which no cache client
+has been written in dillo.
+
+Notice that this will not make sense, before phase 2 of the document
+tree has been finished, since XML/CSS rendering will, unlike HTML/CSS
+rendering, depend largely on complex attributes in author stylesheets.
+
+
+Miscellaneous Notes
+===================
+
+This section is a reminder for things having to be considered, but do
+not fit to anywhere else.
+
+* (Only relevant for phase 2.) It is likely that style changes in the
+  document tree will affect the widget structure to an amount that
+  makes some external references (e.g. iterators) undefined. E.g.,
+  this may happen with the "find text" function:
+
+     1. The document, or a part of the document, has been loaded, but
+        not yet an external CSS style sheet referred by this document.
+
+     2. The user chooses "find text", inserts a search test, and
+        presses "OK". This will initialize the find text state,
+        instantiate an iterator, moving this iterator to the first
+        occurrence of the text in the document, and highlight text.
+
+     3. Before the user presses "OK", to find the next occurrence, the
+        style sheet has been fully retrieved, and is applied on the
+        document. In some cases, this may make it necessary to change
+        large parts of the current widget tree.
+
+     4. As soon as the user presses the "OK" button in the find text
+        dialog, the iterator is tried to be moved to the next
+        occurrence of the search text, but now it contains wild
+        pointers, and dillo will crash!
+
+  This case must at least be caught, so that the find text state can
+  be reset (and so finding text starts from the beginning, discarding
+  the current position). Better would be a way to "convert" the
+  iterators, so that their effective state remains. Details on the
+  latter depend on the detailed design of the document tree.
+
+
+Footnotes
+=========
+
+[1] FWIW, a complete list of supported attributes, both simple and
+    complex. These simple attributes are already fully implemented: 
+
+       background-color, border-spacing, color, font, font-family,
+       font-size, font-style, font-weight, text-align, vertical-align,
+       width.
+
+    These simple attributes are only partly implemented (at the time
+    when this was written):
+
+       border-{top|right|bottom|left}-color,
+       border-{top|right|bottom|left}-style,
+       border-{top|right|bottom|left}-width, text-decoration, height.
+
+    And these (still simple) ones not at all:
+
+       background-attachment, background-image, background-position,
+       background-repeat, border-collapse, clip, font-size-adjust,
+       font-stretch, font-variant, letter-spacing, max-height,
+       max-width, min-height, min-width, outline-color, outline-style,
+       outline-width, overflow, text-indent, text-shadow.
+
+    Two attributes are partly simple: A simple implementation of
+    'list-style-type' is only possible for 'disc', 'circle' and
+    'square', textual values (numbers etc.) are complex. Furthermore,
+    'white-space' can only implemented in a simple way for the values
+    'normal' and 'nowrap', not for 'pre'. (These attributes are
+    already both implemented, in the way, how simple/complex
+    attributes are planned for phase 1.)
+
+    These simple attributes make only sense in conjunction with
+    complex attributes:
+
+       clear, bottom, left, line-height, marker-offset, right, top.
+
+    This is the list of complex attributes:
+
+       caption-side, content, counter-increment, counter-reset,
+       cursor, direction, display, empty-cells, float,
+       list-style-image, list-style-position, marks, position, quotes,
+       text-transform, unicode-bidi, visibility, word-spacing, z-index.
+
+    Only 'display' is already implemented in the planned, limited way.
+
+    And, for completeness, dillo won't implement these, because they
+    cover other aspects dillo does not support:
+
+       azimuth, cue, cue-after, cue-before, elevation, pause,
+       pause-after pause-before, pitch, pitch-range, play-during,
+       richness, speak, speak-header speak-numeral, speak-punctuation,
+       speech-rate, stress, voice-family, volume, orphans, page,
+       page-break-after, page-break-before, page-break-inside, size,
+       widows.
+
+    Finally, a special case is 'table-layout', which will be ignored
+    by dillo, because of its way to render table. ('table-layout' only
+    describes the algorithm, not the result.)
+
+[2] In the future, it may be, that the document tree will be fully DOM
+    compliant. However, now, some compromises are made in regard to
+    the interfaces, e.g. there are no text nodes, but instead the
+    caller (the SGML parser) has to split the text into words and
+    spaces.
+
+
+References
+==========
+
+[CSS2]   Cascading Style Sheets, level 2, CSS2 Specification
+         http://www.w3.org/TR/1998/REC-CSS2-19980512
+
+[DOM2]   Document Object Model (DOM) Level 2 Core Specification
+         http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113
+
+[XML-SS] Associating Style Sheets with XML documents Version 1.0
+         http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/
+</pre>
+<hr>
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

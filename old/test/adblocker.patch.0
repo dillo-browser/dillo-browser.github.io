@@ -1,0 +1,393 @@
+diff -r 6c4735564ddc src/Makefile.am
+--- a/src/Makefile.am	Sun Dec 21 06:50:09 2008 +0000
++++ b/src/Makefile.am	Sun Dec 21 23:56:33 2008 +0000
+@@ -28,6 +28,8 @@ dillo_SOURCES = \
+ 	bw.c \
+ 	cookies.c \
+ 	cookies.h \
++        adblock.c \
++        adblock.h \
+ 	auth.c \
+ 	auth.h \
+ 	colors.c \
+diff -r 6c4735564ddc src/adblock.c
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/src/adblock.c	Sun Dec 21 23:56:33 2008 +0000
+@@ -0,0 +1,293 @@
++/*
++ * An ad blocker thing following the Adblock Plus syntax found at
++ * http://adblockplus.org/en/filters as it was in December 2008.
++ *
++ * This is not very tidy yet since I don't think it's in any danger of
++ * getting into the real tree without being changed into a dpi.
++ * Hence the conversational tone and everything...
++ *
++ * - Comment lines begin with '!'.
++ * - A "basic" rule has an implicit wildcard at each end. i.e., it's
++ *   just looking for a substring. A '|' character before or after
++ *   means turn off the wildcard behavior here.
++ * - A basic rule can contain wildcards. They may just mean '*'.
++ *   I don't know whether '?' is supposed to be special.
++ * - I think they regard any rule of the form /something/ as a regexp rule.
++ *
++ * - Now you prefix your rule with "@@" if it's an "exception rule" that
++ *   _prevents_ blocking.
++ * - And you can append '$' followed by comma-separated options.
++ *   Mostly these specify what types of URLs should be filtered,
++ *   i.e., image URL, script URL, etc. If the type is prefixed by a '~',
++ *   it means "_don't_ filter this type".
++ *   There is also an option for case-sensitive matching.
++ *
++ * LIMITATIONS
++ * 1. Is probably as slow as molasses.
++ * 2. Treats all non-regexp rules as case-sensitive.
++ *    GNU's fnmatch does have a FNM_CASEFOLD, though...
++ *    Just translating everything into regexps might be easiest in
++ *    a way, but I doubt it would help the presumably-slow speed.
++ * 3. Doesn't handle element hiding.
++ */
++
++#include <ctype.h>
++
++#include <fnmatch.h>
++#include <regex.h>
++
++#include "msg.h"
++#include "adblock.h"
++
++
++/* Filename in ~/.dillo/ . A preference to point directly to the file used by
++ * Adblock Plus would be nice.
++ */
++#define ADBLOCK_FILENAME "adblock"
++
++
++typedef enum {
++   ADBLOCK_ALLOW = 1 << 0,
++   ADBLOCK_REGEXP = 1 << 1,
++   ADBLOCK_MATCH_CASE = 1 << 2,
++} AdblockFlag_t;
++
++typedef struct {
++   const char *name;
++   AdblockType_t type;
++} AdblockOption_t;
++
++typedef struct {
++   char *str;
++   int flags;
++   int types;
++} AdblockRule_t;
++
++/*
++ * Types that don't apply to Dillo aren't included. I'm thinking that
++ * ADBLOCK_DOCUMENT could be used for HTTP redirection...
++ */
++const AdblockOption_t Options[] = {
++   {"image", ADBLOCK_IMAGE},
++   {"stylesheet", ADBLOCK_STYLESHEET},
++   {"document", ADBLOCK_DOCUMENT},
++};
++
++
++static Dlist *adblock_rules;
++
++
++/*
++ * Parse filter options. A typical options string might look
++ * something like "match-case, image, stylesheet"
++ *
++ * Return nonzero iff this rule is meaningful for Dillo.
++ * There's no sense in keeping a rule around that's only for
++ * XBL or DTD or whatever...
++ */
++static int Adblock_parse_filter_options(const char *options,
++                                        AdblockRule_t *rule)
++{
++   const int listlen = sizeof(Options) / sizeof(AdblockOption_t);
++   bool_t inverse = FALSE, types_seen = FALSE;
++   const char *ptr;
++   int i;
++
++   ptr = options;
++
++   while (*ptr) {
++      while (isspace(*ptr))
++         ptr++;
++      if (!dStrncasecmp(ptr, "match-case", 10)) {
++         rule->flags |= ADBLOCK_MATCH_CASE;
++         ptr += 10;
++      } else {
++         types_seen = TRUE;
++
++         if (*ptr == '~') {
++            if (!inverse) {
++               /* Initialize. First inverse seen (unless the user is mixing
++                * inverse and 'regular' type specifications, which seems
++                * inadvisable).
++                */
++               rule->types = ADBLOCK_ALL;
++            }
++            inverse = TRUE;
++            ptr++;
++         } else {
++            inverse = FALSE;
++         }
++         for (i = 0; i < listlen; i++) {
++            const char *name = Options[i].name;
++            int len = strlen(name);
++               if (!dStrncasecmp(ptr, name, len) &&
++                   ptr[len] != '-' && !isalpha(ptr[len])) {
++                  /* match */
++                  if (inverse) {
++                     rule->types &= ~Options[i].type;
++                  } else {
++                     rule->types |= Options[i].type;
++                  }
++                  ptr += len;
++                  break;
++            }
++         }
++      }
++      while (*ptr && *ptr != ',')
++         ptr++;
++      if (*ptr)
++         ptr++;
++   }
++   if (types_seen == FALSE) {
++      rule->types = ADBLOCK_ALL;
++   }
++   return (rule->types != 0);
++}
++
++/*
++ * Parse one line.
++ *
++ * A rule "with everything" might look something like
++ * "@@|text|$~object,match-case".
++ * There are also regex rules, "/text/" , which serve to add complexity.
++ */
++static AdblockRule_t *Adblock_parse_line(char *line)
++{
++   enum {BASIC_NO_WILDCARD, BASIC_WILDCARD, REGEXP_POSSIBLE};
++   int len, start;
++   const char *ptr;
++   Dstr *dstr;
++   AdblockRule_t *rule;
++   bool_t keep = TRUE;
++
++   dStrstrip(line);
++   ptr = line;
++   if (*ptr == '\0' || *ptr == '!') {
++      /* empty or comment */
++      return NULL;
++   }
++   rule = dNew0(AdblockRule_t, 1);
++
++   if (*ptr == '@' && ptr[1] == '@') {
++      rule->flags = ADBLOCK_ALLOW;
++      ptr += 2;
++   }
++   if (*ptr == '/') {
++      start = REGEXP_POSSIBLE;
++   }else if (*ptr == '|') {
++      start = BASIC_NO_WILDCARD;
++      ptr++;
++   } else {
++      start = BASIC_WILDCARD;
++   }
++   len = strcspn(ptr, "|$");
++   dstr = dStr_new("");
++
++   if (start == REGEXP_POSSIBLE && ptr[len-1] == '/' && ptr[len] != '|') {
++      /* /text/, and regexec() doesn't want the '/'s */
++      rule->flags |= ADBLOCK_REGEXP;
++      ptr++;
++      len -= 2;
++   } else if (start != BASIC_NO_WILDCARD) {
++      /* wildcard at beginning */
++      dStr_append_c(dstr, '*');
++   }
++   if (len > 0) {
++      dStr_append_l(dstr, ptr, len);
++      ptr += len;
++   }
++   if (*ptr == '|' || (rule->flags & ADBLOCK_REGEXP)) {
++      ptr++;
++   } else {
++      /* wildcard at end */
++      dStr_append_c(dstr, '*');
++   }
++   rule->str = dstr->str;
++   dStr_free(dstr, 0);
++
++   if (*ptr != '$') {
++      rule->types = ADBLOCK_ALL;
++   } else {
++      ptr++;
++      keep = Adblock_parse_filter_options(ptr, rule);
++   }
++   MSG("%s\n%s\nimg%d sty%d doc%d allow%d matchcase%d%s\n\n", line, rule->str,
++       rule->types & ADBLOCK_IMAGE, rule->types & ADBLOCK_STYLESHEET,
++       rule->types & ADBLOCK_DOCUMENT, rule->flags & ADBLOCK_ALLOW,
++       rule->flags & ADBLOCK_MATCH_CASE, (keep ? "" : "\nDISCARD!"));
++
++   if (!keep) {
++      dFree(rule);
++      rule = NULL;
++   }
++   return rule;
++}
++
++/*
++ * Initialize, reading rules from file.
++ */
++void a_Adblock_init()
++{
++   FILE *F_in;
++   char *filename, *line;
++
++   adblock_rules = dList_new(1);
++   filename = dStrconcat(dGethomedir(), "/.dillo/", ADBLOCK_FILENAME, NULL);
++
++   if ((F_in = fopen(filename, "r"))) {
++      while ((line = dGetline(F_in)) != NULL) {
++         AdblockRule_t *rule;         
++
++         if ((rule = Adblock_parse_line(line)))
++            dList_append(adblock_rules, rule);
++         dFree(line);
++      }
++      fclose(F_in);
++   } else {
++      MSG("adblock: Can't open rules file %s\n", filename);
++   }
++   dFree(filename);
++}
++
++/*
++ * Has this URL been blocked by the user?
++ */
++bool_t a_Adblock_permitted(const DilloUrl *url, AdblockType_t t)
++{
++   int i;
++   AdblockRule_t *rule;
++   bool_t allow = TRUE, match = FALSE;
++   regex_t buffer;
++
++   for (i = 0; (rule = dList_nth_data(adblock_rules, i)); i++) {
++      if (rule->types & t) {
++         if (rule->flags & ADBLOCK_REGEXP) {
++            int cflags = REG_NOSUB;
++            if (!(rule->flags & ADBLOCK_MATCH_CASE))
++               cflags |=  REG_ICASE;
++            if (regcomp(&buffer, rule->str, cflags)) {
++               MSG("regcomp didn't like rule string %s\n", rule->str);
++               /* Which might not mean that there's anything _wrong_ with
++                * the string necessarily. We'll see...
++                */
++            } else {
++               match = (regexec(&buffer, URL_STR(url), 0, NULL,
++                                0) == 0);
++               regfree(&buffer);
++            }
++         } else {
++            match = (fnmatch(rule->str, URL_STR(url), 0) == 0);
++         }
++         if (match) {
++            if (rule->flags & ADBLOCK_ALLOW) {
++               /* overrides any rule to block */
++               allow = TRUE;
++               break;
++            }
++            allow = FALSE;
++         }
++      }
++   }
++   return allow;
++}
++
+diff -r 6c4735564ddc src/adblock.h
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/src/adblock.h	Sun Dec 21 23:56:33 2008 +0000
+@@ -0,0 +1,38 @@
++#ifndef __ADBLOCK_H__
++#define __ADBLOCK_H__
++
++#ifdef __cplusplus
++extern "C" {
++#endif /* __cplusplus */
++
++#include "url.h"
++
++typedef enum {
++   ADBLOCK_NONE = 0,
++   ADBLOCK_IMAGE = 1 << 0,
++   ADBLOCK_STYLESHEET = 1 << 1,
++   ADBLOCK_DOCUMENT = 1 << 2,
++   ADBLOCK_ALL = ADBLOCK_DOCUMENT | (ADBLOCK_DOCUMENT - 1),
++#if 0
++   /* Not needed yet */
++      ADBLOCK_SCRIPT = 1 << 3,
++      ADBLOCK_BACKGROUND = 1 << 4,
++      ADBLOCK_OBJECT = 1 << 5,
++      ADBLOCK_XBL = 1 << 6,
++      ADBLOCK_PING = 1 << 7,
++      ADBLOCK_XMLHTTPREQUEST = 1 << 8,
++      ADBLOCK_OBJECT_SUBREQUEST = 1 << 9,
++      ADBLOCK_DTD = 1 << 10,
++      ADBLOCK_SUBDOCUMENT = 1 << 11,
++      ADBLOCK_OTHER = 1 << 12,
++#endif
++} AdblockType_t;
++
++
++void a_Adblock_init();
++bool_t a_Adblock_permitted(const DilloUrl *url, AdblockType_t t);
++
++#ifdef __cplusplus
++}
++#endif /* __cplusplus */
++#endif /* !__ADBLOCK_H__ */
+diff -r 6c4735564ddc src/dillo.cc
+--- a/src/dillo.cc	Sun Dec 21 06:50:09 2008 +0000
++++ b/src/dillo.cc	Sun Dec 21 23:56:33 2008 +0000
+@@ -46,6 +46,7 @@
+ #include "dicache.h"
+ #include "cookies.h"
+ #include "auth.h"
++#include "adblock.h"
+ 
+ /*
+  * Command line options structure
+@@ -269,6 +270,7 @@ int main(int argc, char **argv)
+    a_Bw_init();
+    a_Cookies_init();
+    a_Auth_init();
++   a_Adblock_init();
+ 
+    /* command line options override preferences */
+    if (options_got & DILLO_CLI_FULLWINDOW)
+diff -r 6c4735564ddc src/html.cc
+--- a/src/html.cc	Sun Dec 21 06:50:09 2008 +0000
++++ b/src/html.cc	Sun Dec 21 23:56:33 2008 +0000
+@@ -36,6 +36,7 @@
+ #include "nav.h"
+ #include "menu.hh"
+ #include "prefs.h"
++#include "adblock.h"
+ #include "capi.h"
+ #include "html.hh"
+ #include "html_common.hh"
+@@ -2136,8 +2137,9 @@ DilloImage *a_Html_add_new_image(DilloHt
+                       style_attrs);
+    }
+ 
+-   load_now = a_UIcmd_get_images_enabled(html->bw) ||
+-              (a_Capi_get_flags(url) & CAPI_IsCached);
++   load_now = (a_Capi_get_flags(url) & CAPI_IsCached) ||
++              (a_UIcmd_get_images_enabled(html->bw) &&
++               a_Adblock_permitted(url, ADBLOCK_IMAGE));
+    Html_add_new_linkimage(html, &url, load_now ? NULL : Image);
+    if (load_now)
+       Html_load_image(html->bw, url, Image);

@@ -1,0 +1,1378 @@
+Re: [Dillo-dev]Bug #4, #62, #63
+
+From: Seth de l'Isle <szoth@ub...> - 2000-07-31 20:08
+
+On Mon, Jul 31, 2000 at 11:47:36PM +0900, Eric GAUDET wrote:
+> Le 29-Jul-2000, on m'a dit : 
+
+> 
+> > Bug #63 (Segfault when you click enter in location field): I can't reproduce
+> > it.
+
+I found that bug running on an older slack install, when I tried to reproduce
+it on a newer mandrake install everything seemed fine.
+
+> > 
+> 
+> Me neither
+
+
+
+-- -- -- -- -- -- -- -- -- -- -- --. 
+,_ /) (\ _, Seth de l'Isle, President |
+>> <<,_,>> << Arctic Fox Technology Inc. |
+// _0.-.0_ \\ PO Box 70468 |
+\'._/ \_.'/ Fairbanks, AK 99707 |
+'-.\.--.--./.-' (907) 452-1199 |
+__/ : :Y: : \ _ http://www.ubertechnique.com |
+';, .-(_| : : | : : |_)-. ,:' -- -- -- -- -- -- -- -- --' 
+\\/.' |: : :|: : :| `.\//
+(/ |: : :|: : :| \)
+|: : :|: : :;
+/\ : : | : : /\
+(_/'.: :.: :.'\_)
+\\ `""`""` //
+jgs \\ //
+':. .:' 
+
+
+
+RE: [Dillo-dev]Bug #4, #62, #63
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-31 14:48
+
+Le 29-Jul-2000, on m'a dit : 
+> Hello World!
+> 
+> I've some questions on bug in subject!
+> 
+> Bug #4 (images as white square): I can reproduce it only with PNG. Gif and
+> jpeg works just fine. Maybe a png specific problem ?!?
+> 
+
+I noticed that too. I've been investigating dillo's source, and what I can tell
+so far is it seems to be a libpng bug : in png.c, function Png_datarow_callback
+calls the libpng function :
+png_progressive_combine_row(png_ptr, png->row_pointers[row_num], new_row);
+The 3 *same* parameters, can either build a (buggy) white row or the correct
+image row.
+I can't see anything wrong with png_ptr, which is pretty much always handled by
+libpng functions.
+I noticed the bug is much more frequent when there is several images : I wonder
+if my libpng is compiled reentrant.
+I'm using libpng-1.0.8-1mdk.rpm
+Does anybody have a system where this bug never occurs ? If so, please tell us
+your libpng version.
+
+> Bug #63 (Segfault when you click enter in location field): I can't reproduce
+> it.
+> 
+
+Me neither
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 31-Jul-2000 a 21:59:21
+---------------------------------- 
+
+
+
+[Dillo-dev]Bug #4, #62, #63
+
+From: Luca Rota <drake@it...> - 2000-07-31 09:39
+
+Hello World!
+
+I've some questions on bug in subject!
+
+Bug #4 (images as white square): I can reproduce it only with PNG. Gif and
+jpeg works just fine. Maybe a png specific problem ?!?
+
+Bug #62 (<hr> tag's width problem): Dw_hruler_size_nego_y() (file dw_hrule.c)
+is commented. But that code seem ok! It works! Why is commented?
+
+Bug #63 (Segfault when you click enter in location field): I can't reproduce it.
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]Html test suite
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-30 16:34
+
+I've done some pages to begin with : basic html structure, colors. I'm
+currently finishing the characters page. 
+But I'm not sure what's urgent to do next.
+
+What html specs do you want me to build test pages for (high and medium
+priority) ? Do you want first (only ?) well-formated documents, or do you need
+faulty documents too (missing, misplaced or incorrect tags)
+
+Here is a list topics we can test :
+- basic html structure
+- characters
+- Text rendering (style, colour, fonts)
+- Text formating (paragraphs)
+- Images
+- language (encoding, direction, AFAIK gtk+ can't print 16bits chars)
+- lists
+- links 
+- forms
+- tables
+- frames
+- objets
+- style sheets
+
+Eric
+
+PS: Do we aim for html 3 or html 4 compliance ?
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 31-Jul-2000 a 01:09:08
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]Re: Eric
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-29 00:47
+
+Eric,
+
+> Jorge,
+> I tryied 3 different email addresses yo mail you, all rejected. Where can I
+> send you the screenshots ?
+
+I got your emails. As a matter of fact, you can browse the
+screenshots in our site ;-)
+
+Thanks a lot Eric
+Jorge.-
+
+
+Ps: I've got some unanswered emails still... I've been very busy,
+but that's good! 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-29 00:47
+
+Sebastian,
+
+> > Jorge Arellano Cid wrote:
+> > > [...]
+> > > Ah, let me know if you'd prefer to continue working the patch
+> > > after next release (having the docs and new code), or to try to
+> > > push it into dillo 0.2.3.
+> > 
+> > Docs is currently not the matter (unless I would find out a much more
+> > elegant solution after I've better understood the code ;-), but there is
+> > still a bit to do, so it depends on when you are planning to release
+> > version 0.2.3.
+> 
+> Perhaps, it *is* a matter. I have unterstood Dw not well, but mostly
+> well enough for my problem. But there are some other problems.
+
+I think it's a matter cause it doesn't work as expected. Some
+parts are missing, some other are incomplete, and some have
+workaround tweaks.
+For instance, when Jörgen fixed the checkboxes, his code was
+right, but it didn't work because button widgets were not
+receiving the expose events.
+
+If the "scroller" and "view" code was right, maybe I'd suggest
+you to try a patch based on "changed" and "value changed"
+signals, but that code is a mess!
+
+> A current problem is: When do the pixel positions of anchors definitely
+> have their correct values?
+
+When all the previous images sizes are known. This is not
+deterministic, and heavily depends on network traffic. Even more,
+if we add more resizing widgets, those should be accounted too.
+
+> They sometimes must be corrected (e. g.
+> because the size of an image was unknown before),
+
+Yes.
+
+> so the scrolling
+> position sometimes changes in my timeout function, which does therefor
+> not stop after this was successful (otherwise you have often wrong
+> scroller positions), but first when a flag in DwScroller is set.
+> 
+> Where should this flag be set? I only tried Html_close, and I get
+> *allways* the correct scroller position (although I did not expect
+> that), but often the timeout function continues. (Even when not the
+> two cases are given: 1. no HTML, 2. the transmission was canceled.)
+
+I see several things here:
+
+- The timeout function should not override user scrolling
+(i.e. if the user scrolls the page with the mouse).
+- Html_close can't be trusted to happen.
+- Image reception can't be trusted.
+- It would be nice to have a #anchor display function that
+doesn't get fooled with page resizes (as we're trying).
+
+Maybe, if the timeout function validates itself, the problem can
+be addressed in a simpler way. I mean, let the timeout function
+start, poll until it finds the #anchor, then set its AnchorFound
+flag and to continue correcting the value until:
+
+- #anchor is not found anymore or
+- user scrolls the page (either with keyboard or with mouse)
+
+When one of those happens, it removes itself.
+
+I know this is not perfect, but you'll find a way! ;)
+
+
+Jorge.-
+
+Ps: It took some time to build this hint. I hope it helps! 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-07-28 13:27
+
+I wrote:
+> [...] 
+> Jorge Arellano Cid wrote:
+> > [...]
+> > Ah, let me know if you'd prefer to continue working the patch
+> > after next release (having the docs and new code), or to try to
+> > push it into dillo 0.2.3.
+> 
+> Docs is currently not the matter (unless I would find out a much more
+> elegant solution after I've better understood the code ;-), but there is
+> still a bit to do, so it depends on when you are planning to release
+> version 0.2.3.
+
+Perhaps, it *is* a matter. I have unterstood Dw not well, but mostly
+well enough for my problem. But there are some other problems.
+
+A current problem is: When do the pixel positions of anchors definitely
+have their correct values? They sometimes must be corrected (e. g.
+because the size of an image was unknown before), so the scrolling
+position sometimes changes in my timeout function, which does therefor
+not stop after this was successful (otherwise you have often wrong
+scroller positions), but first when a flag in DwScroller is set.
+
+Where should this flag be set? I only tried Html_close, and I get
+*allways* the correct scroller position (although I did not expect
+that), but often the timeout function continues. (Even when not the
+two cases are given: 1. no HTML, 2. the transmission was canceled.)
+
+I tried to traceback Html_close in gdb, but for my taste there are to
+much void pointers ;-)
+
+Sebastian. 
+
+
+
+RE: [Dillo-dev]Re: Eric
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-28 04:38
+
+Jorge,
+I tryied 3 different email addresses yo mail you, all rejected. Where can I
+send you the screenshots ?
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Jul-2000 a 13:36:08
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-07-27 16:29
+
+Hi, Jorge!
+
+Jorge Arellano Cid wrote:
+> [...]
+> > Currently, I store the requested anchor (what Nav_open_url reads behind
+> > the "#") in DwGtkScroller (which I find somehow logical), but this is
+> > only a detail which may be changed.
+> 
+> Yes, to DwPage.
+> In the next release I'll include more documentation about Dw.
+> 
+> Doc Preview :-)
+> 
+> DwGtkScroller is the topmost widget, it contains the vertical
+> and horizontal scrollers and GtkDwView. GtkDwView serves as the
+> container for the topmost Dw.
+> When the HTML page changes, these widgets remain, only the
+> topmost Dw is destroyed and new one created.
+> 
+> So, it seems to me that te #anchor belongs to DwPage.
+
+The new DwPage does not exist in Nav_open_url, so I put the #anchor in
+GtkDwScroller; but it is removed when it isn't used anymore.
+
+For an implementation of frames there should probably a new Dw widget
+DwFrameSet or so, but since frames can be scrolled, the DwFrameSet may
+perhaps itself contain other GtkDwScoller's with there own 
+#anchors, so (and because currently there aren't any concrete ideas
+about frames) I don't change this (in the near future).
+
+> > However, "queuing" this adjustment
+> > setting (in the case the page has to be loaded) brings some problems.
+> > The way I mentioned (in Dw_page_rewrap or Html_open_a) does not work,
+> > either a few others (e. g. Html_close). In any case,
+> > gtk_adjustment_set_value is called, but is has no effect.
+> 
+> What about adding an idle function to change the adjustment
+> value when the #anchor is found?
+> I mean, making a gtk idle function to poll the widget for the
+> requested anchor until it succeeds, and after that, changing the
+> adjustment value.
+
+Perhaps better a timeout function (with a small intervall of 200 ms or
+so), since idle functions take a lot of CPU time.
+
+I have tested it and --- it did not work :-)
+
+But I have found a solution (based on a timeout function) that works! By
+debugging I realized that there are problems when this timeout function
+accesses the DwPage's hashtable (again threads?), so I rewrote this
+function, so it does not access the hashtable in any case. In theory
+this should work always, in practise there are a few problems in some
+special cases, but I think this is the right way.
+
+> [...]
+> Ah, let me know if you'd prefer to continue working the patch
+> after next release (having the docs and new code), or to try to
+> push it into dillo 0.2.3.
+
+Docs is currently not the matter (unless I would find out a much more
+elegant solution after I've better understood the code ;-), but there is
+still a bit to do, so it depends on when you are planning to release
+version 0.2.3.
+
+Sebastian. 
+
+
+
+RE: [Dillo-dev]Re: Eric
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-27 05:05
+
+Le 26-Jul-2000, on m'a dit : 
+> Considering your skills, you have several choices to contribute!
+> 
+> - We need to assemble an HTML test suite. I have a bunch of
+> pages for that purpose, but it'd be great to make a master HTML
+> testing page with short descriptive links of what the page is
+> meant to test. We coul finally wrap it into a tar.gz and make
+> it available to other developers.
+> 
+
+I can do that. I'll submit the first pages in a day or two (the documentation
+will be in the page itself ;-).
+
+> - Finding bugs, identifying them and making good entries at the
+> bug track.
+> 
+
+I'm already doing that. I'm not sure I'm doing "good entries" tough ;-)
+
+> - Making a screenshots page for dillo (A few jpg thumbs with
+> links to middle sized jpg images).
+> 
+
+I can do that too. Middle sized would be 640x480 max ? Do you want me to do the
+page to present them too ?
+
+> - Implementing the bookmarks as an external plugin. The idea of
+> doing it keeps rolling in my mind. Basically a dpi:/ (dillo
+> plugin) URL can be defined, and when accessing dpi:/bm (bookmark)
+> an external program can be launched on a thread to 'cat' the
+> bookmarks file (this is very much like current file handling).
+> The point with this scheme is that the plugin can be extended
+> to achieve more functionality (add, move, remove bookmark, make
+> category, etc). All implemented in a CGI fashioned way.
+> With that example, other people can start thinking of other
+> plugins, like a man page processor, or info file processor, a
+> dillorc options interface, etc.
+> 
+
+You said that before and I love this idea. I'd like to see a practical example
+of plugin, even alpha stage, before I decide I can do it right.
+What I understand, is there's a program called bm in ~/.dillo/plugin/ or
+/usr/local/lib/dillo/ (or is it /usr/local/share/dillo/ ?), that take its
+arguments on the command line (ie : when calling the URL
+"dpi:/bm?subdirectoy=News&fontsize=16", dillo is opening a read only pipe with
+the command line "bm subdirectory=News fontsize=16"), then the program "bm"
+prints a html page in stdout (and can do something else, like writing a file
+on the disk), which page dillo will render.
+Is that what you have in mind ? If not, can you describe precisely the calling
+mecanism, as well as the data retrieving.
+
+> - Finish the 64bit CPU support.
+> I've been working on that. Standarized type handling and made
+> dillo compilable with lcc. Dillo "runs" on 64bit machines, but
+> very bad.
+> 
+
+I definitly can't do that, unless I benefit a donation of a 64bit workstation
+;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 27-Jul-2000 a 12:17:08
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Jorge Arellano Cid <jcid@ww...> - 2000-07-27 00:23
+
+Sebastian,
+(and everyone interested in Dw internals)
+
+> I indeed store the offsets in a hashtable (stored in DwPage, see below),
+> but these pseudo-widget are to make recalculating of them simpler when
+> the page is resized. More precisely, I added mainly following until now:
+> 
+> - Html_tag_open_a adds an anchor to the page and stores its current
+> offset in this hashtable. (This is done by a new function
+> a_Dw_page_add_anchor.)
+> 
+> - In Dw_page_rewrap this value is corrected. This is needed for resizing
+> of the page, as well as for images whose size changes (to the correct
+> value, after the size has been determined).
+> 
+> - I added a bit code to Nav_open_url, which I described already (see
+> below, after "> > ")
+> 
+> This first two points already work quite well.
+> 
+> If the page with this anchor has already be loaded (completely), when
+> Nav_open_url is called, only a gtk_adjustment_set_value(...) is needed.
+> This works already.
+
+Nice! [suggestions below]
+
+
+> > > o The point to start is Nav_open_url. This function should get the
+> > > requested anchor after the "#" and store it somewhere.
+> > 
+> > I think the best place for it is within the linkblock. This
+> > structure is used to handle auxiliary data structures derived
+> > from HTML procesing (as forms, base URL, etc).
+> > 
+> 
+> How long does a linkblock exist? The reason, why I stored the hashtable
+> for anchors in DwPage, is because these informations should exist as
+> long the user views the page. That is exactly as long the DwPage exists.
+
+At least until the form is sent :-)
+Use DwPage, I agree with you.
+
+> > > Probably, the
+> > > page should not be loaded when the href points to an anchor in the same
+> > > file. Later, the pixel position should be calculated. "Later" means:
+> > >
+> > > - when the page has already been loaded: immediatly, or
+> > > - otherwise: when the lines in the page are wrapped, or, perhaps,
+> > > already when the correct <a name="..."> is read (probably not).
+> > >
+> > > The last problem does not seem too hard.
+> But in practise, it *is* :-)
+
+See suggestions below.
+
+> > If we put the anchor (lets think of a gchar*) in the linkblock,
+> > NULL can mean NO anchor (draw from top), and anything else, draw
+> > from anchor. A new #anchor in the same page overwrites the former
+> > one.
+> > 
+> > That way, we won't fool the user when pressing the BACK key.
+> > One click would show the #anchor-scrolled page from the top and
+> > the next one would go back.
+> 
+> Do you mean to ignore the text before the <a name="...">? I thought of
+> setting the value of the DwGtkScroller's GtkAdjustment, so that the user
+> can scroll back and view the text before the anchor.
+
+I meant exactly what you wrote!
+(My point was not to queue multiple #anchor references, of the
+same page, in the navigation stack)
+
+
+> > > My question is: where to store the requested anchor? 
+> > > [...]
+> > 
+> > As I wrote above, my vote goes to the linkblock.
+
+Well, leave it in DwPage for now. Maybe in the future we'll use
+DwPage as a base widget for frames, and it seems simpler.
+
+
+> Currently, I store the requested anchor (what Nav_open_url reads behind
+> the "#") in DwGtkScroller (which I find somehow logical), but this is
+> only a detail which may be changed.
+
+Yes, to DwPage.
+In the next release I'll include more documentation about Dw.
+
+Doc Preview :-)
+
+DwGtkScroller is the topmost widget, it contains the vertical
+and horizontal scrollers and GtkDwView. GtkDwView serves as the
+container for the topmost Dw. 
+When the HTML page changes, these widgets remain, only the
+topmost Dw is destroyed and new one created.
+
+So, it seems to me that te #anchor belongs to DwPage.
+
+
+> However, "queuing" this adjustment
+> setting (in the case the page has to be loaded) brings some problems.
+> The way I mentioned (in Dw_page_rewrap or Html_open_a) does not work,
+> either a few others (e. g. Html_close). In any case,
+> gtk_adjustment_set_value is called, but is has no effect.
+
+What about adding an idle function to change the adjustment
+value when the #anchor is found?
+I mean, making a gtk idle function to poll the widget for the
+requested anchor until it succeeds, and after that, changing the
+adjustment value.
+
+> A reason for this may be the different threads, and I think Gtk isn't
+> thread-save (what is generally a problem with X).
+
+OH, I'll try to include more documentation (already wrote, but
+in .ps format...)
+
+Doc preview 2:
+
+The threaded systems in dillo were isolated for use only by the
+dns engine and file transfer. They don't mess with shared memory,
+and data exchange is carried on with pipes.
+Threads don't access, nor use GTK+ code.
+
+Plainly stated: If you're coding for dillo, and don't change
+anything in dns.c and file.c, you can forget about threads!
+
+
+> Actually, somehow the
+> text "gets visible" (sorry for this vague expression, but I don't know,
+> where), and this point is perhaps to continue. Perhaps someone can give
+> me some hints.
+
+Sure, I've had problems too when trying to understand it.
+
+Weird behaviour is most notably due to an incomplete
+implementation of the Dw mechanism. For instance:
+
+Dw_gtk_view_adjustment_changed does NOTHING!
+(But it gets called)
+
+I used Dw_gtk_view_v_scroll to solve the scrolling problem. If
+scrolling presents weird behaviour for you, start investigating
+from there.
+
+Ah, let me know if you'd prefer to continue working the patch
+after next release (having the docs and new code), or to try to
+push it into dillo 0.2.3.
+
+--
+--
+
+Ah, I've been working out the code, improved the rendering speed
+(yes it was possible), removed several segfault sources, fixed
+some bugs, etc.
+It seems we're close to 0.2.3.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Eric
+
+From: Jorge Arellano Cid <jcid@ww...> - 2000-07-27 00:23
+
+Hi everyone!
+(This is mainly several replies to Eric's posts, 
+but it's intended to everyone)
+
+> ...
+> However, is it a good thing,
+> when location bar focused, to map left and right arrows to move
+> the cursor, and up, down, page up, page down to scroll the page?
+
+I'm not sure, but it has proven practical!
+Let's keep it that way until someone comes with something better.
+
+> [personal skills]
+> I'd love to contribute to dillo, but I'd prefer the code to
+> be more documented.
+
+Me too!
+Documentation has been one of the key points in our efforts. We
+have advanced a lot with it (documenting inside and outside the
+code), but there's still work to do. No doubt.
+
+I'll include more docs in the next release (I write them as fast
+as I can). I'd also appreciate some feedback on the subject. What
+is already clear from the docs, and what needs more work. No one
+has written me a single line about it :-( --AFAIR
+
+--
+
+Considering your skills, you have several choices to contribute!
+
+- We need to assemble an HTML test suite. I have a bunch of
+pages for that purpose, but it'd be great to make a master HTML
+testing page with short descriptive links of what the page is
+meant to test. We coul finally wrap it into a tar.gz and make
+it available to other developers.
+
+- Finding bugs, identifying them and making good entries at the
+bug track.
+
+- Making a screenshots page for dillo (A few jpg thumbs with
+links to middle sized jpg images).
+
+- Implementing the bookmarks as an external plugin. The idea of
+doing it keeps rolling in my mind. Basically a dpi:/ (dillo
+plugin) URL can be defined, and when accessing dpi:/bm (bookmark)
+an external program can be launched on a thread to 'cat' the
+bookmarks file (this is very much like current file handling).
+The point with this scheme is that the plugin can be extended
+to achieve more functionality (add, move, remove bookmark, make
+category, etc). All implemented in a CGI fashioned way.
+With that example, other people can start thinking of other
+plugins, like a man page processor, or info file processor, a
+dillorc options interface, etc.
+
+- Finish the 64bit CPU support.
+I've been working on that. Standarized type handling and made
+dillo compilable with lcc. Dillo "runs" on 64bit machines, but
+very bad.
+
+
+Just tell me what you'd like to do (volunteers welcome).
+
+Sincerely
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-07-25 15:33
+
+Hi, again!
+
+Jorge Arellano Cid wrote:
+> 
+> Sebastian,
+> 
+> On 11 Jul 2000, Sebastian Geerken wrote:
+[...]
+> > 2. My basic idea is:
+> >
+> > o Extend the DwPage widget: add a new DW_PAGE_CONTENT_ANCHOR, which has
+> > zero size and is not drawn in any way.
+> 
+> Are you planning to get the offset from this pseudo-widget?
+>
+
+I indeed store the offsets in a hashtable (stored in DwPage, see below),
+but these pseudo-widget are to make recalculating of them simpler when
+the page is resized. More precisely, I added mainly following until now:
+
+- Html_tag_open_a adds an anchor to the page and stores its current
+offset in this hashtable. (This is done by a new function
+a_Dw_page_add_anchor.)
+
+- In Dw_page_rewrap this value is corrected. This is needed for resizing
+of the page, as well as for images whose size changes (to the correct
+value, after the size has been determined).
+
+- I added a bit code to Nav_open_url, which I described already (see
+below, after "> > ")
+
+This first two points already work quite well.
+
+If the page with this anchor has already be loaded (completely), when
+Nav_open_url is called, only a gtk_adjustment_set_value(...) is needed.
+This works already.
+
+> > o The point to start is Nav_open_url. This function should get the
+> > requested anchor after the "#" and store it somewhere.
+> 
+> I think the best place for it is within the linkblock. This
+> structure is used to handle auxiliary data structures derived
+> from HTML procesing (as forms, base URL, etc).
+> 
+
+How long does a linkblock exist? The reason, why I stored the hashtable
+for anchors in DwPage, is because these informations should exist as
+long the user views the page. That is exactly as long the DwPage exists.
+
+> > Probably, the
+> > page should not be loaded when the href points to an anchor in the same
+> > file. Later, the pixel position should be calculated. "Later" means:
+> >
+> > - when the page has already been loaded: immediatly, or
+> > - otherwise: when the lines in the page are wrapped, or, perhaps,
+> > already when the correct <a name="..."> is read (probably not).
+> >
+> > The last problem does not seem too hard.
+But in practise, it *is* :-)
+
+> 
+> If we put the anchor (lets think of a gchar*) in the linkblock,
+> NULL can mean NO anchor (draw from top), and anything else, draw
+> from anchor. A new #anchor in the same page overwrites the former
+> one.
+> 
+> That way, we won't fool the user when pressing the BACK key.
+> One click would show the #anchor-scrolled page from the top and
+> the next one would go back.
+
+Do you mean to ignore the text before the <a name="...">? I thought of
+setting the value of the DwGtkScroller's GtkAdjustment, so that the user
+can scroll back and view the text before the anchor.
+
+> 
+> > My question is: where to store
+> > the requested anchor? BrowserWindow would be simple, but when frames are
+> > implemented later, the requested anchor should belong to a frame. DwPage
+> > would be better, but when I follow all the created structures, there is
+> > a break in the IO/Mime module where the anchor gets lost (?). What about
+> > DwBorder becoming a base Widget for a frame?
+> 
+> As I wrote above, my vote goes to the linkblock.
+> We're still one step behind the frame implementation design.
+> Currently we're aiming towards a table representation for it.
+> Anyway, if it would finally get implemented in adifferent way,
+> the information, most probably would end in the linkblock!
+> 
+
+Currently, I store the requested anchor (what Nav_open_url reads behind
+the "#") in DwGtkScroller (which I find somehow logical), but this is
+only a detail which may be changed. However, "queuing" this adjustment
+setting (in the case the page has to be loaded) brings some problems.
+The way I mentioned (in Dw_page_rewrap or Html_open_a) does not work,
+either a few others (e. g. Html_close). In any case,
+gtk_adjustment_set_value is called, but is has no effect.
+
+A reason for this may be the different threads, and I think Gtk isn't
+thread-save (what is generally a problem with X). Actually, somehow the
+text "gets visible" (sorry for this vague expression, but I don't know,
+where), and this point is perhaps to continue. Perhaps someone can give
+me some hints.
+
+Sebastian. 
+
+
+
+Re: [Dillo-dev]Bug #57
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-07-25 08:19
+
+Jorge Arellano Cid wrote:
+> 
+> Hi!
+> 
+> Can anyone tell me how to reproduce bug #57? The procedure in
+> the bug-track works fine for me (no bug).
+> 
+> Jorge.-
+>
+
+I once encountered this bug (not by intention!), but I think it was in
+dillo 0.2.0. As I remember, it was due to some strange characters in the
+title; perhaps this hint might help.
+
+Otherwise: If I start dillo and open a new window (File/New Browser),
+the new window always has an empty bookmark menu. This is so strange
+that it seems to be intended ;-) 
+
+
+
+RE: [Dillo-dev]Bug #57
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-25 01:50
+
+Le 24-Jul-2000, on m'a dit : 
+> 
+> Hi!
+> 
+> Can anyone tell me how to reproduce bug #57? The procedure in
+> the bug-track works fine for me (no bug).
+> 
+> Jorge.-
+> 
+
+I don't konw if it's related, but the page shown by "view bookmarks" (file
+~/.dillo/bookmarks.html) doesn't list the same bookmarks than those in the
+"bookmark" menu : the bookmark menu contains all bookmarked URLs, but the
+bookmark file is only updated when exiting dillo, thus containing only the URLs
+present at dillo's launch.
+No random char for me. (dillo v0.2.2 with focus patch)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Jul-2000 a 23:07:33
+---------------------------------- 
+
+
+
+[Dillo-dev]Bug #57
+
+From: Jorge Arellano Cid <jcid@ww...> - 2000-07-24 12:56
+
+Hi!
+
+Can anyone tell me how to reproduce bug #57? The procedure in
+the bug-track works fine for me (no bug).
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-19 09:19
+
+Le 19-Jul-2000, on m'a dit : 
+> Eric,
+...
+> I sent you a patch for testing (private email), but if your
+> will to help is so good as described above, I'd very much like to
+> know your skills, just to know what I can ask you to do.
+> 
+> Sincerely
+> Jorge.-
+> 
+
+Patch tested and answered. I've never done gtk developement (nor motif, qt or
+any X toolkit), but I've been coding on linux for a year or so (C, pthreads,
+java, php3, html, sql), and I know how to compile and trace a program with
+xxgdb (I still have trouble with makefiles, no improvement to expect here
+because I'm heavily using CodeCrusader with automated makefiles generation, and
+I've got to read the man pages everytime I want to apply patches ;-)
+I haven't done C++ for a while, since I'm no more doing Visual C++
+developement. I wasn't so good doing that anyway :-/
+The "bigest" linux coding project I've been involved in is recoding a dockapp
+(wmtime) for my own fits. Dockapps only use Xlib for rendering. ... oh, and I
+tried to improve gnome-o-phone sending patches, but I stoped it because of an
+argument with the maintener because applying my patches was too much work for
+him.
+
+I'd love to contribute to dillo, but I'd prefer the code to be more documented.
+
+PS: I also know quite well forth, asm68k, and Dr's GEM toolkit, but I don't
+think you'll find that usefull for dillo ;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 19-Jul-2000 a 18:03:25
+"Not so long ago if you had a 3 1/2 inch floppy 
+you hoped nobody found out!"
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-19 01:17
+
+Eric,
+
+> [BUG 54]
+> If you guys need me to track this bug down, you just have to ask : I can
+> reproduce it every time. I can change to gtk-1.2.6, or whatever you ask. I
+> don't know what informations are pertinent for this problem (parameters passed
+> to the gtk_signal_emit_by_name() that can cause errors), name them and I'll do
+> a complete report.
+
+I sent you a patch for testing (private email), but if your
+will to help is so good as described above, I'd very much like to
+know your skills, just to know what I can ask you to do.
+
+Sincerely
+Jorge.- 
+
+
+
+[Dillo-dev]Dw?
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-18 00:35
+
+Hi there!
+
+Here's a question that keeps comming back to me:
+
+Q: What's the point in having the whole Dillo Widget mechanism
+over having a simple GTK+-derived widget set?
+
+I've found reasons like eliminating the window creation
+overhead for images, but, is that the main point of it? I doubt.
+
+
+Any light on the subject is welcomed.
+Jorge.- 
+
+
+
+[Dillo-dev]Bug #58 same as #58 ?
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-15 14:50
+
+Hi guys,
+I've read the bug list, and I have the feeling bug #35 and bug #58 are the same
+(#35 looks like an extreme case of #58 where the "small" page is scrolled too
+high)
+Does this info help ?
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Jul-2000 a 23:46:53
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-15 14:47
+
+Le 14-Jul-2000, on m'a dit : 
+> Il ven, 14 lug 2000, hai scritto:
+> > Hi again,
+> 
+> > There's still some weird code around "the line".
+> > Would you mind sending me a short patch Luca?
+> 
+> As you noticed Dw is incomplete. And it has some problem with focus, too.
+> 
+> Without Interface_handle_key_event() when the location bar has the focus and
+> you press Arrow Down (or Tab) the focus is lost. But Dw (and then Dw_view)
+> doesn't get it.
+> 
+
+...
+
+> 
+> If gtk_signal_emit_by_name() gives some problem well it's safe deleting this
+> line. But it's not a definitive solution. Please note that I've no problem
+> with gtk-1.2.6.
+> 
+
+If you guys need me to track this bug down, you just have to ask : I can
+reproduce it every time. I can change to gtk-1.2.6, or whatever you ask. I
+don't know what informations are pertinent for this problem (parameters passed
+to the gtk_signal_emit_by_name() that can cause errors), name them and I'll do
+a complete report.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Jul-2000 a 23:42:08
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Luca Rota <drake@it...> - 2000-07-15 12:54
+
+Il ven, 14 lug 2000, hai scritto:
+> Hi again,
+
+> There's still some weird code around "the line".
+> Would you mind sending me a short patch Luca?
+
+As you noticed Dw is incomplete. And it has some problem with focus, too.
+
+Without Interface_handle_key_event() when the location bar has the focus and
+you press Arrow Down (or Tab) the focus is lost. But Dw (and then Dw_view)
+doesn't get it.
+
+With Interface_handle_key_event() when the location bar has the focus and you
+press Arrow Down (or Arrow Up, Page Down, Page Up) this handler send a signal
+(with gtk_signal_emit_by_name()) to dw_view and stop the original signal. If we
+delete gtk_signal_emit_by_name(), dw_view doesn't get the key_press event and so
+the page isn't scrolled. If we delete gtk_signal_emit_stop_by_name() the
+location bar will lose the focus.
+
+If gtk_signal_emit_by_name() gives some problem well it's safe deleting this
+line. But it's not a definitive solution. Please note that I've no problem with
+gtk-1.2.6.
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-13 23:39
+
+Hi again,
+
+On Mon, 10 Jul 2000, Luca Rota wrote:
+
+> > Commenting this line prevents dillo form segfaulting when pressing PgUp,
+> > PgDown, Up and Down arrows, but I'm pretty sure this line has a purpose ;-) and
+> > just removing it is not what you'd call "clean fix".
+> 
+> Now, I think, it's safe deleting this line.
+> With my RedHat Linux box and gtk 1.2.6 I've no problem.
+
+There's still some weird code around "the line".
+Would you mind sending me a short patch Luca?
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-13 23:39
+
+Sebastian,
+
+
+On 11 Jul 2000, Sebastian Geerken wrote:
+
+> Hi!
+> 
+> I'm currently working on anchors (to get URL's like "foo#bar" rendered
+> correctly, bug #10), and I have two questions:
+
+Good!
+That's would make dillo much better.
+
+> 1. Does anyone do anything on tables? It's because I will change the
+> DwPage widget, and this is probably also necessary for tables; so we
+> should avoid to get problems patching both togeher.
+
+Yes, and No :-)
+Currently we're studying Dw in order to understand it
+thoroughly and document it (I have three pages written now).
+Although I have made several patches inside it, the general
+design behind it is still somewhat obscure to me; with my latest
+studies I've began to understand why: Dw is incomplete!
+
+Yes, it was designed (by Raph Levien) to manage an interesting
+bunch of funcionality, but some of its key parts are not
+implemented yet!
+
+For instance, embedded GTK+ widgets can't pass resize requests
+to their respective Dw containers (this is necessary if tables
+are to be implemented with GTK+ widgets).
+Some parts of the rewrap and paint stuff are still waiting to
+be completed.
+
+So, our current work consists on studying Dw, documenting it,
+with a view to decide what to extend (or change) and finally
+start designning our table handling scheme upon that base.
+
+(I've also sent emails to Raph, but have had no answers. Maybe
+he's on vacation; it's summer there in Europe!)
+
+> 2. My basic idea is:
+> 
+> o Extend the DwPage widget: add a new DW_PAGE_CONTENT_ANCHOR, which has
+> zero size and is not drawn in any way.
+
+Are you planning to get the offset from this pseudo-widget?
+
+> o The point to start is Nav_open_url. This function should get the
+> requested anchor after the "#" and store it somewhere. 
+
+I think the best place for it is within the linkblock. This
+structure is used to handle auxiliary data structures derived
+from HTML procesing (as forms, base URL, etc).
+
+
+> Probably, the
+> page should not be loaded when the href points to an anchor in the same
+> file. Later, the pixel position should be calculated. "Later" means:
+> 
+> - when the page has already been loaded: immediatly, or
+> - otherwise: when the lines in the page are wrapped, or, perhaps,
+> already when the correct <a name="..."> is read (probably not).
+> 
+> The last problem does not seem too hard. 
+
+If we put the anchor (lets think of a gchar*) in the linkblock,
+NULL can mean NO anchor (draw from top), and anything else, draw
+from anchor. A new #anchor in the same page overwrites the former
+one.
+
+That way, we won't fool the user when pressing the BACK key.
+One click would show the #anchor-scrolled page from the top and
+the next one would go back.
+
+> My question is: where to store
+> the requested anchor? BrowserWindow would be simple, but when frames are
+> implemented later, the requested anchor should belong to a frame. DwPage
+> would be better, but when I follow all the created structures, there is
+> a break in the IO/Mime module where the anchor gets lost (?). What about
+> DwBorder becoming a base Widget for a frame?
+
+As I wrote above, my vote goes to the linkblock.
+We're still one step behind the frame implementation design.
+Currently we're aiming towards a table representation for it.
+Anyway, if it would finally get implemented in adifferent way,
+the information, most probably would end in the linkblock!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-07-11 15:32
+
+Hi!
+
+I'm currently working on anchors (to get URL's like "foo#bar" rendered
+correctly, bug #10), and I have two questions:
+
+1. Does anyone do anything on tables? It's because I will change the
+DwPage widget, and this is probably also necessary for tables; so we
+should avoid to get problems patching both togeher.
+
+2. My basic idea is:
+
+o Extend the DwPage widget: add a new DW_PAGE_CONTENT_ANCHOR, which has
+zero size and is not drawn in any way.
+
+o The point to start is Nav_open_url. This function should get the
+requested anchor after the "#" and store it somewhere. Probably, the
+page should not be loaded when the href points to an anchor in the same
+file. Later, the pixel position should be calculated. "Later" means:
+
+- when the page has already been loaded: immediatly, or
+- otherwise: when the lines in the page are wrapped, or, perhaps,
+already when the correct <a name="..."> is read (probably not).
+
+The last problem does not seem too hard. My question is: where to store
+the requested anchor? BrowserWindow would be simple, but when frames are
+implemented later, the requested anchor should belong to a frame. DwPage
+would be better, but when I follow all the created structures, there is
+a break in the IO/Mime module where the anchor gets lost (?). What about
+DwBorder becoming a base Widget for a frame?
+
+Any suggestions?
+
+Sebastian. 
+
+
+
+Re: [Dillo-dev]dillo-0.2.2
+
+From: <tjs17@co...> - 2000-07-11 01:49
+
+On Sun, 9 Jul 2000, Jorge Arellano Cid wrote: 
+
+> Some time ago I was informed that dillo compiled with freeBSD
+> (with lots of segfaults at run time); was that a 64bit machine?
+> which compiler? (He's a member of this list!).
+
+That was me. I'm using a 32bit machine, gcc 2.7.2.3, and frebsd 3.5. I 
+suppose that my freebsd compilation doesn't really crash much more than 
+my linux one (or netscape for that matter...). BTW, the only tweak I 
+needed for 0.2.2. was to use -pthread instead of -lpthread. 
+
+
+
+Re: [Dillo-dev]Bug #54 : a hint
+
+From: Luca Rota <drake@it...> - 2000-07-10 16:02
+
+Il lun, 10 lug 2000, hai scritto:
+
+> This bug has something to do with interface.c line1048 :
+> in Interface_handle_key_event()
+> 
+> gtk_signal_emit_by_name (GTK_OBJECT (dw_view), "key_press_event", event);
+> 
+Uh! Let me see!
+Oh! yes, I remember!
+
+Some release ago dillo had a bug which prevents form to be focused. And so,
+with gtk 1.2.4 and before the patch for that bug gtk_signal was a little hack.
+
+> Commenting this line prevents dillo form segfaulting when pressing PgUp,
+> PgDown, Up and Down arrows, but I'm pretty sure this line has a purpose ;-) and
+> just removing it is not what you'd call "clean fix".
+
+Now, I think, it's safe deleting this line.
+With my RedHat Linux box and gtk 1.2.6 I've no problem.
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]Bug #54 : a hint
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-10 07:03
+
+This bug has something to do with interface.c line1048 :
+in Interface_handle_key_event()
+
+gtk_signal_emit_by_name (GTK_OBJECT (dw_view), "key_press_event", event);
+
+Commenting this line prevents dillo form segfaulting when pressing PgUp,
+PgDown, Up and Down arrows, but I'm pretty sure this line has a purpose ;-) and
+just removing it is not what you'd call "clean fix".
+
+I'm not much familiar with gtk coding. Can anyone tell me what this line does ?
+(I mean : I know it emits a signal named "key_press_event" ; what I want 
+to know is how dillo is dealing with this signal. It seems that its only
+purpose is to call Interface_handle_key_event, the very same function the
+emission is from ???)
+
+Le 09-Jul-2000, on m'a dit : 
+> Ah, there's a bug (#54) in the bug track engine that seems to
+> concern GTK+, not dillo. Anyway, I'm using GTK+-1.2.6 and don't
+> have any trouble with it (no segfault with the described
+> procedure). Which GTK+ version (or OS) is the poster using?
+> --just curiousity.
+> 
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Jul-2000 a 15:26:13
+"Not so long ago if you had a 3 1/2 inch floppy 
+you hoped nobody found out!"
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]dillo-0.2.2
+
+From: Eric GAUDET <egaudet@in...> - 2000-07-10 03:10
+
+Le 09-Jul-2000, on m'a dit : 
+> Ah, there's a bug (#54) in the bug track engine that seems to
+> concern GTK+, not dillo. Anyway, I'm using GTK+-1.2.6 and don't
+> have any trouble with it (no segfault with the described
+> procedure). Which GTK+ version (or OS) is the poster using?
+> --just curiousity.
+> 
+
+Thats me. This bug is very reproductible : every time (for me).
+I'm on linux kernel 2.4.0-test2-ac2, based on Mandrake 7.0, with
+gtk+-1.2.7 and glib-1.2.7.
+
+I'll try to track this bug, though it seems burried in a 15 or so deep gtk-call
+:-/
+
+Where is the code for the URL box ? (init and loop)
+
+(PS: I got some segfault I can't reproduce, after browsing a few pages (on
+0.2.1))
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Jul-2000 a 11:54:28
+"Not so long ago if you had a 3 1/2 inch floppy 
+you hoped nobody found out!"
+---------------------------------- 
+
+
+
+[Dillo-dev]Dillo web-page comments (fwd)
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-10 00:53
+
+Hi there!
+
+I just received this email and frankly, I think skeff is right:
+
+---------- Forwarded message ----------
+Date: Sun, 09 Jul 2000 23:11:58 +0300
+From: skeff <skeff@on...>
+To: jcid@ma...
+Subject: Dillo web-page comments
+
+Ok site and all that.
+But hey, SCREENSHOTS !!! ;)
+
+People don't bother downloading your program unless you have a
+screenshots, or if they're very interested.
+
+-skeff
+---------------------------------------
+
+If there's someone willing to make that, it'd be great.
+An HTML page with, let's say five small thumbnails and their
+links (jpeg images).
+OK, if you just send me the thumbs and full-pictures pairs
+that'll be enough to build the page.
+If you plan to commit yourself with the task, please send an
+email to this list to let others know it has been taken.
+
+Thanks a lot.
+Jorge.- 
+
+
+
+[Dillo-dev]dillo-0.2.2
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-07-09 18:59
+
+Hi!
+
+Well, maybe a little delayed, but dillo-0.2.2 is finally
+there, ready for download. I think the wait was worth the delay
+because it finally can handle forms very much better, and there's
+also an option that will let slashdot fans read the site. There
+are several other improvements and changes detailed in the
+Changelog.
+
+I want to thank every single patch you've sent me and hope you
+enjoy this release.
+
+Ah, there's a bug (#54) in the bug track engine that seems to
+concern GTK+, not dillo. Anyway, I'm using GTK+-1.2.6 and don't
+have any trouble with it (no segfault with the described
+procedure). Which GTK+ version (or OS) is the poster using?
+--just curiousity.
+
+For those of you that had worked in the HTML parser, this
+release comes with some significant changes. Basically the
+parsing stack was modified with a clearer design (you'll easily
+get it from the code). Form processing no longer depends on the
+stack, but only on the linkblock. The child_linkblock was also
+integrated into the html_linkblock.
+
+Several changes had taken place in order to achieve
+compatibility with lcc compiler (it enhances portability).
+Although I got dillo to compile with lcc, I can't still make it
+run well on 64 bit machines. 
+
+Some time ago I was informed that dillo compiled with freeBSD
+(with lots of segfaults at run time); was that a 64bit machine?
+which compiler? (He's a member of this list!).
+
+
+Jorge.- 
+
+

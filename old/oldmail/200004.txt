@@ -1,0 +1,906 @@
+Re: [Dillo-dev]Sourceforge
+
+From: Jorge Arellano Cid <jcid@hu...> - 2000-04-24 19:15
+
+Hello World!
+
+
+First, I'd really appreciate feedback on my ematic.com email address,
+but I still don't know if it is world reachable.
+(If you can't deliver there, use jcid@ma... instead).
+
+
+On Sun, 23 Apr 2000 bigdaddy@ll... wrote:
+
+> I noticed that dillo is only using about 30% of all the sourceforge
+> resources that it could.
+
+Excellent, if you feel like updating it...
+
+> I.E. - The there is no webpage at http://dillo.so....net
+
+I wish it to be a mirror rather than a URL redirection.
+I'll keep the bug track engine and the primary site in the new server
+(dillo.inf.utfsm.cl) and use sourceforge to handle heavy network traffic
+(downloads and home page).
+
+> The ftp on sourceforge is very outdated.
+
+Update it, no problem (please delete the old tarball)
+
+> The CVS hasn't been updated in a while
+
+Not first priority. If updated, it would work as a checkout only.
+
+
+> I think it might be a good idea to update the sourceforge stuff. It might
+> help to bring more developers into the project.
+
+Thanks, please contact James and ask him the SW permissions to do that.
+It would be nice to announce the project in sourceforge news too...
+Please remember that this is a DEVELOPER's release. Not for USERS.
+
+> Switching over to sourceforge's bugtracking might not be a bad idea, but
+> since we already have an engine for that (though last time I checked it
+> wasn't working) it is not a high priority.
+
+The bug-track is healthy and working, check it at:
+
+http://dillo.inf.utfsm.cl/
+
+(it is was designed for this project, so we'll keep it)
+
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Sourceforge
+
+From: <bigdaddy@ll...> - 2000-04-24 01:45
+
+I noticed that dillo is only using about 30% of all the sourceforge
+resources that it could.
+I.E. - The there is no webpage at http://dillo.so....net
+The ftp on sourceforge is very outdated.
+The CVS hasn't been updated in a while
+So on, and so forth.
+I think it might be a good idea to update the sourceforge stuff. It might
+help to bring more developers into the project.
+At a minimum- make a re-direct on the dillo.so....net page to the
+real homepage, and update the ftp tarball. 
+Switching over to sourceforge's bugtracking might not be a bad idea, but
+since we already have an engine for that (though last time I checked it
+wasn't working) it is not a high priority.
+
+Does anybody else have any thoughts?
+
+-Mark
+
+"You can't get a blue screen on a black and white monitor." 
+
+
+
+Re: [Dillo-dev]ematic.com
+
+From: <bigdaddy@ll...> - 2000-04-22 21:28
+
+If this gets to you, then no ;-)
+
+-Mark
+
+"You can't get a blue screen on a black and white monitor."
+
+On Fri, 21 Apr 2000, Jorge Arellano Cid wrote:
+
+> 
+> Hi,
+> 
+> Has anyone experienced trouble sending mail to jcid@em...?
+> 
+> 
+> Jorge.-
+> 
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]ematic.com
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-21 18:19
+
+Hi,
+
+Has anyone experienced trouble sending mail to jcid@em...?
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]New server
+
+From: Jorge Arellano Cid <jcid@hu...> - 2000-04-20 14:25
+
+Hi!
+
+
+Just finished moving the web site!
+
+Take a look at: http://dillo.inf.utfsm.cl/
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Progress
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-20 01:44
+
+Hello crew!
+
+The new server is almost set; just need to recompile the CGIs
+and it will be ready!
+
+The cache rewrite is in progress, I just finished writing a
+whole new IO engine; the cache will be based on it, and the rest
+of Dillo will use the cache API.
+
+Please remember that after that's done, and the CPU hogging
+problem is fixed, we'll make a freshmeat announce!
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Current tarball
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-13 03:30
+
+Hi!
+
+
+You can get the latest tarball at
+
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/d010a7.tgz
+
+(This is not a release yet; just some patches and progress trying
+to overcome the CPU-hogging bug)
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]CPU Hogging
+
+From: <greslin@li...> - 2000-04-12 13:34
+
+On Wed, Apr 12, 2000 at 09:12:28AM -0400, Jorge Arellano Cid wrote:
+> 
+> Ps: If you want to get a tarball with what's currently done, let
+> me know, just to put it online.
+
+Yes, please do.
+
+
+-- 
+Rob Warren
+
+email: greslin@li...
+homepage: http://www.iag.net/~aleris
+
+GXAnim: http://www.iag.net/~aleris/gxanim.html
+The Canvas Project: canvas.linuxpower.org
+OpenLaw DVD FAQ: http://www.cssfaq.org 
+
+
+
+[Dillo-dev]CPU Hogging
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-12 13:21
+
+Hello list!
+
+Greetings to the new members, and to the old ones!
+
+Some news from current project-status:
+
+I've been working with the CPU-hogging problem, and after
+fixing several things here and there (dns.c, socket.c, http.c,
+IO.c, IO.h, web.c, cache.c...), it's a decision: I'll rewrite the
+cache module.
+
+The cache module is split among several different parts in the
+code, and integrated in a subtle way with some others. Getting
+the idea of the data flow (and the algorithms) becomes a titanic
+task, and maintenance is almost impossible. Ah, and it's broken!
+
+Now I'm working on it, and when its done: a new tarball will be
+released. After that, we'll set dillo.so....net to be a
+mirror of our main site, and I'll make a freshmeat announce "urbi
+et orbi". 
+
+The new site server is almost ready. Just need to move the
+database and the bug-track engine there...
+
+If you feel like patching dillo, please focus on the rendering
+part for now; the low level routines are under heavy
+reconstruction.
+
+
+Best regards
+Jorge.-
+
+
+
+Ps: If you want to get a tarball with what's currently done, let
+me know, just to put it online.
+Ps2: Don't use the CVS now, it's outdated, and when we get it
+sync. it will serve as a checkout only. 
+
+
+
+[Dillo-dev]CPU hogging (part 1)
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-04-05 14:27
+
+Hi,
+
+I just fixed the short CPU hogging that happened when waiting 
+for a DNS query. (Look bug #50 in the bug-track).
+This doesn't mean that the whole CPU hogging problem is solved. Our
+mailing-list-archives-link still hogs the CPU (And forever).
+I'll focus on that now.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: <greslin@li...> - 2000-04-04 21:25
+
+On Tue, Apr 04, 2000 at 02:41:45PM -0400, Jorge Arellano Cid wrote:
+> [Rob said]
+> > Right now I'm far more concerned about this runaway CPU usage. Dillo compiled
+> > great out of the box, and it looks good and stable. But after only calling up
+> > a page or two, it started grabbing 98% of my CPU. This is absolutely unacceptable.
+> > 
+> > Does anyone have any idea what is causing this? I assume Dillo is using a
+> > threading system of some kind; could this be the problem?
+> 
+> OK, I've been workink on that.
+> It is NOT the threading system!
+> Actually, what causes the problem is URL redirection. If you hit a
+> redirected URL, the CPU will be hogged.
+
+I don't buy this. I've tried calling up my own web page at:
+
+http://www.iag.net/~aleris
+
+and sometimes it causes CPU hogging, sometimes it doesn't. It doesn't seem to be
+tied into the threading system at this point; I disabled threading support and
+it still happens. Somewhere there is a piece of code that drops into a nearly
+infinite loop or something. I suspect it is somewhere in the vicinity of the DNS
+resolution code but I can't prove it yet.
+
+
+
+> 
+> > Before we get too deep in making it pretty, we need to improve the infrastructure.
+> > The alternative is to end up with Netscape Communicator. :(
+> 
+> Yes man, I agree.
+> Have you figured out the whole mess that we had before this release?
+> 
+> Well, technically talking I've been studying the problem and almost
+> every problem comes from the IO engine change. It behaves asynchronously
+> but, it was struggled-in without the minimal considerations about that
+> kind of processing. I mean, several critical races were introduced and
+> it was merged with the former (streamed) implementatiom. Frankly I'm not
+> sure now if trying to fix it, or plainly rewriting it.
+
+The latter may be a better idea. This code is a mess, and we'll end up
+spending more time trying to figure the code out than we will fixing it.
+We should probably aim at a gradual rewrite of the browser itself before
+we start shoehorning new features into the current architecture.
+
+
+Rob Warren
+
+email: greslin@li...
+homepage: http://www.iag.net/~aleris
+
+GXAnim: http://www.iag.net/~aleris/gxanim.html
+The Canvas Project: canvas.linuxpower.org
+OpenLaw DVD FAQ: http://www.cssfaq.org 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: <greslin@li...> - 2000-04-04 18:39
+
+On Tue, Apr 04, 2000 at 02:41:45PM -0400, Jorge Arellano Cid wrote:
+> 
+> Rob,
+> 
+> 
+> > I'm getting it through Sourceforge.
+> 
+> But you checked our site in the academico server, right?
+
+Yes, I have. It's just that I'm working through SF for other projects; this
+is more convenient for me.
+
+> 
+> > Do me a favor; could you go ahead and
+> > clear me as a developer? 
+> 
+> Sorry (my poor english), what do you mean?
+
+Go to Sourceforge and indicate to their systems that "Greslin" is one of
+your developers. This will give me update access to the CVS tree.
+
+
+> > Right now I'm far more concerned about this runaway CPU usage. Dillo compiled
+> > great out of the box, and it looks good and stable. But after only calling up
+> > a page or two, it started grabbing 98% of my CPU. This is absolutely unacceptable.
+> > 
+> > Does anyone have any idea what is causing this? I assume Dillo is using a
+> > threading system of some kind; could this be the problem?
+> 
+> OK, I've been workink on that.
+> It is NOT the threading system!
+> Actually, what causes the problem is URL redirection. If you hit a
+> redirected URL, the CPU will be hogged.
+
+I'll tinker with it when I get time.
+
+
+-- 
+Rob Warren
+
+email: greslin@li...
+homepage: http://www.iag.net/~aleris
+
+GXAnim: http://www.iag.net/~aleris/gxanim.html
+The Canvas Project: canvas.linuxpower.org
+OpenLaw DVD FAQ: http://www.cssfaq.org 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: Jorge Arellano Cid <jcid@in...> - 2000-04-04 18:33
+
+Rob,
+
+
+> I'm getting it through Sourceforge.
+
+But you checked our site in the academico server, right?
+
+> Do me a favor; could you go ahead and
+> clear me as a developer? 
+
+Sorry (my poor english), what do you mean?
+
+> Right now I'm far more concerned about this runaway CPU usage. Dillo compiled
+> great out of the box, and it looks good and stable. But after only calling up
+> a page or two, it started grabbing 98% of my CPU. This is absolutely unacceptable.
+> 
+> Does anyone have any idea what is causing this? I assume Dillo is using a
+> threading system of some kind; could this be the problem?
+
+OK, I've been workink on that.
+It is NOT the threading system!
+Actually, what causes the problem is URL redirection. If you hit a
+redirected URL, the CPU will be hogged.
+
+> Before we get too deep in making it pretty, we need to improve the infrastructure.
+> The alternative is to end up with Netscape Communicator. :(
+
+Yes man, I agree.
+Have you figured out the whole mess that we had before this release?
+
+Well, technically talking I've been studying the problem and almost
+every problem comes from the IO engine change. It behaves asynchronously
+but, it was struggled-in without the minimal considerations about that
+kind of processing. I mean, several critical races were introduced and
+it was merged with the former (streamed) implementatiom. Frankly I'm not
+sure now if trying to fix it, or plainly rewriting it.
+
+The cache system integrates with the IO and it is also obscure :-(
+I still can't find a clear way of using it and handling close and abort
+requests the way it should be so, basically I'm studying the code now
+to try to find whether to heavily fix it or to change it.
+As a matter of fact, this would not be the first module rewrite in the
+project.
+
+If you suggest me an IRC channel now, 
+no problem to meet you there.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: <greslin@li...> - 2000-04-04 16:59
+
+On Tue, Apr 04, 2000 at 09:33:08AM -0400, Jorge Arellano Cid wrote:
+> 
+> Rob,
+> 
+> First of all, welcome aboard!
+> You were the first to answer the announce, and I already saw
+> you in the mailing list!
+> I know our server was down for a couple of hours (or more?),
+> but it is working now! Please let me know if you were able to
+> reach it.
+
+I'm getting it through Sourceforge. Do me a favor; could you go ahead and
+clear me as a developer? 
+
+
+> > I'm a C programmer, familiar with GTK and application development. I currently
+> > maintain GXAnim (GTK frontend to XAnim movie player) and am very slowly working
+> > on the Canvas Project, another video-related project. In my spare time I
+> > work with the Open File Sharing Initiative (napster-esque file transfer) and do
+> > quite a bit of work with the Openlaw DVD forum at Harvard Law.
+> 
+> Perfect, GUIs and some networking!
+> May a suggest you take a look at Dillo widget bugs?
+> We are very concerned of the small pages rendering bug.
+
+Right now I'm far more concerned about this runaway CPU usage. Dillo compiled
+great out of the box, and it looks good and stable. But after only calling up
+a page or two, it started grabbing 98% of my CPU. This is absolutely unacceptable.
+
+Does anyone have any idea what is causing this? I assume Dillo is using a
+threading system of some kind; could this be the problem?
+
+Before we get too deep in making it pretty, we need to improve the infrastructure.
+The alternative is to end up with Netscape Communicator. :(
+
+
+
+Rob Warren
+
+email: greslin@li...
+homepage: http://www.iag.net/~aleris
+
+GXAnim: http://www.iag.net/~aleris/gxanim.html
+The Canvas Project: canvas.linuxpower.org
+OpenLaw DVD FAQ: http://www.cssfaq.org 
+
+
+
+Re: [Dillo-dev]bug - incomplete rendering of html
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-04 13:42
+
+Sammy,
+
+On Mon, 3 Apr 2000, nightstalker wrote:
+
+> i have noticed something about this bug (reading small html files can
+> result in incomplete displays .. workaround is to hit reload :)
+
+Just sometimes. You may have to resize the window or go back
+and forward to fix the display.
+This is a Dillo-Widget bug.
+I think its due to initialization problems. If you look at it
+in detail, you'll notice that sometimes, a gray square renders on
+top of the page (try loading a small image for instance), and
+that its height is exactly the same of the whole set of toolbars.
+Some other times, small HTML pages "appear" with an upward
+shift...
+
+
+> i first ran dillo with the 'nstalkie' user who uses the Aqua gtk-theme.
+> the bug occured. Then i ran dillo with the 'progs' user who
+> uses the Cheese gtk-theme. The bug
+> also occured BUT in a different way. i had to press reload twice in
+> order to view the whole page.
+
+Yes, what we have here is not a single thread problem but an
+asynchronous race condition. That explains the variations. If you
+try it several times, with different CPU loads for instance, you
+may notice diferences with the same gtk-theme.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Re: tarball location, etc.
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-04 13:42
+
+James,
+
+On Mon, 3 Apr 2000, James McCollough wrote:
+
+> hey -
+> 
+> Sourceforge has webspace for us at dillo.so....net. Could you
+> send me all the files that make up the dillo website, so I can mirror
+> them on so....net?
+
+No. :-)
+
+Not every file. The problem is mainly with Dillo bug-track
+engine; it uses a database that's set in 'tonatiuh' server, and I
+want to keep it there (Is faster an easier to administrate).
+Well, there're several other pages that I can send you, just
+let me make absolute links for them.
+The other important fact is that if we have sourceforge
+mirroring the site, you (or someone else) has to do the sync.
+work...
+
+> I will also move the tarball there shortly. 
+
+By now, you already did it; I checked all the links.
+Thanks.
+(Don't erase download.so....net/dillo/dillo-0.1.0.tar.gz)
+
+> By the I really like the new release. 
+> It is very stable.
+
+Good!!!
+(Stabilization is one of our main concerns.)
+
+> I am also going to update the CVS shortly.
+
+Don't you hurry.
+I'm thinking of setting it locally in 'huallepen'.
+Why?
+Because so....net is a very slow link form here, the CVS
+doesn't generate a big network load, and I have an exclusive
+machine to put it on!
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-04 13:42
+
+Rob,
+
+First of all, welcome aboard!
+You were the first to answer the announce, and I already saw
+you in the mailing list!
+I know our server was down for a couple of hours (or more?),
+but it is working now! Please let me know if you were able to
+reach it.
+
+> I just saw your announcement on gtk-app-devel. All I can say is, good. It's 
+> good to know that someone's picked up gzilla from the dustbin; I hate to think
+> that the only modern browsers we have for Linux are commercial ones.
+
+Well, our beloved Dillo is far away from challenging those big
+ones, but its speed and anti-bloat design are addictive!
+(We'll try to make it render the whole HTML 4.0 before thinking
+of extending it. And when I say "render HTML 4.0", I mean to have
+the info displayed in a suitable way.)
+
+> I'm a C programmer, familiar with GTK and application development. I currently
+> maintain GXAnim (GTK frontend to XAnim movie player) and am very slowly working
+> on the Canvas Project, another video-related project. In my spare time I
+> work with the Open File Sharing Initiative (napster-esque file transfer) and do
+> quite a bit of work with the Openlaw DVD forum at Harvard Law.
+
+Perfect, GUIs and some networking!
+May a suggest you take a look at Dillo widget bugs?
+We are very concerned of the small pages rendering bug.
+
+> Anyway, I don't know how much time I'll be able to devote here, but I'll put
+> my two bits in where I can and throw a piece of code out every so often. Do
+> you guys have a CVS of your current source? (I assume so.. you're on
+> Sourceforge, right?)
+
+Actually we have, but I'll try to set it up on another server,
+not sourceforge (We are half sourceforgers)
+When the CVS is set, I'll let you all know. It will work only
+as a checkout in the beginning...
+
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]problem with urls.
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-04 13:42
+
+Sammy,
+
+
+On Sun, 2 Apr 2000, nightstalker wrote:
+
+> hi,
+> 
+> this is a minor thingie ...
+> when you enter an url like this:
+> http://www.skoardy.demon.co.uk/rlnews
+> dillo must put a '/' behind this .. i have already found the place in
+> the code
+> where it should happen, but i was thinking :
+
+Actually that happens!
+Look at the VT screen behind Dillo (Nav_open_url) and you'll
+see the URL change.
+
+> how can you know this is a directory ? 
+
+There's no way, that I know, to know that in advance.
+If you have " 'hi' can be either a file or a
+directory.
+
+> i'm thinking of this :
+> i can add a test to see if there are any '.' or '?' in the tail (in this
+> example /rlnews) (the ? is for queries which can be without
+> a dot but may not get a trailing '/' for example :
+> http://www.altavista.com/cgi-bin/query?pg=q&sc=on&hl=on&q=dillo&kl=XX&stype=stext
+
+Sure, there're those URLs too.
+I think that a good guess can be done using the last filename:
+If it has a '.', most probably it's a dir!
+You have to check it for POST or GET or whatever before making
+the gess though.
+The sure way to proceed is to check the RFC.
+
+> is it possible for a http address to have a '.' in the directory name ?
+
+Yes.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Announce
+
+From: <greslin@li...> - 2000-04-03 21:44
+
+On Mon, Apr 03, 2000 at 04:56:52PM -0400, Jorge Arellano Cid wrote:
+> 
+> Ok, I made the announcement to gtk app devel list,
+> Does anyone feel like announcing it to sourceforge news? James? Luca?
+> 
+> Ah, also updated the website.
+> 
+> Jorge.-
+
+Hey ho.
+
+I just saw your announcement on gtk-app-devel. All I can say is, good. It's
+good to know that someone's picked up gzilla from the dustbin; I hate to think
+that the only modern browsers we have for Linux are commercial ones.
+
+I'm a C programmer, familiar with GTK and application development. I currently
+maintain GXAnim (GTK frontend to XAnim movie player) and am very slowly working
+on the Canvas Project, another video-related project. In my spare time I
+work with the Open File Sharing Initiative (napster-esque file transfer) and do
+quite a bit of work with the Openlaw DVD forum at Harvard Law.
+
+Anyway, I don't know how much time I'll be able to devote here, but I'll put
+my two bits in where I can and throw a piece of code out every so often. Do
+you guys have a CVS of your current source? (I assume so.. you're on
+Sourceforge, right?)
+
+
+Rob Warren
+
+email: greslin@li...
+homepage: http://www.iag.net/~aleris
+
+GXAnim: http://www.iag.net/~aleris/gxanim.html
+The Canvas Project: canvas.linuxpower.org
+OpenLaw DVD FAQ: http://www.cssfaq.org 
+
+
+
+[Dillo-dev]Announce
+
+From: Jorge Arellano Cid <jcid@hu...> - 2000-04-03 21:18
+
+Ok, I made the announcement to gtk app devel list,
+Does anyone feel like announcing it to sourceforge news? James? Luca?
+
+Ah, also updated the website.
+
+Jorge.-
+
+
+--------------------
+gtk announce follows
+--------------------
+Hi there,
+
+I only hope this to be the right place for this announcement; please
+don't suggest freshmeat cause Dillo is still alpha code.
+
+Dillo is a gtk+based web browser that's very fast, lean and extensible.
+It has its own HTML parsing routines, is written completely in C and the
+tarball is just 200Kb! (The stripped binary is also 200Kb).
+There's no support for Java, javascript.
+
+We are in need of developers; those of you who feel interested in
+this project, or just wnat more info, take a look at
+
+http://academico.inf.utfsm.cl:81/~jcid/Dillo/project.html
+
+you'll find everything there.
+
+
+Jorge.-
+Dillo project maintainer
+
+
+Ps: Dillo is GPLed! 
+
+
+
+Re: [Dillo-dev]Developer release
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-04-03 13:21
+
+Hi,
+
+On Sun, 2 Apr 2000, nightstalker wrote:
+
+> Jorge Arellano Cid wrote:
+> 
+> > Hi everyone!
+> >
+> > Today dillo-0.1.0.tar.gz is ready for download. It will be our
+> > first public developer release!
+> >
+> 
+> cool !
+> 
+> >
+> > When James finish setting it to on the sourceforge ftp server,
+> > I'll add a download link to the home page, announce it to the gtk
+> > devel mailing list, and it will be public!
+> >
+> 
+> we can also announce it on freshmeat (freshmeat.net)
+
+Yes, we can, but later...
+Why?
+
+1.- Because I need to address server traffic concerns.
+Currently the source is in the academico server and also at
+ftp://ftp.so....net/pub/sourceforge/dillo/dillo-0.1.0.tar.gz 
+The first one is not able to handle a big load, as what could
+be generated by a freshmeat announce, and the second one is very
+slow and unreliable. This week I'll set up a new server, and
+maybe put the source on a ftp port with a maximum concurrent
+connection limit. 
+The best setting (IMHO) is to have dillo source at:
+http://dillo.so....net/dillo-0.1.0.tar.gz
+and everything else in the new server.
+
+2.- Because we need more developers, and the gtk mailing list
+is a better place to find gtk skilled guys. The freshmeat list
+has a broader range, and our release is not ready for users yet.
+(Anyway, if the gtk-mailing-list announce fails to bring new
+devels. to the project, a freshmeat one will follow quickly!)
+
+
+Jorge.-
+
+
+Ps: James, would you mind setting the
+http://dillo.so....net/dillo-0.1.0.tar.gz URL? 
+
+
+
+[Dillo-dev]bug - incomplete rendering of html
+
+From: nightstalker <nstalkie@tv...> - 2000-04-03 00:02
+
+i have noticed something about this bug (reading small html files can
+result
+in incomplete displays .. workaround is to hit reload :)
+
+i first ran dillo with the 'nstalkie' user who uses the Aqua gtk-theme.
+the bug
+occured.
+then i ran dillo with the 'progs' user who uses the Cheese gtk-theme.
+the bug
+also occured BUT in a different way. i had to press reload twice in
+order to
+view the whole page.
+
+this bug is getting weirder and weirder :)
+
+ns 
+
+
+
+[Dillo-dev]problem with urls.
+
+From: nightstalker <nstalkie@tv...> - 2000-04-02 23:15
+
+hi,
+
+this is a minor thingie ...
+when you enter an url like this:
+http://www.skoardy.demon.co.uk/rlnews
+dillo must put a '/' behind this .. i have already found the place in
+the code
+where it should happen, but i was thinking :
+
+how can you know this is a directory ? i'm thinking of this :
+i can add a test to see if there are any '.' or '?' in the tail (in this
+example
+/rlnews) (the ? is for queries which can be without a dot but may not
+get a
+trailing '/' for example :
+http://www.altavista.com/cgi-bin/query?pg=q&sc=on&hl=on&q=dillo&kl=XX&stype=stext
+
+is it possible for a http address to have a '.' in the directory name ?
+
+ns.
+
+ps: yes i'm a roguelike fan :) 
+
+
+
+Re: [Dillo-dev]Developer release
+
+From: nightstalker <nstalkie@tv...> - 2000-04-02 21:58
+
+Jorge Arellano Cid wrote:
+
+> Hi everyone!
+>
+> Today dillo-0.1.0.tar.gz is ready for download. It will be our
+> first public developer release!
+>
+
+cool !
+
+>
+> When James finish setting it to on the sourceforge ftp server,
+> I'll add a download link to the home page, announce it to the gtk
+> devel mailing list, and it will be public!
+>
+
+we can also announce it on freshmeat (freshmeat.net)
+
+>
+> Comments are welcomed.
+>
+> Jorge.-
+>
+> Pd: Haven't got any feedback on the former release yet :-|
+>
+
+i haven't really tried the newest release yet .. (i'll try 0.1.0)
+all i saw was that it was good :)
+
+ns. 
+
+

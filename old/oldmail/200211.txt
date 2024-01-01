@@ -1,0 +1,1659 @@
+Re: [Dillo-dev]dpi on NetBSD
+
+From: Bjoern Weber <foxbow@we...> - 2002-11-29 08:46
+
+[.. dpi problem of empty requests ..]=20
+> Try a telnet to the dpi:
+> telnet localhost 8000
+> and send this:
+> <dpi cmd=3D'open=5Furl' url=3D'dpi:/bm/'>
+> It should send the full answer back.
+That works great.
+
+> If that works, check pthreads to be working; messages are sent
+> from a pthread.
+I'm afraid that it's the GNU pth pthreads emulation that's breeding the
+problem here since I had to disable multithreading in dns.c as well.
+
+[...]
+--=A0
+()=A0ascii=A0ribbon=A0campaign
+/\=A0against=A0HTML=A0in=A0email/postings 
+
+
+
+Re: [Dillo-dev]dpi on NetBSD
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-28 22:21
+
+Bjoern,
+
+> Hello,
+>
+> finally I managed to take a look at the new beta, pulled the sources from the CVS,
+> compiled everything, got the dpi tarball as well and started some testing but it
+> won't work for me. Some tests with the helloworld dpi showed that no requests
+> are sent until the browser is closed. Then there will be exectly as many empty
+> requests ("") as there should have been original requests.
+>
+> Anyone any clue, or even seen that before?
+
+Try a telnet to the dpi:
+
+telnet localhost 8000
+
+and send this:
+
+<dpi cmd='open_url' url='dpi:/bm/'>
+
+It should send the full answer back.
+
+
+If that works, check pthreads to be working; messages are sent
+from a pthread.
+
+Double check port 8000 is not already in use.
+
+
+> Or is it just some quirk in the current CVS version?
+
+Nope.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo on NanoGtk
+
+From: Sebastian Geerken <s.geerken@pi...> - 2002-11-28 19:47
+
+Hi,
+
+perhaps these notes may help:
+
+On Thu, Nov 28, ???? wrote:
+> Our team just ported Dillo from x86/X/Gtk+ to
+> mips/NanoX/NanoGtk, everything went fine except scrolling, that is,
+> when we browse a large page, we got scrollbars, but once I drag and
+> drop the scrollbar, the page turns into chaos immediately. However, if
+> I scrolled the page by using PageUP and PageDown buttons, everything
+> is Ok.
+>
+> It looks like something goes wrong with the screen refreshment,
+> which is to say, if you post too many screen-updating request by
+> scrolling the page with scrollbar, the underlying refresh-request
+> queue handler (NanoGDK?) just cannot fulfil its responsibilities,
+> while if the request is moderate, the handler can manage it.
+
+Dillo uses GtkLayout (base class DwGtkViewport) with GTK_APP_PAINTABLE
+set. I do not know how it works exactly, but before
+gtk_layout_adjustment_changed (which is called when adjustments are
+changed, e.g. scrollers are moved), I found the comment:
+
+/* [...]
+* Real expose event compression, as in the XFE, could be added
+* here. It would help opaque drags over the region, and the
+* obscured case.
+* [...]
+*/
+
+While I do not know exactly what this may refer to. Furthermore, key
+press events are indeed compressed, that may be the reason, why you
+don't have any problems with them. OTOH, too many events without
+compression cause rather a lock for some time, not a messy rendering.
+
+Another idea: GtkLayout was written for handling scrolled areas with
+more that 32k pixels, so that is used in dillo to display the embedded
+GtkWidgets (for form elements) correctly. It may be that this does not
+work the same for NanoGtk as for Gtk.
+
+> So, based on the observation and my conjecture, I dived into
+> NanoGtk and tried to resolve this problem:
+> 
+> 1.Scrolling request is sent by gtk_scrolled_window_set_vadjustment
+> function
+> 2.gtk_scrolled_window_adjustment_changed is the scrolling signal
+> handler, and it adds the window need to scrolling, scrolled_win, to
+> resize queue by calling gtk_widget_queue_resize
+> 3.For a Container (Gtkscrolledwindow is a container)??the resizing
+> handler is gtk_container_clear_resize_widgets
+> 5.BUT, this function just mark the container with
+> GTK_PRIVATE_UNSET_FLAG (widget, GTK_RESIZE_NEEDED); and do nothing more!
+
+Scrolling is done from the GtkScroller's via the GtkAdjustment's,
+which send signals to all widgets they are connected to (in Dillo
+GtkDwScrolledWindow, GtkDwScrolledFrame, and GtkDwViewport twice,
+gtk_layout_adjustment_changed and Dw_gtk_viewport_adj_changed).
+Dw_gtk_viewport_adj_changed just handles "relative" mouse movements
+(at fixed absolte pointer position, but moved viewport), the point you
+should continue is gtk_layout_adjustment_changed.
+
+On Wed, Nov 27, Lars Clausen wrote:
+> Maybe this can help: In Dia, we used to have problems with really slow
+> updates when scrolling. We changed it so that if more than one
+> update-request was present by the time processing started, only the last
+> one would be handled. It helped a lot. However that would translate into
+> Dillo I'm not sure.
+
+The functionality of GtkLayout is absolutely neccessary for dillo, and
+a reimplementation would be quite difficult. (Look at the code for
+event filtering! BTW, in the very beginning, I tried this, but gave it
+up very soon.) It would quite tricky to insert event compression
+there, and OTOH it seems (for what ever reason, I have no idea why)
+only neccessary for key press events, since I never had problems with
+the scollbars, but had them (on my old computer) with key presses.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]0.7.0pre crash and patch
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-28 15:30
+
+Madis,
+
+>
+> Efence found something that seems like using freed memory. This patch
+> solved it.
+>
+> [patch]
+
+Done!
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo on NanoGtk
+
+From: Lars Clausen <lrclause@cs...> - 2002-11-28 05:34
+
+On Thu, 28 Nov 2002, mabo@in... wrote:
+> Hi, all
+>=20
+> Our team just ported Dillo from x86/X/Gtk+ to mips/NanoX/NanoGtk,
+> everything went fine except scrolling, that is, when we browse a
+> large page, we got scrollbars, but once I drag and drop the
+> scrollbar, the page turns into chaos immediately. However, if I
+> scrolled the page by using PageUP and PageDown buttons, everything is
+> Ok. It looks like something goes wrong with the screen refreshment,
+> which is to say, if you post too many screen-updating request by
+> scrolling the page with scrollbar, the underlying refresh-request
+> queue handler (NanoGDK?) just cannot fulfil its responsibilities,
+> while if the request is moderate, the handler can manage it.=20=20
+
+Maybe this can help: In Dia, we used to have problems with really slow
+updates when scrolling. We changed it so that if more than one
+update-request was present by the time processing started, only the last
+one would be handled. It helped a lot. However that would translate into
+Dillo I'm not sure.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Dillo on NanoGtk
+
+From: <mabo@in...> - 2002-11-28 02:45
+
+Hi, all
+
+=09Our team just ported Dillo from x86/X/Gtk+ to=
+mips/NanoX/NanoGtk, everything went fine except scrolling, that=
+is, when we browse a large page, we got scrollbars, but once I=
+drag and drop the scrollbar, the page turns into chaos=
+immediately. However, if I scrolled the page by using PageUP and=
+PageDown buttons, everything is Ok. 
+It looks like something goes wrong with the screen=
+refreshment, which is to say, if you post too many=
+screen-updating request by scrolling the page with scrollbar,=
+the underlying refresh-request queue handler (NanoGDK?) just=
+cannot fulfil its responsibilities, while if the request is=
+moderate, the handler can manage it.
+=09So, based on the observation and my conjecture, I dived into=
+NanoGtk and tried to resolve this problem:
+
+1.Scrolling request is sent by=
+gtk_scrolled_window_set_vadjustment function
+2.gtk_scrolled_window_adjustment_changed is the scrolling signal=
+handler, and it adds the window need to scrolling, scrolled_win,=
+to resize queue by calling gtk_widget_queue_resize
+3.For a Container (Gtkscrolledwindow is a container)=A3=ACthe=
+resizing handler is gtk_container_clear_resize_widgets
+5.BUT, this function just mark the container with=
+GTK_PRIVATE_UNSET_FLAG (widget, GTK_RESIZE_NEEDED); and do=
+nothing more!
+
+I was lost!!
+
+So, I came up with the second solution: Change the=
+Adjustment->step_increment to Adjustment->page_increment, but it=
+seems doesn't work also!
+
+Who can help me!
+
+mabo 
+
+
+
+[Dillo-dev]0.7.0pre crash and patch
+
+From: Madis Janson <madis@at...> - 2002-11-27 23:24
+
+Efence found something that seems like using freed memory. This patch
+solved it.
+
+@@ -445,8 +451,8 @@ void a_Http_ccc(int Op, int Branch, int 
+if (S) {
+a_Chain_del_link(Info, BCK);
+a_Chain_fcb(OpEnd, Info, (void *)S->SockFD, (void
+*)S->Url);
+- Http_socket_free(SKey);
+BW_MSG(S->web, 1, "Query sent, waiting for reply...");
++ Http_socket_free(SKey);
+}
+break;
+case OpAbort: 
+
+
+
+[Dillo-dev]dpi on NetBSD
+
+From: Bjoern Weber <foxbow@we...> - 2002-11-27 09:12
+
+Hello,
+
+finally I managed to take a look at the new beta, pulled the sources from =
+the CVS,
+compiled everything, got the dpi tarball as well and started some testing =
+but it
+won't work for me. Some tests with the helloworld dpi showed that no reque=
+sts
+are sent until the browser is closed. Then there will be exectly as many e=
+mpty
+requests ("") as there should have been original requests.
+
+Anyone any clue, or even seen that before=3F Or is it just some quirk in the=
+current
+CVS version=3F
+
+Greetings,
+
+Bjoern
+--=A0
+()=A0ascii=A0ribbon=A0campaign
+/\=A0against=A0HTML=A0in=A0email/postings 
+
+
+
+[Dillo-dev]dpi bookmarks plugin
+
+From: Ben Woolley <ben@ta...> - 2002-11-27 00:31
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Hello Jorge,
+
+I just tried out the dpi1 bookmarks plugin, and I really like the concept.
+But I started wondering if someone could take advantage of a dpi URL to do
+something improper.
+
+<html>
+<body>
+<a href="dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.">test</a>
+<img src="dpi:/bm/modify?operation=add_url2&title=home2&url=http%3A%2F%2Fhome&submit=submit." alt="test image">
+</body>
+</html>
+
+When I load that page, not only does the image alter my bookmarks, when I
+click on the link the window closes (after altering my bookmarks). This
+seems to be an issue similar to what is discussed in the HTTP 1.1 spec
+section 15.1.3.
+
+Can POST data be sent instead? Section 9.5 says that POST should be used
+for "extending a database through an append operation", which is what the
+plugin actually does.
+
+Perhaps the plugin should check for a proper referral from
+dpi:/bm/modify?operation=add_url&submit=submit. before modifying
+anything.
+
+Perhaps change:
+<dpi
+cmd='open_url'
+url='dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+>
+to:
+<dpi
+cmd='open_url'
+url='dpi:/bm/modify?operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+ref='dpi:/bm/modify?operation=add_url&submit=submit.'
+>
+or:
+<dpi
+cmd='open_url'
+url='dpi:/bm/modify'
+post='operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+>
+or even:
+<dpi
+cmd='open_url'
+url='dpi:/bm/modify'
+ref='dpi:/bm/modify?operation=add_url&submit=submit.'
+post='operation=add_url2&title=home&url=http%3A%2F%2Fhome&submit=submit.'
+>
+
+Do you already have some sort of plan for this issue?
+
+Ben Woolley
+http://ben.tautology.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.0 (FreeBSD)
+
+iD8DBQE95BJU88ChLVDxFsIRAjlbAJ9vM812QF4lxFfKgp/XfhfMwQh0bQCfTZ+C
+rek9st6hTc3gxc8HbQQYMyE=
+=MQbx
+-----END PGP SIGNATURE----- 
+
+
+
+Re: [Dillo-dev]Dillo on OpenBSD [Sparc64]
+
+From: Ben Woolley <ben@ta...> - 2002-11-26 18:54
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Hello Damien and list,
+
+It seems to work on i386.
+
+I have run 0.6.6 on 3.1 and 3.2 and a CVS build of Dillo from October 4th
+on 3.2 and two recent -current branches. Everything seems fine to me.
+
+Ben Woolley
+http://ben.tautology.org
+
+On Mon, 25 Nov 2002 dbastie@le... wrote:
+
+> Hello,
+>
+> I'm trying to use Dillo on OpenBSD 3.2 with my Ultra 5.
+> But when i launch it and i go on http://www.openbsd.org for example, i've
+> 1 word per line ............ (it's same on all web site)
+>
+> This problem is known ?
+>
+> --
+> Damien Basti=E9
+>
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.0 (FreeBSD)
+
+iD8DBQE948NX88ChLVDxFsIRAnAcAJ4nSBeV/s2fkjEnDl4DGl8muLkkTgCfYJqB
+SXNMpPBX431Rhkfgb9mVawc=3D
+=3DbjrU
+-----END PGP SIGNATURE----- 
+
+
+
+[Dillo-dev]CIPSGA CVS
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-26 14:19
+
+Hi guys!
+
+The CIPSGA CVS server is running. Just follow the [CVS] link!
+
+I'm also considering to move our mailing list to CIPSGA. BTW
+there're two lists for us already set. The only fact that makes
+me hesitate is that contacting a sysadmin there is hard as hell.
+For instance, our site statistics are down for more than a month,
+and ASFAIK it's a matter of restarting the http server, but
+that requires a sysadmin...
+
+The main gain in moving the mailing list is to get another
+web interface for it (more easily searchable/browseable), and we
+need it.
+
+The other alternative is to wait some meetings I'm having with
+the "Universidad de Chile" to prosper, and set the lists from
+there in a server I can see&touch with my hands!
+
+What do you think of it?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]MIME types
+
+From: Madis Janson <madis@at...> - 2002-11-26 11:49
+
+On Tue, 26 Nov 2002, Tomas Guemes wrote:
+
+> On Tue, Nov 26, 2002 at 03:57:14AM +0200, Madis Janson wrote:
+> > 
+> i was also thinking to do some work with the bookmarks menu but i still
+> didn't read the dpi code probably i can start next week to read and do
+> something.
+> 
+> Few mounths ago i looked for a standar format for the bookmark file and found
+> xbel, is the XML format used by konqueror and galeon can also manage it, there
+> is some tools to convert to others browser formats like netscape, lynx and
+> opera. I just take a quick look and seems that mozilla is using the same
+> format as netscape. (see http://pyxml.so....net/topics/xbel/)
+> 
+> did you already think something about it?
+>
+a bit - imho some command have to be added to the dpi interface for
+modifing dillo menu (easy thing, i basically did it for a try), then some
+code is needed to make this menu command actually modify the menu and
+then bm_srv needs to be modified so it would add bookmarks into the menu.
+
+XML format - it could be nice, current bm_srv uses a plain-text file, but
+i really haven't thought about this. It should be possible to do it
+entirely in the bookmark plugin. 
+
+
+
+Re: [Dillo-dev]MIME types
+
+From: Tomas Guemes <tomas@as...> - 2002-11-26 03:05
+
+On Tue, Nov 26, 2002 at 03:57:14AM +0200, Madis Janson wrote:
+> 
+> On Mon, 25 Nov 2002, Thomas Heute wrote:
+> 
+> > I don't know how stupid is that question... I am really novice.
+> > 
+> > I would like to know how to handle a MIME type with Dillo, i would like to 
+> > use a software of my own to handle JAR files, i guess i should handle this 
+> > type: <application/x-java>
+> > 
+> > Any way to do that without touching the code of Dillo ?
+> > 
+> > (for information, it is to use on an iPaq)
+> > 
+> You mean 'how to make the browser execute external program for 
+> viewing documents having some certain mime type' ?
+> Short answer is not yet.
+> 
+> This is possible using the plugins api, but first a plugin have to be 
+> written, which would do the actual program execution (one common plugin 
+> should be enough). Currently (in 0.70pre) the dpi1 framework is not fully 
+> finished, but most of necessery code seems to exist. So writing the 
+> plugin should be possible now, when you add some missing bits (i just 
+> read the dillo dpi code in attempt to recreate bookmarks menu into 
+> 0.70pre :)).
+
+i was also thinking to do some work with the bookmarks menu but i still
+didn't read the dpi code probably i can start next week to read and do
+something.
+
+Few mounths ago i looked for a standar format for the bookmark file and found
+xbel, is the XML format used by konqueror and galeon can also manage it, there
+is some tools to convert to others browser formats like netscape, lynx and
+opera. I just take a quick look and seems that mozilla is using the same
+format as netscape. (see http://pyxml.so....net/topics/xbel/)
+
+did you already think something about it?
+
+gretings
+
+Tomas
+
+
+> 
+> --
+> mzz
+> 
+> 
+> 
+> -------------------------------------------------------
+> This S...net email is sponsored by: Get the new Palm Tungsten T 
+> handheld. Power & Color in a compact size! 
+> http://ads.so....net/cgi-bin/redirect.pl?palm0002en
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+Tomas Guemes <tomas@as...> 
+
+
+
+Re: [Dillo-dev]MIME types
+
+From: Madis Janson <madis@at...> - 2002-11-26 01:58
+
+On Mon, 25 Nov 2002, Thomas Heute wrote:
+
+> I don't know how stupid is that question... I am really novice.
+> 
+> I would like to know how to handle a MIME type with Dillo, i would like to 
+> use a software of my own to handle JAR files, i guess i should handle this 
+> type: <application/x-java>
+> 
+> Any way to do that without touching the code of Dillo ?
+> 
+> (for information, it is to use on an iPaq)
+> 
+You mean 'how to make the browser execute external program for 
+viewing documents having some certain mime type' ?
+Short answer is not yet.
+
+This is possible using the plugins api, but first a plugin have to be 
+written, which would do the actual program execution (one common plugin 
+should be enough). Currently (in 0.70pre) the dpi1 framework is not fully 
+finished, but most of necessery code seems to exist. So writing the 
+plugin should be possible now, when you add some missing bits (i just 
+read the dillo dpi code in attempt to recreate bookmarks menu into 
+0.70pre :)).
+
+--
+mzz 
+
+
+
+[Dillo-dev]Dillo RPM (Red Hat 7.x) Updated
+
+From: Kelson Vibber <kelson@po...> - 2002-11-25 20:47
+
+Over the weekend I updated my RPM of Dillo 0.6.6 to include the localization 
+patch from http://bobuk.ipost.ru/packages/dillo/
+
+I had to modify it slightly in order to merge that patch with the 
+cli-local2-fullwindow-xid patch (in some places they modified the same areas 
+of a file).
+
+I also wrote a patch that extends its functionality to copy a default list of 
+encodings to the user's home directory if it does not already exist. This 
+was what held me back from releasing it when it was suggested, since without 
+it the user would end up with an empty menu unless he/she manually copied a 
+file over. Then I didn't have a chance to work on it for about a month.
+
+The RPM, source RPM and .spec file are at 
+http://www.hyperborea.org/software/dillo.html
+
+Here's the patch. Keep in mind that it's been several years since I've done 
+any C programming, so there may be a better way to do this, but it seems to 
+work (at least on my own system):
+
+diff -rU 2 dillo-0.6.6.old/src/encodings.c dillo-0.6.6/src/encodings.c
+--- dillo-0.6.6.old/src/encodings.c Fri Nov 22 10:56:43 2002
++++ dillo-0.6.6/src/encodings.c Fri Nov 22 11:48:35 2002
+@@ -26,4 +26,5 @@
+#include <stdlib.h>
+#include <string.h>
++#include <unistd.h>
+
+#include "list.h"
+@@ -87,7 +88,26 @@
+{
+gchar *file;
++ char buf[4096];
++ static FILE *fp;
++ static FILE *fpw;
+
+/* Here we load and set the encodings */
+file = a_Misc_prepend_user_home(".dillo/encodings");
++ if (access(file, F_OK)) {
++ if ((fp = fopen("/etc/dillo.encodings", "r")) == NULL)
++ if ((fp = fopen("/usr/local/etc/dillo.encodings", "r")) == NULL)
++ g_print("dillo: copying default encoding file: %s\n",
++ strerror(errno));
++ if (fpw = fopen(file, "a")) {
++ while (1) {
++ /* Read a whole line from the file */
++ if ((fgets(buf, 4096, fp)) == NULL)
++ break;
++ fputs(buf, fpw);
++ }
++ fclose(fpw);
++ }
++ fclose(fp);
++ }
+Encodings_file_op(LOAD_ENCODINGS, file, NULL);
+g_free(file);
+
+
+-- 
+Kelson Vibber
+http://www.hyperborea.org/ 
+
+
+
+[Dillo-dev]MIME types
+
+From: Thomas Heute <thomas.heute@ni...> - 2002-11-25 17:40
+
+I don't know how stupid is that question... I am really novice.
+
+I would like to know how to handle a MIME type with Dillo, i would like to 
+use a software of my own to handle JAR files, i guess i should handle this 
+type: <application/x-java>
+
+Any way to do that without touching the code of Dillo ?
+
+(for information, it is to use on an iPaq)
+
+Thanks,
+
+Thomas. 
+
+
+
+[Dillo-dev]Dillo on OpenBSD [Sparc64]
+
+From: <dbastie@le...> - 2002-11-25 10:44
+
+Attachments: Message as HTML      
+
+Hello,
+
+I'm trying to use Dillo on OpenBSD 3.2 with my Ultra 5.
+But when i launch it and i go on http://www.openbsd.org for example, i've
+1 word per line ............ (it's same on all web site)
+
+This problem is known ?
+
+--
+Damien Basti=E9 
+
+
+
+[Dillo-dev]cygwin
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-11-21 08:29
+
+Hi.
+
+Have anyone tried dill on cygwin ?
+I tried to compile it then succeeded but it did not work.
+It looks that async io (glib library) does not work well..
+
+Best Regards 
+
+
+
+Re: [Dillo-dev]dpi and starting servers ....
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-11-20 11:52
+
+Hi Lars,
+
+on Wed, 06 Nov 2002 06:54:44 +0100
+Lars Segerlund <lars.segerlund@co...> wrote:
+
+> Also it would be nice with two types of dpi processes, one global ( 
+> perhaps running in /tmp/.dillo/<unix socket by dpi name> such as the 
+> cache ? and a second kind running on ~/.dillo/<bla bal>/<unix socket by 
+> dpi name> .
+
+Maybe a global socket can be handy but maybe it will bring some security
+questions (permissions etc).
+
+Perhaps providing the flexibility by using a per user plugin_paths preference
+(plugin_paths=~/.dillo:/tmp/dillo) can be a solution.
+
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]ghelp dillo support
+
+From: higuita <higuita7@ya...> - 2002-11-10 08:21
+
+Attachments: Message as HTML      
+
+Hi
+
+i was testing a gnome program, gtt, and i hit in the help
+dillo open as i setup it up
+
+but it dont open, complain about unknown protocol
+i would be good if you add the ghelp as a "alias" to the 
+file protocol, AFAIK its the same thing
+
+from the console i have:
+Url=>ghelp:/usr/share/gnome/help/gtt/C/index.html
+
+if i change the ghelp: to file in dillo is open just fine
+
+thanks for dillo
+
+higuita
+ps: dillo 0.7.0-pre1 is working fine in linux sparc, the last one crashed
+in that old sun ultra1 machine (suse 7.3)... thanks again for that 8)
+-- 
+There is hardly a thing in the world that some man can
+not make a little worse and sell a little cheaper.
+Galeao.casa@Portugal:
+03:11:00 up 10:24, 1 user, load average: 0.06, 0.05, 0.01 
+
+
+
+[Dillo-dev]Encoding and charset selection patch
+
+From: Grigory Bakunov <black@as...> - 2002-11-08 14:55
+
+Hello all.
+I need to say what i update my i18n patches for dillo-0.7.0 - you can
+find this patches here :
+
+http://stuphead.asplinux.ru/dillo/index.html.en#toc6
+
+Thanks Jorge and others project developers for great work!
+
+
+........................................................................
+IRC: irc.openprojects.net #asplinux Grigory Bakunov
+EMAIL: black@as... ASPLinux Support Team
+ICQ: 51369901 http://www.asplinux.ru
+-----BEGIN GEEK CODE BLOCK-----
+GCS/MU d-(--) s:- a- C+++>++$ UBLAVSX+++$ P+ L++++$ E++$ W++ N+>- o? K?
+w-- O- M V-(--) PS+ PE+ !Y PGP+>++++ t+ 5++ X+++ R+++ tv+>-- b+++ ?DI D+
+G++ e>++$ h- r++ y+ z++(+++)
+------END GEEK CODE BLOCK------ 
+
+
+
+[Dillo-dev]dpi menu (for bookmarks)
+
+From: madis <madis@cy...> - 2002-11-07 20:33
+
+how should dpi1 plugins create menu items (for example for bookmarks 
+menu)? it seems to be missing from dpi specification.
+could it be something like this (just a example for generating better 
+ideas ;) )?
+
+<dpi cmd='menu' name='bm' cnt='3' i1='first' i2='@submenu1' i3='last'>
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-06 23:59
+
+Melvin,
+
+> For the moment the only thing I found that is not working correctly is adding a
+> URL in another section than the first one. I made sure to select "Add URL", then
+> check the section I want the new URL to go in and then "submit". After filling
+> the URL, it is added to the first section. That reminds me that if there is no
+> section, the URL is added but it is not displayed until a first section is
+> displayed.
+
+A I said in my previous post, this was not implemented, but I
+added a few lines to the patch at CVS page to make it work.
+
+Note: the patch at http://dillo.cipsga.org.br/cvs.html is not
+incremental. i.e. apply it to the original tarball.
+
+HTH
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-06 15:22
+
+Melvin,
+
+> > Here's a tiny patch that solves the problem:
+> >
+> > http://dillo.cipsga.org.br/cvs.html
+> >
+> > Please let me know how the whole thing works. I haven't got any
+> > feedback yet.
+>
+> For the moment the only thing I found that is not working correctly is adding a
+> URL in another section than the first one. I made sure to select "Add URL", then
+> check the section I want the new URL to go in and then "submit". After filling
+> the URL, it is added to the first section. That reminds me that if there is no
+> section, the URL is added but it is not displayed until a first section is
+> displayed.
+
+Yes, I haven't implemented it yet!
+
+I know that is the expected behaviour, and that it should work.
+It's just a matter of coding the missing bits...
+
+BTW, I was about to leave the "add url" as an excercise to the
+reader :) when I decided to make it as a last minute addition.
+
+My main concern is about grasping the generic mechanisms, the
+potentiality, the way to code PI, etc. Maybe it'll take some more
+time to study the docs, the bm PI, and start coding a custom PI
+before this can be answered. If this is the case, please take
+your time.
+
+Thanks for your quick reply.
+
+
+Cheers
+Jorge.-
+
+
+BTW: one of the interesting points is the possibility of coding
+another, absolutely different bookmarks plugin. The one I coded
+is just an example, that I hope to be useful. DPI1 allows for a
+very flexible way of extending dillo. Every user can chose
+different PIs with the same dillo core! 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-11-06 14:11
+
+Jorge,
+
+on Wed, 6 Nov 2002 10:04:21 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> 
+> Hi there!
+> 
+> > > [I wrote:]
+> > > It works for me all the time.
+> > > Has anyone had trouble making it work?
+> > > (AFAIK it worked for Melvin)
+> > >
+> >
+> > On line 56, in bm_srv10.c:
+> > static char *BmFile = "/home/jcid/.dillo/bm.txt";
+> >
+> > After changing that path, it seems to work OK for me ;)
+> 
+> Gotcha! So that was it!
+> 
+> Here's a tiny patch that solves the problem:
+> 
+> http://dillo.cipsga.org.br/cvs.html
+> 
+> Please let me know how the whole thing works. I haven't got any
+> feedback yet.
+
+For the moment the only thing I found that is not working correctly is adding a
+URL in another section than the first one. I made sure to select "Add URL", then
+check the section I want the new URL to go in and then "submit". After filling
+the URL, it is added to the first section. That reminds me that if there is no
+section, the URL is added but it is not displayed until a first section is
+displayed.
+
+Tavvauvusi [Tah-vow-voo-see] (Inuit: Good bye to you all)
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-06 13:51
+
+Hi there!
+
+> > [I wrote:]
+> > It works for me all the time.
+> > Has anyone had trouble making it work?
+> > (AFAIK it worked for Melvin)
+> >
+>
+> On line 56, in bm_srv10.c:
+> static char *BmFile = "/home/jcid/.dillo/bm.txt";
+>
+> After changing that path, it seems to work OK for me ;)
+
+Gotcha! So that was it!
+
+Here's a tiny patch that solves the problem:
+
+http://dillo.cipsga.org.br/cvs.html
+
+Please let me know how the whole thing works. I haven't got any
+feedback yet.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Stephen Lewis <slewis@pa...> - 2002-11-06 09:36
+
+On Tue, 5 Nov 2002 22:51:18 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> On 5 Nov 2002, Carlos Daniel Ruvalcaba Valenzuela wrote:
+> 
+> > Yes, i think Unix sockets will suit well for the plugin
+> > communication, also the bookmark plugin dosen't works! (yea sure, it
+> > dosen't have to really work, just work a sample plugin :-) )
+> 
+> It works for me all the time.
+> Has anyone had trouble making it work?
+> (AFAIK it worked for Melvin)
+> 
+
+On line 56, in bm_srv10.c:
+static char *BmFile = "/home/jcid/.dillo/bm.txt";
+
+After changing that path, it seems to work OK for me ;)
+
+-- 
+Stephen Lewis
+slewis@pa... 
+
+
+
+[Dillo-dev]another +ve dillo review
+
+From: Geoff Lane <zzassgl@tw...> - 2002-11-06 08:50
+
+This months' issue (Nov 2002) of the UK magazine Linux Format
+(www.linuxformat.co.uk - but it's currently off the net because of /.
+effect) contains a generally favourable review of Dillo 0.6.6.
+
+They really like the small memory use and high speed page loads.
+
+Their main complaints
+
+1 dillo is _too_ strict in following web standards
+(If _nobody_ enforces standards they are pointless)
+2 no highlighting of strings found using the find dialog
+3 no builtin SSL support (nor Java/JavaScript)
+(SSL patches are available, but maybe it's time to integrate
+into base code? Working out a plan to add JavaScript without
+increasing the memory footprint too much would be an
+interesting project for someone.)
+4 HTTP only down-loads
+(Hopefully recent dpi developments solve this.)
+
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+Discoveries are made by not following instructions. 
+
+
+
+[Dillo-dev]dpi and starting servers ....
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-11-06 05:54
+
+Hi folks,
+
+I think the browser should start the different dpi's depending on 
+tags ( URL ), so what in that case would be needed is some configuration 
+of tag -> dpi .
+
+Also it would be nice with two types of dpi processes, one global ( 
+perhaps running in /tmp/.dillo/<unix socket by dpi name> such as the 
+cache ? and a second kind running on ~/.dillo/<bla bal>/<unix socket by 
+dpi name> .
+
+Does anybody agree/disagree ?
+
+/ regards, Lars Segerlund. 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Carlos Daniel Ruvalcaba Valenzuela <clsdaniel@ya...> - 2002-11-06 04:11
+
+On Tue, 2002-11-05 at 18:51, Jorge Arellano Cid wrote:
+
+> Thanks, but how can you tell without running the bookmarks PI?
+
+Well, i was talking about the Dillo part, but the bm dpi does work at
+certain rate, it dosen't shows any bookmark at all, nor does adds
+bookmarks or other functionality related the Bookmark stuff, but it
+shows everything well, the communication between dillo and the bmserver
+is OK.
+
+--> Carlos Daniel Ruvalcaba
+
+_________________________________________________________
+Do You Yahoo!?
+La mejor conexión a internet y 25MB extra a tu correo por $100 al mes. http://net.yahoo.com.mx 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-06 01:54
+
+On 5 Nov 2002, Carlos Daniel Ruvalcaba Valenzuela wrote:
+
+> Yes, i think Unix sockets will suit well for the plugin communication,
+> also the bookmark plugin dosen't works! (yea sure, it dosen't have to
+> really work, just work a sample plugin :-) )
+
+It works for me all the time.
+Has anyone had trouble making it work?
+(AFAIK it worked for Melvin)
+
+>, about the DPI protocol,
+> why do you choosed Tag based communication instead of binary struct?, or
+> binary structures will be supported as well?, Tags have to be
+> intepreted, binary structures only readed, there is a great diference on
+> speed on that.
+
+Think twice.
+
+> Remember the structure for communications?
+> cmd
+> id
+> d1
+> d2
+> lenght
+> data
+
+Yes, I've written/reviewed eight drafts about it.
+
+> Plus, dillo will be able to automatically load plugins? (On-Demand),
+> like a rtf pharser, or any other like that?
+
+Please read the included documentation.
+
+> Also for the creation of new plugins, i think that the implementation is
+> well and easy to work with, but it can be a little problematic while
+> handling tags, to communicate to the browser you use plain sockets.
+> There may be people out there that don't like to handle strings, or is
+> careless writing the sockets code, etc.
+>
+> Resume: Not for anybody, just programmers with handy knowledge on
+> sockets and a bit of creativity to parse out the tags.
+>
+> PS:
+> Jorge, good work with the dpi, cheers!
+
+Thanks, but how can you tell without running the bookmarks PI?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Carlos Daniel Ruvalcaba Valenzuela <clsdaniel@ya...> - 2002-11-06 01:18
+
+Yes, i think Unix sockets will suit well for the plugin communication,
+also the bookmark plugin dosen't works! (yea sure, it dosen't have to
+really work, just work a sample plugin :-) ), about the DPI protocol,
+why do you choosed Tag based communication instead of binary struct?, or
+binary structures will be supported as well?, Tags have to be
+intepreted, binary structures only readed, there is a great diference on
+speed on that.
+
+Remember the structure for communications?
+cmd
+id
+d1
+d2
+lenght
+data
+
+Plus, dillo will be able to automatically load plugins? (On-Demand),
+like a rtf pharser, or any other like that?
+
+Also for the creation of new plugins, i think that the implementation is
+well and easy to work with, but it can be a little problematic while
+handling tags, to communicate to the browser you use plain sockets.
+There may be people out there that don't like to handle strings, or is
+careless writing the sockets code, etc. 
+
+Resume: Not for anybody, just programmers with handy knowledge on
+sockets and a bit of creativity to parse out the tags.
+
+PS: 
+Jorge, good work with the dpi, cheers!
+
+-> Carlos Daniel Ruvalcaba
+
+_________________________________________________________
+Do You Yahoo!?
+La mejor conexión a internet y 25MB extra a tu correo por $100 al mes. http://net.yahoo.com.mx 
+
+
+
+Re: [Dillo-dev]Dillo and memory leak
+
+From: higuita <higuita@GM...> - 2002-11-05 09:16
+
+Attachments: Message as HTML      
+
+On Fri, 01 Nov 2002 08:33:25 +0100, Lars Segerlund
+<lars.segerlund@co...> wrote:
+> It seems that after running for a long time dillo uses up quite a lot 
+> of memory, I had two dillo sessions running for about three to five days
+> and both used about 130 MB , they were only displaying static pages on 
+
+isnt this the cache?
+i think that right now there is not memory cache limit so it
+keeps in the memory every page you open...
+
+i think there is a patch that enable the cache age and limit
+
+higuita
+-- 
+One Unix to rule them all, One Resolver to find them,
+One IP to bring them all and in the zone bind them. 
+
+
+
+Re: [Dillo-dev]BUG#382
+
+From: Jamin W. Collins <jcollins@as...> - 2002-11-03 22:39
+
+On Sun, 3 Nov 2002 17:25:19 -0300 (CLST) Jorge Arellano Cid
+<jcid@so...> wrote:
+
+> Bug #382 says that dillo crashes with:
+> 
+> http://deadly.org/article.php3?sid=20020914154658
+> 
+> I can't reproduce it. Can someone reproduce it?
+
+Doesn't happen here.
+
+-- 
+Jamin W. Collins 
+
+
+
+[Dillo-dev]BUG#382
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-03 20:51
+
+Hi!
+
+
+Bug #382 says that dillo crashes with:
+
+http://deadly.org/article.php3?sid=20020914154658
+
+I can't reproduce it. Can someone reproduce it?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: madis <madis@cy...> - 2002-11-03 18:46
+
+using unix domain sockets seems to be better for these plugins - no 
+potential port number conflicts with other users/services.
+
+On Sat, 2 Nov 2002, Jorge Arellano Cid wrote:
+
+> 
+> Melvin,
+> 
+> > Jorge Arellano Cid <jcid@so...> wrote:
+> >
+> > > Finally, I'm pleased to present the first prototype of dillo
+> > > plugins: both, the dpi enabled browser and the bookmarks PI.
+> >
+> > I tried to run the bookmark server, but it says that the address is already in
+> > use. I have a http server running on port 8000, it seems that's the problem.
+> > That would also mean that two plugins servers can't be run on the same time?
+> > What can I do to solve this?
+> 
+> C'mon Melvin, just change the port number in:
+> 
+> dpi.c:351
+> bm_srv10.c:57
+> 
+> > That would also mean that two plugins servers can't be run on the same time?
+> 
+> Yes they can, at different ports.
+> Ah, and most probably they'll end using unix domain sockets.
+> 
+> I hope this gets you started.
+> 
+> Regards
+> Jorge.-
+> 
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]CPPFLAGS and /usr/local/include (Bug #349)
+
+From: Philip Blundell <pb@ne...> - 2002-11-03 16:53
+
+On Sun, 2002-11-03 at 13:49, Jorge Arellano Cid wrote:
+> Maybe not making a default inclusion of /usr/local/ stuff and
+> letting the user add it in the environment vars before running
+> ./configure is the right way?
+
+Yes, this seems like the right answer. As far as I know, there is no
+reason for dillo to be doing anything special with /usr/local by
+default.
+
+p. 
+
+
+
+[Dillo-dev]CPPFLAGS and /usr/local/include (Bug #349)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-03 13:54
+
+Hi,
+
+There's a problem with having:
+
+CPPFLAGS=3D"$CPPFLAGS -I/usr/local/include"
+LDFLAGS=3D"$LDFLAGS -L/usr/local/lib"
+
+in configure.in.
+
+It'd be good to try to fix it now because the problem arises
+with the gcc 3.1 (cpp 3.1).
+
+If you know about cpp, gcc & autoconf please read on:
+
+(NOTE: cpp <=3D> C pre-processor)
+
+
+On Sun, 29 Sep 2002, Manuel Menal wrote:
+
+> Hey,
+>
+> While porting Dillo to the new implementation of POSIX threads for
+> GNU/Hurd (code name: "Rubbish, I asked for mine with Minced Garlic,
+> Please Take this back"), I found some minor =AB bugs =BB in the Dillo
+> "installation system". The first bug I found out was a bug that was
+> already reported as #349 in the Dillo bug report system. It seems a
+> quite simple and not so annoying bug, but in fact it is quite pervert,
+> as it makes the configure misdetect what is installed in the system:
+> when it checks for jpeglib.h (& others), it tries to preprocess a simple
+> C file which only includes jpeglib.h, and check if there is some
+> output. If there is some output, then it assumes there is no
+> jpeglib.h. Which is not true in this case: the output is just warning
+> of cpp, which complains about the =AB -I/usr/local/include =BB (cpp 3.1
+> already has /usr/local/include it its system directories).
+>
+> There is a simple way to fix it, though. And Here is a patch:
+>
+> diff -pru old/dillo-0.6.6/configure dillo-0.6.6/configure
+> --- old/dillo-0.6.6/configure 2002-09-29 12:41:20.000000000 +0200
+> +++ dillo-0.6.6/configure 2002-09-29 12:40:57.000000000 +0200
+> @@ -1494,8 +1494,8 @@ ac_config_headers=3D"$ac_config_headers co
+> ac_config_commands=3D"$ac_config_commands default-1"
+>
+>
+> -CPPFLAGS=3D"$CPPFLAGS -I/usr/local/include"
+> -LDFLAGS=3D"$LDFLAGS -L/usr/local/lib"
+> +CPPFLAGS=3D"$CPPFLAGS -idirafter=3D/usr/local/include"
+> +LDFLAGS=3D"$LDFLAGS -idirafter=3D/usr/local/lib"
+>
+> idirafter makes cpp check /usr/local/include AFTER its system
+> directories (and the other -I'ed directories), so it doesn't complain
+> any more, and though it does include /usr/local/include on systems where
+> cpp doesn't have it in its system directories. This seems to fix my bug
+> and #349's reporter one.
+>
+> HTH,
+>
+> --
+> Manuel Menal
+
+
+This seems to solve the problem, but it has been reported that
+"idirafter" breaks things for non-gcc compilers, and I wonder
+what's the _right_ way to fix this.
+
+Maybe not making a default inclusion of /usr/local/ stuff and
+letting the user add it in the environment vars before running
+=2E/configure is the right way?
+
+I hesitate because if /usr/local is not already included in the
+system's directories, it means it's not installed.
+
+That is: if you have package "foo" in /usr/lib with includes in
+/usr/include, and you want to test a newest version of it, and
+you build it under /usr/local, ./configure should detect the
+the old one (the system's one).
+
+If you want to use the newest one, you can specify -I/usr/local
+(which changes the search order so now it's found first). Finally
+if you want every application to use the newest package, the
+system's includes&libs paths should be updated.
+
+Does anyone know better?
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-11-02 13:33
+
+Hi Jorge,
+
+on Sat, 2 Nov 2002 09:06:10 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> C'mon Melvin, just change the port number in:
+>=20
+> dpi.c:351
+> bm_srv10.c:57
+
+That's what I ended to do... But if plugins will use INET sockets, then t=
+here
+should be a defined list of ports.
+
+In fact, it was a NAS server that listened at 8000, not the HTTP server.
+
+> Yes they can, at different ports.
+> Ah, and most probably they'll end using unix domain sockets.
+>=20
+> I hope this gets you started.
+
+It's OK, but I thought I report this, because this is currently a limitat=
+ion
+(unless a list that maps plugins to TCP/IP ports is created).
+
+BTW, I like the idea that plugins do not have to be started by the browse=
+r.=20
+
+Thanks for your work.
+
+Tsch=FC=DF (German: Bye)
+
+
+--=20
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]patches updated
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-02 12:55
+
+On Sat, 2 Nov 2002, Melvin Hadasht wrote:
+
+> Hi,
+>
+> The following patches were updated so they apply cleanly on Dillo 0.7.0pre-v1.
+>
+> - local browsing patch. Please note: this patch blocks accesses to a remote
+> host but still does DNS lookup for that host. I read somewhere that spammers can
+> look at their DNS server log to see if they got a hit for 123456.the.spam.com,
+> for example, thus allowing tracking of mail reading. If someone knows a way to
+> check if an address resolves to a localhost (local network?) address without
+> using DNS, please tell me.
+>
+> - fullwindow startup
+>
+> - embeddable Dillo (in another GTK+ application).
+>
+> The all-in-one patch was also updated. The command line support patch was not
+> updated because the last version still applies cleanly.
+>
+> Gentoo distribution is currently allowing the user to automatically fetch these
+> patches to permit HTML mail to be viewed from within Sylpheed-Claws mail user
+> agent, so I hope they will be officially implemented in Dillo.
+>
+> The patches are to be found at http://melvin.hadasht.free.fr/home/
+
+Thanks for the update Melvin.
+
+Yes, those patches will make into the official dillo. BTW I
+have a lot of pending patches to review; as I've said before,
+they were procrastinated because the top priority was on dpi.
+
+I apologize to all the people that haven't had answers in a
+long time. Please be aware that even working full time I don't
+have the time to cope with the huge loads of work here. BTW, just
+answering all the email I receive would eat almost all of my
+time!
+
+Now the priorities are:
+
+* Funding initiative
+* dpi
+* integrating some procrastinated patches
+* next release
+
+
+Please note that the funding initiative is critical, as I know
+that working on spare time won't work for a web browser.
+
+Ah, as I've pointed out somewhere, the current funding
+presentation haven't rised a single dolar, so I'm trying to
+expand the horizon and ask in other channels, and it certainly
+takes a lot of time...
+
+[more on this later]
+
+Best
+Jorge.-
+
+
+PS: Have you voted at http://www.linuxfund.org ? 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-02 12:55
+
+Melvin,
+
+> Jorge Arellano Cid <jcid@so...> wrote:
+>
+> > Finally, I'm pleased to present the first prototype of dillo
+> > plugins: both, the dpi enabled browser and the bookmarks PI.
+>
+> I tried to run the bookmark server, but it says that the address is already in
+> use. I have a http server running on port 8000, it seems that's the problem.
+> That would also mean that two plugins servers can't be run on the same time?
+> What can I do to solve this?
+
+C'mon Melvin, just change the port number in:
+
+dpi.c:351
+bm_srv10.c:57
+
+> That would also mean that two plugins servers can't be run on the same time?
+
+Yes they can, at different ports.
+Ah, and most probably they'll end using unix domain sockets.
+
+I hope this gets you started.
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Re: broken link on dillo website
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-02 12:55
+
+Jolan,
+
+> http://dillo.cipsga.org.br/Icons/
+>
+> You don't have permission to access /Icons/ on this server.
+>
+> Can you please change the permissions as appropriate so I can grab
+> an icon?
+
+Sorry about that.
+
+The real problem is that the web server was somehow "updated"
+and the settings didn't remain. BTW, thepermissions are right,
+the problem is they don't allow symbolic links any more, so the:
+
+index.html -> icons.html
+
+doesn't work anymore.
+
+I had to made a file copy of it (now it works).
+
+Thanks for the tip, and please don't hesitate to report any
+problem you may find.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]patches updated
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-11-02 10:19
+
+Hi,
+
+The following patches were updated so they apply cleanly on Dillo 0.7.0pre-v1.
+
+- local browsing patch. Please note: this patch blocks accesses to a remote
+host but still does DNS lookup for that host. I read somewhere that spammers can
+look at their DNS server log to see if they got a hit for 123456.the.spam.com,
+for example, thus allowing tracking of mail reading. If someone knows a way to
+check if an address resolves to a localhost (local network?) address without
+using DNS, please tell me.
+
+- fullwindow startup
+
+- embeddable Dillo (in another GTK+ application).
+
+The all-in-one patch was also updated. The command line support patch was not
+updated because the last version still applies cleanly.
+
+Gentoo distribution is currently allowing the user to automatically fetch these
+patches to permit HTML mail to be viewed from within Sylpheed-Claws mail user
+agent, so I hope they will be officially implemented in Dillo.
+
+The patches are to be found at http://melvin.hadasht.free.fr/home/
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-11-01 20:47
+
+Hi Jorge,
+
+on Fri, 1 Nov 2002 15:52:25 -0300 (CLST)
+Jorge Arellano Cid <jcid@so...> wrote:
+
+> Finally, I'm pleased to present the first prototype of dillo
+> plugins: both, the dpi enabled browser and the bookmarks PI.
+
+I tried to run the bookmark server, but it says that the address is already in
+use. I have a http server running on port 8000, it seems that's the problem.
+That would also mean that two plugins servers can't be run on the same time?
+What can I do to solve this?
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+[Dillo-dev]Dillo 0.7.0-pre-v1 (dpi enabled)
+
+From: Jorge Arellano Cid <jcid@so...> - 2002-11-01 18:54
+
+Hi there!
+
+
+A lot of time has passed, but also a lot of work has been done.
+
+Finally, I'm pleased to present the first prototype of dillo
+plugins: both, the dpi enabled browser and the bookmarks PI.
+
+This is a work in progress and there's still some work to do
+before making a release of it, but I hope you enjoy this version
+and start working with it ASAP.
+
+I've prepared a tarball with all the necessary stuff, just get:
+
+http://dillo.cipsga.org.br/070pre/070pre-v1.tgz
+
+... read the docs and you'll be started.
+
+
+Enjoy
+Jorge.-
+
+
+PD: If you haven't voted some pesos for dillo at
+http://www.linuxfund.org, please do so. We need
+the money and it'll cost you nothing.
+Remember, the max amount is 1500. 
+
+
+
+[Dillo-dev]Dillo and memory leak
+
+From: Lars Segerlund <lars.segerlund@co...> - 2002-11-01 07:33
+
+It seems that after running for a long time dillo uses up quite a lot 
+of memory, I had two dillo sessions running for about three to five days 
+and both used about 130 MB , they were only displaying static pages on 
+the local filesystem, in other words no reloads and sych, also they 
+seemed to have allocated about the same amount of memory during this 
+time. This could indicate a leak that is propotional with time so to 
+speak. I will try to pin it down.
+
+/ Lars Segerlund. 
+

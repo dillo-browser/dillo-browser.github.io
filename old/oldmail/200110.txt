@@ -1,0 +1,3823 @@
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-31 21:42
+
+> The main bad thing with having that extra code in the browser is that it
+> adds cpu cycles and memory usage to normal browsing sessions. How often
+> do you actually view a page source code? Except for when developing web
+> browsers of course. 
+
+or when developing web pages, or just learning how a nifty trick is done. 
+
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: DraX <drax@wh...> - 2001-10-31 20:52
+
+On Wed, 31 Oct 2001, Martin Samuelsson wrote:
+
+> 
+> On Wed, Oct 31, 2001 at 12:24:24PM -0800, DraX wrote:
+> > I have no problem with the ABILITY to spawn an external proccess thats a
+> > good idea, but i feel that i shouldn't have to do it myself.
+> 
+> I'm sure you'll understand the unix way in building applications about
+> the same time you learn how to quote other people on mailing lists.
+> Answers should be below the original text and irrelevant text should be
+> removed. There are rfc:s defining this and, most important, it really
+> helps the readers.
+> 
+Flaming me dosen't make you sound more credible you know?
+
+> The main bad thing with having that extra code in the browser is that it
+> adds cpu cycles and memory usage to normal browsing sessions. How often
+> do you actually view a page source code? Except for when developing web
+> browsers of course. Do you view 1% of the pages? Or perhaps on out of
+> 1000? Most users never ever view the source. There's normally no need
+> to.
+> 
+Granted, but i wonder just how many extra cycles or memory usage is added,
+i doubt it's that much at all, probabbly less then is needed to fork off
+an xterm and execute more.
+
+> It's not the web browsers job. It shouldn't be there. It adds bloat to
+> the browser, and other applications problary does a better job.
+> --
+> /Martin
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Martin Samuelsson <cosis@ly...> - 2001-10-31 20:40
+
+On Wed, Oct 31, 2001 at 12:24:24PM -0800, DraX wrote:
+> I have no problem with the ABILITY to spawn an external proccess thats a
+> good idea, but i feel that i shouldn't have to do it myself.
+
+I'm sure you'll understand the unix way in building applications about
+the same time you learn how to quote other people on mailing lists.
+Answers should be below the original text and irrelevant text should be
+removed. There are rfc:s defining this and, most important, it really
+helps the readers.
+
+The main bad thing with having that extra code in the browser is that it
+adds cpu cycles and memory usage to normal browsing sessions. How often
+do you actually view a page source code? Except for when developing web
+browsers of course. Do you view 1% of the pages? Or perhaps on out of
+1000? Most users never ever view the source. There's normally no need
+to.
+
+It's not the web browsers job. It shouldn't be there. It adds bloat to
+the browser, and other applications problary does a better job.
+--
+/Martin 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: DraX <drax@wh...> - 2001-10-31 20:24
+
+I have no problem with the ABILITY to spawn an external proccess thats a
+good idea, but i feel that i shouldn't have to do it myself.
+
+On Wed, 31 Oct 2001, John Utz wrote:
+
+> On Wed, 31 Oct 2001, DraX wrote:
+> 
+> > I just find spawning an external proccess just to look at some html is
+> > stupid.
+> 
+> this is a pretty valid rationale!
+> 
+> but it suffers from a profound lack of flexibility, and can be probably
+> can be discounted by the fact that it contravenes 'The Unix Way'.
+> 
+> 
+> >
+> >
+> > On Wed, 31 Oct 2001, Doug Kearns wrote:
+> >
+> > > On Tue, Oct 30, 2001 at 06:00:57PM -0800, DraX wrote:
+> > > > -1
+> > >
+> > > Well, where is the value in this sort of thing?
+> > >
+> > > What, exactly, does the current source viewer do so well?
+> > >
+> > > I don't understand, bloat, bloat, bloat, bloat ...
+> > >
+> > > Regards,
+> > > Doug
+> > >
+> > > _______________________________________________
+> > > Dillo-dev mailing list
+> > > Dillo-dev@li...
+> > > https://lists.so....net/lists/listinfo/dillo-dev
+> > >
+> >
+> >
+> > _______________________________________________
+> > Dillo-dev mailing list
+> > Dillo-dev@li...
+> > https://lists.so....net/lists/listinfo/dillo-dev
+> >
+> 
+> -- 
+> 
+> John L. Utz III
+> john@ut...
+> 
+> Idiocy is the Impulse Function in the Convolution of Life
+> 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: John Utz <john@ut...> - 2001-10-31 19:31
+
+On Wed, 31 Oct 2001, DraX wrote:
+
+> I just find spawning an external proccess just to look at some html is
+> stupid.
+
+this is a pretty valid rationale!
+
+but it suffers from a profound lack of flexibility, and can be probably
+can be discounted by the fact that it contravenes 'The Unix Way'.
+
+
+>
+>
+> On Wed, 31 Oct 2001, Doug Kearns wrote:
+>
+> > On Tue, Oct 30, 2001 at 06:00:57PM -0800, DraX wrote:
+> > > -1
+> >
+> > Well, where is the value in this sort of thing?
+> >
+> > What, exactly, does the current source viewer do so well?
+> >
+> > I don't understand, bloat, bloat, bloat, bloat ...
+> >
+> > Regards,
+> > Doug
+> >
+> > _______________________________________________
+> > Dillo-dev mailing list
+> > Dillo-dev@li...
+> > https://lists.so....net/lists/listinfo/dillo-dev
+> >
+>
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]feature request: searching HTML source
+
+From: John Utz <john@ut...> - 2001-10-31 19:06
+
+And something that i'd like to see that might do this even better:
+
+how about a configuration item that lets you pick the editor you want to
+use for view src?
+
+i want to use emacs so that i can use psgmlx to manage font lock and tag
+parsing, and search, and so on and so forth.....
+
+hmm, i shall enter a feature bug and try and create this patch
+
+On Tue, 30 Oct 2001, Carl Wilhelm Soderstrom wrote:
+
+> Here's something I'd like to see in a web browser:
+> When you view the source HTML of a page; have a simple dialog box (like
+> right next to the 'close' button), where you can put in a string, and search
+> for it in the source code you're viewing.
+> That way, it's easier to find the particular piece of source that
+> you're looking for.
+>
+> Doing a great job guys! Keep up the good work!
+> Carl Soderstrom
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-31 18:48
+
+On Wed, Oct 31, 2001 at 10:34:21AM -0800, DraX wrote:
+> I just find spawning an external proccess just to look at some html is
+> stupid.
+
+hmmm... looks like the current viewer *doesn't* spawn a new process. (unless
+I'm just not seeing it in 'ps axu'). I kind of expected that it would.
+
+Carl Soderstrom.
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: DraX <drax@wh...> - 2001-10-31 18:34
+
+I just find spawning an external proccess just to look at some html is
+stupid.
+
+
+
+On Wed, 31 Oct 2001, Doug Kearns wrote:
+
+> On Tue, Oct 30, 2001 at 06:00:57PM -0800, DraX wrote:
+> > -1
+> 
+> Well, where is the value in this sort of thing?
+> 
+> What, exactly, does the current source viewer do so well?
+> 
+> I don't understand, bloat, bloat, bloat, bloat ...
+> 
+> Regards,
+> Doug
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: William Kendrick <nbs@so...> - 2001-10-31 18:05
+
+On Wed, Oct 31, 2001 at 06:13:31PM +0100, Martin Samuelsson wrote:
+<snip> 
+> The fact that it looks cute isn't a reason to include it in the main
+> binary imho.
+> 
+> There's nothing preventing a cute looking dillo like html aware text
+> viewer that not is compiled into dillo.
+
+Agreed. It's my hope to one day get Dillo working on my Agenda PDA,
+and I imagine viewing HTML source won't be too important for most users,
+so saving some room in the binary is nice.
+
+Having options for an external viewer (whether it be an 'official Dillo'
+one, or simply "rxvt -e more %s") is the best way to go to keep the
+program small.
+
+Of course, if we just /must/ have a built-in viewer (it's hard to imagine,
+but there might be some environments where a text viewer like 'more'
+or something like a 'notepad' program would NOT be available),
+I think it should be pretty simple. Just a scrollable, fixed-point font
+plaintext display. No colors or anything.
+
+-bill! 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-31 17:27
+
+> The fact that it looks cute isn't a reason to include it in the main
+> binary imho.
+
+I know. :) it's a waste of space in a program that's designed to be tiny. 
+if I actually knew how to write C, I might just take the viewer and make it
+a separate project. 
+oh well... one of these days. :)
+
+Carl Soderstrom. 
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Martin Samuelsson <cosis@ly...> - 2001-10-31 17:13
+
+On Wed, Oct 31, 2001 at 09:45:20AM -0600, Carl Wilhelm Soderstrom wrote:
+> doesn't require any external programs, and looks cute?
+> ;>
+> 
+> those are about the only reasons I can find to like it. 
+
+The fact that it looks cute isn't a reason to include it in the main
+binary imho.
+
+There's nothing preventing a cute looking dillo like html aware text
+viewer that not is compiled into dillo.
+--
+/Martin 
+
+
+
+[Dillo-dev]Yay! Cookies!
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-31 17:06
+
+I now have (rudimentary) cookie support. While I can parse all the RFC2109
+cookies and the old Netscape style cookies, some servers seem to be very
+picky about the format. I got the bulletin boards that I've really been
+missing cookies for to accept them. There is no cookie control yet, nor
+persistent storage, and the cookie jar is shared among all threads.
+
+For those who'd like to try it out, a tarball with a patch and two new
+files is at <URL:http://shasta.cs.uiuc.edu/~lrclause/dillo-cookies.tar.gz>.
+
+I shall now start to consider how to control them:) I'd like to avoid
+blocking the page load while asking about cookies, so that should go into a
+separate thread.=20=20
+
+Persistance would require a lock, because of the threading, otherwise it's
+trivial.=20
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-31 15:45
+
+> Well, where is the value in this sort of thing?
+> 
+> What, exactly, does the current source viewer do so well?
+
+doesn't require any external programs, and looks cute?
+;>
+
+those are about the only reasons I can find to like it. 
+
+Carl Soderstrom. 
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+[Dillo-dev]BUG #241 (was: Big tag-parsing patch)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-10-31 12:45
+
+On Tue, Oct 30, 2001 at 09:55:02AM -0300, Jorge Arellano Cid wrote:
+> Can anyone reproduce BUG#206 and/or BUG#241?
+> 206: segfault at http://gamefaqs.com
+> 241: unusable last link at http://www.ktl.fi/fineli/
+
+Yes, I can reproduce it, you may have to click the reload
+button. However, I'm currently rewriting (for bug #201) the code in
+dw_page.c for word wrapping, size requisition and some other things,
+the code has become a bit clearer, and indeed, this bug does not occur
+in my code. So I've committed myself to this bug.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Taras <taras.glek@ho...> - 2001-10-31 04:58
+
+On Tue, 2001-10-30 at 20:00, Doug Kearns wrote:
+> On Wed, Oct 31, 2001 at 12:45:11PM -0800, Taras wrote:
+> > On Tue, 2001-10-30 at 19:38, Doug Kearns wrote:
+> > > On Tue, Oct 30, 2001 at 06:00:57PM -0800, DraX wrote:
+> > > > -1
+> > > 
+> > > Well, where is the value in this sort of thing?
+> > > 
+> > > What, exactly, does the current source viewer do so well?
+> > > 
+> > > I don't understand, bloat, bloat, bloat, bloat ...
+> > Not to mention that compared to a full featured external editor this is
+> > crap, crap, crap. Compared to normal browsing, view source is rarely
+> > used, and having it load it every single time you want to quickly see a
+> > page is definetly a drag(IMHO) and unneeded, especially since most times
+> > I do view source is to do something useful with the source, and I would
+> > preffer to use an external editor for that. 
+> > So thats my +1.
+> 
+> <snip>
+> 
+> Did you mean for this to go to the list as well as me ?
+Sorry :), I meant to ditto you to the list
+> Regards,
+> Doug 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Doug Kearns <djkea2@mu...> - 2001-10-31 03:36
+
+On Tue, Oct 30, 2001 at 06:00:57PM -0800, DraX wrote:
+> -1
+
+Well, where is the value in this sort of thing?
+
+What, exactly, does the current source viewer do so well?
+
+I don't understand, bloat, bloat, bloat, bloat ...
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: DraX <drax@wh...> - 2001-10-31 02:01
+
+-1 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Doug Kearns <djkea2@mu...> - 2001-10-31 00:54
+
+On Tue, Oct 30, 2001 at 05:33:43PM -0600, Carl Wilhelm Soderstrom wrote:
+> > Smaller and lighter than vi, maybe, but not smaller and lighter than
+> > ed. Let the user coose just how small and light he wants.
+> 
+> should we just abandon the source viewer entirely, then? just have a
+> preference for which external viewer you want, and set vi to be the default?
+
++1
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-31 00:03
+
+> Smaller and lighter than vi, maybe, but not smaller and lighter than
+> ed. Let the user coose just how small and light he wants.
+
+should we just abandon the source viewer entirely, then? just have a
+preference for which external viewer you want, and set vi to be the default?
+
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Ted Spradley <tsprad@sp...> - 2001-10-30 23:58
+
+Carl Wilhelm Soderstrom wrote:
+> 
+> > Smaller and lighter than vi, maybe, but not smaller and lighter than
+> > ed. Let the user coose just how small and light he wants.
+> 
+> should we just abandon the source viewer entirely, then? just have a
+> preference for which external viewer you want, and set vi to be the default?
+
+Well, that's what I would do, but that's just me.
+
+Did my message go just to you? I thought I was replying to the list. 
+Need to pay more attention. This discussion belongs on the list.
+
+> 
+> Carl Soderstrom
+> --
+> Network Engineer
+> Real-Time Enterprises
+> (952) 943-8700
+
+-- 
+The Earth is degenerating these days. Bribery and corruption abound.
+Children no longer mind their parents, every man wants to write a book,
+and
+it is evident that the end of the world is fast approaching.
+-Assyrian stone tablet, c.2800bc 
+
+
+
+Re: [Dillo-dev]Re: feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-30 23:06
+
+> Even better in my opinion would be to launch an external viewer/editor for
+> viewing the source. Why redo the wheel?
+
+that's actually a good idea; and should be an option. (like it is in
+Galeon).
+
+The reason I'm interested in re-inventing the wheel in this case, is that
+our new wheel might be smaller and ligher than the old wheel. :)
+
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+[Dillo-dev]Re: feature request: searching HTML source
+
+From: Niklas <su99-nho@na...> - 2001-10-30 23:02
+
+Attachments: Message as HTML      
+
+On Tue, 30 Oct 2001 16:51:05 -0600 "Carl Wilhelm Soderstrom"
+<chrome@re...> wrote:
+> When you view the source HTML of a page; have a simple dialog box (like
+> right next to the 'close' button), where you can put in a string, and
+search
+> for it in the source code you're viewing. 
+
+Even better in my opinion would be to launch an external viewer/editor for
+viewing the source. Why redo the wheel?
+
+-- 
+Niklas 
+
+
+
+[Dillo-dev]feature request: searching HTML source
+
+From: Carl Wilhelm Soderstrom <chrome@re...> - 2001-10-30 22:51
+
+Here's something I'd like to see in a web browser:
+When you view the source HTML of a page; have a simple dialog box (like
+right next to the 'close' button), where you can put in a string, and search
+for it in the source code you're viewing. 
+That way, it's easier to find the particular piece of source that
+you're looking for. 
+
+Doing a great job guys! Keep up the good work!
+Carl Soderstrom
+-- 
+Network Engineer
+Real-Time Enterprises
+(952) 943-8700 
+
+
+
+[Dillo-dev]Multiple header fields
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-30 21:57
+
+Hi again!
+
+As I mentioned earlier, I'm working on code for cookies (not nearly as hard
+as I thought). I have the basic cookie matching and aging down, and I'm
+now starting on parsing cookies. I've found one problem in the way the
+HTTP header is parsed, though: AFAICT, the Cache_parse_field function
+assumes that there is only one field with a particular header. However,
+RFC 2109 states that 'An origin server may include multiple Set-Cookie
+headers in a response'. I'm not too happy to hack in such a central
+place, so I hope somebody knowledgeable in this area can come up with a
+good solutions.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Big tag-parsing patch
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2001-10-30 14:17
+
+Attachments: path-dwpage      
+
+tis 2001-10-30 klockan 13.55 skrev Jorge Arellano Cid:
+> [Topic swap]
+>=20
+>=20
+> Can anyone reproduce BUG#206 and/or BUG#241?
+> 206: segfault at http://gamefaqs.com
+> 241: unusable last link at http://www.ktl.fi/fineli/
+
+#241 would be the same old problem with the last line of a page not
+being compared with the other lines.=20
+I think biting the bullet and do a comparison on every word added will
+be the only sane solution. It would be nice to get rid of those problems
+once and for all.
+Attached patch does that. It seems to be faster too! :-)
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Big tag-parsing patch
+
+From: Doug Kearns <djkea2@mu...> - 2001-10-30 14:17
+
+On Tue, Oct 30, 2001 at 09:55:02AM -0300, Jorge Arellano Cid wrote:
+> 
+> Hi everyone!
+
+Hello!
+
+
+<snip>
+
+> ------------
+> [Topic swap]
+> 
+> 
+> Can anyone reproduce BUG#206 and/or BUG#241?
+> 206: segfault at http://gamefaqs.com
+> 241: unusable last link at http://www.ktl.fi/fineli/
+
+I can reproduce 241 _very_ reliably :)
+
+<snip>
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]Big tag-parsing patch
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-10-30 13:49
+
+On Tue, 30 Oct 2001 09:55:02 -0300 (CLST)
+Jorge Arellano Cid <jcid@ne...> wrote:
+
+> As some of you may know, we were working very hard with J=F6rgen
+> on the new TAG-parsing code (it was priority #1). The good news
+> is that it's already in the CVS!
+> Please consider it beta and test it as much as possible (any
+> page will do!). C'mon, GO GET IT! ;)
+
+Works fine here, haven't had the time to test it to thoroughly though=
+.
+
+> Can anyone reproduce BUG#206 and/or BUG#241?
+> 206: segfault at http://gamefaqs.com
+> 241: unusable last link at http://www.ktl.fi/fineli/
+
+Bug 241 is strange. Tried loading the page a few times in dillo. Mayb=
+e 1/3 of the time the link is not clickable. The html-code is always=
+the same, so the page must have finished loaded.
+
+--=20
+//Hugo Hallqvist - hugha495 at student.liu.se 
+
+
+
+[Dillo-dev]Big tag-parsing patch
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-30 12:56
+
+Hi everyone!
+
+
+As some of you may know, we were working very hard with J=F6rgen
+on the new TAG-parsing code (it was priority #1). The good news
+is that it's already in the CVS!
+Please consider it beta and test it as much as possible (any
+page will do!). C'mon, GO GET IT! ;)
+
+
+What does it do:
+
+* Eliminates fixed-size attribute constraints!
+* A single pass for getting attribute values and entities
+parsing.
+* Avoids g_strdup whenever is possible.
+* Parses CDATA as stated in the W3C's HTML4.01 standar:
+- replaces named entities with LATIN1 char codes
+- replaces numeric character entities with LATIN1 char codes
+- ignores LF
+- replaces CR and TAB with a single space
+Note: Entities outside Latin1 are still pending.
+
+* Fixes: BUG#190, BUG#197, BUG#207, BUG#228 and BUG#239.
+
+
+------------
+[Topic swap]
+
+
+Can anyone reproduce BUG#206 and/or BUG#241?
+206: segfault at http://gamefaqs.com
+241: unusable last link at http://www.ktl.fi/fineli/
+
+(no feedback <-> entry removal)
+
+
+------------
+[Topic swap 2]
+
+
+I'll answer some procrastinated posts when I'm back home.
+
+
+
+Greetings
+Jorge.- 
+
+
+
+Re: [Dillo-dev]interface visibility patch
+
+From: Grigory Bakunov <black@as...> - 2001-10-29 06:13
+
+Date |Fri, 26 Oct 2001 03:39:51 +0300
+From |"Sam J. Engstr=F6m" <mail@sa...>
+
+Hello!
+
+
+SJE> In an effort to get some of my ipaq changes integrated to main dillo=
+I've=20
+SJE> made a patch against 0.6.2 that allows you to configure which interf=
+ace=20
+SJE> widgets (such as toolbar buttons) are visible. This is great on hand=
+helds and=20
+SJE> possibly embedded systems where typing in the url should not be allo=
+wed.
+
+SJE> Next I'll try to make the mouse buttons configurable. I've just now=20
+SJE> discovered that you can pan the viewport with the middle button, and=
+it would=20
+SJE> help a lot when viewing pages on the ipaq.
+
+if nobody don't have objection i place this patch to my dillo patch-o-mat=
+ic
+
+http://haru.wom.ru/pub/dillo/ 
+
+
+
+RE: [Dillo-dev]HTML/XHTML compliance
+
+From: Eric GAUDET <egaudet@in...> - 2001-10-29 04:37
+
+-- En reponse de "[Dillo-dev]HTML/XHTML compliance" de Simon Hill, le
+29-Oct-2001 :
+> 
+> will the rendering engine of dillo be completely w3c html4/xhtml
+> compliant?
+> 
+
+Short answer: no.
+For a longer anwser, have a look at the mailing list archive.
+
+But if you're willing to help, for instance my testing dillo against html
+standards, you're welcome to add entries in the bugtrack.
+
+> red_one
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Oct-2001 a 20:35:10
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]HTML/XHTML compliance
+
+From: Simon Hill <red_one@ot...> - 2001-10-29 03:25
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+
+will the rendering engine of dillo be completely w3c html4/xhtml
+compliant?
+
+red_one
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iEUEARECAAYFAjvczBAACgkQsnOzDG7Xi8oyswCXdDB+Cc48egrKtk30Lx40V2I0
+EQCeJhRGgZV1ESyrwcJcQ1PyOnoUpW8=
+=ZEs1
+-----END PGP SIGNATURE----- 
+
+
+
+[Dillo-dev]interface visibility patch
+
+From: Sam J. <mail@sa...> - 2001-10-26 00:38
+
+Attachments: dillo-0.6.2-visibility.diff.gz      
+
+In an effort to get some of my ipaq changes integrated to main dillo I've 
+made a patch against 0.6.2 that allows you to configure which interface 
+widgets (such as toolbar buttons) are visible. This is great on handhelds and 
+possibly embedded systems where typing in the url should not be allowed.
+
+Next I'll try to make the mouse buttons configurable. I've just now 
+discovered that you can pan the viewport with the middle button, and it would 
+help a lot when viewing pages on the ipaq.
+
+-- 
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+Re: [Dillo-dev]Dillo pretending to be IE
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-26 00:26
+
+On Thu, 25 Oct 2001, Andreas Schweitzer wrote:
+
+> Hi,
+>=20
+> First of all : Great work guys ! I like dillo a lot !
+>=20
+> Now, after M$ latest stunt :=20
+> http://slashdot.org/articles/01/10/25/1824206.shtml
+> I decided I needed to hack dillo :-) Not that I visit MSN nor that
+> I think MSN is in any way worth visiting .... but still ....
+> this is not the first time something like that happened.
+>=20
+> Here is a patch that makes dillo pretend to be IE. Right now,
+> this is only for MSN. But if you like it I may make it more
+> elegantly.
+
+I would like this feature to be more elegantly implemented. At least to
+where you can set generally what browser to look like, from the
+preferences.
+
+-Lars, working on cookies
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]Dillo pretending to be IE
+
+From: Andreas Schweitzer <andy@ph...> - 2001-10-25 22:53
+
+Hi,
+
+First of all : Great work guys ! I like dillo a lot !
+
+Now, after M$ latest stunt : 
+http://slashdot.org/articles/01/10/25/1824206.shtml
+I decided I needed to hack dillo :-) Not that I visit MSN nor that
+I think MSN is in any way worth visiting .... but still ....
+this is not the first time something like that happened.
+
+Here is a patch that makes dillo pretend to be IE. Right now,
+this is only for MSN. But if you like it I may make it more
+elegantly.
+
+Cheers
+Andreas
+
+
+
+--- dillo-0.6.2/src/IO/http.c.orig Tue Oct 16 11:53:53 2001
++++ dillo-0.6.2/src/IO/http.c Thu Oct 25 18:14:49 2001
+@@ -32,6 +32,7 @@
+#include "../web.h"
+#include "../interface.h"
+
++#define IE_STRING "Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.0)"
+
+/* Used to send a message to the bw's status bar */
+#define BW_MSG(web, root, fmt...) \
+@@ -105,7 +106,8 @@
+gchar *str, *ptr;
+GString *s_port = g_string_new(""),
+*query = g_string_new(""),
+- *full_path = g_string_new("");
++ *full_path = g_string_new(""),
++ *id_string = g_string_new("");
+
+/* Sending the default port in the query may cause a 302-answer. --Jcid */
+if (URL_PORT(url) && URL_PORT(url) != DILLO_URL_HTTP_PORT)
+@@ -122,17 +124,34 @@
+URL_PATH(url) ? URL_PATH(url) : "/");
+}
+
++/*
++ * There could be a function, that tests if
++ * - the URL is on a blacklist
++ * - the user invoked a command line switch
++ * - the user pressed a button on the browser window
++ * this function could even return the string
++ * 
++ * right now there is only a check if *.msn.com is accessed.
++ * 
++ * if ( pretend_incognito(URL_STR(url)) ){
++ */
++ if ( strstr(URL_STR(url),".msn.com") !=NULL) {
++ g_string_sprintfa(id_string,"%s", IE_STRING);
++ } else {
++ g_string_sprintfa(id_string, "Dillo/%s", VERSION);
++ }
++
+if ( URL_FLAGS(url) & URL_Post ){
+g_string_sprintfa(
+query,
+"POST %s HTTP/1.0\r\n"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: %s\r\n"
+"Content-type: application/x-www-form-urlencoded\r\n"
+"Content-length: %ld\r\n"
+"\r\n"
+"%s",
+- full_path->str, URL_HOST(url), s_port->str, VERSION,
++ full_path->str, URL_HOST(url), s_port->str, id_string->str,
+(glong)strlen(URL_DATA(url)), URL_DATA(url));
+
+} else {
+@@ -141,12 +160,12 @@
+"GET %s HTTP/1.0\r\n"
+"%s"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: %s)\r\n"
+"\r\n",
+full_path->str, 
+(URL_FLAGS(url) & URL_E2EReload) ?
+"Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+- URL_HOST(url), s_port->str, VERSION);
++ URL_HOST(url), s_port->str, id_string->str);
+}
+
+str = query->str;
+
+
+
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Forgot
+
+From: Grigory Bakunov <black@as...> - 2001-10-23 02:09
+
+Also i make small sites with all patches what i found at this moment.
+http://haru.wom.ru/pub/dillo/patches/
+All patches cleaned for current cvs version.
+You can add your own patch by form on site.
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]Charset (and font) problem solving etc.
+
+From: Grigory Bakunov <black@as...> - 2001-10-23 02:08
+
+Okey, i solve some font troubles in dillo.
+As you remember after long debates in dillo code apear
+some 'ugly hacked solution' for font selecting - i mean direct font charset setting like this -
+sprintf (fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",...);
+i make a patch for solve it - now all this strings changed to
+sprintf (fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-%s",
+...,
+prefs.font_charset);
+and to dillorc file added new options - 
+font_charset=xxx
+where xxx is your prefered font charset.
+by default it's equal 'iso8859-1'.
+
+patch place here
+http://haru.wom.ru/pub/dillo/patches/dillo_0.62.charset_selection.patch
+
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]'who' in dillo 'knows' that something is a link? need this for keyboard link navigation
+
+From: John Utz <john@ut...> - 2001-10-19 16:17
+
+thankyou sebastian,
+
+i think your implementation suggestion looks good.
+
+On Fri, 19 Oct 2001, Sebastian Geerken wrote:
+
+> Hi John,
+>
+> On Wed, Oct 10, 2001 at 04:22:55PM -0500, John Utz wrote:
+> > When dillo loads a page, it learns where the links are and colors them
+> > blue.
+> >
+> > Furthermore, when the cursor flies over a link, it is presented in the
+> > data area at the bottom of the page.
+> >
+> > i would like to have keyboard navigation work as simply as possible, so it
+> > needs to make use of existing functionality so that it doesnt break/get
+> > broken by dillo improvements.
+> >
+> > so, what data structure maintains these link facts and what do i use to
+> > access them?
+>
+> They are in several dillo widgets:
+>
+> - DwPage contains them in the word/line structure:
+> page->words[i].style->link; if you iterate over the lines
+> (e.g. for getting the vertical position), page->lines[i] contains
+> indices on the words list (first_word and last_word).
+>
+> - DwImage contains several links for image maps, this is described
+> in doc/DwImage.txt in the tarball.
+>
+> - Of course, a DwContainer (the base class of all widgets
+> containing other widgets) contains, indirectly, also links.
+>
+> Probably the best is to add one or more virtual functions to the base
+> class DwWidget, and implement them for those three widgets.
+>
+> Links are, for Dw, just numbers, the widgets just emit signals which
+> other modules are connected to, look e.g. at Dw_page_button_press. The
+> signals are the same for all widgets, and described in
+> doc/DwImage.txt. For activating links by the keyboard, "link_clicked"
+> is probably the best choice, then the function Html_link_clicked
+> (which is connected to this signal) has to be modified a bit,
+> GdkEventButton does not make much sense for this.
+>
+> Sebastian
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+RE: [Dillo-dev]Suggestions
+
+From: Eric GAUDET <egaudet@in...> - 2001-10-19 15:55
+
+-- En reponse de "[Dillo-dev]Suggestions" de digitalash@vs..., le
+19-Oct-2001 :
+> Hello Friends,
+> 
+> I am Ashwin Desikan from chennai, i just downloaded the latest version of
+> Dillo and it is great.
+> i would like to make a few suggestions though:
+> 
+> 1. support for backspace key in editable textareas.
+
+works for me.
+
+> 2. i think u can put the "page size" box and the "no of pages" box at the top
+> of the tool bar to the right most bottom along with status bar. it would look
+> better.
+> 3. i think u can map the backspace key to back button if the control is not
+> in a textarea.
+> 4. u can provide a small button along with the back and forward buttons
+> (similar to netscape and IE) wherein the list of all the previous links
+> visited is displayed, so that the user can select the one he wants to
+> revisit.
+> 
+
+on the works now. will be finished next week.
+
+> i am willing to contribute to the developement of dillo in whatever way
+> possible. i would like to know if any among u have already started to support
+> frames in dillo (i went through the minimalistic support in 0.6.2 ).
+> 
+
+have a look at the bugtrack: frames are at 50%.
+
+> KEEP UP THE GOOD WORK GUYS
+
+Thanks
+
+> 
+> bye
+> Ashwin Desikan 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 19-Oct-2001 a 08:53:06
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]Suggestions
+
+From: <digitalash@vs...> - 2001-10-19 14:55
+
+Hello Friends,
+
+I am Ashwin Desikan from chennai, i just downloaded the latest version of Dillo and it is great.
+i would like to make a few suggestions though:
+
+1. support for backspace key in editable textareas.
+2. i think u can put the "page size" box and the "no of pages" box at the top of the tool bar to the right most bottom along with status bar. it would look better.
+3. i think u can map the backspace key to back button if the control is not in a textarea.
+4. u can provide a small button along with the back and forward buttons (similar to netscape and IE) wherein the list of all the previous links visited is displayed, so that the user can select the one he wants to revisit.
+
+i am willing to contribute to the developement of dillo in whatever way possible. i would like to know if any among u have already started to support frames in dillo (i went through the minimalistic support in 0.6.2 ).
+
+KEEP UP THE GOOD WORK GUYS
+
+bye
+Ashwin Desikan 
+
+
+
+Re: [Dillo-dev]Several issues
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-10-19 14:09
+
+On Tue, Oct 09, 2001 at 11:34:40AM -0400, Jorge Arellano Cid wrote:
+> > Bookmark URL in status bar.
+> 
+> I'd like to shift bookmarks menu into a popup-menu because the
+> scrolling hack is only working with them (I don't know whether
+> it's possible to make it work with normal menus).
+> 
+> Note: the "scrolling hack" allows scrolling within popups that
+> are to long for the screen.
+
+Just FYI: Gtk+ 2.0 will, AFAIK, support scrolled menus, so this hack
+will become obsolete.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]dillo 0.6.2 scrolling problems
+
+From: James Schofield <jschofield@ot...> - 2001-10-19 14:01
+
+No problem here, Slackware 8.0, GTK 1.2.10.
+
+James
+
+On Thu, 18 Oct 2001, vasant wrote:
+
+>
+> Hi,
+>
+> I downloaded the latest version of Dillo and built it on a
+> Slackware 8.0 system. It builds cleanly but the resulting binary
+> doesn't scroll properly. I think the versions of GTK/GLIB is 1.2.10.
+> Has anyone seen the same problem ?
+>
+> Regards
+> Kanchan
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]'who' in dillo 'knows' that something is a link? need this for keyboard link navigation
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-10-19 13:45
+
+Hi John,
+
+On Wed, Oct 10, 2001 at 04:22:55PM -0500, John Utz wrote:
+> When dillo loads a page, it learns where the links are and colors them
+> blue.
+> 
+> Furthermore, when the cursor flies over a link, it is presented in the
+> data area at the bottom of the page.
+> 
+> i would like to have keyboard navigation work as simply as possible, so it
+> needs to make use of existing functionality so that it doesnt break/get
+> broken by dillo improvements.
+> 
+> so, what data structure maintains these link facts and what do i use to
+> access them?
+
+They are in several dillo widgets:
+
+- DwPage contains them in the word/line structure:
+page->words[i].style->link; if you iterate over the lines
+(e.g. for getting the vertical position), page->lines[i] contains
+indices on the words list (first_word and last_word).
+
+- DwImage contains several links for image maps, this is described
+in doc/DwImage.txt in the tarball.
+
+- Of course, a DwContainer (the base class of all widgets
+containing other widgets) contains, indirectly, also links.
+
+Probably the best is to add one or more virtual functions to the base
+class DwWidget, and implement them for those three widgets.
+
+Links are, for Dw, just numbers, the widgets just emit signals which
+other modules are connected to, look e.g. at Dw_page_button_press. The
+signals are the same for all widgets, and described in
+doc/DwImage.txt. For activating links by the keyboard, "link_clicked"
+is probably the best choice, then the function Html_link_clicked
+(which is connected to this signal) has to be modified a bit,
+GdkEventButton does not make much sense for this.
+
+Sebastian 
+
+
+
+[Dillo-dev]dillo 0.6.2 scrolling problems
+
+From: vasant <vkanchan@un...> - 2001-10-19 00:10
+
+Hi,
+
+I downloaded the latest version of Dillo and built it on a
+Slackware 8.0 system. It builds cleanly but the resulting binary
+doesn't scroll properly. I think the versions of GTK/GLIB is 1.2.10.
+Has anyone seen the same problem ?
+
+Regards
+Kanchan 
+
+
+
+[Dillo-dev]Surprise!
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-18 12:27
+
+Hi everyone!
+
+Surprise!
+
+dillo-0.6.2 was released.
+
+(Note that there's new documentation; namely the parser).
+
+
+Enjoy
+Jorge.- 
+
+
+
+[Dillo-dev]Surprise! (fwd)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-18 11:00
+
+[This is a fwd. because the former email is still bouncing...]
+
+---------- Forwarded message ----------
+Date: Wed, 17 Oct 2001 21:33:59 -0300 (CLST)
+From: Jorge Arellano Cid <jcid@ne...>
+To: Dillo mailing list <dillo-dev@li...>
+Subject: Surprise!
+
+
+Hi everyone!
+
+Surprise!
+
+dillo-0.6.2 was released.
+
+(Note that there's new documentation; namely the parser).
+
+
+Enjoy
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Fix for segfault with long attributes
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-10-17 10:35
+
+Hi,
+
+I just realized that attributes actually don't need to be that large to
+cause a buffer overflow.
+Just try to view the following HTML page.
+
+<html>
+<head></head>
+<body text="mmmmmmmmmmmmmmmmmmmmm">
+</body>
+</html>
+
+A better crafted "text" attribute would execute arbitrary code.
+
+regards,
+Johannes Hofmann 
+
+
+
+Re: [Dillo-dev]dillo strange behaviour
+
+From: John Utz <john@ut...> - 2001-10-16 19:24
+
+really?
+
+excuse me, my mistake. sorry.
+
+On Tue, 16 Oct 2001, Grigory Bakunov wrote:
+
+> Date |Tue, 16 Oct 2001 12:53:16 -0500 (CDT)
+> >From |John Utz <john@ut...>
+>
+> Hello!
+>
+> JU> Hi grigory!
+>
+> JU> i really appreciate your detailed discussion of the problem!
+>
+> JU> it brings a question to my mind, what is the 'dillo way' to handle broken
+> JU> html?
+>
+> JU> i havent been working on this project too long, so if there is an
+> JU> established policy about broken html, then i'd like to see it spelled out
+> JU> on the dillo project page.
+>
+> JU> can i suggest that there be a 'broken html' plugin(s)? i know that we have
+> JU> discussed the broken html on ebay....but i havent heard any direction on
+> JU> this issue.....
+>
+>
+> Read carrefully please. It's not broken HTML.
+> It's wrong Dillo behaviour.
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]dillo strange behaviour
+
+From: Grigory Bakunov <black@as...> - 2001-10-16 18:35
+
+Date |Tue, 16 Oct 2001 12:53:16 -0500 (CDT)
+From |John Utz <john@ut...>
+
+Hello!
+
+JU> Hi grigory!
+
+JU> i really appreciate your detailed discussion of the problem!
+
+JU> it brings a question to my mind, what is the 'dillo way' to handle broken
+JU> html?
+
+JU> i havent been working on this project too long, so if there is an
+JU> established policy about broken html, then i'd like to see it spelled out
+JU> on the dillo project page.
+
+JU> can i suggest that there be a 'broken html' plugin(s)? i know that we have
+JU> discussed the broken html on ebay....but i havent heard any direction on
+JU> this issue.....
+
+
+Read carrefully please. It's not broken HTML.
+It's wrong Dillo behaviour. 
+
+
+
+Re: [Dillo-dev]dillo strange behaviour
+
+From: Martin Samuelsson <cosis@ly...> - 2001-10-16 18:15
+
+On Tue, Oct 16, 2001 at 12:53:16PM -0500, John Utz wrote:
+> can i suggest that there be a 'broken html' plugin(s)? i know that we have
+> discussed the broken html on ebay....but i havent heard any direction on
+> this issue.....
+
+Wouldn't the prefered way to run such a protocol fixer be as a proxy server?
+
+It seems like a really bad idea to perform that task inside the browser. 
+For a number of obvious reasons.
+
+Do anyone know if there exist any proxy software that tries to parse and 
+correct buggy html?
+--
+/Martin 
+
+
+
+Re: [Dillo-dev]dillo strange behaviour
+
+From: John Utz <john@ut...> - 2001-10-16 17:40
+
+Hi grigory!
+
+i really appreciate your detailed discussion of the problem!
+
+it brings a question to my mind, what is the 'dillo way' to handle broken
+html?
+
+i havent been working on this project too long, so if there is an
+established policy about broken html, then i'd like to see it spelled out
+on the dillo project page.
+
+can i suggest that there be a 'broken html' plugin(s)? i know that we have
+discussed the broken html on ebay....but i havent heard any direction on
+this issue.....
+
+tnx!
+
+johnu
+
+On Tue, 16 Oct 2001, Grigory Bakunov wrote:
+
+> I found realy strange dillo behaviour on rpmfind.net site.
+>
+> look - at first search we have this html:
+> ----- HTML-phase-1 ------------------------------------
+> <form method="get" action="/linux/rpm2html/search.php" enctype="application/x-www-form-urlencoded">
+> <input type="text" size="35" name="query" value="">
+> <input type="submit" value="Search ..." name="submit">
+> </form>
+> ------------------------------------------------END-------
+>
+> so, realy good work form. after input into 'query' field text '12345'
+> and press submit we pass to rpmfind.net site next url query:
+> http://rpmfind.net/linux/rpm2html/search.php?query=1234&submit=Search+...
+> and now form in html look like this
+>
+> ------- HTML-phase-2---------------------------------
+> <form action="/linux/rpm2html/search.php?query=1234" enctype="application/x-www-form-urlencoded" method="GET">
+> <input name="query" type="TEXT" size="60" value="1234">
+> <input name=submit type=submit value="Search ...">
+> </form>
+> ------------------------------------------------END-----
+> As all see - authors of rpmfind site place our 'query' string into form action tag.
+> so, after input into query field '4321' and press submit - we have VERY strange URL string:
+> http://rpmfind.net/linux/rpm2html/search.php?query=1234?query=4321&submit=Search+...
+> look! we have to 'query' variable in url. but RFC says it's not correct.
+> and at least - we have absolutely wrong html form text -
+>
+> ------- HTML-phase-3---------------------------------
+> <form action="/linux/rpm2html/search.php?query=1234%3Fquery%3D4321"
+> enctype="application/x-www-form-urlencoded" method="GET">
+> <input name="query" type="TEXT" size="60" value="1234?query=4321">
+> <input name=submit type=submit value="Search ...">
+> </form>
+> ------------------------------------------------END----
+>
+> so, we need to remove dublicate variables when insert new variables by GET method.
+> Thanks for all who be so patient and read this message to the end.
+>
+>
+> ___________________________________________________________________
+> Truly yours, Grigory Bakunov
+> ASPLinux Support Team
+> http://www.asplinux.ru
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]dillo strange behaviour
+
+From: Grigory Bakunov <black@as...> - 2001-10-16 17:28
+
+I found realy strange dillo behaviour on rpmfind.net site.
+
+look - at first search we have this html:
+----- HTML-phase-1 ------------------------------------
+<form method="get" action="/linux/rpm2html/search.php" enctype="application/x-www-form-urlencoded">
+<input type="text" size="35" name="query" value=""> 
+<input type="submit" value="Search ..." name="submit">
+</form>
+------------------------------------------------END-------
+
+so, realy good work form. after input into 'query' field text '12345'
+and press submit we pass to rpmfind.net site next url query:
+http://rpmfind.net/linux/rpm2html/search.php?query=1234&submit=Search+...
+and now form in html look like this
+
+------- HTML-phase-2---------------------------------
+<form action="/linux/rpm2html/search.php?query=1234" enctype="application/x-www-form-urlencoded" method="GET">
+<input name="query" type="TEXT" size="60" value="1234">
+<input name=submit type=submit value="Search ...">
+</form>
+------------------------------------------------END-----
+As all see - authors of rpmfind site place our 'query' string into form action tag.
+so, after input into query field '4321' and press submit - we have VERY strange URL string:
+http://rpmfind.net/linux/rpm2html/search.php?query=1234?query=4321&submit=Search+...
+look! we have to 'query' variable in url. but RFC says it's not correct.
+and at least - we have absolutely wrong html form text -
+
+------- HTML-phase-3---------------------------------
+<form action="/linux/rpm2html/search.php?query=1234%3Fquery%3D4321"
+enctype="application/x-www-form-urlencoded" method="GET">
+<input name="query" type="TEXT" size="60" value="1234?query=4321">
+<input name=submit type=submit value="Search ...">
+</form>
+------------------------------------------------END----
+
+so, we need to remove dublicate variables when insert new variables by GET method.
+Thanks for all who be so patient and read this message to the end.
+
+
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]backround colour
+
+From: Liam <jedi@ro...> - 2001-10-16 08:19
+
+Hey everyone,
+
+I'm new on the dillo scene and was wondering why all backrounds that are 
+supposed to be white are some sort of off-white? Is this intended?
+
+Also, I'd like to say that it is really nice to see a browser that loads 
+so fast, both for use and loading webpages.
+
+Cheers,
+Liam 
+
+
+
+[Dillo-dev]CCC principle
+
+From: <SirVer@gm...> - 2001-10-15 14:59
+
+Hey there,
+
+i implemented a kind of dpi1 plugin scheme a while ago, then, I run out
+of time. Now, I'd like to try it again with the new CCC style.
+But I don't fully grap the principle. Could someone explain me how it
+works exactly?
+
+Thanks
+Holger 
+
+
+
+[Dillo-dev]Fix for segfault with long attributes
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-10-12 11:58
+
+Hi,
+
+in Html_get_attr_value() I found a small typo that causes an buffer
+overflow in dillo when reading attribute values larger than 1024 bytes.
+The attached patch fixes the problem.
+
+regards,
+Johannes Hofmann
+
+*** html.c.orig Fri Oct 12 13:54:58 2001
+--- html.c Fri Oct 12 13:55:17 2001
+***************
+*** 3424,3430 ****
+static gint Html_get_attr_value(const char *tag, gint tagsize,
+char *data, gint datasize, gint strip)
+{
+! gint i = 0, j = -1, max = MAX(tagsize, datasize);
+
+
+if (tag[0] == '"' || tag[0] == '\'' ) {
+--- 3424,3430 ----
+static gint Html_get_attr_value(const char *tag, gint tagsize,
+char *data, gint datasize, gint strip)
+{
+! gint i = 0, j = -1, max = MIN(tagsize, datasize);
+
+
+if (tag[0] == '"' || tag[0] == '\'' ) { 
+
+
+
+Re: [Dillo-dev]'who' in dillo 'knows' that something is a link? need this for keyboard link navigation
+
+From: Hayden <finally_extinct@ru...> - 2001-10-11 04:00
+
+On Wed, 10 Oct 2001 16:22:55 -0500 (CDT)
+John Utz <john@ut...> wrote:
+
+> hi;
+> 
+> When dillo loads a page, it learns where the links are and colors them
+> blue.
+> 
+> Furthermore, when the cursor flies over a link, it is presented in the
+> data area at the bottom of the page.
+> 
+> i would like to have keyboard navigation work as simply as possible, so it
+> needs to make use of existing functionality so that it doesnt break/get
+> broken by dillo improvements.
+> 
+> so, what data structure maintains these link facts and what do i use to
+> access them?
+> 
+> tnx!
+> 
+> johnu
+
+I actually started looking into this and text selection the other day, they are the features I miss most in dillo.
+There are no structures holding the location of the links as far as I know, currently when the mouse is moved over a link the function Dw_page_find_link is called. This function returns the contents of word->style->link (which could contain a link or not) for the word that the cursor is over.
+The function itself searches the lines one by one till it matches the y position of the cursor, and then searches the words on that line one by one till the x position of the cursor is matched.
+
+I think seerching word by word from start to end is currently the only way to find a link on a page without a reference such as the cursor position. 
+
+
+
+[Dillo-dev]'who' in dillo 'knows' that something is a link? need this for keyboard link navigation
+
+From: John Utz <john@ut...> - 2001-10-10 21:15
+
+hi;
+
+When dillo loads a page, it learns where the links are and colors them
+blue.
+
+Furthermore, when the cursor flies over a link, it is presented in the
+data area at the bottom of the page.
+
+i would like to have keyboard navigation work as simply as possible, so it
+needs to make use of existing functionality so that it doesnt break/get
+broken by dillo improvements.
+
+so, what data structure maintains these link facts and what do i use to
+access them?
+
+tnx!
+
+johnu
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]BUG 232 patch to add 'Back' to PAGE OPTIONS menu
+
+From: John Utz <john@ut...> - 2001-10-10 20:32
+
+hi;
+
+note the simplicity of the patch. code reuse fills me with joy.
+furthermore, it only took me 15 minutes to do.
+
+hope this is deemed worthy of includion. i know it sure improves *my* user
+experience.
+
+
+bash-2.05$ diff -c menuold.c menu.c
+*** menuold.c Fri Jul 13 10:58:03 2001
+--- menu.c Wed Oct 10 13:30:30 2001
+***************
+*** 175,180 ****
+--- 175,184 ----
+Menu_sep(menu);
+Menu_add(menu, "_Find Text", "<ctrl>F", bw,
+a_Commands_findtext_callback, bw);
++ Menu_sep(menu);
++ Menu_add(menu, "Back", NULL, bw,
++ a_Commands_back_callback, bw);
++ Menu_sep(menu);
+bw->pagemarks_menuitem = Menu_add(menu, "Jump to...", NULL, bw, NULL,
+bw);
+
+Menu_sep(menu);
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Updated auth patch available
+
+From: <torkel@ly...> - 2001-10-10 10:58
+
+An updated basic auth patch is available at:
+
+http://www.lysator.liu.se/~torkel/computer/ipaq/dillo_auth1010.diff.gz
+
+
+Changes in this patch are, according to Pekka Lampila (medar@ka...)
+
+- Bugfix to auth information in url (ignore user:passwd(a)... in path part
+of url string)
+- Indentation changed from emacs out-of-the-box-C-mode to something else
+- Merge with current cvs
+
+
+Thank you Pekka. :)
+I have not yet had time to test it myself, but i'm sure it works.
+
+
+Enjoy.
+
+//Tor-Åke 
+
+
+
+Re: [Dillo-dev]Several issues
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-09 18:43
+
+On Tue, 9 Oct 2001, Jorge Arellano Cid wrote:
+
+>=20
+> Hi list!
+>=20
+>=20
+> Here's a grouping of several issues mainly raised by Lars:
+>=20
+>> History menus on back/forward buttons.
+>=20
+> Done.
+
+Sweet!
+
+>> Bookmark URL in status bar.
+>=20
+> I'd like to shift bookmarks menu into a popup-menu because the
+> scrolling hack is only working with them (I don't know whether
+> it's possible to make it work with normal menus).
+>=20
+> Note: the "scrolling hack" allows scrolling within popups that
+> are to long for the screen.
+
+Well, the menu items are shortened at the moment, so you'd never need to
+scroll. Or?
+
+>=20
+>> Profiling
+>>
+>> % cumulative self self total
+>> time seconds seconds calls us/call us/call name
+>> 15.16 2.01 2.01 5885091 0.34 0.34 a_Url_dup
+>> [...]
+>=20
+> After careful consideration, I decided to try out a function
+> (Html_set_new_link) that avoids the main source of the second
+> a_Url_dup.
+> It seems to reduce render time by 25% on the most favorable
+> case (a page FULL of links) and to be near a 7% on the average ;)
+
+Very nice! Glad it was useful.
+
+>> Page down/up step (from half a page to a configurable factor)
+>=20
+> I'll send the patch to Sebastian for further revision.
+
+Yes, it needs revision. It doesn't take effect for a new page until after
+the first scroll, I have no idea why. And I would like to have it not be
+configurable, really, but set to slightly less than a page (if we can do
+one or two lines of text less, that'd be nice for reading, but it's more
+tricky).=20
+
+>> Image aspect ratio when there's only one dimension specified.
+>>
+>> I had a page where an image was scaled by just setting the
+>> width. Most browsers preserve the aspect ratio when scaling it,
+>> but not Dillo. The HTML specs don't mention aspect ratio at
+>> all. Should we categorize this under 'broken HTML', or should
+>> we keep the aspect ratio when only one of width and height is
+>> specified?
+>=20
+> Interesting question!
+>=20
+> If the HTML specs don't specify that situation, then it is
+> broken HTML (as far as dillo is concerned). OTOH I see the point
+> in preserving the aspect ratio, but considering that those
+> attributes are deprecated, that the spec say they "overrride" the
+> original value, and that they seem to be expected as a couple,
+> maybe the best solution is to keep the "statu quo" and to raise a
+> warning message!
+
+Well, I haven't actually seen the problem in many (any, I think) other
+places, so a quiet (non-dialog) warning is probably appropriate.
+
+>> Save dialog doesn't remember the directory
+>=20
+> Please make separate buffers for open and save.
+
+I was considering that for a while. I not quite sure in what situations
+you'd use both. I have no problem with splitting them up.
+
+>> Key bindings: Space to scroll down, Backspace up...
+>=20
+> Some time ago I wrote this to Bruno Widmann:
+>=20
+>>> I receive miscelaneous key binding requests, some for vi like
+>>>bindings, others like less pager, like lynx, etc. I find dillo OK
+>>>as it is now, but who knows, maybe we can allow key binding
+>>>customization in dillorc...
+>>>
+>>> Keys: Direction arrows, PgUp and PgDn.
+>>>
+>>> As I said before, I don't think of it as a great improvement,
+>>>but it will certainly make some guys happier :)
+>>>
+>>> Ah, and definitively, I don't want to make dillo configurable
+>>>"ad absurdum". So if you want, let's try those keys and that
+>>>should be enough.
+
+I agree that heavy configuration should at least be very well thought
+out. It's easy to get to where it's worse than useless. I'm going to keep
+a set of my own patches around for having Dillo work the way I do, I won't
+spend much time pressuring you into accepting them.
+
+>>>--------------------------------------
+>>>Bug 216 (answers without content/type)
+>>>--------------------------------------
+>>>
+>>> Yes, I also had this problem with ebay (made a little hack, and
+>>>won my bid!). Since that moment the idea of handling this case
+>>>the rigth way is present. Note that the problem arises from a
+>>>http answer lacking the content/type info; the RFC says it SHOULD
+>>>be present, so it's not an error :(
+>>>
+>>> The solution is simple, do you remember magic numbers and the
+>>>'file' command? Well, that's the way to go. I don't mean calling
+>>>'file' and parsing its output, but to examine the magic numbers
+>>>file (and its format) for the small set of MIME types dillo
+>>>supports:
+>>>
+>>> image/{png, jpeg, gif}
+>>> text/{plain, html}
+>>>
+>>> and afterward, to create a custom function that returns the
+>>>MIME type of a file, by examining a few bytes from the start of
+>>>it. Ex:
+>>>
+>>> gchar *a_Mime_get_content_type(const gchar *FewBytesString);
+>>>
+>>> After having this function, it's just a matter of binding it to
+>>>header parsing.
+
+That would be fairly easy, indeed.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Several issues
+
+From: John Utz <john@ut...> - 2001-10-09 17:13
+
+On Tue, 9 Oct 2001, Jorge Arellano Cid wrote:
+
+>
+> Hi list!
+>
+>
+> Here's a grouping of several issues mainly raised by Lars:
+>
+> Note that there's different, but very interesting topic that
+> consists in designing a keyboard navigation model for dillo. I
+> know John Utz is willing to develop it, so those of you that feel
+> interested, please contact him and try to devise a simple,
+> interesting and useful model! :-)
+
+oh good. i am glad this got a mention.... i'll try and post a bug and a
+work item today.
+
+>
+> --- o ---
+>
+> Ah, I can't resist to repost a topic that has remained
+> unanswered, it has the advantage of not requiring a lot of dillo
+> expertise and that will let us bid on ebay!
+
+how ironic! i had dillo open on ebay for the very first time
+last nite. i had wondered why i had not tried that before, now i know :-)
+i did notice that the mime type was *very* stupid - what where those folks
+at ebay thinking? - or am *i* being stupid and misunderstanding something?
+
+i was just thinking that i should step thru the code in ups and see what
+is going on...
+
+the patch is an intriguing solution. it concerns me a trifle to start
+hacking in octet-stream parsing into the mailine dillo code (welcome to
+mozilla) - and i understand that the submitter understands that too,
+that's why he referred to it as a hack.
+
+perhaps an octet-stream parser plugin might be the best idea - that would
+allow for isolation of broken pseudo-html into one clean location. That
+cpould execute the magic number code and then ask the user if it was from
+ebay and then offer to memorize that fact and do it automatically in the
+future. Or it could be linked to a bookmark at that site to avoid question
+asking - but that seems kinda hackish too.
+
+2 related points:
+
+1. octet-stream parsing is a general issue that needs a plugin - if the
+mimetype is octet-stream but it's actually an MS-Word doc, then that would
+be detectable (and handleable by invoking Abiword!) with this idea.
+
+2. the 'ebay problem' maybe related to some commercial web-site creation
+program that i am unaware of. if this where the case, then that would
+imply that we would be likely to hit it again on some other site. Has
+anybody ran into a similar example?
+
+> Regards
+> Jorge.-
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Several issues
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-09 15:47
+
+Hi list!
+
+
+Here's a grouping of several issues mainly raised by Lars:
+
+> History menus on back/forward buttons.
+
+Done.
+
+
+> Bookmark URL in status bar.
+
+I'd like to shift bookmarks menu into a popup-menu because the
+scrolling hack is only working with them (I don't know whether
+it's possible to make it work with normal menus).
+
+Note: the "scrolling hack" allows scrolling within popups that
+are to long for the screen.
+
+
+> Profiling
+>
+> % cumulative self self total
+> time seconds seconds calls us/call us/call name
+> 15.16 2.01 2.01 5885091 0.34 0.34 a_Url_dup
+> [...]
+
+After careful consideration, I decided to try out a function
+(Html_set_new_link) that avoids the main source of the second
+a_Url_dup.
+It seems to reduce render time by 25% on the most favorable
+case (a page FULL of links) and to be near a 7% on the average ;)
+
+
+> Page down/up step (from half a page to a configurable factor)
+
+I'll send the patch to Sebastian for further revision.
+
+
+> Image aspect ratio when there's only one dimension specified.
+>
+> I had a page where an image was scaled by just setting the
+> width. Most browsers preserve the aspect ratio when scaling it,
+> but not Dillo. The HTML specs don't mention aspect ratio at
+> all. Should we categorize this under 'broken HTML', or should
+> we keep the aspect ratio when only one of width and height is
+> specified?
+
+Interesting question!
+
+If the HTML specs don't specify that situation, then it is
+broken HTML (as far as dillo is concerned). OTOH I see the point
+in preserving the aspect ratio, but considering that those
+attributes are deprecated, that the spec say they "overrride" the
+original value, and that they seem to be expected as a couple,
+maybe the best solution is to keep the "statu quo" and to raise a
+warning message!
+
+
+> Save dialog doesn't remember the directory
+
+Please make separate buffers for open and save.
+
+
+> Key bindings: Space to scroll down, Backspace up...
+
+Some time ago I wrote this to Bruno Widmann:
+
+>> I receive miscelaneous key binding requests, some for vi like
+>>bindings, others like less pager, like lynx, etc. I find dillo OK
+>>as it is now, but who knows, maybe we can allow key binding
+>>customization in dillorc...
+>>
+>> Keys: Direction arrows, PgUp and PgDn.
+>>
+>> As I said before, I don't think of it as a great improvement,
+>>but it will certainly make some guys happier :)
+>>
+>> Ah, and definitively, I don't want to make dillo configurable
+>>"ad absurdum". So if you want, let's try those keys and that
+>>should be enough.
+>>
+>> Cheers
+>> Jorge.-
+>>
+>>PD: If you don't want to try the key customization, please let me
+>> know so I can forward the idea to the list.
+
+
+Note that there's different, but very interesting topic that
+consists in designing a keyboard navigation model for dillo. I
+know John Utz is willing to develop it, so those of you that feel
+interested, please contact him and try to devise a simple,
+interesting and useful model! :-)
+
+
+--- o ---
+
+Ah, I can't resist to repost a topic that has remained
+unanswered, it has the advantage of not requiring a lot of dillo
+expertise and that will let us bid on ebay!
+
+
+
+>>--------------------------------------
+>>Bug 216 (answers without content/type)
+>>--------------------------------------
+>>
+>> Yes, I also had this problem with ebay (made a little hack, and
+>>won my bid!). Since that moment the idea of handling this case
+>>the rigth way is present. Note that the problem arises from a
+>>http answer lacking the content/type info; the RFC says it SHOULD
+>>be present, so it's not an error :(
+>>
+>> The solution is simple, do you remember magic numbers and the
+>>'file' command? Well, that's the way to go. I don't mean calling
+>>'file' and parsing its output, but to examine the magic numbers
+>>file (and its format) for the small set of MIME types dillo
+>>supports:
+>>
+>> image/{png, jpeg, gif}
+>> text/{plain, html}
+>>
+>> and afterward, to create a custom function that returns the
+>>MIME type of a file, by examining a few bytes from the start of
+>>it. Ex:
+>>
+>> gchar *a_Mime_get_content_type(const gchar *FewBytesString);
+>>
+>> After having this function, it's just a matter of binding it to
+>>header parsing.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Re: w3m-frames patch needs update for current cvs-dillo
+
+From: Livio Baldini Soares <livio@li...> - 2001-10-08 19:04
+
+Howdy Ulrich!
+
+Ulrich Schwarz writes:
+> Hi Livio,
+> 
+> your great w3m-frames patch for dillo needs an update for the current
+> dillo cvs version:
+
+> /home/fruli/dillo/dillo-patched/src/html.c:1388: undefined reference to `Html_new_link'
+
+Thanks for the tip! I've updated the patch for today's CVS and
+improved it just a little. I've added a `bullet` to mark each link
+(frameset) inside the frame. I think it looks a tiny bit better now.
+
+Jorge, if you ever get around applying this patch, I guess you
+should apply this version and not the one I've sent you:
+
+http://www.linux.ime.usp.br/~livio/dillo/w3m_frames.1002566719.diff
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Good Job Guys
+
+From: Tony P <digital712@ho...> - 2001-10-08 17:14
+
+I just joined to say what a spiffy little browser you guys have
+created. Good work, looks really nice with AA font's too. Looking
+forward to using it more often once the table rendering gets a little
+better.
+
+Oh ya, I was thinking the other day, Gnome Transfer Manager is a pretty
+spiffy download program, since you guys are are going to make it a
+plugin type browser anyway, this might be a fairly simple solution for
+handling downloads. Just a thought.
+
+Keep up the great work!
+
+Thanks,
+
+Tony 
+
+
+
+[Dillo-dev]dillo patches for iPaq
+
+From: Shooby Ban <shooby@gn...> - 2001-10-07 15:44
+
+I uploaded my dirty hacks for 0.6.1 to http://projects.gnome.hu/dillo
+
+There is a semi-solution for meta refresh stuffs...
+
+I made some hacks in interfaces.c to make small panel real small.
+
+Other thinx:
+
+I've seen a cool feature in Pocket Explorer. The images are resizing after
+loading to the size of the window. (I think this is a good feature in a
+content sensitive right click menu... :)))
+
+I'm in hurry, sorry for the breaf.
+
+--
+Sho 
+
+
+
+[Dillo-dev]Latest commit II
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-06 22:40
+
+Hi!
+
+
+Sorry about the previous commit, testing code slipped in so the
+popup functions were broken. Now it's OK (AFAIK ;).
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Latest commit
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-06 14:22
+
+Hi everyone!
+
+
+Uhhh, I had been very short of time lately, mainly due to
+splitting my attention between W3C's RAND concerns and dillo...
+
+Anyway, I just commited a patch for navigation stack history,
+it works as follows:
+
+- Right click over Back or Forward button to activate
+- Left-click to jump to selected URL
+- Middle-click to open it in a new window
+- Look at the status bar to check the URL you're selecting
+- If there're too many items, the popup will scroll!
+
+
+Actually there's still another 50% of the patch pending, but I
+rushed it in because it has become a recurrent issue, and a need.
+
+Fine print: I'm not sure of GTK+'s behaviour when closing or
+activating popup items. It seems plausible for it to be
+destroying them when not attached to any particular widget, but
+as I said before, I'm not sure yet. Any light on this subject is
+very welcome!
+
+Please someone send me a diff to the help file that integrates
+the above information.
+
+Ah, I also set Ctrl-Q to close window and Alt-Q to quit, plus
+some minor tweaks.
+
+
+Enjoy
+Jorge.-
+
+
+PS: Lars, I owe you an answer. 
+
+
+
+Re: [Dillo-dev]Dillo on Agenda VR3
+
+From: William Kendrick <nbs@so...> - 2001-10-05 17:42
+
+On Fri, Oct 05, 2001 at 08:22:44PM +0300, Sam J. Engström wrote:
+<snip>
+> > 1. Small form factor. Hide a lot of the less-used options inside
+> > a menu. Make other widgets (forward, back, stop, scrollbars) as small
+> > as possible.
+> 
+> This should be configurable so you could choose which toolbar buttons you 
+> want. The small icons are small enough for the ipaq, but there could be a set
+> of micro icons, 5x5 pixels or something, to choose from.
+
+I noticed "dillorc" last night and went nuts. :) I added a "tiny" icon
+set, as well as a "miniscule" panel size. (Removes progress bar at the
+top (they were cut off anyway) and status bar at the bottom (to save
+verticle space))
+
+
+<snip> 
+> There's the Squashed GTK project for making gtk widgets smaller
+> http://mvista.so....net/projects/gtksquashed/ you might find useful.
+
+Ah, I was unfamiliar with this. Thanks, I'll look into it.
+
+
+> I think GTK is good enough for handhelds too.
+<snip>
+
+True, but the problem is, the Agenda's already got FLTK in it, so
+GTK+ would just eat up the userspace on the flash disk. :^/
+
+It would also end up being a new requirement for people who want to
+try it... unless I can get GTK to statically link for the Agenda.
+
+
+Thanks!
+
+
+BTW, a screenshot of Dillo running at 160x240, with my dillorc and
+interface/prefs tweaks, as well as diffs for 0.6.1, are here:
+
+http://www.sonic.net/~nbs/agenda-browser/
+
+
+Take it easy!
+
+-bill!
+bill@ne...
+http://www.newbreedsoftware.com/bill/ 
+
+
+
+Re: [Dillo-dev]Dillo on Agenda VR3
+
+From: Sam J. <mail@sa...> - 2001-10-05 17:22
+
+On Friday 05 October 2001 07:39, you wrote:
+> I was wondering if people have had luck running it [dillo] on small devices,
+> ...
+
+I've been using dillo as my main browser on the ipaq, and providing a tweaked 
+version for it similar to yours. We should get our tweaks integrated to the 
+main dillo, so people with yet another pda wouldn't need to start doing their 
+own changes, just worry about porting. My version is at 
+http://www.hut.fi/~sengstro/ipaq.html
+
+> The important aspects include:
+>
+> 1. Small form factor. Hide a lot of the less-used options inside
+> a menu. Make other widgets (forward, back, stop, scrollbars) as small
+> as possible.
+
+This should be configurable so you could choose which toolbar buttons you 
+want. The small icons are small enough for the ipaq, but there could be a set 
+of micro icons, 5x5 pixels or something, to choose from.
+
+> 2. Zoom-out. Agenda has 160 width. Many websites require (sigh) at
+> least 800x600 display to be viewable. (sigh) Zooming out 5 times would let
+> you see the whole page without scrolling horizontally.
+
+At least panning would help.
+
+> 3. Zoom-in. ... Of course, at 1/5th the size, pages would be unreadable.
+> So I had the idea of a 'magnifying glass' mode. While zoomed out,
+> you can switch to what I call "PenZoom" mode, and pan around the page
+> and read it legibly.
+
+Zooming would be great, but what I'd really like, and I think would be easier 
+to implement too, is the ability to choose from a menu while running 
+different rendering options such as hide images (remove space used by them 
+too, maybe show links to them) and disable table rendering. You could then 
+easily read the text which is usually the most important content of a page.
+
+> Since GTK+ doesn't come with the default Agenda 'romdisk' releases, I think
+> the first step for someone porting it (oh no, am I volunteering? crap!)
+> would be to alter the code so that it can target to _either_ GTK+ (for
+> desktop users) or FLTK (for PDA users).
+
+There's the Squashed GTK project for making gtk widgets smaller
+http://mvista.so....net/projects/gtksquashed/ you might find useful. I 
+think GTK is good enough for handhelds too.
+
+> * I did see one post from someone saying they use Dillo on an iPAQ.
+> It's in a completely different league than the Agenda. Color, faster,
+> higher resolution, more RAM and 'disk'space. But the fact that it
+> works is encouraging to me ;)
+
+Yes, as a pda it's better, but compared to desktop computers the resolution, 
+ram and flash sizes are laughably small. The same aspects as you've described 
+generally apply.
+
+Regards,
+Sam
+
+-- 
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+[Dillo-dev]Selection (was: Pending projects: History, scroll size, middle-cl)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-10-05 16:53
+
+On Mon, Oct 01, 2001 at 10:12:33PM -0700, Eric GAUDET wrote:
+> -- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+> [...]
+> > A feature I'm dying to see though is selection support, it sucks to have
+> > a fast browser and not be able to copy examples from it into my
+> > code..etc.
+> > 
+> > I know this is a big task, but it hurts not to have it.
+> 
+> I know, I want it too. I even volunteered and begun to implement it. The hard
+> part is to highlight the selection, because there's nothing in dillo to do that.
+> Especially now, with tablesall over the place.
+
+Yes, nested widgets make some things more complicated, but otherwise
+tables much simpler. If the problem is to handle several nested
+widgets, this is a idea: a simplification may be to serialize them
+"virtually": to add some mechanisms to handle all text as it were in
+one structure, by defining a data type to access text at one level,
+e.g. as a pair of DwPage and line (or word) index. BTW, in a change
+I'm currently working on (bug #201), I'm adding a possibility to find
+the position of a widget within the parent widget fast, in a way
+specific to the parent widget; for a page widget, it is the line
+number (other widgets don't use this).
+
+As I said, just a vague idea, without any implementation ideas.
+
+> I believe the guys that implemented the find-text ran into the same problem ;-)
+
+It was Jorge, but finding text is probably simpler than text
+selection.
+
+> Quick poll about that: would you guys of the list be happy with a drag-box
+> selection (just like selecting in an image in gimp)? I mean just selecting a
+> rectangle in the text, not rest of the line.
+
+Yes, happier than now. :-)
+
+Sebastian 
+
+
+
+[Dillo-dev]Dillo on Agenda VR3
+
+From: William Kendrick <nbs@so...> - 2001-10-05 04:39
+
+Hi! My name's Bill Kendrick. I'm poking around the web lately, trying to
+see what kind of existing web browser software might be good to port to
+the Agenda VR3 PDA. (It's a Linux-based handheld.)
+
+Of the many I found listed on SourceForge, I found three which looked
+promising. One of which didn't crash the minute I asked it to load a
+web page. :) It was Dillo! :)
+
+I was wondering if people have had luck running it on small devices,
+and whether the existing codebase would lend itself well to converting
+to other widget sets, other than GTK+. (The Agenda VR3 comes with FLTK
+built-in. There's an FLTK-based browser around, called ViewML, but it
+hasn't been updated since early this year.)
+
+For those interested, the VR3 is a 66MHz MIPS-based system running
+a Linux 2.4.x kernel. It has a 160x240 resolution LCD screen, which can
+display 16 shades of grey (4bpp). It, of course, has a stylus. It also
+has a soft keyboard/handwriting area which can be popped when needed.
+The current versions have 8MB of RAM and 16MB of flash (about 3 or so are
+currently available for user data and user-installed programs).
+
+
+Late last night, half asleep, I whipped up a picture of what I think
+a suitable web browser would look like on the Agenda, and it includes a
+few options which wouldn't make too much sense on a desktop browser,
+but hey... that's what "#ifdef"s are for. :)
+
+You can see a mockup screenshot I made, as well as some details, here:
+
+http://www.sonic.net/~nbs/agenda-browser/
+
+
+The important aspects include:
+
+1. Small form factor. Hide a lot of the less-used options inside
+a menu. Make other widgets (forward, back, stop, scrollbars) as small
+as possible.
+
+2. Zoom-out. Agenda has 160 width. Many websites require (sigh) at least
+800x600 display to be viewable. (sigh) Zooming out 5 times would
+let you see the whole page without scrolling horizontally.
+
+3. Zoom-in. ... Of course, at 1/5th the size, pages would be unreadable.
+So I had the idea of a 'magnifying glass' mode. While zoomed out,
+you can switch to what I call "PenZoom" mode, and pan around the page
+and read it legibly.
+
+
+Since GTK+ doesn't come with the default Agenda 'romdisk' releases, I think
+the first step for someone porting it (oh no, am I volunteering? crap!)
+would be to alter the code so that it can target to _either_ GTK+ (for
+desktop users) or FLTK (for PDA users).
+
+After that, adding the zoom features would be the next step.
+
+
+What do people think? Am I crazy? Should I just try and start writing
+an FLTK browser from scratch instead? Are any of you even interested in
+PDAs yet? :) *
+
+
+-bill!
+bill@ne...
+http://www.newbreedsoftware.com/bill/
+
+* I did see one post from someone saying they use Dillo on an iPAQ.
+It's in a completely different league than the Agenda. Color, faster,
+higher resolution, more RAM and 'disk'space. But the fact that it
+works is encouraging to me ;) 
+
+
+
+Re: [Dillo-dev]Re: usability patch
+
+From: Martin Samuelsson <cosis@ly...> - 2001-10-04 21:25
+
+On Thu, Oct 04, 2001 at 10:42:05PM +0200, Tor-Åke Fransson wrote:
+> How about having that option control if dillo should start with toolbars
+> ripped off or not?
+
+I agree that ripping off the menubars unclutters the browsing window, but it 
+generates a new problem. For every menubar that gets ripped off there is a 
+new window created. Which of course does clutter the window list.
+
+Clearly, making the dirt go away and sweeping it under the carpet isn't the 
+same thing. I want a nice and neat user interface.
+
+The window managers job is to make it easy to switch focus between different 
+active applications. It's not its job to hide things that shouldn't been 
+there in the first place.
+
+I've thought about rip off items before and came to the conclusion that best 
+thing to do is to make it an option in gtk to hide the item instead of making
+it a separate window.
+
+Since I don't think I could implement such a change in the lib I made the 
+change in the application instead.
+
+Making the change in gtk would be the correct way to solve this for all 
+applications. But I'm not man enough to make it. Anyone else feeling up to it?
+--
+/Martin 
+
+
+
+[Dillo-dev]Re: usability patch
+
+From: <torkel@ly...> - 2001-10-04 20:42
+
+Well, since the toolbars can be ripped off (as on all proper gtk
+applications), and i can have the window manager hide them somewhere until
+i need them, i would never use this feature.
+
+Especially since i use dillo on my ipaq, where shortcut keys isn't an
+option...
+
+How about having that option control if dillo should start with toolbars
+ripped off or not?
+
+Regards,
+Tor-Åke
+
+Quoting Martin Samuelsson:
+> [...]
+> For example the panel at the top of the screen. I noticed that it's size
+> could get changed. So I wrote these few lines to make it disappear all
+> together.
+
+>Is there any chance that my patch could get applied in the official
+>distribution? Should I change it in some way? Apply through the bts?
+>
+>I believe there are more people than me who finds that the bar does
+>nothing but wasting valuable screen space.
+>
+>What do you think? Is it worthless? Am I worthless? Do you get this mail 
+
+
+
+[Dillo-dev]keyboard navigation doesnt seem to work. i'll make it work if u want
+
+From: John Utz <john@ut...> - 2001-10-04 16:37
+
+hi;
+
+if somebody isnt working on this already. i'd be happy to.
+
+i am using dillo to browse docs on my laptop on the bus to and from work,
+and using the mouse is really not good in that situation :-).
+
+tell me the procedure for owning this work. i feel that it should work the
+same way lynx does modulo expected GTK widget behavior.
+
+does anybody disagree with this?
+
+should i create a feature bug in the bug tracker?
+
+can somebody tell me anything beyond the naming conventions doc about
+where this should go in the src code tree? it seems like control.c would
+not be a *bad* place, but that seems not really right.
+
+should this be a new module/file?
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Re: usability patch
+
+From: Martin Samuelsson <cosis@ly...> - 2001-10-03 20:35
+
+Attachments: dillo-nouglybar.patch      
+
+Since I got no feedback what so ever on my last mail I'm retrying.
+
+Tried dillo for the first time a couple of weeks ago and totally fell in love. 
+It's a wonderful browser for the pages it does render. And I hope it will do
+frames and cookies without getting bloated sometime in the future.
+
+However there are a few things that irritates me in the user interface.
+
+For example the panel at the top of the screen. I noticed that it's size could 
+get changed. So I wrote these few lines to make it disappear all together.
+
+Is there any chance that my patch could get applied in the official 
+distribution? Should I change it in some way? Apply through the bts?
+
+I believe there are more people than me who finds that the bar does nothing but 
+wasting valuable screen space.
+
+What do you think? Is it worthless? Am I worthless? Do you get this mail?
+--
+/Martin 
+
+
+
+[Dillo-dev]Some profiling
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-03 16:33
+
+I have my Dillo run with -pg, and when I restarted this morning to get the
+newest patch in, I took out the gprof results. Here's the top ten of what
+I got, this is from fairly standard browsing of slashdot, theregister, gtk
+api docs, java docs, webboards, cnn and a few other things. There doesn't
+seem to be anything critically slow, though a_Url_dup is called quite a
+lot. The cache search is somewhat slow, maybe a g_hashtable will be useful
+someday. All in all, I don't see anything that warrants change right
+away. Good job!
+
+-Lars
+
+% cumulative self self total=20=20=20=20=20=20=20=20=
+=20=20=20
+time seconds seconds calls us/call us/call name=20=20=20=20
+15.16 2.01 2.01 5885091 0.34 0.34 a_Url_dup
+7.99 3.07 1.06 113824 9.31 9.40 Dw_page_forall
+6.41 3.92 0.85 505303 1.68 2.07 Dw_page_new_word
+4.75 4.55 0.63 16500 38.18 117.16 Cache_entry_search
+4.00 5.08 0.53 191117 2.77 2.77 Html_get_attr_value
+3.09 5.49 0.41 21717 18.88 50.55 a_Dicache_get_entry
+2.41 5.81 0.32 35397 9.04 9.13 Dw_image_scale_row
+1.96 6.07 0.26 2870616 0.09 0.09 a_Dw_widget_get_type
+1.89 6.32 0.25 274063 0.91 1.23 Gif_sequence
+1.81 6.56 0.24 66995 3.58 5.03 Dw_page_draw_line
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Oh, oh... bugtrack gone :_(
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-03 02:34
+
+Hi all!
+
+> > It seems that all bugtrack entries have disappeared. Jorge, was it
+> > you?
+>
+> No AFAIK :)
+>
+> > In case it wasn't and all the entries are gone (why is that?)
+
+I answered this early in the morning, and was about to quote
+that anyone can make a backup of the main DB file with:
+
+http://dillo.so....net/cgi-bin/bugtrack/Dillo_text.py
+
+but it didn't work, so I decided to check it later.
+
+Several hours after, I tested again (with a view to start
+fixing), and it worked, just as before!
+
+So, it _IS_ sourceforge having problems with CGI apps. In our
+case, if the updating CGI was stopped shortly after it started,
+that could explain the 1-sized files...
+
+> I checked the sited and all the data files had length 1.
+> That's pretty fishy.
+> Fortunately I had a backup there!
+>
+> > really wierd... hope this helps!
+
+
+Weird, but it starts to get clearer.
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Oh, oh... bugtrack gone :_(
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-02 20:19
+
+Livio,
+
+> Hi all!
+>
+> It seems that all bugtrack entries have disappeared. Jorge, was it
+> you?
+
+No AFAIK :)
+
+> In case it wasn't and all the entries are gone (why is that?)
+
+I checked the sited and all the data files had length 1.
+That's pretty fishy.
+Fortunately I had a backup there!
+
+> really wierd... hope this helps!
+
+Thanks Livio.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Oh, oh... bugtrack gone :_(
+
+From: Livio Baldini Soares <livio@li...> - 2001-10-02 17:56
+
+Hi all!
+
+It seems that all bugtrack entries have disappeared. Jorge, was it
+you? In case it wasn't and all the entries are gone (why is that?), I
+have a copy of today's entries at:
+
+http://www.linux.ime.usp.br/~livio/dillo/bugtrack.1002045154.old
+
+really wierd... hope this helps!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-cl
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-02 14:50
+
+On Mon, 01 Oct 2001, Eric GAUDET wrote:
+
+> -- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+> middle-cl" de Taras, le 02-Oct-2001 :
+>> Mon, 2001-10-01 at 19:20, Eric GAUDET wrote:
+>>> -- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll
+>>> size, middle-cl" de DraX, le 01-Oct-2001 :
+>>> > Middle mouse click on the page should open whatever is in the
+>>> > clipboard. Anybody got a problem with that?
+>>> >=20
+>>> > -Lars
+>>> >=20
+>>>=20
+>>> I don't like that in netscape already, please don't do the same mistake
+>>> with dillo.
+>> I hate that too. Its easy enough to paste in the url bar.
+
+Too bad. I really like that feature. I dislike having to find the little
+X button and then the url bar, when I'm used to just clicking anywhere on
+the page. I guess I'll just make that a private patch.
+
+>> A feature I'm dying to see though is selection support, it sucks to have
+>> a fast browser and not be able to copy examples from it into my
+>> code..etc.
+>>=20
+>> I know this is a big task, but it hurts not to have it.
+>=20
+> I know, I want it too. I even volunteered and begun to implement it. The
+> hard part is to highlight the selection, because there's nothing in dillo
+> to do that. Especially now, with tablesall over the place. I believe
+> the guys that implemented the find-text ran into the same problem ;-)
+>=20
+> Quick poll about that: would you guys of the list be happy with a
+> drag-box selection (just like selecting in an image in gimp)? I mean just
+> selecting a rectangle in the text, not rest of the line.
+
+It would be better than nothing, that's certain.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Dillo for the blind and visually impaired.
+
+From: Simon Dobrisek <simond@lu...> - 2001-10-02 07:32
+
+Dear Jorge,
+
+first of all, thanx for the reply!
+
+> That means that the learning curve to modify the specialized
+> parts is quite steep and lofty. On the other hand, I see that the
+> simplicity of the parser and small codebase is a plus for your
+> project.
+
+This I have noticed. For our project the crucial part is the dw_page
+(lines, words, ...) and it can be handled fairly easily. We have avoided
+journeys to any other part of the dillo ... only a few minor interventions
+in scrolled_frame/window (scrolling had generated motion notify event and
+we wanted to distinct this event and the true pointer motion event).
+
+> In brief, if you're planning for the mid to long term, I'd
+> suggest you to try to keep with one of the official releases and
+> to make a specialized version of dillo for the visually impaired
+> (instead of trying to catch-up with a patch scheme).
+
+I agree. We are doing this. The first working version is based on dillo
+0.5.1, just now we are introducing specialized parts into the dillo 0.6.1
+code. We would call this specialized version with a combination of names
+"dillo" and "homer".
+
+> Beware of the GPL: Your code MUST be GPLed!
+
+Our project requires from us to do that.
+
+> Menus are different, because they're pure GTK widgets, you may
+> need to derive a custom class to do that, I'm not sure. Maybe the
+> tooltips code can hint you, and the authoritative source is the
+> GTK+ mailing list.
+
+Hmmm... I have already played with the tooltips. I will check the GTK+
+mailing list.
+
+Thanx again!
+
+Simon.
+
+simond@lu... 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-cl
+
+From: Eric GAUDET <egaudet@in...> - 2001-10-02 05:12
+
+-- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+middle-cl" de Taras, le 02-Oct-2001 :
+> Mon, 2001-10-01 at 19:20, Eric GAUDET wrote:
+>> -- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+>> middle-cl" de DraX, le 01-Oct-2001 :
+>> > Middle mouse click on the page should open whatever is in the clipboard.
+>> > Anybody got a problem with that?
+>> > 
+>> > -Lars
+>> > 
+>> 
+>> I don't like that in netscape already, please don't do the same mistake with
+>> dillo.
+> I hate that too. Its easy enough to paste in the url bar.
+> 
+> A feature I'm dying to see though is selection support, it sucks to have
+> a fast browser and not be able to copy examples from it into my
+> code..etc.
+> 
+> I know this is a big task, but it hurts not to have it.
+
+I know, I want it too. I even volunteered and begun to implement it. The hard
+part is to highlight the selection, because there's nothing in dillo to do that.
+Especially now, with tablesall over the place.
+I believe the guys that implemented the find-text ran into the same problem ;-)
+
+Quick poll about that: would you guys of the list be happy with a drag-box
+selection (just like selecting in an image in gimp)? I mean just selecting a
+rectangle in the text, not rest of the line.
+
+>> 
+>> ------------------------------------
+>> Eric GAUDET <egaudet@in...>
+>> Le 01-Oct-2001 a 19:19:51
+>> "In theory, there's no difference between 
+>> theory and practice; in practice, there is."
+>> ------------------------------------
+>> 
+>> 
+>> _______________________________________________
+>> Dillo-dev mailing list
+>> Dillo-dev@li...
+>> hhttps://lists.so....net/lists/listinfo/dillo-de
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Oct-2001 a 22:04:10
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-cl
+
+From: Taras <taras.glek@ho...> - 2001-10-02 04:59
+
+Mon, 2001-10-01 at 19:20, Eric GAUDET wrote:
+> -- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+> middle-cl" de DraX, le 01-Oct-2001 :
+> > Middle mouse click on the page should open whatever is in the clipboard.
+> > Anybody got a problem with that?
+> > 
+> > -Lars
+> > 
+> 
+> I don't like that in netscape already, please don't do the same mistake with
+> dillo.
+I hate that too. Its easy enough to paste in the url bar.
+
+A feature I'm dying to see though is selection support, it sucks to have
+a fast browser and not be able to copy examples from it into my
+code..etc.
+
+I know this is a big task, but it hurts not to have it.
+> 
+> ------------------------------------
+> Eric GAUDET <egaudet@in...>
+> Le 01-Oct-2001 a 19:19:51
+> "In theory, there's no difference between 
+> theory and practice; in practice, there is."
+> ------------------------------------
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> hhttps://lists.so....net/lists/listinfo/dillo-de 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-cl
+
+From: Eric GAUDET <egaudet@in...> - 2001-10-02 02:21
+
+-- En reponse de "Re: [Dillo-dev]Pending projects: History, scroll size,
+middle-cl" de DraX, le 01-Oct-2001 :
+> Middle mouse click on the page should open whatever is in the clipboard.
+> Anybody got a problem with that?
+> 
+> -Lars
+> 
+
+I don't like that in netscape already, please don't do the same mistake with
+dillo.
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Oct-2001 a 19:19:51
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Dillo for the blind and visually impaired.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-01 22:36
+
+Simon,
+
+>
+> Dear colleagues,
+>
+> I am a teaching assistant and part of my research work at our university
+> is to develop a simple but usable web browser for the blind and visually
+> impaired people.
+>
+> For some time we have been involved in a non-profit research project where
+> we developed a voice-driven text-to-speech system (HOMER II) for blind or
+> visually impaired persons for reading Slovenian texts ( my country ;) ).
+>
+> Later on we got an idea to set a web portal entirely dedicated to such
+> disabled persons in Slovenia and to develop a HOMER III system which
+> includes an html parser. Additionally, we decided to enable use of mouse
+> pointer when browsing through the available text at the portal (some
+> useful info, daily newspapers, selected novels ... all preformated into
+> simple html pages ... the portal does not exist yet :( ... but an internet
+> source of nonstructed ASCII Slovenian texts does!)
+>
+> And then I "discovered" the dillo. We have already done some job and our
+> extension of the dillo has a screen reading capabilities (with the
+> Slovenian text-to-speech and a lot of beep sounds ;) ... it works only
+> when pointer is in the "dw_page"). The working name of the system is
+> "ihomer".
+>
+> I have to say that I am a rookie in GTK programming and the dillo project.
+> I hope I didn't pollute the code with too much unstable crap but it seems
+> stable (as much as dillo is stable). Our extension of the source code will
+> be publicly available (without the Slovenian TTS but with the instructions
+> how to integrate other language TTS ... actually we have version with the
+> "dummy synthesis - delayed print" to the console window).
+
+Interesting project!
+
+Beware, though, that dillo is a visual user agent that's highly
+optimized to be fast: with very innovative coding on the network
+layers and cache for speed, fast and streamed table rendering for
+early feedback, etc.
+
+That means that the learning curve to modify the specialized
+parts is quite steep and lofty. On the other hand, I see that the
+simplicity of the parser and small codebase is a plus for your
+project.
+
+In brief, if you're planning for the mid to long term, I'd
+suggest you to try to keep with one of the official releases and
+to make a specialized version of dillo for the visually impaired
+(instead of trying to catch-up with a patch scheme).
+
+Beware of the GPL: Your code MUST be GPLed!
+
+> And now the main point!
+>
+> Currently, I am stucked with a problem of how to hook on the low level
+> signals of the GTK menus and buttons in the dillo. I would need to
+> "intercept" the position of the pointer in the menu (better said, I need
+> the menu or button label text beneath the pointer to send it to the TTS).
+
+Dillo toolbars, and dw widgets are easy to hook: just as the
+tooltips and as the hand-mouse-cursor.
+
+Menus are different, because they're pure GTK widgets, you may
+need to derive a custom class to do that, I'm not sure. Maybe the
+tooltips code can hint you, and the authoritative source is the
+GTK+ mailing list.
+
+> TTS works in a separated thread with a time out function. This means that
+> you can't stuff the TTS with some fast browsing. You need to stay in a
+> position for some time to hear anything from the TTS. This feature of our
+> TTS seem to be stable when browsing through the dw_page. (I hooked TTS on
+> the motion_notify_event of the dw_page)
+>
+> Do you have any hint, instructions?
+
+[As stated above]
+
+
+Good luck
+Jorge.- 
+
+
+
+[Dillo-dev]Last Patch of the Day: Bookmark URL in statuc bar
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 22:06
+
+Have to go home now, but before I leave, here's a patch that shows the
+bookmark URL in the statusbar when the mouse is over the menu item. I'm
+not quite sure if status_is_link is what I think it is, though.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile /tmp/dillo-patch4=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Index: bookmark.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /cvsroot/dillo/dillo/src/bookmark.c,v
+retrieving revision 1.17
+diff -u -B -b -r1.17 bookmark.c
+--- bookmark.c 2001/08/29 17:45:18 1.17
++++ bookmark.c 2001/10/01 22:05:25
+@@ -104,6 +104,29 @@
+}
+=20
+/*
++ * Put the url in the status bar when moving cursor over menuitem.
++ */
++void a_Bookmarks_menu_select_callback(GtkWidget *wid, gpointer *user_data)
++{
++ CallbackInfo *CbInfo =3D (CallbackInfo *)user_data;
++=20=20=20
++ gtk_label_set(GTK_LABEL(CbInfo->bw->status),
++ bookmarks[CbInfo->index].url->url_string->str);
++ CbInfo->bw->status_is_link =3D 1;
++}
++
++/*
++ * Remove the url in the status bar when removing cursor from menuitem.
++ */
++void a_Bookmarks_menu_deselect_callback(GtkWidget *wid, gpointer *user_dat=
+a)
++{
++ CallbackInfo *CbInfo =3D (CallbackInfo *)user_data;
++=20=20=20
++ gtk_label_set(GTK_LABEL(CbInfo->bw->status), "");
++ CbInfo->bw->status_is_link =3D 0;
++}
++
++/*
+* Add a bookmark to the bookmarks menu of a particular browser window
+*/
+void Bookmarks_add_to_menu(BrowserWindow *bw, GtkWidget *menuitem, guint i=
+ndex)
+@@ -119,6 +142,12 @@
+/* accelerator goes here */
+gtk_signal_connect(GTK_OBJECT (menuitem), "activate",
+(GtkSignalFunc)Bookmarks_goto_bookmark, CbInfo);
++ gtk_signal_connect(GTK_OBJECT (menuitem), "select",=20
++ (GtkSignalFunc)a_Bookmarks_menu_select_callback,
++ CbInfo);
++ gtk_signal_connect(GTK_OBJECT (menuitem), "deselect",=20
++ (GtkSignalFunc)a_Bookmarks_menu_deselect_callback,
++ CbInfo);
+}
+=20
+/*
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+[Dillo-dev]Patch: Bug #211
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 20:51
+
+Attached is a patch for bug #211: Save-as dialog does not remember dir.
+
+It remembers the same dir for save page, save link and open file. It will
+also remember the file name of the last saved or opened file and use that
+for suggestions if the URL doesn't give a useable suggestion.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile /tmp/dillo-patch3=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Index: interface.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /cvsroot/dillo/dillo/src/interface.c,v
+retrieving revision 1.39
+diff -u -b -B -r1.39 interface.c
+--- interface.c 2001/09/27 14:25:21 1.39
++++ interface.c 2001/10/01 20:50:52
+@@ -832,6 +832,10 @@
+g_string_free(UrlStr, TRUE);
+a_Url_free(url);
+=20
++ printf("Full name %s\n", fn);
++ if (bw->file_dialog_last_name !=3D NULL) g_free(bw->file_dialog_last_na=
+me);
++ bw->file_dialog_last_name =3D g_strdup(fn);
++
+gtk_widget_destroy(bw->openfile_dialog_window);
+}
+=20
+@@ -883,6 +887,10 @@
+(GtkSignalFunc) Interface_openfile_ok_callback, (void *)bw);
+}
+=20
++ if (bw->file_dialog_last_name !=3D NULL)
++ gtk_file_selection_set_filename(
++ GTK_FILE_SELECTION(bw->openfile_dialog_window), bw->file_dialog_l=
+ast_name);
++
+if (!GTK_WIDGET_VISIBLE(bw->openfile_dialog_window))
+gtk_widget_show(bw->openfile_dialog_window);
+else
+@@ -1089,6 +1098,9 @@
+Web->flags |=3D WEB_Download;
+/* todo: keep track of this client */
+a_Cache_open_url(Web, Interface_save_callback, Web);
++
++ if (bw->file_dialog_last_name !=3D NULL) g_free(bw->file_dialog_last=
+_name);
++ bw->file_dialog_last_name =3D g_strdup(name);
+}
+a_Url_free(url);
+=20
+@@ -1115,21 +1127,43 @@
+Web->flags |=3D WEB_Download;
+/* todo: keep track of this client */
+a_Cache_open_url(Web, Interface_save_callback, Web);
++
++ if (bw->file_dialog_last_name !=3D NULL) g_free(bw->file_dialog_last=
+_name);
++ bw->file_dialog_last_name =3D g_strdup(name);
+}
+=20
+gtk_widget_destroy(bw->save_link_dialog_window);
+}
+=20
+/*
+- * Scan Url and return a local-filename suggestion for saving
++ * Scan Url and return a local-filename suggestion for saving.
++ * The filename includes the directory last saved in, if any.
+*/
+-char *Interface_make_save_name(const DilloUrl *url)
++char *Interface_make_save_name(const DilloUrl *url, BrowserWindow *bw)
+{
+gchar *FileName;
+=20
+if (URL_PATH(url) && (FileName =3D strrchr(URL_PATH(url), '/')))
+- return g_strndup(++FileName, MIN(strlen(FileName), 64));
+- return g_strdup("");
++ FileName =3D g_strndup(++FileName, MIN(strlen(FileName), 64));
++ else
++ FileName =3D g_strdup("");
++ if (bw->file_dialog_last_name !=3D NULL) {
++ gchar *FilenameWithDir =3D NULL;=20
++ if (*FileName) {
++ gchar *dirpart =3D g_dirname(bw->file_dialog_last_name);
++ FilenameWithDir =3D
++ g_strconcat(dirpart,
++ G_DIR_SEPARATOR_S,
++ FileName,
++ NULL);
++ g_free(dirpart);
++ } else {
++ FilenameWithDir =3D g_strdup(bw->file_dialog_last_name);
++ }
++ g_free(FileName);
++ return FilenameWithDir;
++ } else=20
++ return FileName;
+}
+=20
+/*
+@@ -1147,7 +1181,7 @@
+(GtkSignalFunc) Interface_file_save_url, (void *)bw );
+}
+url =3D a_Url_new(gtk_entry_get_text(GTK_ENTRY(bw->location)), NULL, 0,=
+0);
+- SuggestedName =3D Interface_make_save_name(url);
++ SuggestedName =3D Interface_make_save_name(url, bw);
+gtk_file_selection_set_filename(
+GTK_FILE_SELECTION(bw->save_dialog_window), SuggestedName);
+g_free(SuggestedName);
+@@ -1174,7 +1208,7 @@
+(GtkSignalFunc) Interface_file_save_link,
+(void *)bw);
+}
+- SuggestedName =3D Interface_make_save_name(bw->menu_popup.info.url);
++ SuggestedName =3D Interface_make_save_name(bw->menu_popup.info.url, bw);
+gtk_file_selection_set_filename(
+GTK_FILE_SELECTION(bw->save_link_dialog_window), SuggestedName);
+g_free(SuggestedName);
+Index: browser.h
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RCS file: /cvsroot/dillo/dillo/src/browser.h,v
+retrieving revision 1.22
+diff -u -b -B -r1.22 browser.h
+--- browser.h 2001/09/27 14:25:21 1.22
++++ browser.h 2001/10/01 20:50:52
+@@ -101,6 +101,8 @@
+gpointer question_dialog_data;
+GtkWidget *viewsource_window;
+=20
++ gchar *file_dialog_last_name;
++
+/* Dillo navigation stack (implemented with list.h) */
+DilloNav *nav_stack;
+gint nav_stack_size; /* [1 based] */
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+Re: [Dillo-dev]next encodings patch
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-10-01 20:43
+
+Grigory,
+[and everyone]
+
+> Hello.
+
+Hi!
+
+> I'm new in this list so don't kick me strongly.
+
+Hmmmm, what a shame we have come to expect that...
+
+Fortunately this mailing list has a long tradition of polite,
+technically skilled and cooperative email interchange, and we
+love it that way!
+
+Back in the old days when I was at the university, a memorable
+teacher told us that the toughest problem of gathering a working
+team of highly skilled to brilliant considered individuals was
+that those guy's egos were bigger than a whole cathedral, and
+that they would avoid cooperating with each other in the pursue
+of demonstrating that they were the best overall, and that they
+could undertake the whole task without the aid of anyone!
+
+He was right...
+
+I had come to observe that really brilliant or knowledgeable
+people (up to geniuses), don't behave that way. They know what
+they're worth, an thus doesn't have to demonstrate anything.
+
+Even more, the later ones are the most cooperative, encouraging
+and open to share their valuable knowledge, when it comes to help
+their colleagues to improve their skills.
+
+The excellent news is that being a genius is not a requirement
+for adopting that working spirit; and so we did!
+
+
+> I make a patch for force encodings selection.
+> I drop it here
+>
+> http://lambda.asplinux.udm.net/pub/dillo/dillo.encodings.patch
+
+OK.
+
+> It's based on japanise encodings patch but can help
+> all users who use nonlatin1 charsets (especialy this patch
+> help for all cyrillic readers with our charsets hell).
+> Patch use iconv and work with 'encodings' file that i
+> drop into ~/.dillo/ (like bookmarks.html).
+> File contain "Charset name" "iconv name" pairs in form
+> <enc value="ASCII">AscII</enc>
+> <enc value="KOI8-R">Cyrillic KOI8-R</enc>
+> <enc value="CP1251">Cyrillic CP1251</enc>
+> <enc value="IBM866">Cyrillic IBM866</enc>
+> <enc value="UTF-8">Unicode</enc>
+> etc...
+> As you can see this patch help me to view unicode and other charsets page.
+
+As described in the project notes (an as stated within all the
+suggested reading-material), this problem is far from easy to
+solve. BTW, the required framework will be available with
+GTK+2.0. In the mean time, I'll provide links to custom patches
+for specific languages, as long as they provide a home page that
+explains how to apply and enable the patch, as well as what they
+provide and what they break :).
+
+So take your time, and when you have a stable version of your
+code, just let me know, and I'll gladly add a link to it from the
+i18n section of the [Links] page.
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-click, space/back
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 19:54
+
+On 01 Oct 2001, J=F6rgen Viksell wrote:
+
+> 2001-10-01 klockan 17.09 skrev Lars Clausen:
+>> Middle mouse click on the page should open whatever is in the clipboard.
+>> Anybody got a problem with that?
+>=20
+> The middle button (button 2) is already mapped to a scrolling function.
+
+Grumble. I can see some use for that, but it's limited to how far you can
+move the mouse before hitting the edge of the screen. I really like having
+middle mouse 'paste' the url in, that way url's found in text (inside our
+outside the browser) can be opened really quickly. We could consider a
+click with no movement to do paste, but that's rather fragile (what if your
+middle button is flaky? what if you scroll a little trying to paste?).
+Seems early to start making the mouse buttons configurable:)
+
+>> Space should scroll down, and probably Backspace scroll up.
+>=20
+> Yes please, I'm always pressing that damn spacebar... ;-)
+
+See previous patch:)
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-click, space/back
+
+From: Viksell <jorgen.viksell@te...> - 2001-10-01 19:48
+
+2001-10-01 klockan 17.09 skrev Lars Clausen:
+> Middle mouse click on the page should open whatever is in the clipboard.
+> Anybody got a problem with that?
+
+The middle button (button 2) is already mapped to a scrolling function.
+
+> Space should scroll down, and probably Backspace scroll up.
+
+Yes please, I'm always pressing that damn spacebar... ;-)
+
+J=F6rgen 
+
+
+
+[Dillo-dev]Image scaling aspect ratio?
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 17:51
+
+I had a page where an image was scaled by just setting the width. Most
+browsers preserve the aspect ratio when scaling it, but not Dillo. The
+HTML specs don't mention aspect ratio at all. Should we categorize this
+under 'broken HTML', or should we keep the aspect ratio when only one of
+width and height is specified?
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+[Dillo-dev]patch hell
+
+From: Grigory Bakunov <black@as...> - 2001-10-01 17:44
+
+Hello.
+I look at this list and one thing born in my head.
+What bout ONE place to hold ALL patches for dillo ?
+I can make it if nobody other want to do it.
+Or we just can use sourceforge patches tracker -
+gods or mantainers ! please activate pathes tracker on sourceforge for dillo!
+And thanks for great browser. realy.
+
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]Patch: Space and backspace scrolls page
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 17:33
+
+This patch adds space and backspace scrolling the page.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile /tmp/dillo-patch2=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff -rubB dillo-orig/src/dw_gtk_scrolled_frame.c dillo/src/dw_gtk_scrolled=
+_frame.c
+--- dillo-orig/src/dw_gtk_scrolled_frame.c Thu Jul 19 20:35:52 2001
++++ dillo/src/dw_gtk_scrolled_frame.c Mon Oct 1 12:27:53 2001
+@@ -475,6 +475,7 @@
+else
+return gtk_container_focus (container, GTK_DIR_TAB_FORWARD);
+=20
++ case GDK_BackSpace:
+case GDK_Page_Up:
+if (event->state & GDK_CONTROL_MASK)
+Dw_gtk_scrolled_frame_move_by(frame,
+@@ -484,6 +485,7 @@
+- frame->vadjustment->page_increment=
+);
+return TRUE;
+=20
++ case GDK_space:
+case GDK_Page_Down:
+if (event->state & GDK_CONTROL_MASK)
+Dw_gtk_scrolled_frame_move_by(frame,
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-click, space/back
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 17:23
+
+On Mon, 1 Oct 2001, drax@wh... wrote:
+
+> Sounds great! One thing i'd like is to ahve the progress thing down on
+> the status bar, stretched out long instead of in a block, and to take the
+> address bar off of the menubar! Then dillos interface would fit my taste
+> much better.
+>=20
+> Maybe i'll looki into doing one of those myself...
+>=20
+> DraX
+>=20
+>=20
+> On 1 Oct 2001, Lars Clausen wrote:
+>=20
+>>=20
+>> The bugtrack system seems to be broken ATM. I'm starting to look at a
+>> bunch of minor useability features that I miss in Dillo from other
+>> browsers:
+>>=20
+>> History menus on back/forward buttons (a la Galeon): Need to brush up on
+>> events and menu creation.
+>>=20
+>> Page scroll size is 1/2 page, I prefer a full page. This setting goes
+>> into preferences. I tried setting adjustments in
+>> Dw_gtk_scrolled_frame_set_scroll_adjustments, but it doesn't seem to be
+>> called. Where should I go to reliably set
+>> [hv]adjustment->page_increment?
+
+Ok, here be the patch for scroll_increment. Please let me know if it is
+not up to coding standards.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket?
+
+=3D=3D=3DFile /tmp/dillo-patch1=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff -rubB dillo-orig/src/dw_gtk_viewport.c dillo/src/dw_gtk_viewport.c
+--- dillo-orig/src/dw_gtk_viewport.c Thu Jul 19 20:35:52 2001
++++ dillo/src/dw_gtk_viewport.c Mon Oct 1 12:20:57 2001
+@@ -12,6 +12,7 @@
+#include <gtk/gtk.h>
+#include "dw_gtk_viewport.h"
+#include "dw_container.h"
++#include "prefs.h"
+=20
+#include "debug.h"
+=20
+@@ -424,6 +425,9 @@
+static void Dw_gtk_viewport_adj_changed (GtkAdjustment *adj,
+GtkDwViewport *viewport)
+{
++ if (prefs.scroll_increment !=3D 0.0)
++ adj->page_increment =3D adj->page_size*prefs.scroll_increment;
++
+Dw_gtk_viewport_mouse_event (GTK_WIDGET (viewport),
+viewport->mouse_x, viewport->mouse_y, NULL=
+);
+}
+diff -rubB dillo-orig/src/prefs.c dillo/src/prefs.c
+--- dillo-orig/src/prefs.c Thu Sep 20 16:14:47 2001
++++ dillo/src/prefs.c Mon Oct 1 11:05:18 2001
+@@ -49,7 +49,8 @@
+{ "panel_size", DRC_TOKEN_PANEL_SIZE },
+{ "small_icons", DRC_TOKEN_SMALL_ICONS },
+{ "limit_text_width", DRC_TOKEN_LIMIT_TEXT_WIDTH },
+- { "font_factor", DRC_TOKEN_FONT_FACTOR }
++ { "font_factor", DRC_TOKEN_FONT_FACTOR },
++ { "scroll_increment", DRC_TOKEN_SCROLL_INCREMENT }
+};
+=20
+static const guint n_symbols =3D sizeof (symbols) / sizeof (symbols[0]);
+@@ -144,6 +145,9 @@
+case DRC_TOKEN_LIMIT_TEXT_WIDTH:
+prefs.limit_text_width =3D (strcmp(scanner->value.v_string, "YES") =
+=3D=3D 0);
+break;
++ case DRC_TOKEN_SCROLL_INCREMENT:
++ prefs.scroll_increment =3D strtod(scanner->value.v_string, NULL);
++ break;
+default:
+break; /* Not reached */
+}
+diff -rubB dillo-orig/src/prefs.h dillo/src/prefs.h
+--- dillo-orig/src/prefs.h Wed Jun 27 08:27:02 2001
++++ dillo/src/prefs.h Mon Oct 1 11:04:32 2001
+@@ -41,6 +41,7 @@
+DRC_TOKEN_FONT_FACTOR,
+DRC_TOKEN_SHOW_ALT,
+DRC_TOKEN_LIMIT_TEXT_WIDTH,
++ DRC_TOKEN_SCROLL_INCREMENT,
+DRC_TOKEN_LAST
+} Dillo_Rc_TokenType;
+=20
+@@ -64,6 +65,7 @@
+gboolean small_icons;
+gboolean limit_text_width;
+gdouble font_factor;
++ gdouble scroll_increment;
+};
+=20
+/* Global Data */
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 
+
+
+
+Re: [Dillo-dev]Pending projects: History, scroll size, middle-click, space/back
+
+From: DraX <drax@wh...> - 2001-10-01 17:17
+
+Sounds great! One thing i'd like is to ahve the progress thing down on the
+status bar, stretched out long instead of in a block, and to take the
+address bar off of the menubar! Then dillos interface would fit my taste
+much better.
+
+Maybe i'll looki into doing one of those myself...
+
+DraX
+
+
+On 1 Oct 2001, Lars Clausen wrote:
+
+>=20
+> The bugtrack system seems to be broken ATM. I'm starting to look at a
+> bunch of minor useability features that I miss in Dillo from other
+> browsers:
+>=20
+> History menus on back/forward buttons (a la Galeon): Need to brush up on
+> events and menu creation.
+>=20
+> Page scroll size is 1/2 page, I prefer a full page. This setting goes in=
+to
+> preferences. I tried setting adjustments in
+> Dw_gtk_scrolled_frame_set_scroll_adjustments, but it doesn't seem to be
+> called. Where should I go to reliably set [hv]adjustment->page_increment=
+?=20
+>=20
+> Middle mouse click on the page should open whatever is in the clipboard.
+> Anybody got a problem with that?
+>=20
+> Space should scroll down, and probably Backspace scroll up. Some browser=
+s
+> have Backspace go to previous page, but I don't like that. Any comments?
+>=20
+> -Lars
+>=20
+> --=20
+> Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+> "I do not agree with a word that you say, but I |----------------------=
+------
+> will defend to the death your right to say it." | Where are we going, a=
+nd
+> --Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket?
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20 
+
+
+
+[Dillo-dev]Pending projects: History, scroll size, middle-click, space/back
+
+From: Lars Clausen <lrclause@cs...> - 2001-10-01 17:09
+
+The bugtrack system seems to be broken ATM. I'm starting to look at a
+bunch of minor useability features that I miss in Dillo from other
+browsers:
+
+History menus on back/forward buttons (a la Galeon): Need to brush up on
+events and menu creation.
+
+Page scroll size is 1/2 page, I prefer a full page. This setting goes into
+preferences. I tried setting adjustments in
+Dw_gtk_scrolled_frame_set_scroll_adjustments, but it doesn't seem to be
+called. Where should I go to reliably set [hv]adjustment->page_increment?=
+=20
+
+Middle mouse click on the page should open whatever is in the clipboard.
+Anybody got a problem with that?
+
+Space should scroll down, and probably Backspace scroll up. Some browsers
+have Backspace go to previous page, but I don't like that. Any comments?
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+

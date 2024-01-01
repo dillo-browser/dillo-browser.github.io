@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>discard CSS syntax errors</title>
+
+<style type="text/css" media="all">
+
+.word {
+ background-color: orange
+}
+
+table.separate {
+ border-collapse: separate;
+}
+table.separatebogus {
+ border-collapse: separate;
+ margin: 10px foo bar;
+ border: 20px #foo bar;
+ padding: 40px baz;
+}
+
+.tdbogus {
+  margin: 5px baz;
+  border: 10px solido #aaa;
+  padding: 20px 34;
+}
+.tdok {
+  border: 5px solid red;
+}
+</style>
+</head>
+
+<body bgcolor="#F0F8FF">
+
+<h3>Separate:</h3>
+These tables should render equal when CSS syntax errors are discarded:
+<p>
+ <table class="separate" border=1>
+ <tr><td>Carnivores<td><i class="word">Primates</i>
+ <tr><td class="tdok">Tiger<td>Sifaka
+ </table>
+<br>
+ <table class="separatebogus" border=1>
+ <tr><td class="tdbogus">Carnivores<td><i class="word">Primates</i>
+ <tr><td class="tdok">Tiger<td>Sifaka
+ </table>
+<br>
+<hr>
+
+</body>
+</html>

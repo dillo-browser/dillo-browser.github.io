@@ -1,0 +1,3767 @@
+[Dillo-dev]Dw details
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-31 15:04
+
+Hi!
+
+Some details on my Dw design. Implementation is far enough to make be
+beleive that this design should work quite well. In detail:
+
+- DwWidget: set_width and set_height are currently not used, instead,
+this feature is currently implemented otherwise. Will be changed
+next.
+The implementation of a_widget_queue_resize is currently very simple
+and inefficient, but works; changes should not effect the other
+code.
+
+- DwContainer: There won't be much implementation, anyway.
+
+- Interaction between Gtk and Dw: GtkLayout does a good job ;-).
+Embedding of Gtk+ widgets by DwEmbedGtk works mainly. (BTW, focus
+works very nice now.)
+
+DwWidget
+--------
+
+My goal for the new design was mainly to make dillo's widgets more
+similar to Gtk+ widgets.
+
+struct _DwWidget
+{
+GtkObject object;
+
+/* some more members, will change */
+};
+
+
+struct _DwWidgetClass
+{
+GtkObjectClass parent_class;
+
+void (*size_request) (DwWidget *widget,
+DwRequisition *requisition);
+void (*size_allocate) (DwWidget *widget,
+DwAllocation *allocation);
+void (*set_width) (DwWidget *widget,
+guint32 width);
+void (*set_height) (DwWidget *widget,
+guint32 height);
+void (*draw) (DwWidget *widget,
+DwRectangle *area,
+GdkEventExpose *);
+/* further methods for events */
+};
+
+size_request and size_allocate work quite exactly as in GtkWidget. I
+added two methods, set_width and set_height, which may (but need not)
+have an effect on the behaviour of size_request. (Probably, set_height
+will not be used anyway, but it is there for symmetry.) Most widgets
+in dillo will use size_request much more often that size_allocate.
+
+There is a function a_dw_widget_queue_resize, which a widget must call
+when its desired change has changed (e.g. if a word is added to a
+page). The implementation is based on the size_request and
+size_allocate methods, similar to gtk_widget_queue_resize), so a
+widget must not implement anything like idle functions etc. (BTW,
+a_dw_widget_queue_resize as well as gtk_widget_queue_resize do work
+with idle functions.)
+
+Since DwWidget's are windowless "per se", there is no need for
+distinguishing between a draw and an expose method. However, if the
+draw function is called because of an expose event, the method will
+receive it as third argument (otherwise NULL), in case, if the widget
+is interested in further details.
+
+
+DwContainer
+-----------
+
+Quite similar to GtkContainer.
+
+
+Interaction between Gtk and Dw
+------------------------------
+
+The top level Dw widget is handled by a Gtk+ widget GtkDwViewport,
+derived from GtkLayout. GtkDwViewport is responsible for all events
+for Dw widgets, the underlying GtkLayout for events for embedded Gtk+
+widgets.
+
+There is still a widget DwEmbedGtk for embedding Gtk+ widgets into a
+DwWidget. Some "events" (like destroy or size_request) of those
+widgets have to be caught by signals, since Gtk+ does not regard the
+DwEmbedGtk as the parent of the Gtk+ widget.
+
+(I first tried another approach, without GtkLayout, which made the
+design simpler, but had severe problems with the Gtk+ widgets. So I
+decided to use GtkLayout, which does a good job for this.)
+
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Progress
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-10-30 00:36
+
+During some recent plane trips I have mostly finished my work on dillo and
+rendering of font modifying tags. font tab itself is supported, it does not
+yet support the face attribute. The sub and super tags need attention, they
+are the only major things not working yet.
+
+I intend to add a flag to dillo's configuration to ignore all font modifying
+tags in the html, or only specific ones. I have even pondered saying it is ok
+if font color= is set, but not font face=. Jorge, I know how much you hate not
+being able to control what html authors do and I would like to give our users a
+rich set of control over this. Personally, I like to see pages the way the
+author intended, but I know not everyone does. Comments on implementation of
+user prefs welcome. Need just a little cleanup of the code and I can submit a
+patch.
+
+Jorge, would you like for this to happen after Sebastian's Dw changes?
+
+Sorry for not being very talkative lately, this is the first time this machine
+has been on in a week. 
+
+
+
+[Dillo-dev]Dw progress
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-28 10:43
+
+Hi!
+
+Another good news: Dw is working quite nice already. Embedding Gtk+
+widgets is now (nearly) perfect, there are no expose problems anymore,
+even resize queueing of Gtk+ widgets are recognized. After making
+some changes and fixing some bugs, I'll soon start re-intigreating it
+into dillo.
+
+A note to bug #86: tabbing between widgets works automatically (done
+by the base class GtkLayout or somewhere else), but the toplevel Gtk+
+widget (GtkDwViewport) isn't focussable yet, so e.g. the arrow keys
+don't work. Making GtkDwViewport focussable will cause some other
+problems, since you may not focus children of focussable containers by
+pressing the tab key (but you may by clicking on them). I'll work on
+it (and make an entry in the bug tracking engine).
+
+Images: I'll first deactivate images, and then take a look at Jorge's
+changes.
+
+Sebastian 
+
+
+
+[Dillo-dev]Dillo-plugins first release
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-27 16:07
+
+Hi guys,
+As I promised, I just made available all the Dillo-plugins stuff I've
+been working on at:
+http://www.rti-zone.org/dillo/
+
+Feel free to send me any comments about this. 
+It's stable and almost complete, so you can try and do your own
+Dillo-plugins right now.
+
+I'm still working on the patch, and I'll finish it hopefully soon
+enough to be reviewed by Jorge and integrated in Dillo v0.3.
+
+A usable Bookmarks Dillo-plugin will be available soon too, but its
+developement will be disconnected of Dillo. (I'm not forking Dillo !
+The purpose of plugins is to be external programs). 
+The internal bookmarks menu won't be removed until Jorge decides so.
+
+Ciao
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 28-Oct-2000 a 00:55:24
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Progress
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-10-27 12:40
+
+Hi!
+
+A few days ago I finally devised a way to simplify the complex
+alternative design; it was a major task with lots of changes that
+I hope to document in the future.
+
+The good news is that I have a running prototype of dillo-0.3.0
+with it!
+
+The prototype runs very good and only requires some polishing
+before being adopted as the basis for our new release. 
+
+In brief:
+
+- The imgsink stuff was completely removed.
+- The dicache was rewritten from scratch and integrated
+into the normal cache.
+- A single client queue is being used for both caches.
+- The file descriptors were replaced by cache keys that serve
+as connection handlers.
+- The image data structure and related sources got changed.
+- Every decoder (png, gif, jpeg) was adapted to the new
+scheme.
+
+
+The current prototype already solves the file caching problem
+(and the severe memory leaks related). Now, I'll try to fix BUGs
+using the tools that this new design provide. When I finish that,
+it will be time to move the patch queue... But before I start
+patching, I'll upload the prototype to the CVS server so it can
+be tested.
+
+I only hope this design succeeds to provide what we need...
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Dillo Weekly News
+
+From: Allan Clark <shark@bl...> - 2000-10-24 14:53
+
+I've just posted the latest Dillo weekly news, this was meant to be done on
+Sunday so I'm sorry it's so late but I had a uni deadline to make (just).
+Anyway you can find it at
+http://www.shark.pwp.blueyonder.co.uk/news/news221000.html
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+Re: [Dillo-dev]Wild idea : frames
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-24 12:39
+
+-- En reponse de "Re: [Dillo-dev]Wild idea : frames" de Eric GAUDET, le
+24-Oct-2000 :
+>>> Don't render frames embeding DwPages in DwPages, but
+>>> create an actual browser page for each frame of the
+>>> frameset, with the correct width and height. The
+>>> user can then place the frames as he wants without
+>>> being bugged with having to read a page in a tiny
+>>> window.
+>> 
+>> As I think about this, this sounds like a neat
+>> approach for re-sizable frames. But bear in mind that
+>> not all frames are re-sizable. We'll need to handle
+>> both re-sizable AND non-re-sizable frames, IMHO.
+>> 
+> 
+> While we could probably intercept resizing messages, I'm not sure
+> this
+> would be a good idea. I want to keep control over sites designed for
+> large screens (I "only" have a 800x600 laptop). I don't see where in
+> html concepts the user is denied to customised his browser's
+> behavior.
+> 
+
+More precisely on attributes :
+- NORESIZE should be used to allow the browser window to be
+resized without the DwPage renegotiation its dimensions. (only useful
+with sizes in %)
+- SCROLLING should always be auto : there's no point to deny scrolling
+in such a frame implementation.
+- FRAMEBORDER, MARGINWIDTH, MARGINHEIGHT : ignored. I agree there will
+be a problem here with complex pages using frames for showing fancy
+displays, mostly for java applets and video streaming (none of which we
+plan to support anytime soon). Those pages should be built with tables
+anyway, and I don't care if we can't render "correctly" poorly designed
+pages.
+
+This multi-window implementation for frames is allowed by HTML4 specs :
+(quoted from W3C site)
+"16.1 Introduction to frames
+HTML frames allow authors to present documents in multiple views,
+which may be independent windows or subwindows. Multiple views offer
+designers a way to keep certain information visible, while other views
+are scrolled or replaced."
+
+The "subwindows" is the way most browsers render frames, but not the
+only one ;-)
+
+PS: I didn't came with this idea to make frames implementation simpler,
+but because I think this could be convenient for users.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Oct-2000 a 21:21:30
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Wild idea : frames
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-24 08:57
+
+-- En reponse de "Re: [Dillo-dev]Wild idea : frames" de Daniel Roberts,
+le 24-Oct-2000 :
+> --- Eric GAUDET <egaudet@in...> wrote:
+>> Don't render frames embeding DwPages in DwPages, but
+>> create an actual browser page for each frame of the
+>> frameset, with the correct width and height. The
+>> user can then place the frames as he wants without
+>> being bugged with having to read a page in a tiny
+>> window.
+> 
+> As I think about this, this sounds like a neat
+> approach for re-sizable frames. But bear in mind that
+> not all frames are re-sizable. We'll need to handle
+> both re-sizable AND non-re-sizable frames, IMHO.
+> 
+
+While we could probably intercept resizing messages, I'm not sure this
+would be a good idea. I want to keep control over sites designed for
+large screens (I "only" have a 800x600 laptop). I don't see where in
+html concepts the user is denied to customised his browser's behavior.
+
+>> We'll also need to add an identifier for the
+>> frameset (say a hash of the url ?), in case the same
+>> target names are used in different framesets. That
+>> doesn't seem pose any problem.
+> 
+> Actually, would it not be easier if we simply embedded
+> the DwPages within some master widget that contained
+> the master URL and the master frameset?
+> 
+
+That's the current design "to-be" with Sebastian's new Dw widgets.
+
+> Also, another problem will surface in the course of
+> this: How on earth do we plan to handle bookmarking,
+> and back/forward buttons for frames? Last time I
+> checked, the W3C HTML specs generally seemed to admit
+> that this was a very messy situation in HTML. In
+> Netscape, they had a HECK of a time with this. 
+> Bookmarking was impossible, and back/forward had to be
+> given an ugly hack to handle frames, originally.
+> 
+
+For bookmarking, we can bookmark only the frameset's URL. For
+back/forward button, I don't see any problem : each browser window
+already has its own history.
+
+> In this course of thought, yet another thought has
+> occured to me: With so many different
+> languages/protocols (http, ftp, html, xml, xslt, css,
+> JavaScript, etc.), why not make Dillo more generic and
+> modular by breaking the HTML support out into a
+> plugin?
+> 
+
+Plugins plan do handle all this (both protocols and languages).
+However, we'll need a final rendering language, and IMHO html is not
+worth than any other, and likely better designed than anything we can
+design for scratch for our own use.
+And plugins have a drawback, which was already addressed (in
+Dillo-plugins protocol, to be plublished soon) about make a http plugin:
+"While it is possible to override "http:", this unlikely to be a good
+idea : doing that will cause Dillo to fork a Dillo-plugin for each http
+request. While Dillo's main purpose is being an http client, it would
+be much better to patch Dillo's http layer (instead of doing a
+Dillo-plugin for that) if you want to modify/fix/enhance Dillo's http
+behavior."
+
+Same for html : Dillo was designed for fast html rendering, we should
+keep html inside Dillo as THE low-level language for pages rendering.
+
+> Speaking of which, BTW, whatever became of the FTP plugin?
+
+It's cooking, be patient.
+
+More on Dillo-plugins by friday. (protocol and design draft
+documentation, patch, sample plugin and usable bookmark plugin)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Oct-2000 a 17:39:29
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Wild idea : frames
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-24 01:53
+
+--- Eric GAUDET <egaudet@in...> wrote:
+> Don't render frames embeding DwPages in DwPages, but
+> create an actual browser page for each frame of the
+> frameset, with the correct width and height. The
+> user can then place the frames as he wants without
+> being bugged with having to read a page in a tiny
+> window.
+
+As I think about this, this sounds like a neat
+approach for re-sizable frames. But bear in mind that
+not all frames are re-sizable. We'll need to handle
+both re-sizable AND non-re-sizable frames, IMHO.
+
+> We'll also need to add an identifier for the
+> frameset (say a hash of the url ?), in case the same
+> target names are used in different framesets. That
+> doesn't seem pose any problem.
+
+Actually, would it not be easier if we simply embedded
+the DwPages within some master widget that contained
+the master URL and the master frameset?
+
+Also, another problem will surface in the course of
+this: How on earth do we plan to handle bookmarking,
+and back/forward buttons for frames? Last time I
+checked, the W3C HTML specs generally seemed to admit
+that this was a very messy situation in HTML. In
+Netscape, they had a HECK of a time with this. 
+Bookmarking was impossible, and back/forward had to be
+given an ugly hack to handle frames, originally.
+
+In this course of thought, yet another thought has
+occured to me: With so many different
+languages/protocols (http, ftp, html, xml, xslt, css,
+JavaScript, etc.), why not make Dillo more generic and
+modular by breaking the HTML support out into a
+plugin?
+
+Speaking of which, BTW, whatever became of the FTP plugin?
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+[Dillo-dev]Wild idea : frames
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-24 01:23
+
+The list is so sleepy, let me share with you an idea I had for
+framesets rendering : (not inline frame, not tables)
+Don't render frames embeding DwPages in DwPages, but create an actual
+browser page for each frame of the frameset, with the correct width and
+height. The user can then place the frames as he wants without being
+bugged with having to read a page in a tiny window.
+To make that working, we'll have to add in DwPage a target attribute :
+I already did that in my href page. We'll also need to add an
+identifier for the frameset (say a hash of the url ?), in case the same
+target names are used in different framesets. That doesn't seem pose any
+problem.
+We can also render the frameset window showing a scalled-down version
+of the frame map : gtk containers with buttons named after the frames
+titles should fo the trick. A window-manager "pager" sort of thing.
+
+Any comment ?
+
+If you like the idea, I'll probably give it a try when next Dillo
+version comes out.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 24-Oct-2000 a 10:12:56
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]BSD ports
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-18 17:46
+
+Jorge Arellano Cid wrote:
+
+> Sammy,
+>
+>
+> On the DNS scheme concerns. That's the expected behaviour: one
+> solving thread per request (Tested with more than a hundred
+> simoultaneous requests crowding 4 server channels).
+>
+> It seems the problem is highly related to BSD's threads
+> implementation; but please note that FreeBSD 3.5 does the trick.
+
+it's the expected behaviour of gethostbyname() actually (that it garbles
+
+up it's internal data when called simultaneously in threads). i think
+the thing here is that glibc might automatically use a multithread
+capable
+gethostbyname (which isn't one of the *_r functions specified by posix).
+
+i did a little research today and found out that most unices have a
+gethostbyname_r function, but apparently BSD hasn't (because the
+function isn't standardized yet).
+
+dillo runs fine when i put the max number of server channels to 1, so
+i'll use that for now :)
+
+
+>
+> Hope this helps
+> Jorge.-
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]BSD ports
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-10-18 12:30
+
+Sammy,
+
+Kurt Lidl reported no problems using dillo with his BSD/OS
+4.0.1 i386system <lidl@en...>.
+
+Ryan Oberlin <ryan@sc...> got it running on
+FreeBSD (with some changes that I haven't got).
+
+tjs17@co... reported no problems with a a 32bit machine,
+gcc 2.7.2.3 and FreeBSD 3.5 (with -pthread instead of -lpthread).
+
+Jeremy C. Reed <reed@re...> has reported some
+problems trying to run dillo on NetBSD (I'm sure he'll appreciate
+any helping information).
+
+Feel free to contact and ask them (please tell them I gave you
+the addresses).
+
+---
+
+On the DNS scheme concerns. That's the expected behaviour: one
+solving thread per request (Tested with more than a hundred
+simoultaneous requests crowding 4 server channels).
+
+It seems the problem is highly related to BSD's threads
+implementation; but please note that FreeBSD 3.5 does the trick.
+
+
+Hope this helps
+Jorge.- 
+
+
+
+Re: [Dillo-dev]bug with dns or .. ?
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-17 21:20
+
+Allan Clark wrote:
+
+> Just tried it and it worked fine for me.
+>
+>
+
+i have found what the problem is. apparently we are doing something
+quite dangerous here :)
+
+in Dns_server we call gethostbyname()
+
+from manpage gethostbyname
+These functions use static data storage; if the data is needed for future
+
+use, it should be copied before any subsequent calls overwrite it.
+
+but what we do is: we run Dns_Servers (several of them) in threads.
+so it is quite possible that one query starts while another one is busy and
+it will garble up gethostbyname's internal data (which is what's happening)
+
+when i disable threading for dns i have no problems.
+
+the debug output i get is for example :
+
+a_Cache_open_url:
+http://images.freshmeat.net/FreshMeat/Core/pc.gif?/index.php3,971817463
+a_Cache_open_url: http://phoenix-adrunner.mycomputer.com/b/ar/freshmeat1/1
+Dns_server: starting...
+channel: 0
+Dns_server: starting...
+channel: 1
+a_Cache_open_url: http://ads.freshmeat.net/egra5006en.gif?971817463
+
+etc ... etc ..
+
+from this point no single gethostbyname function will return !! note that we
+had two
+requests very fast after eachother. 
+
+
+
+RE: [Dillo-dev]bug with dns or .. ?
+
+From: Allan Clark <shark@bl...> - 2000-10-17 20:34
+
+Just tried it and it worked fine for me.
+
+> -----Original Message-----
+> From: dillo-dev-admin@li...
+> [mailto:dillo-dev-admin@li...]On Behalf Of Sammy
+> Mannaert
+> Sent: 17 October 2000 21:14
+> To: Dillo-dev@li...
+> Subject: [Dillo-dev]bug with dns or .. ?
+> 
+> 
+> hi,
+> 
+> as i don't know if this is a bug or not, i want to ask some of you who
+> run dillo on linux:
+> 
+> - go to http://www.freshmeat.net (or freshmeat.net)
+> - try to click any of the links above (linux.com, slashdot, etc ..)
+> - you will only see DNS resolving <domain here> and that's it ..
+> 
+> as i am running dillo on freebsd, i'm aware this might be a freebsd
+> specific
+> thingie, so i'd like to see if it's also happening on a linux platform.
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]bug with dns or .. ?
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-17 20:25
+
+hi,
+
+as i don't know if this is a bug or not, i want to ask some of you who
+run dillo on linux:
+
+- go to http://www.freshmeat.net (or freshmeat.net)
+- try to click any of the links above (linux.com, slashdot, etc ..)
+- you will only see DNS resolving <domain here> and that's it ..
+
+as i am running dillo on freebsd, i'm aware this might be a freebsd
+specific
+thingie, so i'd like to see if it's also happening on a linux platform. 
+
+
+
+[Dillo-dev]Find text (quite long sorry)
+
+From: Allan Clark <shark@bl...> - 2000-10-17 16:10
+
+Hi,
+First of all I am having trouble with my network, I seem to be able to send
+and recieve mail and that is about it, anyway that is why this is not a patch
+but I have just included the text, there isn't much anyway and is all in one
+function but sorry about that. The code below cleans up the findtext implemented
+by Sam, it uses a pretty fast algorithm which will also work if we ever choose
+to use unicode characters. You should be able to follow the algorithm fairly
+easily but essentially it pre-computes a prefix function for the find string
+this it does in linear time according to the length of the find string and only
+depends on the search string and not the page's text, it then searches through
+the text of the page which can also be done in linear time, and so it is pretty
+fast. This will find text that is span over one or more lines, but there is one
+slight known problem, this concerns moving the scroller to the correct
+position, currently if the occurence of the find string is in one line then the
+correct thing happens, if it spans two lines then again the correct thing
+happens and the scroller is positioned as if it were only contained in the top
+of the two lines, but if it spans more than two lines the scroller is placed as
+if the occurence started at the second last line the the occurence spans. Other
+points to note is that I have included code to enable the user to either match
+the case or not, I haven't updated the rest of the code as I realised because
+of my strange network problem I wouldn't be able to patch so I wanted to keep
+my changes limited to one function. Also the foundAt variable gives us a little
+more information than it needs but I
+left it the way it is as it will make it easier to highlight the text when we
+add support for that. Okay so if you're still with me, apply Sam's patch 
+http://www.shark.pwp.blueyonder.co.uk/patches/findtext.diff.gz
+then Sebastian's patch
+http://www.shark.pwp.blueyonder.co.uk/patches/findtext2.diff
+and then open up dw_page.c, scroll to the bottom where you will find the
+a_Dw_page_find_text(DwPage *page, char *find) function and replace it with the
+one below
+
+/*
+* Find the text in the page.
+*/
+void a_Dw_page_find_text(DwPage *page, char *find)
+{
+
+GString *stext;
+GtkDwScroller *scroller;
+DwContainer *container;
+gint m;
+gint *prefix;
+gboolean matchCase;
+gint k = 0;
+gint q = 1;
+gint line_num = 0;
+gint foundAt = -1;
+gint ii = 0;
+gint t = 0;
+gint s = 0;
+gint fromPrevious = 0;
+
+
+matchCase = FALSE; /* Not yet implemented */
+
+if ( !(container = a_Dw_find_container(&page->dw)) ){
+g_print("BUG: Dw container not found\n");
+return;
+}
+
+m = strlen(find);
+if (!m)
+return;
+
+prefix = (gint*) g_malloc (m * sizeof(gint));
+stext = g_string_sized_new(64);
+
+/* First compute a static prefix function
+* this can be done in linear time and
+* based solely on the search string
+*/
+
+prefix[0] = 0; /*Must be this reguardless of the string */
+
+if (!matchCase)
+g_strdown (find);
+
+for (q = 1; q < m; q++)
+{
+while (k > 0 && find[k] != find[q])
+k = prefix[k - 1];
+if (find[k] == find[q])
+k++;
+prefix[q] = k;
+}
+
+/*Go in loop searching each line until we find
+the search string */
+for (line_num = 0; line_num < page->num_lines; line_num++)
+{
+/* this allows us to find strings that span over two or more lines */
+if (stext->len > m)
+stext = g_string_erase(stext, 0, stext->len - m);
+fromPrevious = stext->len; /*might not be as long as m */
+/* Now we get the next block of text */
+for(s = 0; s < page->lines[line_num].num_words; s++)
+{
+if (page->lines[line_num].words[s].content_type != DW_PAGE_CONTENT_TEXT)
+continue;
+stext = g_string_append(stext, page->lines[line_num].words[s].content.text);
+stext = g_string_append(stext, " ");
+}
+if (stext->len < m)
+continue;
+
+/* Now we search the stext for the search string */
+if(!matchCase)
+stext = g_string_down(stext);
+foundAt = -1;
+ii = 0;
+t = 0;
+while (stext->str[ii])
+{
+while (t > 0 && (find[t] != stext->str[ii]))
+t = prefix[t - 1];
+if (find[t] == stext->str[ii])
+t++;
+ii++;
+if (t == m) {
+foundAt = ii - m;
+break;
+}
+}
+/* Now if we have found it then highlight the line */
+if (foundAt != -1) {
+scroller = GTK_DW_SCROLLER (container->widget->parent);
+if (foundAt < fromPrevious && line_num > 0) /*line_num <= 0 shouldn't ever happen if foundAt < fromPrevious*/
+a_Dw_gtk_scroller_jump_pos (scroller,
+page->lines[line_num - 1].y_top);
+else
+a_Dw_gtk_scroller_jump_pos (scroller,
+page->lines[line_num].y_top);
+break;
+}
+}
+
+g_string_free(stext, TRUE);
+g_free (prefix);
+} 
+
+
+
+Re: [Dillo-dev]Patches
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-17 12:23
+
+Eric GAUDET wrote:
+> I've already included in most of the pages I made if dillo v0.2.4's behavior is
+> correct or not, and sometime what it should be. I planned to update this when
+> next version (not cvs) will be available.
+> It's an HTML-rendering testsuite only. I won't build any testsuite for cache
+> behavior, http requests and other things a browser is supposed to do.
+> I understood there's a bedtest for Sebastian's new Dw : I can include that.
+
+It's simply a main-function of 20 lines, which creates some widgets
+and then calls gtk_main. It helps me testing all functions and finding
+bugs. (Furthermore, most widgets aren't ported yet, although they are
+mostly simple ones, like DwBullet.) This could perhaps done also for
+other modules, i.e. separating the module's code and calling all of
+its functions "by hand".
+
+Another way could be to use the existing possibilities of a server.
+E.g., I already used php pages with included "<? sleep(10) ?>" to
+simulate slow connections (this could also be done by a simple cgi
+script), or you may create specific http headers etc.
+
+> It's the very first version : no one has reacted on it yet. I expect to receive
+> your own pages, comments and (grammar :-/) corrections so it can be improved.
+> (actually I was waiting for Jorge's green light and corrections before
+> publishing it, but you guys may want to know what's happening ;-)
+
+I have written some test pages. I'll download your suite and look what
+I might send you.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Patches
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-17 01:41
+
+Jorge Arellano Cid writes:
+> 
+> Hi!
+> 
+> The minimal consideration I expect from newcomers, is to read
+> the home page before posting to this mailing list. If they don't
+> or even worse, they do but decide to force their ways into this
+> project, we have a bad start...
+> 
+> Rules are there for a reason, and I want to thank Eric for
+> pointing them out to the mailing list.
+> 
+
+Ok, sorry. I didn't mean to break all your "rules" and cause any
+confusion. I was just trying to contribute, and not "forcing" my way
+into the project. I did read the home page, and read a bunch of
+previous mails from the archive list, but it wasn't clear to me that
+we weren't suppossed to post patches and stuff in the mailing
+list. Now it's very clear, sorry.
+
+(...) 
+
+> > Sorry if I seemed annoyed, but I not. It just not nice to have
+> > people effort thrown away in vain, when they could be producing lots
+> > if things were a little bit more organized.
+> 
+> Please don't blame on us the results of you not following our
+> rules. You could have known that in advance. As a matter of fact,
+> you knew I was working some of the bugs you tried to fix.
+
+Wow, I wasn't blaming anyone of anything, I was just stating my
+opinion about how the project was organized. But since am a newcomer,
+and don't nothing about it, you can just ignore my remarks ;-).
+
+> 
+> If you read the mailing list archives, you'll find an
+> "Activity" post (by me); there you'll find a list of things that
+> your patch doesn't solve, and maybe then it will become clear why
+> patches are reviewed before inclusion.
+
+I agree with this, all patches should be reviewed. I was just
+exposing an idea I had about the problem (not a total fix). I sent the
+patch to show to everyone the idea I had, and wanted some feed back
+about the *idea*, I know that the patch didn't solve all the problems,
+and I don't expect it to be included in Dillo's next version.
+
+
+I'm REALLY sorry that I caused all this commotion, I did not mean to
+have a "bad start". Jorge, what should I do to "redeem" my situation?
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]how i compiled under freebsd (4.1)
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-17 00:10
+
+Sammy Mannaert wrote:
+
+> i'm not a freebsd expert by far, but i think this explenation offers
+> more detail than
+> the readme in the tarball .. (for example it doesn't add the problem of
+> -D_THREAD_SAFE,
+> if you forget it, dillo will only load the first url you go to, the
+> other ones will only
+> display "resolving DNS" or something alike in the statusbar)
+>
+
+it seems as if this isn't really fixed yet (though i used correct
+compiling options ..) sometimes (quite a lot really) i get DNS
+solving <host> and nothing else ... weird ...
+
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]how i compiled under freebsd (4.1)
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-16 23:38
+
+hi,
+
+i've succesfully compiled and tested dillo on freebsd (the platform i
+run now)
+in order to be able to compile, i had to do quite a few things which i
+will explain
+here.
+
+i'm not sure if i took the "correct" freebsd way of doing things
+however ..
+
+first step: freebsd uses -pthread and -D_THREAD_SAFE instead of
+-lpthread
+and -D_REENTRANT :
+type
+export CFLAGS="-pthread -D_THREAD_SAFE"
+or setenv CFLAGS "-pthread -D_THREAD_SAFE"
+(depending on shell)
+
+second step: freebsd uses gtk12-config instead of gtk-config :
+do
+ln /usr/X11R6/bin/gtk12-config /usr/X11R6/bin/gtk-config
+(as root ofcourse)
+
+third step:
+do
+./configure --with-gtk-prefix=/usr/X11R6
+--with-gtk-exec-prefix=/usr/X11R6
+
+
+now here is when a problem emerges. it seems our configure script
+doesn't really
+support the option to set the jpeg include lib directories ? (for the
+record: freebsd
+has jpeglib.h etc .. in /usr/local/include) .. anyways, i couldn't get
+it to work :)
+what i did:
+in configure.in i outcommented following part:
+if test "$jpeg_ok" = yes; then
+AC_CHECK_HEADERS(jpeglib.h jconfig.h jerror.h jmorecfg.h,
+jpeg_ok=yes, jpeg_ok=no)
+fi
+
+it then worked as suspected. (do we really need this part ? can't we
+assume that
+the jpeglib is correctly installed after we did the first test in
+configure ?
+checking for jpeg_destroy_decompress in -ljpeg (<- this one))
+
+
+i'm not a freebsd expert by far, but i think this explenation offers
+more detail than
+the readme in the tarball .. (for example it doesn't add the problem of
+-D_THREAD_SAFE,
+if you forget it, dillo will only load the first url you go to, the
+other ones will only
+display "resolving DNS" or something alike in the statusbar) 
+
+
+
+[Dillo-dev]help needed: sigsuspend with new glibc
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 16:49
+
+Hi all,
+I've updated my glibc to 2.1.3-5mdk a few days ago, and now I'm catching a lot
+of sigsuspend in gdb (I hadn't a single one before) : on sigsuspend every
+pthread_create (one for each image on a page). That's really bugging me.
+What can I do to avoid this ?
+
+Does this have anything to do with that message :
+(gdb) run
+Starting program: /home/eric/src/dillo-0.2.4.orig/src/./dillo 
+warning: Unable to find dynamic linker breakpoint function.
+GDB will be unable to debug shared library initializers
+and track explicitly loaded dynamic code.
+dillo_dns_init: Here we go!
+
+Can anyone help me on this ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 17-Oct-2000 a 01:43:21
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Patches
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 16:34
+
+-- En reponse de "RE: [Dillo-dev]Patches" de Daniel Roberts, le 16-Oct-2000 :
+>> It's an HTML-rendering testsuite only. I won't build
+...
+> [extra deleted for brevity...]
+> 
+> I just took a look at it. At the moment, it does look
+> to me like a reasonable subset of HTML tests, given
+> Dillo's current status/capabilities. When
+> tables/frames support is complete, I am guessing that
+> tables/frames tests will be the next thing to be
+> added. :-)
+> 
+
+Sure, but Jorge already urged me *not* to bother with table testing pages, as
+the first line of code for it is not even written.
+But that's the next big step all right.
+
+> BTW, Mozilla has a *HUGE* test suite, with tests
+> scattered all over the place. I suggest we might want
+> to consider using some of these tests. I'd be willing
+> to bring them over here and adapt them for Dillo's
+> use, if you'd like to add them to your testsuite. 
+
+That would be nice. Just focus on dillo's current/likely next capabilities for
+now.
+
+> When the time comes, Mozilla also has XML, CSS, and
+> JavaScript tests as well. They are good and complete,
+> what's more.
+> 
+
+Forget it, we won't need them soon.
+
+> I think however that we *DO* also need things like
+> http requests, cache behavior, and other things a
+> browser should do. 
+
+That's not easy to publish this as a test suite : who here has an http server
+running on his machine ? Who wants to patch, say boa, for faking altered http
+responses to see how dillo's handling the problem, and maintain such a
+malformed monster ? How helping would it be : everyone having the same
+behaviour in a tight controlled environment and make sure dillo's working ok ?
+
+What can be done, though, is one (or some) of us publish some results. 
+But the most likely guy doing that is the feature-coder himself, with his own
+tests. And I'm sure he won't submit a non-fully tested patch.
+
+I'm not sure there's a point doing a test suite for this now. When dillo reach
+v1.0 and everyone will be willing to add nigty feature, then we'll want to make
+sure we won't break anything.
+
+For now, I mainly want to test what I'm adding, relying on others to do the
+same for what they're doing.
+
+> For example, how about the
+> bookmark bug that someone pointed out was fixed THREE
+> times? A regression test on this should have helped
+> point this out earlier. :-) 
+
+The bookmark thing was always alpha code. It's a quick hack nobody wants to fix
+because :
+1) there's a lot to do elsewhere
+2) there's a bookmark as pluggin planned since day one, better, easier to fix,
+external to dillo, hopefully making obsolete the current fishy code.
+
+> However, since I actually 
+> probably know HTML and CSS better than I do XML or C,
+> I will probably be able to do these most readily.
+> 
+[2nd post]
+> I would definitely be willing to perform the tests,
+> given the links Eric just posted.
+
+If you want to maintain the Html testsuite thing, help yourself. You can take
+what I made and mix it with whatever you think is relevant. Or we can both
+update it.
+
+> Also, with Gzilla/Armadillo, I used to post Insure++
+> memory leak reports sometimes. I can do the same for
+> Dillo if it helps.
+
+That would be great !
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 17-Oct-2000 a 01:11:01
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Patches
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-16 15:20
+
+--- Jorge Arellano Cid <jcid@ne...> wrote:
+
+> I've read Daniel's posts on the subject and if
+> he's willing to perform the tests (or any one
+> else), please contact Eric and start working from
+his
+> test-suite.
+
+I would definitely be willing to perform the tests,
+given the links Eric just posted.
+
+Also, with Gzilla/Armadillo, I used to post Insure++
+memory leak reports sometimes. I can do the same for
+Dillo if it helps.
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+RE: [Dillo-dev]Patches
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-16 15:17
+
+--- Eric GAUDET <egaudet@in...> wrote:
+
+> It's an HTML-rendering testsuite only. I won't build
+> any testsuite for cache behavior, http requests and
+> other things a browser is supposed to do. 
+> I understood there's a bedtest for Sebastian's new
+> Dw : I can include that.
+> It's the very first version : no one has reacted on
+> it yet. I expect to receive your own pages, comments
+> and (grammar :-/)
+> corrections so it can be improved.
+[extra deleted for brevity...]
+
+I just took a look at it. At the moment, it does look
+to me like a reasonable subset of HTML tests, given
+Dillo's current status/capabilities. When
+tables/frames support is complete, I am guessing that
+tables/frames tests will be the next thing to be
+added. :-)
+
+BTW, Mozilla has a *HUGE* test suite, with tests
+scattered all over the place. I suggest we might want
+to consider using some of these tests. I'd be willing
+to bring them over here and adapt them for Dillo's
+use, if you'd like to add them to your testsuite. 
+When the time comes, Mozilla also has XML, CSS, and
+JavaScript tests as well. They are good and complete,
+what's more.
+
+I think however that we *DO* also need things like
+http requests, cache behavior, and other things a
+browser should do. For example, how about the
+bookmark bug that someone pointed out was fixed THREE
+times? A regression test on this should have helped
+point this out earlier. :-) However, since I actually
+probably know HTML and CSS better than I do XML or C,
+I will probably be able to do these most readily.
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+RE: [Dillo-dev]Patches
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 12:34
+
+-- En reponse de "[Dillo-dev]Patches" de Jorge Arellano Cid, le 16-Oct-2000 :
+> Regression tests:
+> -----------------
+> 
+> Some time ago Eric commited to compiling a test-suite for dillo
+> (we discussed several topics and its ready). I've had no time to
+> test it, nor to include it in official plans (due to lack of
+> time, --I sincerely apologize Eric).
+> 
+
+No problem : I much prefer you working on dillo's next version ;-)
+
+> I've read Daniel's posts on the subject and if he's willing to
+> perform the tests (or any one else), please contact Eric and
+> start working from his test-suite.
+> 
+
+I've already included in most of the pages I made if dillo v0.2.4's behavior is
+correct or not, and sometime what it should be. I planned to update this when
+next version (not cvs) will be available. 
+It's an HTML-rendering testsuite only. I won't build any testsuite for cache
+behavior, http requests and other things a browser is supposed to do. 
+I understood there's a bedtest for Sebastian's new Dw : I can include that.
+It's the very first version : no one has reacted on it yet. I expect to receive
+your own pages, comments and (grammar :-/) corrections so it can be improved.
+(actually I was waiting for Jorge's green light and corrections before
+publishing it, but you guys may want to know what's happening ;-)
+
+Here's a link where anyone can visite :
+http://www.rti-zone.org/dillo/Html.testsuite/
+
+Here's where you can download the whole suite :
+http://www.rti-zone.org/dillo/Html.testsuite.tar.gz
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Oct-2000 a 21:19:43
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Patches
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-10-16 11:49
+
+Hi!
+
+The minimal consideration I expect from newcomers, is to read
+the home page before posting to this mailing list. If they don't
+or even worse, they do but decide to force their ways into this
+project, we have a bad start...
+
+Rules are there for a reason, and I want to thank Eric for
+pointing them out to the mailing list.
+
+
+> It would be really nice if we had an updated CVS version to patch
+> to, or if someone (one of the olders guys with the project) released a
+> 0.2.5 or 0.2.4-1 or something like that, with all the "pending"
+> patches included, cause frankly it seems too confusing and I have no
+> idea where to start programming so my works are all wasted/outdated.
+
+The CVS version is the most current (official).
+Developers can patch 0.2.4 (or CVS).
+
+> Sorry if I seemed annoyed, but I not. It just not nice to have
+> people effort thrown away in vain, when they could be producing lots
+> if things were a little bit more organized.
+
+Please don't blame on us the results of you not following our
+rules. You could have known that in advance. As a matter of fact,
+you knew I was working some of the bugs you tried to fix.
+
+If you read the mailing list archives, you'll find an
+"Activity" post (by me); there you'll find a list of things that
+your patch doesn't solve, and maybe then it will become clear why
+patches are reviewed before inclusion.
+
+Finally, I'll keep my schedule exactly as described in the
+"Activity" post.
+
+---
+
+Bug track engine:
+----------------
+
+I see one source of confussion (and a solution) here.
+
+I'll use the word "done" to signal a CVS commited patch.
+Developers, please only use comments or a percentage.
+
+Example:
+
+MrX@so... 70% <- The guy is making some progress
+
+MrX@so... 100% <- The guy is finished his work and the
+patch is expecting a review.
+
+MrX@so... 100% done <- The patch was reviewed (fixed) and
+commited to the CVS.
+
+
+----
+
+Regression tests:
+-----------------
+
+Some time ago Eric commited to compiling a test-suite for dillo
+(we discussed several topics and its ready). I've had no time to
+test it, nor to include it in official plans (due to lack of
+time, --I sincerely apologize Eric).
+
+I've read Daniel's posts on the subject and if he's willing to
+perform the tests (or any one else), please contact Eric and
+start working from his test-suite.
+
+
+----
+
+News:
+-----
+
+I want to thank Allan for his excellent work with dillo weekly
+News.
+
+
+
+Sincerely
+Jorge.- 
+
+
+
+Re: [Dillo-dev]About bugs #74 and #69 (better program and watch
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 11:12
+
+-- En reponse de "Re: [Dillo-dev]About bugs #74 and #69 (better program and
+watch" de Livio Baldini Soares, le 16-Oct-2000 :
+>> Looks nice. I can't really test it, because my cable modem loads pages too
+>> fast
+>> and I can barely see the watch ;-) I wanted to see if one can scroll in a
+>> partially loaded page, but I can tell really.
+>> However, it seems not to wait until all images on a page are loaded, is it
+>> the expected behavior ?
+> 
+> Err, it's suppossed to do that. The watch serves so one can control
+> when the lock was ON or OFF, not when/while all the page was
+> loading. I did that cause sometimes the lock would go ON and wouldn't
+> go off like it should (like when a page is not found or some other
+> error, which currently the lock system isn't implemented to work
+> on). So if the cursor continued to be the watch for no reason, just
+> hit the STOP button, and everything should go back to normal.
+> 
+
+I'm asking because it seems to segfault too when clicking a link (or the
+button "back") on a page where all images are not loaded yet. Wasn't it
+supposed to protect from that too ?
+
+>> I experienced some segfaults too. I can't reproduce them each time, but it
+>> seems to occur when closing a window where a page (an image ?) is still
+>> loading.
+>> 
+> 
+> Yeah, I get that too, but as Sebastian said, closing windows are not
+> that simple... there's a need for a little bit of cleaning up, or else
+> pending requests don't have a place to go, then they get sad and crash
+> Dillo ;-)
+> 
+
+Ok, makes sens. So, is the windows closing code going to be your next patch ?
+;-))
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Oct-2000 a 20:07:27
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]About bugs #74 and #69 (better program and watch
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-16 09:28
+
+Eric GAUDET writes:
+> -- En reponse de "Re: [Dillo-dev]About bugs #74 and #69 (better program and
+> watch " de Livio Baldini Soares, le 16-Oct-2000 :
+
+> ...
+> Looks nice. I can't really test it, because my cable modem loads pages too fast
+> and I can barely see the watch ;-) I wanted to see if one can scroll in a
+> partially loaded page, but I can tell really.
+> However, it seems not to wait until all images on a page are loaded, is it the
+> expected behavior ?
+
+Err, it's suppossed to do that. The watch serves so one can control
+when the lock was ON or OFF, not when/while all the page was
+loading. I did that cause sometimes the lock would go ON and wouldn't
+go off like it should (like when a page is not found or some other
+error, which currently the lock system isn't implemented to work
+on). So if the cursor continued to be the watch for no reason, just
+hit the STOP button, and everything should go back to normal.
+
+> I experienced some segfaults too. I can't reproduce them each time, but it
+> seems to occur when closing a window where a page (an image ?) is still loading.
+> 
+
+Yeah, I get that too, but as Sebastian said, closing windows are not
+that simple... there's a need for a little bit of cleaning up, or else
+pending requests don't have a place to go, then they get sad and crash
+Dillo ;-)
+
+> 
+> please don't include the whole old messages.
+
+Oops, :-o forgot to cut it, sorry.
+
+bye,
+
+-- 
+Livio 
+
+
+
+Re: [Dillo-dev]About bugs #74 and #69 (better program and watch 
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 09:11
+
+-- En reponse de "Re: [Dillo-dev]About bugs #74 and #69 (better program and
+watch " de Livio Baldini Soares, le 16-Oct-2000 :
+> Hi yall,
+> 
+> I've been working on my patch, to better it. First thing I wanted to
+> make the cursor change into a watch or something while the lock (which
+> I mention below) was on. To do is I started messing more with the code
+> and realized that the lock system which I created was starting to turn
+> into a headache. So what I did was, I encapsulated the system into
+> basically two calls (which I included into nav.c):
+> 
+...
+Looks nice. I can't really test it, because my cable modem loads pages too fast
+and I can barely see the watch ;-) I wanted to see if one can scroll in a
+partially loaded page, but I can tell really.
+However, it seems not to wait until all images on a page are loaded, is it the
+expected behavior ?
+I experienced some segfaults too. I can't reproduce them each time, but it
+seems to occur when closing a window where a page (an image ?) is still loading.
+
+> 
+> Attached is the gzipped patch, which should deprecate the previous I
+> sent. I don't know if this will help in the future, maybe Jorge will
+> sanitate all our problems with his new misterious Dw ;-). But until
+> then, I think this is a nice working patch. What do guys think?
+> 
+
+anyway that's a nice patch : I can't speak for Jorge, and I'm not so much in
+page-loading/caching stuff, but the concept seems good.
+
+> bye,
+> 
+> Livio.
+> 
+> Livio Baldini Soares writes:
+>> Hi (again),
+>> 
+...
+
+please don't include the whole old messages.
+
+bye
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Oct-2000 a 18:00:54
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]File baseurl resolving behaviour
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-16 05:15
+
+Hi guys,
+
+again browsing in Dillo I tried to do the following; I wanted to
+check the contents of my /tmp directory, so I typed in:
+/tmp/
+
+on the "New Url", instead of file:/tmp/. Dillo assumed that it was a
+http request and tried to resolve http://tmp/.
+
+Im my opinion, this shouldn't happen. I think that if a user enters
+an URL starting with a '/' then he wants a file not a http. What do
+you guys think?
+
+Anyway, I've already made the patch (its really small), and am
+sending along with the message.
+
+bye,
+
+-- 
+Livio
+
+--- dillo.orig/src/interface.c Sat Sep 9 21:08:36 2000
++++ dillo.my/src/interface.c Mon Oct 16 03:06:12 2000
+@@ -654,7 +656,7 @@ Interface_openfile_ok_callback(GtkWidget
+*/
+void a_Interface_entry_open_url(GtkWidget *widget, BrowserWindow *bw)
+{
+- gchar *url;
++ gchar *url, *BaseUrl;
+GtkEntry *entry;
+
+/* Find which entry to get the URL from. This is a bit of a hack. */
+@@ -666,7 +668,13 @@ void a_Interface_entry_open_url(GtkWidge
+#ifdef VERBOSE
+g_print(ëntry_open_url %s\n", gtk_entry_get_text(entry));
+#endif
+- url = a_Url_resolve_relative("http:/", gtk_entry_get_text(entry));
++ if ( (gtk_entry_get_text(entry))[0] == '/') /* if the first char is a slash, */
++ BaseUrl = "file:"; /* the user wants a file. */
++ else
++ BaseUrl = "http:/";
++
++ url = a_Url_resolve_relative(BaseUrl, gtk_entry_get_text(entry));
++
+if ( url ) {
+a_Nav_push(bw, url);
+g_free(url); 
+
+
+
+Re: [Dillo-dev]About bugs #74 and #69 (better program and watch cursor feature)
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-16 03:02
+
+Attachments: seg_fault2.diff.gz      
+
+Hi yall,
+
+I've been working on my patch, to better it. First thing I wanted to
+make the cursor change into a watch or something while the lock (which
+I mention below) was on. To do is I started messing more with the code
+and realized that the lock system which I created was starting to turn
+into a headache. So what I did was, I encapsulated the system into
+basically two calls (which I included into nav.c):
+
+a_Nav_lock_acquire
+a_Nav_locl_release
+
+And except for some early BrowserWindow initilization, these are
+what you should call, and never access bw->nav_lock directly (like a
+private in C++). This way the code looks much better, and easier to
+understand and expand.
+
+With this done I was able to successfully implement the little
+"loading watch" which I wanted (it was getting on my nerves not
+knowing what Dillo was doing, if it was loading the page or not,
+etc. with this watch cursor a now the lock is acquire threfore
+*should* be indicating that it's loading a root-Url).
+
+Attached is the gzipped patch, which should deprecate the previous I
+sent. I don't know if this will help in the future, maybe Jorge will
+sanitate all our problems with his new misterious Dw ;-). But until
+then, I think this is a nice working patch. What do guys think?
+
+bye,
+
+Livio.
+
+Livio Baldini Soares writes:
+> Hi (again),
+> 
+> I know that Jorge is working on these bugs, but I *think* I've found
+> a good solution to the problems (actually I'm not really sure...). It
+> seems to me that the problem comes from a type of "concurrency"
+> problem within the IO and html/cache modules. The http requests in
+> Dillo, from what I understand, are all asynchronous, but I've seen no
+> concurrency controls in the modules. I think this lack of control is
+> generating the problem.
+> 
+> For example, if I press the "Achieved Goals" link in Dillo's home
+> page, don't wait for it to load and press the "Changelog" link (or any
+> other, even the "Acheived Goals" repeatelly), Dillo will request ALL
+> the "clicked" links pages. Up to this part everything should be ok
+> (actually no, but I'll get to that later), the problem comes in when
+> the requests arrive. Many requests start coming in and Dillo gets
+> "confused" and can't handle them all.
+> 
+> What I've done is prevented various (root) Url requests at the same
+> time. This is what Netscape does, when you click a link on a page, the
+> cursos turns into a watch and all the other links become
+> "un-clickable" until the new page gets loaded. I think this is a
+> "correct" behaviour and not a restriction to the user.
+> 
+> I did this in Dillo by placing a type of LOCK in the BrowserWindow
+> (browser.h) structure. Its a gboolean `nav_lock`. When someone tries
+> to load a root-url, by using the `a_Nav_push` I set the nav_lock to
+> TRUE. By doing this I disabled any type of user navigation. The only
+> two places where `nav_lock` comes FALSE again is by pressing STOP (in
+> the `a_Commands_stop_callback) and in the `a_Nav_expect_done`
+> function, because here we can assume that the root url has changed
+> (bw->nav_stack[nav_stack_ptr]) and therefore we can allow the user to
+> navigate savely again.
+> 
+> When I got this working I would still (very seldomly) get
+> seg. faults. Studying the problem I found out that if, for example,
+> you click on a link, then wait until it get "unlocked" (when the
+> `a_expect_done` is called), then press BACK before the entire page
+> loaded (pics and all), a few pending requests for that page are still
+> coming in. With that in mind, I tought of two choices:
+> 
+> 1) Everytime the user requested for an URL, Dillo should cancel all
+> the pending requests for old URLs, so that the requests wouldn't
+> arrive later "unexpectedly".
+> 
+> 2) Don't cancel the requests since Dillo has already made then; I
+> think it would be a wast of data. Instead just ignore the few pending
+> requests.
+> 
+> I chose option 2. I did this similar to what Sam Dennis did a while
+> ago (when he send the patch). From what I can see applying these two
+> ideas (the lock and Sam's patch) we have a pretty much clean fix to
+> the problem. Of course I could be wrong and missing the "root" of the
+> problem. Does anybody see any flaws in what I've described above?
+> 
+> This lock system, if it's conceptually correct, should fix this
+> bug. But what I've implemented is NOT the complete lock system, it's
+> just a preview on how I tought to fix this problem. If you guys like
+> the idea, I'll have to finish up the exception handling (so if there's
+> an error while downloading a page, navigation doesn't become forever
+> disabled, erroneously locked).
+> 
+> I'm sending the patch that should implement this fix, included is
+> Sam's patch (html_loading.diff) and the cache patch (cache_patch), so
+> there's no need to apply those patches, only this one. This patch
+> should be applyed against the CVS version.
+> 
+> hope this helps, bye,
+> 
+> -- 
+> Livio 
+
+
+
+RE: [Dillo-dev]Where's bug #80 fix?
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 01:59
+
+-- En reponse de "RE: [Dillo-dev]Where's bug #80 fix?" de Eric GAUDET, le
+16-Oct-2000 :
+> If you want to test all my patches, here's an (temporary, don't rely on it)
+> address where you can download all of them with a txt file of explanations :
+> 
+
+Sorry, here's the address :
+http://www.rti-zone.org/dillo/
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Oct-2000 a 10:58:42
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Where's bug #80 fix?
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-16 01:28
+
+-- En reponse de "[Dillo-dev]Where's bug #80 fix?" de Livio Baldini Soares, le
+15-Oct-2000 :
+> Hello,
+> 
+> I saw in the Bug Engine that bug #80 (seg. fault, when right
+> clicking in a text/plain page) was taken cared of. If I recall
+> correctly it stated that Eric fixed it, but I can't seem to find
+> anything about it in the mail archive, nor any of Allan's patches
+> contain a solution for it. Anybody know how's the fix? Eric?
+> 
+> bye,
+> 
+
+I always send my patches t directly to Jorge, not to the mailing list, because
+that's what Jorge asked.
+If you want to test all my patches, here's an (temporary, don't rely on it)
+address where you can download all of them with a txt file of explanations :
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 16-Oct-2000 a 10:20:19
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Where's bug #80 fix?
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-15 20:17
+
+Hello,
+
+I saw in the Bug Engine that bug #80 (seg. fault, when right
+clicking in a text/plain page) was taken cared of. If I recall
+correctly it stated that Eric fixed it, but I can't seem to find
+anything about it in the mail archive, nor any of Allan's patches
+contain a solution for it. Anybody know how's the fix? Eric?
+
+bye,
+
+-- 
+Livio 
+
+
+
+Re: [Dillo-dev]Close Window command
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-15 20:07
+
+Sebastian Geerken writes:
+> Livio Baldini Soares wrote:
+(...)
+> 
+> There is a function a_Interface_new_browser_window, so there should
+> probably also be a function a_Interface_destroy_browser_window, which
+> will do a bit more that destroying the widget. Merely destroying the
+> widget could even cause crashes (AFAIK dillo), since the still active
+> IO stuff could try to add text into the nonexisting page widget.
+
+Oops, guess your right... sorry. So we don't "forget" to do this, I
+inserted this as a Bug in the Bug Engine, it's bug #87.
+
+bye,
+
+-- 
+Livio 
+
+
+
+Re: [Dillo-dev]Old CVS
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-15 19:56
+
+--- Sam Dennis <sdennis101@ge...> wrote:
+> Correct me if I'm wrong, but isn't an out of date
+> cvs version an oxymoron?
+> 
+> It seems like it's extremely difficult to avoid
+> repeating work currently
+> because patches have been made but the cvs version
+> hasn't changed.
+
+I agree. Question is, why are the patches not being
+committed to CVS? I would think the thing to do it
+have them checked in, after undergoing a code review. 
+Then we wouldn't have this problem. Besides, if a
+change is found later to cause problems, it can be
+backed out. Again, some kind of automated regression
+testing infrastructure would make this part easier, too.
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+[Dillo-dev]Old CVS
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-15 19:32
+
+Correct me if I'm wrong, but isn't an out of date cvs version an oxymoron?
+
+It seems like it's extremely difficult to avoid repeating work currently
+because patches have been made but the cvs version hasn't changed.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Dillo Weekly News
+
+From: Allan Clark <shark@bl...> - 2000-10-15 11:43
+
+This weeks Dillo Weekly News has been posted you can find it here
+http://www.shark.pwp.blueyonder.co.uk/news/news151000.html
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+Re: [Dillo-dev]Close Window command
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-15 10:29
+
+Livio Baldini Soares wrote:
+> 
+> Hi all,
+> 
+> messing with Dillo, I tried to do the `Close Window` function
+> (Crtl-W or Menu select `File -> Close Window`), well nothing
+> happenned. I looked at commands.c, and all I found was the empty stub:
+> 
+> void a_Commands_close_callback(GtkWidget *widget, gpointer client_data)
+> {
+> }
+> 
+> Below it I also saw the exit_callback and in it a commentary:
+> /* There should be a close command that does this: */
+> /* gtk_widget_destroy (bw->main_window); */
+> 
+> So, that's exactly what I did, now close_callback looks like:
+> 
+> void a_Commands_close_callback(GtkWidget *widget, gpointer client_data)
+> {
+> gtk_widget_destroy(((BrowserWindow *) client_data)->main_window);
+> }
+> 
+> What gives? Am I missing something? Why wasn't this already done? I
+> tried it out and it's working fine. Including when your in the last
+> window (only one left) and when you `close` it (not `exit`), dillo
+> exits normally.
+> 
+> I guess I've probably missed some previous discussion... Just in case,
+> I'm sending the "patch".
+
+There is a function a_Interface_new_browser_window, so there should
+probably also be a function a_Interface_destroy_browser_window, which
+will do a bit more that destroying the widget. Merely destroying the
+widget could even cause crashes (AFAIK dillo), since the still active
+IO stuff could try to add text into the nonexisting page widget.
+
+Sebastian 
+
+
+
+[Dillo-dev]About bugs #74 and #69
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-15 08:49
+
+Attachments: seg_fault.diff      
+
+Hi (again),
+
+I know that Jorge is working on these bugs, but I *think* I've found
+a good solution to the problems (actually I'm not really sure...). It
+seems to me that the problem comes from a type of "concurrency"
+problem within the IO and html/cache modules. The http requests in
+Dillo, from what I understand, are all asynchronous, but I've seen no
+concurrency controls in the modules. I think this lack of control is
+generating the problem.
+
+For example, if I press the "Achieved Goals" link in Dillo's home
+page, don't wait for it to load and press the "Changelog" link (or any
+other, even the "Acheived Goals" repeatelly), Dillo will request ALL
+the "clicked" links pages. Up to this part everything should be ok
+(actually no, but I'll get to that later), the problem comes in when
+the requests arrive. Many requests start coming in and Dillo gets
+"confused" and can't handle them all.
+
+What I've done is prevented various (root) Url requests at the same
+time. This is what Netscape does, when you click a link on a page, the
+cursos turns into a watch and all the other links become
+"un-clickable" until the new page gets loaded. I think this is a
+"correct" behaviour and not a restriction to the user.
+
+I did this in Dillo by placing a type of LOCK in the BrowserWindow
+(browser.h) structure. Its a gboolean `nav_lock`. When someone tries
+to load a root-url, by using the `a_Nav_push` I set the nav_lock to
+TRUE. By doing this I disabled any type of user navigation. The only
+two places where `nav_lock` comes FALSE again is by pressing STOP (in
+the `a_Commands_stop_callback) and in the `a_Nav_expect_done`
+function, because here we can assume that the root url has changed
+(bw->nav_stack[nav_stack_ptr]) and therefore we can allow the user to
+navigate savely again.
+
+When I got this working I would still (very seldomly) get
+seg. faults. Studying the problem I found out that if, for example,
+you click on a link, then wait until it get "unlocked" (when the
+`a_expect_done` is called), then press BACK before the entire page
+loaded (pics and all), a few pending requests for that page are still
+coming in. With that in mind, I tought of two choices:
+
+1) Everytime the user requested for an URL, Dillo should cancel all
+the pending requests for old URLs, so that the requests wouldn't
+arrive later "unexpectedly".
+
+2) Don't cancel the requests since Dillo has already made then; I
+think it would be a wast of data. Instead just ignore the few pending
+requests.
+
+I chose option 2. I did this similar to what Sam Dennis did a while
+ago (when he send the patch). From what I can see applying these two
+ideas (the lock and Sam's patch) we have a pretty much clean fix to
+the problem. Of course I could be wrong and missing the "root" of the
+problem. Does anybody see any flaws in what I've described above?
+
+This lock system, if it's conceptually correct, should fix this
+bug. But what I've implemented is NOT the complete lock system, it's
+just a preview on how I tought to fix this problem. If you guys like
+the idea, I'll have to finish up the exception handling (so if there's
+an error while downloading a page, navigation doesn't become forever
+disabled, erroneously locked).
+
+I'm sending the patch that should implement this fix, included is
+Sam's patch (html_loading.diff) and the cache patch (cache_patch), so
+there's no need to apply those patches, only this one. This patch
+should be applyed against the CVS version.
+
+hope this helps, bye,
+
+-- 
+Livio 
+
+
+
+[Dillo-dev]Close Window command
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-15 06:24
+
+Hi all,
+
+messing with Dillo, I tried to do the `Close Window` function
+(Crtl-W or Menu select `File -> Close Window`), well nothing
+happenned. I looked at commands.c, and all I found was the empty stub:
+
+void a_Commands_close_callback(GtkWidget *widget, gpointer client_data)
+{
+}
+
+Below it I also saw the exit_callback and in it a commentary:
+/* There should be a close command that does this: */
+/* gtk_widget_destroy (bw->main_window); */
+
+So, that's exactly what I did, now close_callback looks like:
+
+void a_Commands_close_callback(GtkWidget *widget, gpointer client_data)
+{
+gtk_widget_destroy(((BrowserWindow *) client_data)->main_window);
+}
+
+What gives? Am I missing something? Why wasn't this already done? I
+tried it out and it's working fine. Including when your in the last
+window (only one left) and when you `close` it (not `exit`), dillo
+exits normally.
+
+I guess I've probably missed some previous discussion... Just in case,
+I'm sending the "patch".
+
+bye,
+
+-- 
+Livio <livio@li...>
+
+--- dillo.orig/src/commands.c Mon Aug 28 22:25:45 2000
++++ dillo.my/src/commands.c Sun Oct 15 04:17:31 2000
+@@ -63,10 +63,11 @@ void a_Commands_prefs_callback(GtkWidget
+}
+
+/*
+- * ?
++ * Close only the selected Window
+*/
+void a_Commands_close_callback(GtkWidget *widget, gpointer
+client_data)
+{
++ gtk_widget_destroy(((BrowserWindow *) client_data)->main_window);
+}
+
+/* 
+
+
+
+Re: [Dillo-dev]Archiving patches
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-15 06:21
+
+-- En reponse de "Re: [Dillo-dev]Archiving patches" de Livio Baldini Soares, le
+15-Oct-2000 :
+> 
+> With all these patches I'm starting to get a little confused... I'm
+> trying to solve bug 74# (and others that arise due to the same
+> problem), I believe I've found the problem and have a "clean"and
+> simple fix, but I'm supposed to build it on top of what version?
+> 0.2.4? CVS? CVS with all the patches applyed?
+> 
+
+You should not bother with published patches unless you want to test one (and
+only one at time : it's very unlikely you can apply all without reworking most
+of the diffs, which will be done by Jorge for next version)
+You want to patch against v0.2.4, (or CVS version, which claims to be v0.2.5).
+It's also possible you need/find handy to patch a patched version. If you don't
+patch against vanilla v0.2.4, list all patches needed before yours.
+
+> I'm asking cause some of these changes will affect other code we
+> build on top. Plus there seems to be a new Dw beeing made, and a
+> testbed(?).
+> 
+
+We're not sure of what the new Dw will look like. Sebastian hasn't finished it
+yet.
+
+> It would be really nice if we had an updated CVS version to patch
+> to, or if someone (one of the olders guys with the project) released a
+> 0.2.5 or 0.2.4-1 or something like that, with all the "pending"
+> patches included, cause frankly it seems too confusing and I have no
+> idea where to start programming so my works are all wastedøutdated.
+> 
+
+Only jorge can decide if a submitted patch will be included in the official
+dillo version. It's not a good thing to have a fully patched version. For us
+patchers, there's only one developper version, the lastest : 0.2.4.
+CVS is to be considered experimental.
+
+> By the way, is the `Bug Track System` being used? More precisely is it
+> valid and not outdated?
+> 
+
+The bug track system is the most up-to-date informations you'll have, because
+it's automated and updated by everybody (actually I think Jorge is kind of
+moderating it, but the delay is not noticably larger than one day).
+Use it to report bugs you've found and things you want fixed by somebody else.
+Use it to tell everybody what you are working on (to avoid duplicate efforts).
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Oct-2000 a 13:07:20
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Archiving patches
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-15 03:15
+
+Allan Clark writes:
+> Just to let everyone know I have started to archive most of the patches that
+> get sent to the list, it was prompted by Sammy's post about looking for the
+> first find text patch, anyway you can find a sort of index at
+> http://www.shark.pwp.blueyonder.co.uk/patches.html I say sort of as it makes
+> no attempt to explain the patches merely provides links to them.
+> 
+
+This is really helpfull! I got all the patches (ps. seems like
+html_loading.diff and html_loading1.diff are the same. Anything wrong
+with that?).
+
+With all these patches I'm starting to get a little confused... I'm
+trying to solve bug 74# (and others that arise due to the same
+problem), I believe I've found the problem and have a "clean"and
+simple fix, but I'm supposed to build it on top of what version?
+0.2.4? CVS? CVS with all the patches applyed?
+
+I'm asking cause some of these changes will affect other code we
+build on top. Plus there seems to be a new Dw beeing made, and a
+testbed(?).
+
+It would be really nice if we had an updated CVS version to patch
+to, or if someone (one of the olders guys with the project) released a
+0.2.5 or 0.2.4-1 or something like that, with all the "pending"
+patches included, cause frankly it seems too confusing and I have no
+idea where to start programming so my works are all wastedøutdated.
+
+Sorry if I seemed annoyed, but I'm not. It's just not nice to have
+people's effort thrown away in vain, when they could be producing lots
+if things were a little bit more organized.
+
+By the way, is the `Bug Track System` being used? More precisely is it
+valid and not outdated?
+
+bye and sorry for bugging yall ;-)
+
+-- 
+Livio 
+
+
+
+[Dillo-dev]Archiving patches
+
+From: Allan Clark <shark@bl...> - 2000-10-14 18:25
+
+Just to let everyone know I have started to archive most of the patches that
+get sent to the list, it was prompted by Sammy's post about looking for the
+first find text patch, anyway you can find a sort of index at
+http://www.shark.pwp.blueyonder.co.uk/patches.html I say sort of as it makes
+no attempt to explain the patches merely provides links to them.
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+Re: [Dillo-dev]Bug #85 fix
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-14 18:20
+
+--- Daniel Roberts <zuperdee@ya...> wrote:
+
+> That's why one does QA/regression tests. :-) 
+> Perhaps this is a sign that Dillo needs some kind of
+> QA/regression testing framework?
+
+BTW, this also is reason to think about open-source
+philosophy... I am not ordinarily that philosophical,
+but it has occured to me that ESR said in "The
+Cathedral and the Bazaar," that "given enough eyes,
+all bugs are shallow."
+
+However, seeing this bug which has regressed THREE
+times now, I think, proves ESR wrong on this point. 
+His approach seems rather like the classic "monkeys at
+typewriters" approach to Shakespeare--that is, given
+enough 1000's of monkeys at enough 1000's of
+typewriters, one of them somewhere will type "to be or
+not to be."
+
+I do believe however, this proves why one needs to
+think of open-source as merely the LICENSING framework
+for a project, and not a specification on how the
+development efforts are coordinated and managed... 
+Case in point: the GCC Steering Committee does
+automated regression tests. I think Dillo could
+benefit from this, too.
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+Re: [Dillo-dev]Bug #85 fix
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-14 17:10
+
+--- Sammy Mannaert <nstalkie@tv...> wrote:
+
+> this is a bug i once fixed ... i know the bookmarks
+> have been rewritten so the old mistake might have
+> come back for the THIRD time :) (it was originally
+in
+> gzilla/armadillo, where i fixed it, then dillo came
+> into existance, where i fixed it again (i think),
+and
+> now again)
+
+> any predictions on how much it will show up again ?
+
+That's why one does QA/regression tests. :-) Perhaps
+this is a sign that Dillo needs some kind of
+QA/regression testing framework?
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Messenger - Talk while you surf! It's FREE.
+http://im.yahoo.com/ 
+
+
+
+Re: [Dillo-dev]Bug #85 fix
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-14 15:42
+
+-- En reponse de "Re: [Dillo-dev]Bug #85 fix" de Sammy Mannaert, le 14-Oct-2000
+> 
+> strange ...
+> 
+> this is a bug i once fixed ... i know the bookmarks have been rewritten
+> so the old mistake might have come back for the THIRD time :) (it was
+> originally in gzilla/armadillo, where i fixed it, then dillo came into
+> existance, where i fixed it again (i think), and now again)
+> 
+> any predictions on how much it will show up again ? :)
+> 
+
+When the bookmark plugin I'm coding will be integrated, it won't anymore :
+there will be *new* bugs ;-)
+
+> sammy
+> 
+> PS: i've been pretty inactive lately (though i have been following the
+> mailing list), i'll try doing a few patches in the coming month ...
+> 
+
+me too :-/
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Oct-2000 a 00:39:28
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Bug #85 fix
+
+From: Sammy Mannaert <nstalkie@tv...> - 2000-10-14 15:13
+
+Livio Baldini Soares wrote:
+
+> Hi again,
+>
+> first let me thank Eric for taking the time in answering me. I found
+> out what the problem was with my glib (I had 2 glib's installed, one
+> in /usr/ and the other in /usr/local, I guess they were conflicting,
+> since their versions didn't match).
+>
+> Messing around with Dillo I wanted to bookmark Dillo's home page
+> (dillo.so....net) and then Seg. Fault!
+>
+> I looked at the code, and I guess I got a patch working (actually just
+> an tiny change, just a NULL check). Latter I found out at the Bug
+> Track page that this was bug #85. Hope this helps, here's the patch.
+>
+> bye,
+>
+> PS: I read in the mail archive that someone made a patch for the `Find
+> Text...' function, where can I find it? The only thing I found was
+> another patch to be used afterwards so the use of anchors wouldn't be
+> needed.
+>
+> --
+> Livio <livio@li...>
+>
+> $ diff -pru dillo/src/bookmark.c dillo.my/src/bookmark.c
+>
+> --- dillo/src/bookmark.c Mon Aug 28 22:43:47 2000
+> +++ dillo.my/src/bookmark.c Fri Oct 13 21:25:41 2000
+> @@ -165,7 +165,7 @@ void a_Bookmarks_add(GtkWidget *widget,
+> return;
+>
+> /* If the page has no title, lets use the URL */
+> - if (strcmp (title, ¨) == 0)
+> + if ( !title || (strcmp (title, ¨) == 0))
+> title = url;
+>
+> #ifdef TITLE39
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+strange ...
+
+this is a bug i once fixed ... i know the bookmarks have been rewritten
+so the old mistake might have come back for the THIRD time :) (it was
+originally in gzilla/armadillo, where i fixed it, then dillo came into
+existance, where i fixed it again (i think), and now again)
+
+any predictions on how much it will show up again ? :)
+
+sammy
+
+PS: i've been pretty inactive lately (though i have been following the
+mailing list), i'll try doing a few patches in the coming month ... 
+
+
+
+RE: [Dillo-dev]Bug #85 fix
+
+From: Allan Clark <shark@bl...> - 2000-10-14 08:47
+
+You should find the original message in the archives here
+http://www.geocrawler.com/lists/3/SourceForge/702/0/4469704/
+also I put it on the site I use for the dillo news although I don't link to
+it, I do that with most of the pathces just for safe keeping you can find it
+here
+http://www.shark.pwp.blueyonder.co.uk/findtext.diff.gz
+
+<snip>
+> PS: I read in the mail archive that someone made a patch for the `Find
+> Text...' function, where can I find it? The only thing I found was
+> another patch to be used afterwards so the use of anchors wouldn't be
+> needed.
+<snip> 
+
+
+
+[Dillo-dev]Bug #85 fix
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-13 23:52
+
+Hi again,
+
+first let me thank Eric for taking the time in answering me. I found
+out what the problem was with my glib (I had 2 glib's installed, one
+in /usr/ and the other in /usr/local, I guess they were conflicting,
+since their versions didn't match). 
+
+Messing around with Dillo I wanted to bookmark Dillo's home page
+(dillo.so....net) and then Seg. Fault!
+
+I looked at the code, and I guess I got a patch working (actually just
+an tiny change, just a NULL check). Latter I found out at the Bug
+Track page that this was bug #85. Hope this helps, here's the patch.
+
+bye,
+
+PS: I read in the mail archive that someone made a patch for the `Find
+Text...' function, where can I find it? The only thing I found was
+another patch to be used afterwards so the use of anchors wouldn't be
+needed. 
+
+--
+Livio <livio@li...>
+
+$ diff -pru dillo/src/bookmark.c dillo.my/src/bookmark.c 
+
+--- dillo/src/bookmark.c Mon Aug 28 22:43:47 2000
++++ dillo.my/src/bookmark.c Fri Oct 13 21:25:41 2000
+@@ -165,7 +165,7 @@ void a_Bookmarks_add(GtkWidget *widget, 
+return;
+
+/* If the page has no title, lets use the URL */
+- if (strcmp (title, ¨) == 0)
++ if ( !title || (strcmp (title, ¨) == 0))
+title = url;
+
+#ifdef TITLE39 
+
+
+
+RE: [Dillo-dev]Newbie questions
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-13 11:14
+
+-- En reponse de "[Dillo-dev]Newbie questions" de Livio Baldini Soares, le
+13-Oct-2000 :
+> Hi guys,
+> 
+> I was looking around in Sourceforge for a new browser in constrution
+> (or finished), 'cause I'm goddam sick of Netscape exiting for no
+> reason at all. I found that Dillo was the best project and looks like
+> it has future. I liked the project so I've decided to try to
+> contribute in any way way I can. The problem is I'm still a newbie in
+> Linux and Unix programming, so if I'm being out of hand or something,
+> please let me know.
+> 
+
+Welcome.
+
+> Where are the latest versions/patches? I saw somewhere on your webpage
+> (dillo.so....net/Dname.html) that there are MIME/ and URL/
+> directories undeer the src/, but when I got the 0.2.4 version, I found
+> no such directories.
+> 
+
+Lastest version is 0.2.4. You can patch against it. mime and url directories,
+as well as the Dname.html page look like old stuff (gzilla era), you can safely
+ignore them.
+
+> I downloaded the cvs files by doing:
+> 
+> $ cvs -z3 -d:pserver:anonymous@cv...:/cvsroot/dillo co
+> dillo
+> 
+> like indicated on the Sourceforge CVS page. And then couldn't compile
+> it. The problem was with the `g_print()'. I don't know, but there must
+> be something wrong with my system (I use Debian 2.1, aka potato, and
+> have installed: libglib1.2(-dev) -- 1.2.7-2). I try to compile a
+> simple program like:
+> 
+> -----------------------
+>#include <glib.h>
+> 
+> int main(void){
+> 
+> g_print("Testing...\n");
+> 
+> return 0;
+> }
+> -----------------------
+> And compile it:
+> $ gcc test.c -o test -lglib -I/usr/lib/glib/include/
+> $ ./test
+> Segmentation fault
+> 
+
+Did you try to trace the program ? (I use xxgdb, which is an athena
+front-end to gdb, crude but efficient : "xxgdb ./test", then run, then stack )
+
+> Someone knows what's going on? 
+> 
+> What I did to "overcome" this problem is switched to plain `printf()'
+> function:
+> 
+> $ cd src/
+> $ for i in `find . -name "*.c"`; do ./chg $i g_print printf; done
+> 
+> And THEN it compiled. I'm running it fine and enjoying it! Congrats on
+> the great work guys.
+> 
+
+If you want your patches included in dillo, you'll have to fix this glib
+problem.
+
+> PS: Sorry about the stupid questions, and the long mail.
+
+We're here to help, you can ask.
+
+> PS1: Sorry for the bad english..., I'm Brazilian.
+> 
+
+No problem : most of us are not native english speaker and we won't even notice
+a thing ;-)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 13-Oct-2000 a 20:02:55
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Newbie questions
+
+From: Livio Baldini Soares <livio@li...> - 2000-10-13 04:56
+
+Hi guys,
+
+I was looking around in Sourceforge for a new browser in constrution
+(or finished), 'cause I'm goddam sick of Netscape exiting for no
+reason at all. I found that Dillo was the best project and looks like
+it has future. I liked the project so I've decided to try to
+contribute in any way way I can. The problem is I'm still a newbie in
+Linux and Unix programming, so if I'm being out of hand or something,
+please let me know.
+
+Where are the latest versions/patches? I saw somewhere on your webpage
+(dillo.so....net/Dname.html) that there are MIME/ and URL/
+directories undeer the src/, but when I got the 0.2.4 version, I found
+no such directories.
+
+I downloaded the cvs files by doing:
+
+$ cvs -z3 -d:pserver:anonymous@cv...:/cvsroot/dillo co dillo
+
+like indicated on the Sourceforge CVS page. And then couldn't compile
+it. The problem was with the `g_print()'. I don't know, but there must
+be something wrong with my system (I use Debian 2.1, aka potato, and
+have installed: libglib1.2(-dev) -- 1.2.7-2). I try to compile a
+simple program like:
+
+-----------------------
+#include <glib.h>
+
+int main(void){
+
+g_print("Testing...\n");
+
+return 0;
+}
+-----------------------
+And compile it:
+$ gcc test.c -o test -lglib -I/usr/lib/glib/include/
+$ ./test
+Segmentation fault
+
+Someone knows what's going on? 
+
+What I did to "overcome" this problem is switched to plain `printf()'
+function:
+
+$ cd src/
+$ for i in `find . -name "*.c"`; do ./chg $i g_print printf; done
+
+And THEN it compiled. I'm running it fine and enjoying it! Congrats on
+the great work guys.
+
+PS: Sorry about the stupid questions, and the long mail.
+PS1: Sorry for the bad english..., I'm Brazilian.
+
+thanks for the attention,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Patch to support font-loading on the iPaq handheld.
+
+From: Eric Christianson <echristi@ri...> - 2000-10-12 17:15
+
+This patch allows one of the default fonts on the compaq iPaq
+linux distribution to work. (www.handhelds.org)
+
+
+1098,1103d1097
+< 
+< if (font->font == NULL) {
+< /* Can't load the font - try another platform font that should be available. (iPaq) */
+< font->font = gdk_font_load("-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso8859-1");
+< }
+< 
+
+Eric Christianson
+RidgeRun, Inc.
+http://www.ridgerun.com 
+
+
+
+Re: [Dillo-dev]Find text patch
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-11 20:03
+
+Sam Dennis wrote:
+> I did think of doing something like that, but I presumed that the functions
+> already in place would have been exported if that was desirable.
+I wrote all these functions (from
+Dw_gtk_scroller_adjustment_value_changed to the end) for anchors, and
+exported only those which were necessary for them. If some functions
+are useful for other purposes, they may be exported, too.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Find text bugs
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-10 17:24
+
+On Tue, Oct 10, 2000 at 01:25:42AM +0000, Sam Dennis wrote:
+> Er, it does segfault sometimes, I have to admit, but I'm almost certain that
+> it's not my fault...
+
+I think that most of the crashes are happening in the html rendering,
+actually. Although I have had one or two of them inside a perfectly valid
+call to realloc.
+
+Since then I've tried to test it by searching around a nice long court
+transcript and it didn't crash once. This and a number of other things makes
+me begin to suspect my libc instead...
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Find text patch
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-10 17:19
+
+On Tue, Oct 10, 2000 at 04:43:17PM +0200, Sebastian Geerken wrote:
+> Sam Dennis wrote:
+> > 
+> > I've implemented a find text command for the first instance of the string
+> > (it shouldn't be too difficult to extend it to finding multiple instances,
+> > probably just starting by looking from the line after the last instance was
+> > found).
+> > 
+> > I'm sorry about the anchor, but it seemed like the only sane way to scroll
+> > to the line we found.
+> 
+> This patch doesn't use anchors. Apply it after Sam's patch.
+> 
+> Sebastian
+
+I did think of doing something like that, but I presumed that the functions
+already in place would have been exported if that was desirable.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Find text patch
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-10 13:08
+
+Attachments: findtext2.diff      
+
+Sam Dennis wrote:
+> 
+> I've implemented a find text command for the first instance of the string
+> (it shouldn't be too difficult to extend it to finding multiple instances,
+> probably just starting by looking from the line after the last instance was
+> found).
+> 
+> I'm sorry about the anchor, but it seemed like the only sane way to scroll
+> to the line we found.
+
+This patch doesn't use anchors. Apply it after Sam's patch.
+
+Sebastian 
+
+
+
+[Dillo-dev]Find text bugs
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-10 00:22
+
+Er, it does segfault sometimes, I have to admit, but I'm almost certain that
+it's not my fault...
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Find text patch
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-10 00:10
+
+Attachments: findtext.diff.gz      
+
+I've implemented a find text command for the first instance of the string
+(it shouldn't be too difficult to extend it to finding multiple instances,
+probably just starting by looking from the line after the last instance was
+found).
+
+I'm sorry about the anchor, but it seemed like the only sane way to scroll
+to the line we found.
+
+It doesn't highlight the string found in any way, partially because I don't
+think that any mechanism for this is currently in place.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Find text implementation problems
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-09 20:15
+
+On Mon, Oct 09, 2000 at 10:54:32PM +0200, Sebastian Geerken wrote:
+> ...
+> scroller = GTK_DW_SCROLLER (bw->docwin);
+> view = GTK_DW_VIEW (dw_scroller->viewport);
+> border = (DwBorder*) (view->dw);
+> page = (DwPage*) (border->child);
+
+Er, a little convoluted, isn't it?
+
+> 
+> I think border is sometimes NULL, so you may add some checks.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Find text implementation problems
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-09 19:21
+
+Sam Dennis wrote:
+> 
+> I've been looking at implementing the find text function and had got half
+> way through mentally coding a solution (because of the DwPage{Line,Word})
+> before I realised that all the callback has is the browser window, and I
+> could see no way of getting at a DwPage from that, which is essential for
+> searching.
+> 
+> Am I missing something obvious?
+
+BrowserWindow *bw;
+GtkDwScroller *scroller;
+GtkDwView *view;
+DwBorder *border;
+DwPage *page;
+
+scroller = GTK_DW_SCROLLER (bw->docwin);
+view = GTK_DW_VIEW (dw_scroller->viewport);
+border = (DwBorder*) (view->dw);
+page = (DwPage*) (border->child);
+
+I think border is sometimes NULL, so you may add some checks.
+
+Sebastian 
+
+
+
+[Dillo-dev]Small idea for caching
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-09 17:22
+
+I've just discovered a note I made to myself a while ago about dillo's
+caching system. There is currently a complex system of callbacks necessary,
+but couldn't a lot of that be thrown away with a simple pipe between the
+caching system (server) and the dillo widget (client)?
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Activity
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-10-09 17:07
+
+Hi there!
+
+
+Just as before, silence periods on the mailing list, signal
+high activity on the background! (Well, my email box seldom stops
+its flow).
+
+I'm very pleased for the "parallel" working the code is getting
+(Several improvement and fixing patches, design on the widget
+side and design on the Networking and middle layers by my side).
+
+Currently I have a lengthy queue of patches waiting to be
+processed (from Jörgen, Eric, Agustín, Marcos, ...). And I keep
+trying to solve the design issues of Networking/Middle-Layers
+that result in a lot of related bugs. I think this is the highest
+priority (for me to work on); Look this:
+
+- BUGs 74, 84, 64 and 69 are related to it.
+- File images being decoded every time (not fed by the dicache)
+- Fine reload functionality can't be done without it.
+- The problem asked by Sean MacLennan
+- Sudden crashes
+- Slow downloads (it may happen)
+- General browser stability.
+- etc.
+
+I'll keep working on it all October; If I don't succeed, I'll
+start reviewing/integrating every patch and make a new release
+based on 0.2.4.
+
+The good news is that finally I got into a design model that
+handles all the necessary stuff. The bad new is that it's too
+complex (and we all know that maintaining such things becomes a
+nightmare). So, it will be done when I devise a way to simplify
+it one or two "degrees".
+
+
+Jorge.-
+
+Ps: Marcos has sent me a patch with basic authentication support!
+
+------------------------- ooOOoo -----------------------------
+Some answers:
+
+> I am try to add Mosaic style remote access to dillo. From a unix signal
+> handler I want to push an url. The command a_Nav_push works *once*, then
+> fails from then on.
+
+Yes, I know. That's the right way to do it though. 
+I mean: a_Nav_push should not crash; that's a BUG.
+
+> I have a patch below that shows a very simple
+> example of this, plus an attempt to set the text in the location widget.
+> I can set the text correctly, but I do not know how to then signal gtk
+> to process the line.
+
+That is part of a_Nav_push's work. You should not worry doing
+it "by hand". It seems to me that you'll have to wait until the
+design concerns that eliminate "the BUG" are done.
+
+(The only thing you need to worry about is not calling
+a_Nav_push from an interrupt handler, but to generate an event
+that triggers it from GTK's main loop).
+
+-------------------------------------
+
+> I've been looking at implementing the find text function and had got half
+> way through mentally coding a solution (because of the DwPage{Line,Word})
+> before I realised that all the callback has is the browser window, and I
+> could see no way of getting at a DwPage from that, which is essential for
+> searching.
+> 
+> Am I missing something obvious?
+
+Obvious? I don't think so!
+
+The top 'dw' is set by a_Dw_gtk_scroller_set_dw (you can follow
+the chain from there).
+
+In brief:
+
+bw->docwin is a GtkDwScroller
+bw->docwin->viewport->dw is a DwBorder
+bw->docwin->viewport->dw->child is a DwPage or a DwImage
+
+so, something like this will get you going:
+
+GtkDwScroller *scroller = bw->docwin;
+DwBorder *border = scroller->viewport->dw;
+DwPage *page = border->child;
+
+Notes: you have to add type checks and things like that.
+I haven't tested this but it should be very close.
+
+Hope this helps. 
+
+
+
+Re: [Dillo-dev]Find text implementation problems
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-09 16:43
+
+On Mon, Oct 09, 2000 at 10:26:07AM +0900, Eric GAUDET wrote:
+> -- En reponse de "[Dillo-dev]Find text implementation problems" de Sam Dennis,
+> le 08-Oct-2000 :
+> > I've been looking at implementing the find text function and had got half
+> > way through mentally coding a solution (because of the DwPage{Line,Word})
+> > before I realised that all the callback has is the browser window, and I
+> > could see no way of getting at a DwPage from that, which is essential for
+> > searching.
+> > 
+> > Am I missing something obvious?
+> > 
+> 
+> You'll have to create a new external function in DwPage (a_Dwpage_findtext ?).
+> That way you can either register it as a callback, or call it yourself from
+> whatever other source (command.c ?).
+> 
+
+Even if I do that, I still need a pointer to a DwPage, and I see no way of
+getting it. There is also the issue of frames and (possibly) tables here, as
+both are separate pages, how do we know which to search even if we can get
+pointers to them?
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+RE: [Dillo-dev]Find text implementation problems
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-09 01:26
+
+-- En reponse de "[Dillo-dev]Find text implementation problems" de Sam Dennis,
+le 08-Oct-2000 :
+> I've been looking at implementing the find text function and had got half
+> way through mentally coding a solution (because of the DwPage{Line,Word})
+> before I realised that all the callback has is the browser window, and I
+> could see no way of getting at a DwPage from that, which is essential for
+> searching.
+> 
+> Am I missing something obvious?
+> 
+
+You'll have to create a new external function in DwPage (a_Dwpage_findtext ?).
+That way you can either register it as a callback, or call it yourself from
+whatever other source (command.c ?).
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 09-Oct-2000 a 10:23:31
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Find text implementation problems
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-08 22:41
+
+I've been looking at implementing the find text function and had got half
+way through mentally coding a solution (because of the DwPage{Line,Word})
+before I realised that all the callback has is the browser window, and I
+could see no way of getting at a DwPage from that, which is essential for
+searching.
+
+Am I missing something obvious?
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-08 17:03
+
+--- Sebastian Geerken <S.Geerken@pi...> wrote:
+> DwPage doesn't bother about its parent widget
+> (either at toplevel, or in a DwTable, or, as inline
+> frame, in a DwPage?). It will just paint itself
+where
+> the parent wants it to do, and report size changes
+> (incremental rendering!) to its parent. (BTW: Vice
+> versa, DwTable will not bother about its children,
+it
+> only regards at them as DwWidget's.)
+
+This sounds like a VERY nice thing! I believe
+Incremental reflow is what the Mozilla people call
+this in Gecko, BTW. This should make Dillo better
+than Netscape 4.x was at table rendering! Incidently,
+Netscape's table rendering was VERY slow, inefficient,
+and memory-hogging. It sized things dynamically
+during multiple attempts, storing every attempt in
+memory. This meant (if I understand them correctly)
+that say, for tables of 10 columns by 10 rows, it
+would store 100 attempted and failed trials in memory
+before getting it right. Since Netscape never
+implemented incremental layout of page sections, the
+document state was split up and most of it used to
+simulate a cell as a nested HTML document. This
+allowed them to use the existing layout code to
+simulate the layout of that cell multiple times until
+the size was right. It was slow and wasteful of
+memory. To make matters worse, their attempts to
+optimize and streamline made the code difficult to
+read and never really solved the problem of less than
+optimal memory use and speed.
+
+For details, and mistakes to avoid that Netscape made,
+I find this document VERY interesting reading:
+
+http://www.mozilla.org/classic/layodesc.html
+
+> This is very nice in Gtk+: all widgets have a very
+> special purpose, a button is something where you can
+> click on, but how it looks is determined by *its
+> child*. You can even nest buttons, which is
+> admittedly quite silly, but who knows. (In early
+> versions of gnome, the panel menu entries had
+> submenus on the right side.) This results sometimes
+> in a horrible widget hierarchy, but is still
+> efficient enough, and much easier to extend than if
+> you have buttons with a label, buttons with a
+pixmap,
+> buttons with a pixmap and a label below the pixmap,
+> buttons with a pixmap and a label right of the
+pixmap
+> etc.
+
+Interesting. So does this mean that you could have
+say 3 distinct buttons inside each other, each
+performing different actions, like so:
+
+------------------------
+| Button 1 |
+| |
+| |---------| |------| |
+| |Button 2 | |Btn. 3| |
+| | | | | |
+| ----------- -------- |
+| |
+------------------------
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos - 35mm Quality Prints, Now Get 15 Free!
+http://photos.yahoo.com/ 
+
+
+
+Re: [Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-08 15:03
+
+Eric GAUDET wrote:
+> > As I say, I'll need to learn from the ground up on more basic
+> > things first, however. :-) But I do want to see what I can do.
+> >
+> 
+> What I did for that is choose easy bugs in the bug-track engine (or some of my
+> own ideas) and try to make a patch, as a skill training. You'll find most of
+> the code clean and easy to understand. Some areas are still obscure to me
+> (attrs ? cache ?). Even if the patches are rejected, this is still a great way
+> to learn before trying hardcore table/frame coding ;-).
+> May I suggest :
+> - PNG transparency (bug #60)
+> - GIF animations support
+> - form widget jumping with tab/shift+tab (bug #86)
+
+This depends heavily on the Dw structure (in both cases, either if you
+let Gtk+ (GtkWindow) do the work, or -- which I would prefer -- let it
+do by GtkDwViewport).
+
+> - X clipboard support (bug #59)
+> - adding "copy this link" to the popup menu
+> - adding "save this image" to the popup menu
+> - fix the status bar informations disapearing
+> - implement "find text"
+> - implement basic httpauth (see with Sean if he's not doing it already)
+> - implement SUP and SUB tags
+> - fix corrupted PNG segfault.
+
+Or:
+- When jumping to an #anchor in the same page, the url should be
+pushed on the navigation stack. See Nav_open_url and struct
+_BrowserWindow.
+- A menu of the last visited urls, like the one you get when you hold
+the "Back" button pressed for a while in Netscape, or click on the
+small button right on the "Back" button in MSIE.
+- Implement the <link> tag, and e.g. add an menu "Related pages" or
+so, with some accelerators, so the user must only press N for the next
+page etc. (I hope, some authors still use this tag.)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-08 15:03
+
+Eric GAUDET wrote:
+> I'm thinking of 3 reasons why table and frames are different.
+> [...]
+
+4) Tables are 2-dimensional, while frames are only aligned in one
+direction, i.e. you must nest framesets to get a grid of frames.
+
+5) The size of a table cell is (in most cases) calculated by the
+browser, the frame's size is determined by the web author.
+
+> [...]
+> Perhaps we can come with a common page structure (ex DwPage ?), that would have
+> the ability to be both a full html page (part of a frameset) or a table cell.
+
+DwPage doesn't bother about its parent widget (either at toplevel, or
+in a DwTable, or, as inline frame, in a DwPage?). It will just paint
+itself where the parent wants it to do, and report size changes
+(incremental rendering!) to its parent. (BTW: Vice versa, DwTable will
+not bother about its children, it only regards at them as DwWidget's.)
+This is very nice in Gtk+: all widgets have a very special purpose, a
+button is something where you can click on, but how it looks is
+determined by *its child*. You can even nest buttons, which is
+admittedly quite silly, but who knows. (In early versions of gnome,
+the panel menu entries had submenus on the right side.) This results
+sometimes in a horrible widget hierarchy, but is still efficient
+enough, and much easier to extend than if you have buttons with a
+label, buttons with a pixmap, buttons with a pixmap and a label below
+the pixmap, buttons with a pixmap and a label right of the pixmap etc.
+
+> I'm not sure this will be the best way : most table cells contain only an image
+> or a text paragraph. Building a whole html page for that will be a big waste
+> (think about those >1000k tables ;-).
+
+(gdb) print sizeof (DwPage)
+$1 = 184
+
+(I admit that it will take a bit more after initialization.)
+
+Memory is not the problem, but perhaps time, since size negotiation
+could happen to often. But currently it works very fast for normal
+pages, and so I think we should look how it will work for tables, and
+then eventually optimize it in detail.
+
+> I'd prefer to split the current DwPage in two widgets : one for the html
+> rendering only (say DwRenderedHtml) which would do what the current DwPage do
+> with lines, words ; one just like DwPage, but without what's done by
+> DwRender : only links, gc, attrs, anchors, ... This DwPage would of course
+> point to a DwRenderedHtml
+
+I'll bother about this, when Dw is complete. ;-)
+
+Sebastian 
+
+
+
+[Dillo-dev]Dillo News
+
+From: Allan Clark <shark@bl...> - 2000-10-08 14:36
+
+Hi all, the Dillo Weekly News is up and the url is
+http://www.shark.pwp.blueyonder.co.uk/news081000.html
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+[Dillo-dev]Minor view source change
+
+From: Sam Dennis <sdennis101@ge...> - 2000-10-08 13:27
+
+Attachments: viewsource.diff      
+
+View source shouldn't get the url from the location widget as that isn't
+necessarily the url of the page that is shown.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-08 06:52
+
+-- En reponse de "Re: [Dillo-dev]RE: table/frames (was:What can I do?)" de
+Daniel Roberts, le 08-Oct-2000 :
+>> To make frames look like this, you'll have to do
+>> much more complicated things.
+> 
+> Ah, but what about inline frames?
+> 
+
+right, iframes are like a single table cell embeding a separate page (URL). No
+span tough. And you still can show the same structure as a complex table with
+it.
+It's kind of new too (HTML4 ?) : even my nestcape 4.72 can't render them.
+Anyway, all suggestions I heard about table/frames handling can quite easily be
+extended to iframe (once we've decided how to embed a page in a page).
+Not a big deal.
+
+> 
+> All in all, it looks to me like tables/frames are THE
+> next big thing to concentrate on in Dillo.
+
+Right again !
+
+> As I say, I'll need to learn from the ground up on more basic
+> things first, however. :-) But I do want to see what I can do.
+> 
+
+What I did for that is choose easy bugs in the bug-track engine (or some of my
+own ideas) and try to make a patch, as a skill training. You'll find most of
+the code clean and easy to understand. Some areas are still obscure to me
+(attrs ? cache ?). Even if the patches are rejected, this is still a great way
+to learn before trying hardcore table/frame coding ;-).
+May I suggest :
+- PNG transparency (bug #60)
+- GIF animations support
+- form widget jumping with tab/shift+tab (bug #86)
+- X clipboard support (bug #59)
+- adding "copy this link" to the popup menu
+- adding "save this image" to the popup menu
+- fix the status bar informations disapearing
+- implement "find text"
+- implement basic httpauth (see with Sean if he's not doing it already)
+- implement SUP and SUB tags
+- fix corrupted PNG segfault.
+
+As you can see, there's some big code planned (table/frames, IO engine,
+unified alignment), but there's also a lot of small things to do you can
+choose to improve both your skills and dillo :-)
+
+> BTW, I am also curious now about cross-platform
+> plans... Is the plan just to support Unices, or
+> others like BeOS, Mac, or Windows? I am thinking
+> since it is GTK+-based, Unices would be relatively
+> easy... Windows support could be added too, since
+> GTK+ supports Windows, but I can see a new
+> networking/IO layer being needed... Same for BeOS,
+> since GTK+ supports BeOS, too. Mac I would think
+> would be even harder though.
+> 
+
+AFAIR there was a big effort to make dillo compile under libc5, and I heard
+somebody tryied it on BSD with some success (a little less stable than on
+linux ?).
+I don't know about windos and beos, but I'm sure the folks here would welcome
+any volunteer.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 08-Oct-2000 a 15:02:53
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-08 04:54
+
+--- Eric GAUDET <egaudet@in...> wrote:
+
+> I'm thinking of 3 reasons why table and frames are
+> different.
+
+These all do seem like valid reasons, too.
+
+> To make frames look like this, you'll have to do
+> much more complicated things.
+
+Ah, but what about inline frames?
+
+
+All in all, it looks to me like tables/frames are THE
+next big thing to concentrate on in Dillo. As I say,
+I'll need to learn from the ground up on more basic
+things first, however. :-) But I do want to see what
+I can do.
+
+BTW, I am also curious now about cross-platform
+plans... Is the plan just to support Unices, or
+others like BeOS, Mac, or Windows? I am thinking
+since it is GTK+-based, Unices would be relatively
+easy... Windows support could be added too, since
+GTK+ supports Windows, but I can see a new
+networking/IO layer being needed... Same for BeOS,
+since GTK+ supports BeOS, too. Mac I would think
+would be even harder though.
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos - 35mm Quality Prints, Now Get 15 Free!
+http://photos.yahoo.com/ 
+
+
+
+[Dillo-dev]RE: table/frames (was:What can I do?)
+
+From: Eric GAUDET <egaudet@in...> - 2000-10-08 02:31
+
+-- En reponse de "RE: [Dillo-dev]What can I do?" de Allan Clark, le 07-Oct-2000
+:
+> <snip>
+>> How are tables that different? Netscape/Mozilla used
+>> to render tables as complete HTML documents within a
+>> larger one. After all, tables can also have images,
+>> text, and everything else a complete HTML document
+>> has.
+> That's the exact point that I made, I don't see how tables and frames are
+> really any different.
+
+I'm thinking of 3 reasons why table and frames are different.
+
+1) Table cell can span on several row or colomns, frames don't.
+Example :
+<table>
+<tr><td rowspan=2>a</td><td colspan=2>b</td></tr>
+<tr><td>c</td><td>d</td></tr>
+<tr><td>e</td><td>f</td><td>g</td>
+</table>
+should be rendered like :
++---+-------+
+| | b |
+| a +---+---+
+| | c | d |
++---+---+---+
+| e | f | g |
++---+---+---+
+To make frames look like this, you'll have to do much more complicated things.
+
+2) Frames can have sliders and be resized, tables don't.
+
+3) Table cells embedding an htlm page is only a convenient way of
+rendering tables, but there is no actual html page (eg: file) as such.
+Framesets _are_ separate html (or not) pages (in the cache) that have to be
+loaded.
+
+That's why frames are not a subset of tables, and tables are not a subset of
+frame.
+
+IMHO frames and table have a very different behavior, both the way they look
+and their underlying implementation. 
+Perhaps we can come with a common page structure (ex DwPage ?), that would have
+the ability to be both a full html page (part of a frameset) or a table cell.
+I'm not sure this will be the best way : most table cells contain only an image
+or a text paragraph. Building a whole html page for that will be a big waste
+(think about those >1000k tables ;-).
+
+I'd prefer to split the current DwPage in two widgets : one for the html
+rendering only (say DwRenderedHtml) which would do what the current DwPage do
+with lines, words ; one just like DwPage, but without what's done by
+DwRender : only links, gc, attrs, anchors, ... This DwPage would of course
+point to a DwRenderedHtml
+
+For frames, we use GtkContainers with DwPages.
+
+For tables, a new widget DwTable would contain the structure of the table and
+pointers to DwRenderedHtml widgets, one for each cell.
+DwTable would be a word widget, just like an image is now.
+
+... that's it ;-)
+
+(and we should wait for Sebastian's new Dw widgets)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 08-Oct-2000 a 11:00:26
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]What can I do?
+
+From: Allan Clark <shark@bl...> - 2000-10-07 21:24
+
+<snip>
+> How are tables that different? Netscape/Mozilla used
+> to render tables as complete HTML documents within a
+> larger one. After all, tables can also have images,
+> text, and everything else a complete HTML document
+> has.
+That's the exact point that I made, I don't see how tables and frames are
+really any different. 
+
+
+
+Re: [Dillo-dev]What can I do?
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-07 21:15
+
+--- Sebastian Geerken <S.Geerken@pi...> wrote:
+
+> Gzw was written (afaik) mainly because of the size
+> limitation for X windows (and so Gtk+ widgets),
+> otherwise pure Gtk+ widgets could be used. It can
+> embed Gtk+ widgets, but that does not work
+perfectly,
+> so there had been some discussion on eleminating Dw,
+> but that will make dealing with the size limitation
+> quite complicated. (This is my personal opinion.
+> Jorge did not decide yet, what will be used in
+> future, so I tried to implement and test my ideas.)
+
+Mozilla faced the same problem, both in the Motif and
+the GTK+ ports. They ended up using a GTKLayout
+widget instead of a GTKDrawingArea for the page layout
+area, IIRC. Problem with this however, was that they
+then had a constant battle to fight with the GTKLayout
+widget's want to do its own layout things... So they
+wrote this whole new library/widget (with the help of
+Owen Tayler of GTK+ fame) set called GTKSuperWin. 
+Could we perhaps use this, BTW?
+
+> Dw embeds Dw already now, e.g. bullets and images
+> are Dw widgets embedded in a DwPage. Embedding a
+> DwPage in a DwPage is also possible, and if they
+> share the same html document (as in tables), the
+html
+> parser has to be extended, e.g . by a stack. I did
+> already hack something like that which worked
+> halfway, it should not be too hard.
+
+Sounds good.
+
+> Tables and frames are quite different, the only
+> thing they have in common is, that they contain
+text,
+> so IMO the simplest way should be to write them as
+> containers for pages.
+
+How are tables that different? Netscape/Mozilla used
+to render tables as complete HTML documents within a
+larger one. After all, tables can also have images,
+text, and everything else a complete HTML document
+has.
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos - 35mm Quality Prints, Now Get 15 Free!
+http://photos.yahoo.com/ 
+
+
+
+Re: [Dillo-dev]What can I do?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-07 12:01
+
+Daniel Roberts wrote:
+> Okay. Well, for starters, does the UI need anything?
+> I'd like to experiment with GTK+ a bit if I can... I
+> am trying to learn GTK+, so if anyone can give some
+> pointers on using it (other than the tutorial, which I
+> am already actively reading), I would appreciate it.
+> Translation: I might need to ask lots of questions, if
+> nobody minds. (Boy I wish a class were taught on GTK+
+> somewhere.)
+
+There is also a reference and some mailing lists at http://www.gtk.org. A
+good "tutorial" for using Gtk+ are the sources of Gimp, a good way of
+learning how to write new widgets is reading the sources of Gtk+
+itself.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]What can I do?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-07 12:01
+
+Hi,
+
+Daniel Roberts wrote:
+> It is also interesting that dw (formerly gzw, I
+> assume) is being re-writeen from scratch. Seems like
+> this is rather what Mozilla did with Gecko.
+
+Dw is not completely rewritten, since the other widgets (mainly
+DwPage) will ported to the new Dw.
+
+Gzw was written (afaik) mainly because of the size limitation for X
+windows (and so Gtk+ widgets), otherwise pure Gtk+ widgets could be
+used. It can embed Gtk+ widgets, but that does not work perfectly, so
+there had been some discussion on eleminating Dw, but that will make
+dealing with the size limitation quite complicated. (This is my
+personal opinion. Jorge did not decide yet, what will be used in
+future, so I tried to implement and test my ideas.)
+
+> As to tables/frames, how is it going to be done? I
+> recall some discussions with Armadillo about possibly
+> doing it by embedding dw within dw. Tables are
+> admittedly a little bit different from frames, but I
+> do think they are almost like flip sides of the same
+> coin.
+
+Dw embeds Dw already now, e.g. bullets and images are Dw widgets
+embedded in a DwPage. Embedding a DwPage in a DwPage is also possible,
+and if they share the same html document (as in tables), the html
+parser has to be extended, e.g . by a stack. I did already hack
+something like that which worked halfway, it should not be too hard.
+
+Tables and frames are quite different, the only thing they have in
+common is, that they contain text, so IMO the simplest way should be
+to write them as containers for pages.
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]What can I do?
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-06 19:44
+
+--- Allan Clark <shark@bl...> wrote:
+
+> Glad to hear from you, the above is kind of the
+> implementation I had in mind for tables and frames,
+> my suggestion is that we should have a page being
+> either a list of horizontal subpages, a list of
+> vertical subpages or a page as they are just now
+> implemented with lines, and then each "leaf" page
+can
+> take care of drawing (alignment etc) by itself and
+> all the parent pages need to do is tell all their
+> children to re-draw, re-size etc.
+
+Interesting. But where I can see this getting tricky
+is things like tables nested within tables, or with
+things like inline frames (not to mention re-sizable
+frames). How will this scheme handle those things? 
+For huge tables (like >1000k), won't it get a little
+slow? Yes, there ARE tables >1000k. Mozilla had a
+bug filed on such tables being slow to render. :-)
+
+> As for what you can do, well pick something you
+> think dillo needs and just do it (I hope I won't get
+> into trouble for nicking nike's slogan) I think
+> the main thing is to get Sebastians port of dw
+> working correctly, so if you can help with that it
+> would be great but it is your time so do whatever
+you
+> enjoy the most.
+
+Okay. Well, for starters, does the UI need anything? 
+I'd like to experiment with GTK+ a bit if I can... I
+am trying to learn GTK+, so if anyone can give some
+pointers on using it (other than the tutorial, which I
+am already actively reading), I would appreciate it. 
+Translation: I might need to ask lots of questions, if
+nobody minds. (Boy I wish a class were taught on GTK+
+somewhere.)
+
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos - 35mm Quality Prints, Now Get 15 Free!
+http://photos.yahoo.com/ 
+
+
+
+RE: [Dillo-dev]What can I do?
+
+From: Allan Clark <shark@bl...> - 2000-10-06 15:42
+
+> Hello all!
+<snip>
+
+> As to tables/frames, how is it going to be done? I
+> recall some discussions with Armadillo about possibly
+> doing it by embedding dw within dw. Tables are
+> admittedly a little bit different from frames, but I
+> do think they are almost like flip sides of the same
+> coin.
+>
+
+Glad to hear from you, the above is kind of the implementation I had in mind
+for tables and frames, my suggestion is that we should have a page being
+either a list of horizontal subpages, a list of vertical subpages or a page
+as they are just now implemented with lines, and then each "leaf" page can
+take care of drawing (alignment etc) by itself and all the parent pages need
+to do is tell all their children to re-draw, re-size etc.
+As for what you can do, well pick something you think dillo needs and just
+do it (I hope I won't get into trouble for nicking nike's slogan) I think
+the main thing is to get Sebastians port of dw working correctly, so if you
+can help with that it would be great but it is your time so do whatever you
+enjoy the most.
+
+Note to Sebastian: would you like me to put up the sources of your dw on the
+web page I'm using to do the dillo news, that way you wouldn't have to mail
+it to everyone who asks? I can also update it pretty much when needed. 
+
+
+
+[Dillo-dev]What can I do?
+
+From: Daniel Roberts <zuperdee@ya...> - 2000-10-06 15:26
+
+Hello all!
+
+I am checking this out because Christopher Reid Palmer
+has effectively admitted that Dillo will probably
+become the real successor to Armadillo, and that
+Armadillo is effectively dead, since he hasn't enough
+time to dedicate to it.
+
+Dillo, IMHO, has definitely already surpassed both of
+its predecessors (Gzilla and Armadillo) in almost
+every aspect. I am hoping it is well on its way to
+competing with the likes of KDE's Konquerer, or maybe
+even Mozilla. Lord knows I worked on Mozilla for
+quite a while (and still use it for everyday browsing,
+cause there ain't any real alternative for GNOME folks
+like me), but I still find Mozilla to be painfully
+bloated, inefficient, slow, and memory-hogging, even
+after their wonderful ground-up re-write based on
+Gecko. Bottom line is, I have come to the same
+conclusion that JWZ did--that is, all the open source
+in the world cannot save Mozilla at this point. 
+Mozilla is pretty much hopeless.
+
+I think Mozilla's biggest problem was XUL. After
+having seen what a cross-platform front-end interface
+like Mozilla's XUL could be like, I am now convinced
+that a native GTK+ interface would definitely be the
+way to go. XUL is too bloated and far to slow for my
+tastes.
+
+Anyway, I am happy to see some progress being made on
+Dillo, and what's more, in the areas that really need
+it the most, like Networking, I/O, and implementing
+tables/frames.
+
+It is also interesting that dw (formerly gzw, I
+assume) is being re-writeen from scratch. Seems like
+this is rather what Mozilla did with Gecko.
+
+As to tables/frames, how is it going to be done? I
+recall some discussions with Armadillo about possibly
+doing it by embedding dw within dw. Tables are
+admittedly a little bit different from frames, but I
+do think they are almost like flip sides of the same
+coin.
+
+Anyway, I unfortunately don't know too much about
+Dillo internals, C/C++, or GTK+. So would somebody
+like to point me to something I can do to help with
+Dillo? I'd like to help if I can.
+
+=====
+Is your JavaScript ready for Nav5 and IE5?
+Get the latest JavaScript client sniffer at
+http://developer.netscape.com/docs/examples/javascript/browser_type.html
+
+Sincerely,
+Daniel
+e-mail: zuperdee@pe...
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos - 35mm Quality Prints, Now Get 15 Free!
+http://photos.yahoo.com/ 
+
+
+
+[Dillo-dev]New Dw
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-10-06 13:53
+
+Hi!
+
+I've been working on a new Dw, mainly written from scratch. I've given
+up the idea of making all elements GtkWidget's, since any attempt to
+work around the window size limit would be far to complicated, but
+designed and begun to implement a new Dw, which mainly follows the
+goal to be more similar to Gtk, because (i) the design of Gtk+ is
+quite nice and proven to be usable, (ii) that will make embedding Gtk
+widgets simpler, and (iii) it will be simpler to understand for
+someone who knows Gtk.
+
+It's mainly a simple copy of the Gtk structures: there is a DwWidget
+(sorry for the doubled "widget"), derived from GtkObject and with
+similar methods as GtkWidget, a DwContainer, and structures like
+DwRectangle, DwAllocation etc. with 32 bit sizes. Furthermore there is
+a Gtk+ widget GtkDwViewport, which embeds a DwWidget (more directly
+than the old GtkDwView), and is, from the view of Gtk+, parent of all
+Gtk+ widgets that are embedded in the DwWidgets. DwContainers will
+simply have to report all their children (DwWidget's as well as
+GtkWidget's), and GtkDwViewport will recursively sort out the
+GtkWidget's (by the GTK_IS_WIDGET macro), so implementing a
+DwContainer is not more complicated than implementing a GtkContainer.
+
+Currently, there are still many bugs, especially severe expose
+problems for embedded Gtk+ widgets, and DwWidget is still quite
+incomplete. After fixing the most severe bugs, I'll try to integrate
+the new Dw (which currently runs in a testbed) into dillo soon, trying
+to complete it in dillo itself. There is already a halfway working
+DwPage (a port of my Gtk+ port of the old DwPage, to the new Dw).
+
+I'll send the sources to anyone who is interested, and I would be glad
+about help from someone else who knows Gtk+ good.
+
+Sebastian 
+
+
+
+[Dillo-dev]remote url access
+
+From: Sean MacLennan <seanm@ne...> - 2000-10-02 15:49
+
+Attachments: out      
+
+Hi,
+
+I am try to add Mosaic style remote access to dillo. From a unix signal
+handler I want to push an url. The command a_Nav_push works *once*, then
+fails from then on. I have a patch below that shows a very simple
+example of this, plus an attempt to set the text in the location widget.
+I can set the text correctly, but I do not know how to then signal gtk
+to process the line.
+
+Any help at all would be appreciated,
+
+Sean 
+
+
+
+[Dillo-dev]Dillo Weekly News
+
+From: Allan Clark <shark@bl...> - 2000-10-02 00:17
+
+The latest weekly news has been posted, a little light on content this week
+due to the lack of activity on the list and the fact that the first one was
+a little late and hence this week's only has two days worth of news.
+The url is
+http://www.shark.pwp.blueyonder.co.uk/news021000.html
+Allan Clark
+allan@al...
+shark@bl... 
+
+

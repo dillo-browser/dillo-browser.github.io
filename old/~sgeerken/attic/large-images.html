@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Scaling Images: Errors?</title>
+  </head>
+  <body>
+    <img src="very-tall.png" />
+    <img src="very-tall.png" style="height: 131072px"/>
+    <img src="very-wide.png"/>
+    <img src="very-wide.png" style="width: 131072px"/>
+    <img src="very-wide.png" style="width: -10px"/>
+    <img src="very-wide.png" style="height: -20px"/>
+    <img src="very-wide.png" style="width: 7000px; height: 7000px"/>
+  </body>
+</html>

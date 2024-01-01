@@ -1,0 +1,1303 @@
+Re: [Dillo-dev]Font modifying tags
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-04-28 15:10
+
+Hi.
+
+On Wed, Apr 18, I wrote:
+> [...]
+> > I'll soon upload a few changes, [...]
+
+Done. Read doc/DwStyle.txt for informations about it.
+
+I've added the face attribute to <font>, but as before, it is
+currently completely deactivated. There should probably a new dillorc
+option force_my_font.
+
+About bug #118: This bug has two aspects. The first (li_test.html) is
+that there is an extra line break, this is (I think so) the same bug
+as #78 (<p> in <li>). Second, headers were always positioned at the
+left, this was because the style of the first word in the line (a
+pagemark anchor) was wrong. The latter has been fixed, therefore the
+"50% done" in the WorkedBy field.
+
+> [...]
+> And a question:
+> 
+> Eric implemented visualization of visited links by calling
+> a_Cache_url_read when the page is _drawn_. This has the strange effect
+> that sometimes the links are updated when a page is loaded in another
+> window (e.g. when you open a link in a new window) - this is indeed
+> very useful -, but first after they have been redrawn (e.g. caused by
+> an expose events) - quite inconsistent.
+> 
+> I've made a few changes, two points are (more on the reasons later):
+> (i) I moved the a_Cache_url_read call into html.c, and (ii) I'll add
+> the possibility to change the style of words dynamically. However, the
+> only simple possibility I see is to change a link when the user clicks
+> on them. (Which makes perhaps sense, since a broken "visited" link is
+> also a visited link.) Any suggestions?
+
+My current solution looks like this:
+
+- I've removed vcolor from DwPageAttr/DwStyle. In future, there
+will be one style for each "state", instead of one style for all
+states.
+
+- When the page is read, a_Cache_url_read is called to determine
+whether to use the "link" or the "vlink" color.
+
+- If the user clicks on a link, it is changed to "vcolor". There is
+some code in Dw_page_button_release to handle this, but this is
+definitely supposed as a workaround, and will change in future.
+
+
+Sebastian 
+
+
+
+[Dillo-dev]BUG 147 & BUG 148
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-25 12:39
+
+Hi!
+
+These entries (147 & 148) are not bugs in dillo, but a problem
+with shell character escaping! If you use:
+
+dillo http://cgi.ebay.com/aw-cgi/eBayISAPI.dll?ViewItem&amp;item=1230283536
+
+in the command line, the shell will stop at the '&' and try to
+run that in background, and the rest of the line will be parsed
+as a different thing.
+
+Just try:
+
+dillo 'http://cgi.ebay.com/aw-cgi/eBayISAPI.dll?ViewItem&amp;item=1230283536'
+
+and it will be fine.
+
+Please acknowledge me this info (or prove me wrong! :) before I
+delete those entries.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Menu Button Question
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-24 11:53
+
+Hello Andrew!
+
+andew ecu writes:
+> Hi i have just compiled the dillo-0.4.0 source code, and the binary program 
+> that i got runs. However the only menu options that i get are File and 
+> Bookmarks and Help. I noticed on the screen shots and also in the source 
+> code of commands.c that there is meant to be a Document menu and a Browse 
+> menu.
+> 
+> Have i compiled the program wrong? Why cant i get the full menu
+> options?
+
+No, you haven't compiled the wrong program. You *are* getting the
+full menu options (as of now). Those screenshots are somewhat old and
+most of user options are availvable through mouse pop-up menus
+(right-click on a page or on a link and you'll get 2 diferent pop-ups
+with some interesting options).
+
+We can update those screenshots, but besides those two menus from
+the menu bar, everything else in Dillo's apperaence seems to be quite
+the same.
+
+By the way, I suggest you try out Dillo from CVS. It includes some
+changes which make browsing much more stable! (new Concomitant Control
+Chain design).
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Menu Button Question
+
+From: andew ecu <andrewecu@ho...> - 2001-04-24 02:56
+
+Hi i have just compiled the dillo-0.4.0 source code, and the binary program 
+that i got runs. However the only menu options that i get are File and 
+Bookmarks and Help. I noticed on the screen shots and also in the source 
+code of commands.c that there is meant to be a Document menu and a Browse 
+menu.
+
+Have i compiled the program wrong? Why cant i get the full menu options?
+
+Please Help :)
+Thanks
+Andrew
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com. 
+
+
+
+Re: [Dillo-dev]thinggies
+
+From: Holger Rapp <sirver@gm...> - 2001-04-22 17:18
+
+Jorge,
+
+> > i've got a short question to dillo.
+> > why are white backgrounds disallowed in the dillorc file? I couldn't see
+> > the useability for this.
+> > Please explain.
+> 
+> Some of us suffer from extra sensitivity in our eyes, and to
+> keep looking at white backgrounds for an extended time can lead
+> to headaches and eye pain. That's all.
+> 
+A well, ok. But wouldn't it be better to allow white bgs by default and
+to turn them off as a feature? SOme sites just don't look with a other
+color then white.
+> > Also, i would like to know im someone succeeded in getting the dpi1
+> > plugins up and running. I saw in the log that some loaded it down. What
+> > do you think of it?
+> 
+> Well, I haven't checked your latest version yet, but I'm
+> willing to. Now I'm working on other areas, but the time will
+> come sooner or later; please be patient, or send me some notes
+> about your progress.
+> 
+Ok, i will. I have to reimplement change some things because of the new
+URL Scheme, which i haven't understood yet. But i will. Expect to hear
+from me somewhen in the following week.
+> Ah, I have asked you a couple of times if I have sent you my
+> old version of the FTP plugin; have I?
+Sorry, didn't i answer this? Yes, you have. when you take a look at the
+code you'll recognize big party of your code, I guess.
+
+So long
+Holger 
+
+
+
+Re: [Dillo-dev]thinggies
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-22 14:14
+
+Holger,
+
+> i've got a short question to dillo.
+> why are white backgrounds disallowed in the dillorc file? I couldn't see
+> the useability for this.
+> Please explain.
+
+Some of us suffer from extra sensitivity in our eyes, and to
+keep looking at white backgrounds for an extended time can lead
+to headaches and eye pain. That's all.
+
+> Also, i would like to know im someone succeeded in getting the dpi1
+> plugins up and running. I saw in the log that some loaded it down. What
+> do you think of it?
+
+Well, I haven't checked your latest version yet, but I'm
+willing to. Now I'm working on other areas, but the time will
+come sooner or later; please be patient, or send me some notes
+about your progress.
+
+Ah, I have asked you a couple of times if I have sent you my
+old version of the FTP plugin; have I?
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]News
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-22 02:07
+
+Hi!
+
+Sorry if I seemed a bit unresponsive, but I was dedicated to
+the new prototype and its integration with current CVS.
+Today I uploaded the merged code to the CVS; there're plenty of
+changes, summarized in the Changelog. The good news is that the
+new CCC-scheme is working good, and that several other things can
+be built on top of it!
+
+The most noticeable effects are better status messages, a bit
+more of stability, improved error handling and the beloved fast
+Back (or Forward) test! Here I'm a little puzzled, although it
+works quite fast, sometimes the toolbar buttons get into an
+insensitive state (more accurately: the mouse events are not
+passed to the underlying widgets). The funny thing is that the
+main page (viewport) keeps responsive to the keyboard, and
+Shift+TAB rolls focus as usual, so it's possible to write a new
+URL, go there, and after a little struggling, normal work can be
+resumed (I don't know exactly how).
+Ah, the other thing that may help is that before Sebastian's
+last patch to event passing code, there were segfaults instead...
+
+How2reproduce: Load a few (local) pages, and keep going back
+and forward as fast as you can until it happens.
+
+
+Cheers
+Jorge.-
+
+
+Ps: Deleted BUG#141 
+
+
+
+[Dillo-dev]thinggies
+
+From: Holger Rapp <sirver@gm...> - 2001-04-21 09:52
+
+Hello,
+
+i've got a short question to dillo.
+why are white backgrounds disallowed in the dillorc file? I couldn't see
+the useability for this.
+Please explain.
+Also, i would like to know im someone succeeded in getting the dpi1
+plugins up and running. I saw in the log that some loaded it down. What
+do you think of it?
+
+Greets.
+Holger 
+
+
+
+Re: [Dillo-dev]Font modifying tags
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2001-04-18 18:38
+
+Hi.
+
+On Fri, Mar 30, Livio Baldini Soares wrote:
+> I accidently started implementing font tags again :-( I was looking
+> through Eric's new Html.testsuite when I noticed some tags weren't
+> implemented, so I eagerly starting hacking...
+> Then I remembered: "Shit! Sean is doing that already...". 
+> So Sean, if it isn't any trouble, could you list the tags that you've
+> already implemented? (The ones I did were the <big> and <small>... I
+> cheated and implemented then both under one Html_tag_open_*() function
+> ;-)
+
+On Sat, Mar 31, I wrote:
+> I intended to post this in a few days, since I'm currently working on
+> attributes. I wondered what has happened with the implementation of
+> the <font> tag.
+> 
+> I'll soon upload a few changes, [...]
+
+"Soon" has taken a bit longer, but at least the interface and the
+modifications of html.c and dw_page.c are finished. The implementation
+of styles (which are currently mainly the same) is still buggy (but
+stable, mainly only memory leaks), and I'll test several variations of
+implementation details for speed and memory usage.
+
+However, if someone wants to implement several related html elements
+(<font color=...> and <font face=...> already work - except checking
+preferences), I'll send him a patch for working on html.c.
+
+And a question:
+
+Eric implemented visualization of visited links by calling
+a_Cache_url_read when the page is _drawn_. This has the strange effect
+that sometimes the links are updated when a page is loaded in another
+window (e.g. when you open a link in a new window) - this is indeed
+very useful -, but first after they have been redrawn (e.g. caused by
+an expose events) - quite inconsistent.
+
+I've made a few changes, two points are (more on the reasons later):
+(i) I moved the a_Cache_url_read call into html.c, and (ii) I'll add
+the possibility to change the style of words dynamically. However, the
+only simple possibility I see is to change a link when the user clicks
+on them. (Which makes perhaps sense, since a broken "visited" link is
+also a visited link.) Any suggestions?
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]RE: Dpi1 Plugins
+
+From: Holger Rapp <sirver@gm...> - 2001-04-16 17:41
+
+Hi,
+
+doing well with the dpi1 stuff and the FTP-Plugin. Working quite stable
+now. I realease a new version tonight. A high priority is the to write
+what i did in a other way then the dpi1.txt suggests. I will send my
+version as soon as possible. 
+The ftp plugin is now able to list dirs on other Servers and the dpi1
+engine is fully workable, even if there is stuff missing. I guess we
+could implement it in the next stable version of dillo.
+Check the new source at http://microkosmos.mine.nu at about 24:00 CEST,
+i really like to here what you're thinking.
+
+Greets
+Holle 
+
+
+
+Re: [Dillo-dev]Patch for File Selection (Discussion about User-Interface)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-16 15:13
+
+Hi!
+
+
+> > I also plan to make window to fix the second of my brother's
+> > complaint (no feed back during download), with updated status on the
+> > download. But this comes back to what I wanted to discuss about UI.
+> I also dislike this in dillo. While i really like the non linear way
+> dillo handels lookups/transfers i prefer if it would be more verbose
+> (ex: looking up blah blah, getting blahblah (30%)) so one could see that
+> it's still alive and working.
+
+Please read the [Project Notes] link.
+
+> >
+> > User Interface
+> > --------------
+> Here i've got to add a thing. I'm currently working at the ftp module
+> and the dpi1 plugin stuff.
+
+[Holger]: Did I send you my old ftp plugin-program code?
+
+> And i've got no idea how a plugin should
+> inform the user about it's progress. There could be those ways:
+> 1) the plugin makes it's own progress dialog
+> 2) the plugin creates on question a HTML page which shows the progress
+> 3) the plugin permanently passes it's progress to dillo and it updates
+> a progress dialog.
+>
+> I personally like the 3 one the most. But this is also a UI thingy, so
+> what do you thing?
+
+The number of bytes passed to the browser (download progress
+info when retireving a file via FP), is got by the browser as a
+side effect of the IO activity.
+"Contacting host", "Login in" type of messages will be passed
+back to the browser using dpi1 protocol; later on, those messages
+are routed to the sttus bar with the a_Interface_status function.
+
+You can review the save-as functionality to get the picture.
+BTW, I implemented it just for that!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]RE: Dpi1 Plugins
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-16 15:13
+
+Holger,
+[this email has interesting information for everyone]
+
+> > [Plugins bugs]
+> > There're zombies after calling PI-programs, no reload, ...
+> I found some. I'm not sure how to handle the memory leak throu the IO
+> engine (the code which you wrote), cuz i don't want to stick around in
+> the IO engine, because i don't won't to get trouble with the one
+> responsible for it.
+
+Don't worry about the IO, I'm developing the error control now,
+and my prototype has plenty of changes and improvements, so it's
+pointless to change the old IO now.
+
+> The others are just some search-and-destroy bugs.
+> I finally tracked down the bug with the parsing of the pluginsrc file...
+> hope to get this fixed tomorrow.
+
+Let me know when you have a polished prototype.
+
+> Another point is the new URL sheme. It is nessesary to make a difference
+> between plugins, that should cache and plugins that shouldn't. Is this
+> planed?
+
+There're a couple of ideas floating around this issue. By now,
+it is safe not to make any difference.
+In the future it could be handled by a no-cache directive in
+the HTTP header, or by a specific request in the dpi1 protocol.
+
+
+> Now, for something completly different: Dillo crashed after entering a
+> new URL while another one is already loaded. I didn't found the bug in
+> the source, but this is a known problem. I would like to know if there
+> is a progress in this, because this makes it really annoying to use
+> dillo sometimes. And i want to get rid of netscape 8).
+
+Yes, progress has been made (some of it is recorded in the
+bugtrack).
+As I wrote before, I'm developing an IO prototype that's
+currently working better than the former! I'll polish it a bit
+more and integrate it to the CVS tree, even knowing that it is
+not complete yet.
+There're several bugs, some rocorded and some not, that will be
+fixed with the new control framework. Progress seems very slow
+because I'm not working in a single bug, but with a whole family
+of bugs that stem from a common root.
+The problem is complex due to the innovative concept of never
+blocking interface that dillo uses. In other words: Has anyone
+seen a busy mouse-cursor in dillo? :-)
+The good news is that the new CCC (concomitant control chain)
+looks able to cope with that complexity in the prototype.
+
+In what regards to Netscape or Mozilla, it will not be easy to
+forget about them :(. Mainly due to sites using java, javascript,
+flash and related encumbered technologies.
+
+I don't plan to support those things in dillo. At least not
+within the main program, but if someone else develops a plugin
+that's able to cope with them, and there's a will to use it even
+knowing about all the security problems it can bring, I will not
+fight against them, and let them use it.
+
+HTTPS and W3C standards are a different thing, and they will
+have its place within dillo (when priorities point on them).
+
+I beleive we can get dillo to a point where it becomes our main
+browser of choice, and Mozilla or Netscape as a last resource.
+From there and on, only the lords of destiny can tell.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Bug #141 ???
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-11 20:20
+
+Hi folks!
+
+Is the person who inserted bug #141 on the list? If you are, the bug
+isn't entirely true... Please use Dillo and render this page:
+http://www.rti-zone.org/dillo/Html.testsuite/entities.html
+
+Dillo *does* render "special HTML-chars". There are two things to be
+said here. First, are you forgetting the ';' after the named entity?
+This can have mislead you... and I think that the guys here on the
+list have discussed about error recovery on these cases (or am I
+mistaken???), look at the `Faulty entities' section on the above URL.
+
+Secondly, it *is* true that Dillo does not render correctly ALL
+named entities correctly. So the bug entry #141 could either be
+changed to:
+
+* Dillo doesn't render named entities without ';', even though that's
+wrong ;-)
+
+* Dillo doesn't render ALL named entities correctly...
+
+Or we can just foget about it, and erase the entry.
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Patch for File Selection (Discussion about User-Interface)
+
+From: Holger Rapp <sirver@gm...> - 2001-04-10 14:07
+
+everyone,
+
+
+> Ok, with that said, you can get the patch (against today's,
+> 10Apr2001, CVS version) at:
+> http://www.linux.ime.usp.br/~livio/dillo/file_select.diff
+The patch worked well, and i really like it. But what i dislike is, that
+the selection is modal. i would prefer that dillo should stay
+responsive.
+
+> I also plan to make window to fix the second of my brother's
+> complaint (no feed back during download), with updated status on the
+> download. But this comes back to what I wanted to discuss about UI.
+I also dislike this in dillo. While i really like the non linear way
+dillo handels lookups/transfers i prefer if it would be more verbose
+(ex: looking up blah blah, getting blahblah (30%)) so one could see that
+it's still alive and working.
+
+> 
+> User Interface
+> --------------
+Here i've got to add a thing. I'm currently working at the ftp module
+and the dpi1 plugin stuff. And i've got no idea how a plugin should
+inform the user about it's progress. There could be those ways:
+1) the plugin makes it's own progress dialog
+2) the plugin creates on question a HTML page which shows the progress
+3) the plugin permanently passes it's progress to dillo and it updates
+a progress dialog. 
+
+I personally like the 3 one the most. But this is also a UI thingy, so
+what do you thing? 
+
+Greets
+Holger
+> 
+
+
+
+[Dillo-dev]Patch for File Selection (Discussion about User-Interface)
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-10 09:19
+
+Hi guys!
+
+My little kid brother started using Dillo this weekend, and he
+complained that it was "hard" for him to save (download) files. Mainly
+for two reasons. First, the entry box he said was just plain ugly,
+unfriendly, and unbrowsable. Secondly, he wanted some feedback from
+Dillo to see how the download was doing (percentage of the file
+already downloaded, etc).
+
+I totally agree with him... One thing Dillo is very bad at is User
+Interface (UI). Sometime ago, I was thinking of sending a message to
+open up a discussion about User Interface, but before I didn't have
+any time. But before I get into that, let me show you guys a patch to
+fix the first of my brother's complaint.
+
+File Selection
+--------------
+
+I made a patch to use gtk_file_selection when trying to "Save Page
+As..." and "Save Link As...". Currently it was only used for "Open
+File...". This made file selection MUCH better (easier for the
+end-user) than the simple text entry-box.
+
+To do this I reorganized some of interface.c and killed some widgets
+for dialogs boxes in browser.h. Mainly there are two things to be
+noticed:
+
+[1] Now there is only *one* dialog window for all three
+functions. Therefore you *can not* access more than one at a time. To
+me, this makes a lot of sense, because if you're going to choose a
+file for whatever reason, then CHOOSE the file, OR close the
+window. After that you can go on doing what you were doing... So
+that's why I set the File_Selection window to MODAL. The main bw
+window will seem to be dead, until you close the file_selection.
+
+[2] I have made a generic function,
+Interface_make_choose_file_dialog(), which is similar to the
+previously used Interface_make_dialog(). You pass, as arguments, the
+window's name, and most importantly, the call function to use to
+connect to the signal "clicked" on the ok_button. This means that
+this is and *should* be reusable. If this is needed anywhere, than an
+a_Command type hook is supposed to be set in commands.c, and in that
+make a call to an a_Interface function which can use the
+choosefile_dialog I've created. (Eric, this may help you with bug #128
+with the file selection part).
+
+Ok, with that said, you can get the patch (against today's,
+10Apr2001, CVS version) at:
+http://www.linux.ime.usp.br/~livio/dillo/file_select.diff
+
+I would really be happy to hear back on this patch. And any requests
+for improvement are very welcome.
+
+I also plan to make window to fix the second of my brother's
+complaint (no feed back during download), with updated status on the
+download. But this comes back to what I wanted to discuss about UI.
+
+User Interface
+--------------
+
+Has anyone given much thought about Dillo's interface? Or is it NOT a
+priority for the moment? If it's not, than I can delay/postpone this
+discussion for a better occasion. But if it's time to discuss it,
+better do it now before the UI starts to get too complicated.
+
+First of all, about the code organisation, we seem to be using gtk's
+default structure which menus.c/commands.c/interface.c.
+With some projects using glade I've done, this seems to have worked
+well, but I'm not sure it will with Dillo. If the UI starts to grow,
+then this type of structure tends to be bad (confusing).
+
+So now we get to the most important part: HOW do we want Dillo's user
+interface? If the goal is to keep it simple, than we might as well
+keep current structure. I don't exactly know how you guys picture
+Dillo when it's finished, or better yet, how you guys would *like* to
+see/use Dillo.
+
+I have some ideas of my own, but they seem a little too wild :^P
+
+For example, I like Emacs' buffers idea. In only ONE window you can
+have as many buffers (in our case, Viewport's) as you like. So you
+download 2 or 3 pages concurrently, and look at one at a time (or
+browse through the viewports by clicking on a button, which beats
+managing 3 or more separate windows on your desktop). There is a
+browser that "somewhat" does this which is Opera (has anyone tried
+it?). What Opera lacks though, is the option to split the window, and
+have 2 separate windows, because sometimes that's useful too (like
+Emacs has). So we could do a merge between tradicional mutilple
+windows, and a "buffering" system (multiple viewports in each window).
+
+Of course everyone of us will come up with diferent ideas, and I would
+like you guys (us) to discuss about User Interface to start making a
+plan for future (and some not so future, too) implementation for UI.
+
+Well, that's all for now. Best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Bug #139
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-08 09:41
+
+Hi guys!
+
+I've inserted and fixed bug #139. It seems that when you try to
+access URL's with ANCHORS *directly*, then the View Source command
+shows up empty. And even if you erase the anchor part of the URL, it
+still has an empty source.
+
+But if you try to access the URL without the anchor part before the
+URL with the anchor part, then everything is ok. The problem is due to
+how the URL gets registered in Cache (with a_Cache_open_url, and
+a_Cache_url_read). I've made a quick & dirty fix for this, and I think
+it's not worthwhile spending time fixing this cleanly because Jorge
+and I are working on a new URL scheme which will try to eliminate
+these problems.
+
+Here is the two line patch (on top of src/commands.c from todays
+CVS): 
+*******************************
+diff -pru dillo/src/commands.c dillo.new2/src/commands.c
+--- dillo/src/commands.c Sun Mar 4 16:21:21 2001
++++ dillo.new2/src/commands.c Sun Apr 8 06:15:59 2001
+@@ -96,7 +96,7 @@ void a_Commands_exit_callback(GtkWidget 
+void a_Commands_viewsource_callback (GtkWidget *widget, gpointer client_data)
+{
+BrowserWindow *bw = (BrowserWindow *) client_data;
+- char *buf;
++ char *buf, *hash;
+gint size;
+static GtkWidget *window = NULL;
+GtkWidget *box1;
+@@ -137,6 +137,8 @@ void a_Commands_viewsource_callback (Gtk
+
+gtk_text_freeze (GTK_TEXT (text));
+
++ if ( (hash = a_Url_parse_hash(bw->nav_stack[bw->nav_stack_ptr].url)) )
++ *hash = '\0';
+buf = a_Cache_url_read(bw->nav_stack[bw->nav_stack_ptr].url, &size);
+
+gtk_text_insert (GTK_TEXT (text), NULL, NULL,
+**************************
+
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]ematic mail
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-08 02:03
+
+Hi,
+
+I lost a couple of emails with ematic, if it was from someone
+here, please resend them to my nettaxi account.
+
+Thanks
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Interesting HTML Suite
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-07 19:17
+
+Hi,
+
+On Sat, 7 Apr 2001, Livio Baldini Soares wrote:
+
+> Hi,
+>
+> I ran into this and I thought it very interesting:
+> http://www.bath.ac.uk/%7Epy8ieh/internet/eviltests/
+>
+> It's a HTML suite which does "evil tests". Plus, there are links for
+> ther Html suite's.
+>
+> I tried a view tests, and they seemed nice... I didn't like that he
+> complained about a missing HTTP_REFERER field... but as far as I can
+> tell, it's an optional field :-(
+
+Remember that dillo doesn't try to render malformed HTML code,
+not even non standar extensions. Anyway, the "wet blanket" pages
+(standar compliance tests) can be interesting, but please always
+check Eric's suite first, because it is specially tailored to our
+needs.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Dillo and Mime types
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-07 19:17
+
+Robert,
+
+> I'm interested in being able to open RealMedia files in the RealVideo
+> Player program. Is there a way to do MIME types in Dillo? Basically, I
+> would like to click on a link and get the RealPlayer to fire up and load
+> the media file. I can do this with Netscape, but Dillo is a far sexier
+> browser. It's interesting that the Dillo binary is smaller than Lynx and
+> yet can display inline images!
+>
+>
+> Please let me know if there is a way to specify handling of MIME types in
+> Dillo. I appreciate your efforts ... this is a fine browser.
+
+Yes, there is a way, but in the future this will be handled
+more easily with dillo plugins (a different thing from Netsacpe
+plugins).
+
+The basic idea is to stream the incoming data to the PI and let
+it pass it to the apropriate viewer. If your RealPlayer accepts
+incoming data through its stdin, then, a simple dillo-plugin can
+be the solution.
+
+We're working on plugins now, but this extension is not
+currently spported by dillo.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Interesting HTML Suite
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-07 09:36
+
+Hi,
+
+I ran into this and I thought it very interesting:
+http://www.bath.ac.uk/%7Epy8ieh/internet/eviltests/
+
+It's a HTML suite which does "evil tests". Plus, there are links for
+ther Html suite's. 
+
+I tried a view tests, and they seemed nice... I didn't like that he
+complained about a missing HTTP_REFERER field... but as far as I can
+tell, it's an optional field :-(
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Dillo on sparc && Broken proxy query
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-05 03:35
+
+Hi again!
+
+I've done some more research and made a cleaner patch. I've tested
+it under both proxies (it seems that my professor's network uses Squid
+2.2STABLE4) and using no proxy.. all of them work fine now with my
+patch ;-)
+
+Eric GAUDET writes:
+> 
+> A few question you didn't mention in your email because the answer is probably
+> "obviously yes", but I gotta ask ;-)
+
+(...)
+
+> - Does your patch follow the requirements of the relevant RFCs about http and
+> proxying ?
+
+Well, what I *understtod* from HTTP/1.1 RFC (number 2616, from June
+1999) is that yes, the hostname SHOULD be what the user (client)
+wants, not the intermediate gateway or proxy. But I may well have
+misunderstood. Here's the snip from rfc-2616, section 14.23
+
+****************************************************
+> 14.23 Host
+> 
+> The Host request-header field specifies the Internet host and
+> port number of the resource being requested, as obtained from the
+> original URI given by the user or referring resource (generally
+> an HTTP URL, as described in section 3.2.2). The Host field value
+> MUST represent the naming authority of the origin server or
+> gateway given by the original URL. This allows the origin server
+> or gateway to differentiate between internally-ambiguous URLs,
+> such as the root "/" URL of a server for multiple host names on a
+> single IP address.
+> 
+> Host = "Host"":"host [ ":"port ] ; Section 3.2.2
+> 
+> A "host" without any trailing port information implies the
+> default port for the service requested (e.g., "80"for an HTTP
+> URL). For example, a request on the origin server for
+> <http://www.w3.org/pub/WWW/> would properly include:
+> 
+> GET /pub/WWW/HTTP/1.1
+> Host: http://www.w3.org
+> 
+> A client MUST include a Host header field in all HTTP/1.1 request
+> messages . If the requested URI does not include an Internet host
+> name for the service being requested, then the Host header field
+> MUST be given with an empty value. An HTTP/1.1 proxy MUST ensure
+> that any request message it forwards does contain an appropriate
+> Host header field that identifies the service being requested by
+> the proxy. All Internet-based HTTP/1.1 servers MUST respond with
+> a 400 (Bad Request) status code to any HTTP/1.1 request message
+> which lacks a Host header field.
+> 
+> See sections 5.2 and 19.6.1.1 for other requirements relating to
+> Host.
+**************************************************************
+
+I've read secions 5.2 and 19.6.1.1 and there seems to be nothing
+relevant concerning this issue.
+
+Ok, so did anyone understand the RFC in a different manner?
+
+I've implemented the "correct" (or not ;-) hostname in the Host
+request-header field while using proxy. The patch is at:
+
+http://www.linux.ime.usp.br/~livio/dillo/proxy.diff
+
+Comments are always appreciated!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Dillo on sparc && Broken proxy query
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-04 17:57
+
+Hi Eric!
+
+Yeah, I forgot to mention a few things, and it seems my patch breaks
+things on non-proxy systems.
+
+Eric GAUDET writes:
+> -- En reponse de "[Dillo-dev]Dillo on sparc && Broken proxy query" de Livio
+> Baldini Soares, le 03-Apr-2001 :
+> > Hi all,
+> > 
+> > I have some good (and bad ;-) news! I got Dillo to work on a Linux
+> > sparc box here at the University. ALSO I got it to work on a Sparc
+> > running:
+> > 
+> ...
+> > 
+> > Comments for the patch are *very* appreciated:
+> > 
+> 
+> A few question you didn't mention in your email because the answer is probably
+> "obviously yes", but I gotta ask ;-)
+> - you turned on the "proxy" dillorc option, right ?
+
+Yes. (And ALSO there is a environment variable $http_proxy correctly
+set). Oh, I and I forgo to mention that it works on the proxy in the
+network I help to administrate (student's network). Here I use squid
+version 2.2.5 and everything works fine... The one which doesn't work
+fine is in the professor's network. I don't know how their sysadmin
+has set up squid, and which version it is (altough it is 2 or above).
+
+> - I assume the patched dillo still works in a non-proxy environement, have you
+> test it ?
+
+No :-( I forgot to add an `if' clause... but I'll fix this on the next
+version of the patch...
+
+> - Does your patch follow the requirements of the relevant RFCs about http and
+> proxying ?
+
+I have no idea... I guess I should check the RFC first on how to
+correctly make the query.
+
+I'll answer this in a few days after I do some reasearch ;-)
+
+best regards.
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Dillo on sparc && Broken proxy query
+
+From: Eric GAUDET <egaudet@fr...> - 2001-04-03 13:22
+
+-- En reponse de "[Dillo-dev]Dillo on sparc && Broken proxy query" de Livio
+Baldini Soares, le 03-Apr-2001 :
+> Hi all,
+> 
+> I have some good (and bad ;-) news! I got Dillo to work on a Linux
+> sparc box here at the University. ALSO I got it to work on a Sparc
+> running:
+> 
+...
+> 
+> Comments for the patch are *very* appreciated:
+> 
+
+A few question you didn't mention in your email because the answer is probably
+"obviously yes", but I gotta ask ;-)
+- you turned on the "proxy" dillorc option, right ?
+- I assume the patched dillo still works in a non-proxy environement, have you
+test it ?
+- Does your patch follow the requirements of the relevant RFCs about http and
+proxying ?
+
+------------------------------------
+Eric GAUDET <egaudet@fr...>
+Le 03-Apr-2001 a 22:18:53
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]Dillo on sparc && Broken proxy query
+
+From: Livio Baldini Soares <livio@li...> - 2001-04-03 13:07
+
+Hi all,
+
+I have some good (and bad ;-) news! I got Dillo to work on a Linux
+sparc box here at the University. ALSO I got it to work on a Sparc
+running:
+
+$ uname -a
+SunOS jaca 5.7 Generic_106541-04 sun4u sparc
+
+It compiled ALMOST ok. First I got some warnings while compiling 
+
+In file included from /usr/local/include/netdb.h:97,
+from dns.c:19:
+/usr/local/include/sys/bitypes.h:26: warning: redefinition of ìnt8_t'
+/usr/include/sys/int_types.h:62: warning: ìnt8_t'previously declared here
+/usr/local/include/sys/bitypes.h:27: warning: redefinition of ìnt16_t'
+/usr/include/sys/int_types.h:68: warning: ìnt16_t'previously declared here
+/usr/local/include/sys/bitypes.h:28: warning: redefinition of ìnt32_t'
+/usr/include/sys/int_types.h:69: warning: ìnt32_t'previously declared here
+
+But that's all. It ran alright, except for the fact that there is a
+strange proxy running on the the intranet the that machine runs.
+It looks that when you have a `Host: ' part of the the query == proxy
+host, then the proxy thinks that you've made a bad query or something
+and forwards me the a default page, whichever Url I try to access.
+
+The proxy running there is proxy 2 (I don't know which version). The
+hack fix for this would be to remove `Host: ' from the query. Instead
+I've changed which hostname we put in the query (the way I did it,
+hostname in the query can be diferent from hostname which we make the
+query to). This fixes the proxy problem.
+
+Comments for the patch are *very* appreciated:
+
+---------------------------------------------------------------
+diff -pru dillo/src/IO/http.c dillo.new/src/IO/http.c
+--- dillo/src/IO/http.c Tue Apr 3 08:38:15 2001
++++ dillo.new/src/IO/http.c Tue Apr 3 09:54:12 2001
+@@ -184,6 +184,7 @@ static void Http_dns_callback(int Op, gu
+gint a_Http_get(const char *Url, void *Data)
+{
+gint fd;
++ gchar hostname[256];
+SocketData_t *S = g_new(SocketData_t, 1);
+
+/* Reference Web data */
+@@ -192,7 +193,8 @@ gint a_Http_get(const char *Url, void *D
+/* Hacked-in support for proxies, inspired by Olivier Aubert */
+S->port = 80;
+if (HTTP_Proxy && !(No_Proxy && strstr(Url, No_Proxy) != NULL)) {
+- a_Url_parse(HTTP_Proxy, S->hostname, sizeof(S->hostname), &S->port);
++ a_Url_parse(HTTP_Proxy, hostname, sizeof(hostname), &S->port);
++ a_Url_parse(Url, S->hostname, sizeof(S->hostname), NULL);
+S->tail = (char *) Url;
+} else {
+S->tail = a_Url_parse(Url, S->hostname, sizeof(S->hostname),
+&S->port);
+@@ -221,7 +223,7 @@ gint a_Http_get(const char *Url, void *D
+/* Let the DNS engine solve the hostname, and when done,
+* we'll try to connect the socket */
+fd = S->SockFD;
+- a_Dns_lookup(S->hostname, Http_dns_callback, (void *) S);
++ a_Dns_lookup(hostname, Http_dns_callback, (void *) S);
+/* Http_dns_callback() frees 'S', so if it finishes before this function
+* resumes, S->SockFD is lost; that's why we use 'fd'instead. --Jcid */
+return fd;
+--------------------------------------------------------------
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]patch image maps
+
+From: Eric GAUDET <egaudet@fr...> - 2001-04-03 11:13
+
+Hi all,
+Here's a tiny patch (3 lettres ;-) so dillo can handle f... err ... pages
+using incorrect arguments for their image maps area. (namely, yahoo maps'
+"Compass" image and its "shape=polygon" instead of "poly")
+
+Best,
+Eric
+
+
+diff -pur dillo-0.4.0/src/html.c dillo-0.4.0.imgmaps.fix/src/html.c
+--- dillo-0.4.0/src/html.c Wed Feb 28 10:01:58 2001
++++ dillo-0.4.0.imgmaps.fix/src/html.c Tue Apr 3 20:07:32 2001
+@@ -1111,7 +1111,7 @@ static void Html_tag_open_area(DilloHtml 
+type = DW_PAGE_SHAPE_RECT;
+} else if( strcmp(tmp, "circle") == 0 ) {
+type = DW_PAGE_SHAPE_CIRCLE;
+- } else if( strcmp(tmp, "poly") == 0 ) {
++ } else if( strncmp(tmp, "poly",4) == 0 ) {
+type = DW_PAGE_SHAPE_POLY;
+} else {
+type = DW_PAGE_SHAPE_RECT;
+
+------------------------------------
+Eric GAUDET <egaudet@fr...>
+Le 03-Apr-2001 a 20:08:30
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]Errata
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-02 23:39
+
+Hi!
+
+
+In my previous post, where it says:
+
+> BTW: I'll reply your posts in a few hours.
+
+I intended:
+
+> BTW: I'll reply Holger posts in a few hours.
+
+:-)
+
+
+Ah, and sometime ago, when I wrote:
+
+> The last weeks I've been trying to devote most of my time to
+> finishing the IO engine error control design. This had been a
+> several times procrastinated task, and I wish to push it forward
+> as much as I can this time.
+
+I meant that I want to advance with it as much as I can.
+
+
+Sorry for the confusion it could have produced.
+
+Jorge.- 
+
+
+
+[Dillo-dev]Re: dpi1 comments
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-04-02 16:45
+
+Eric,
+
+Please excuse my delays but I have lots of work, on several
+areas, and I'm devoting all of my time to it.
+
+> [Nav in menubar]
+> here's a small patch to change dillo's interface: it saves the
+> height of the nav (location) bar by building it in the same
+> handlebox as the menubar. It looks like this: ...
+
+You may be surprised, but this is exactly what I was looking
+forward when I began to remove menubar entries. I'm pleased to
+know I have this patch and although I haven't had the time to
+test and integrate it yet, I wanted to aknowledge you this good
+reception.
+
+> [patch] back history
+> here's a patch that adds a mouse button 2 or 3 callback to the
+> toolbar buttons ...
+
+Sometime ago I considered the idea of adding right-button-menus
+to the toolbar buttons (as for specifying reload options for
+instance). Obviously the idea also applies to BACK and FORWARD,
+and has several potential posibilities.
+It'll have to wait though, at least until we finish plugins, IO
+engine error control and particularly the new URL struct scheme
+we're developing with Livio. After that, integration and
+implementation should be straightforward.
+
+
+
+On Fri, 30 Mar 2001, Eric GAUDET wrote:
+
+> Hi Jorge,
+> I've been reviewing dpi1.txt and here're my comments.
+>
+> - you disgarded everything you though was only for dpi2. I think we should keep
+> them and add them step by step.
+
+By now I'm aiming to a quick implementation of basic
+functionality of the PI stuff. That's why some of the parts
+aren't specified enough, and why some issues remain open, but at
+least with what's currently there, the most basic scheme can be
+implemented.
+
+> - you disgarded most of the possible requests in DpiRequestInfo: don't you want
+> to list them as much as possible ? I gave some anyway.
+
+I tried to group related request and to eliminate data that's
+not requires (for instance, I prefer the browser window to be
+transparent for dpi1).
+
+> - Some commands embed the client ID, some not. Can dillo know from what client
+> the command comes from without it (in the IO engine) ? I think it's needed each
+> time. If not, why provide it ?
+
+Yes it can. The ID is provided just in case a resident PI needs
+to identify different requesting channels (as long as I remember)
+
+> - the command field are 2 bytes long each. Not a word about byte significance ?
+
+Yes, I do make mistakes.
+That needs to be specified.
+
+
+> - I like the pluginrc thing. But you haven't told much about the
+> initialisation.
+
+That's an open issue.
+Currently I don't have a definitive idea of what's to be done
+here, but at least I know that each PI-program must not be run
+every time dillo is launched. That's how the pluginrc idea sprung
+into the draft.
+
+
+> I tried to provide all details in my draft: one might think it
+> as complex, but this was built from the problems I encountered when coding it.
+> I can imagine you don't like the key-challenge/response mecanism, though.
+> Anyway, I was proposing DILLO_HELLO and DILLO_WELCOME, answer with "undefined"
+> DpiRegister and DpiSendRegister doing the almost same thing ? I don't get it
+> really.
+
+To me it seems that we agree on this, but with a communication
+problem in between :-). (maybe by my side...)
+
+Maybe the solution is to add this command to the protocol:
+
+dillo -> dpi:
+
+CMD : DpiInit
+D1 : Client ID
+D2 : { Any pertinent data }
+Length: Data length
+Data : <data>
+::
+Where data is the challenge.
+
+and from dpi->dillo:
+
+CMD : DpiInitAnswer
+D1 : Client ID
+D2 : { Any pertinent data }
+Length: Data length
+Data : <data>
+::
+Where data is the answer to the challenge.
+
+(Note that the challenge can also be coded in D2, eliminating the
+need of 'data' and 'Length').
+
+As I said before, we seem to agree on this, unless I had missed
+the whole point of this issue ;-)
+
+
+> Also, I think you have the order backward, it should be:
+> * dillo forks the plugin
+> * the plugin answers with DpiSendRegister and its information
+> * dillo acknoledges with DpiRegister containing the client ID
+
+No.
+
+The draft is right, the point is that this operation is carried
+on with the only purpose of registering a new PI into dillorc.
+After that's done, the PI ends.
+If sometime in the future the PI is needed, it's forked and run
+again, this time, to perform its task.
+Note that with this scheme, after a second launch of dillo,
+that PI would be already registered inside pluginsrc, so there's
+no need to register it again.
+
+
+> - also, whilst coding the first patch, I found that using a command line option
+> (--dillo-hello) was very convenient to debug a plugin form the command line by
+> making it answer from outside dillo.
+
+Agreed, feel free to specify it (as simply as you can).
+
+> - you don't want to keep the dpi:<plugin-name> calling mecanism, you prefer to
+> make the prefix mandatory. May I ask why ?
+
+No :-)
+
+Of course you can!
+I don't remember making an explicit denial of it (and if I did,
+I don't remember why :-).
+
+Seriously, it probably doesn't appear in the draft, due to the
+above metioned reasons, but it can be easily added, provided it
+conforms with the protocol.
+
+> - nothing about how to install a plugin. I was proposing:
+> <<
+> $HOME/.dillo/plugins
+> /usr/local/share/dillo/plugins/
+> If a Dillo-plugin is found more than once, only the first one is registered,
+> the other ones are ignored: users can install their own plugins in their home
+> directory to prevent default Dillo-plugins to be used by Dillo.
+> >>
+> What's wrong with that ?
+
+Nothing Eric, I just wanted to simplify the protocol, and to
+provide an easily understandable definition with a view to a fast
+implementation of the basic PI framework. Fortunately I seem to
+have succeeded, because Holger had started working.
+
+
+BTW: I'll reply your posts in a few hours.
+
+
+Jorge.- 
+

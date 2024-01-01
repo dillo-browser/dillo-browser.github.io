@@ -1,0 +1,48 @@
+14-Oct-2008
+Release coverage of dillo-2.0 in Desktop Linux
+http://www.desktoplinux.com/news/NS6922044112.html
+
+19-Feb-2004 
+Linux for Devices coverage of dillo-0.8.0 release.
+http://www.linuxfordevices.com/c/a/News/Embeddable-browser-project-hits-milestone-release-seeks-funding/
+
+Jun-2002 
+Matthias Arndt at Linux Gazette has written an article which introduces Dillo
+to possible new users. 
+http://linuxgazette.net/issue79/arndt.html
+
+15-Sep-2002 
+Paul Tatham from the Montreal Linux Users Group makes an interesting review
+of Dillo.
+http://www.mlug.ca/static/35.htm
+
+01-Sep-2002 
+Marcel Gagne describes how to build a lightweight Linux.
+http://www.linuxjournal.com/article/6169
+
+26-Feb-2002 
+Ralph Krause at Linux Journal has made a review of Dillo 0.6.4.
+http://www.linuxjournal.com/article/5847
+
+18-Jan-2003 
+Freshmeat has an article "Lightweight Web Browsers", of course, with a
+section about dillo.
+http://freshmeat.net/articles/lightweight-web-browsers
+
+22-Mar-2002 
+Damien Gallop at MacWrite.com has mentioned Dillo in his review of browsers
+for the Mac OS X. 
+http://www.macwrite.com/critical-mass/mac-os-x-internet-browsers
+
+24-Jun-2002 
+Michael J. Jordan from Linux Online has made a review of various Linux web
+browsers out there. In the article there is a nice and small mention of Dillo.
+http://www.linux.org/apps/reviews/browsers0602_6.html
+
+01-Feb-2002 
+The people over at www.ntk.net have written a little blurt about Dillo. Short
+review from H4ck3r's perspective. It's notably how they had been the only ones
+able to make a point of dillo's networking performance (not only rendering).
+That's soothing to me, since I've worked very hard on it (two papers and
+presentations at the SCCC 2000, that were not understood at all! :-)
+http://www.ntk.net/2002/02/01/#TRACKING

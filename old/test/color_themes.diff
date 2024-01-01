@@ -1,0 +1,380 @@
+diff -r df1a2f4f9d5a src/dillo.cc
+--- a/src/dillo.cc	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/dillo.cc	Sun Jan 13 05:29:37 2013 +0000
+@@ -237,43 +237,49 @@
+    checkFont(prefs.font_fantasy, "fantasy");
+ }
+ 
+-static void setColorFLTK(int32_t color, void (*fn) (uchar, uchar, uchar))
++/*
++ * Set UI color. 'color' is an 0xrrggbb value, whereas 'default_val' is a fltk
++ * color (index 0-0xFF, or 0xrrggbb00).
++ */
++static void setUIColorWdef(Fl_Color idx, int32_t color, Fl_Color default_val)
+ {
+-   if (color != -1)
+-      fn(color >> 16, (color >> 8) & 0xff, color & 0xff);
+-}
+-
+-static void setColorPrefWdef(int32_t &color, int32_t default_val)
+-{
+-   if (color == -1)
+-      color = default_val;
+-   else if (color == 0)
+-      color = FL_BLACK;
+-   else
+-      color <<= 8;
++   if (color == -1) {
++      if (default_val != 0xFFFFFFFF)
++         Fl::set_color(idx, default_val);
++   } else {
++      Fl::set_color(idx, color << 8);
++   }
+ }
+ 
+ static void setColors()
+ {
+-   unsigned rgb;
++   /* The main background is a special case because Fl::background() will
++    * set the "gray ramp", which is a set of lighter and darker colors based
++    * on the main background and used for box edges and such.
++    */
++   if (prefs.ui_main_bg_color != -1) {
++      uchar r = prefs.ui_main_bg_color >> 16,
++            g = (prefs.ui_main_bg_color >> 8 & 0xff),
++            b = prefs.ui_main_bg_color & 0xff;
+ 
+-   setColorFLTK(prefs.ui_main_bg_color, Fl::background);
+-   setColorFLTK(prefs.ui_text_bg_color, Fl::background2);
+-   setColorFLTK(prefs.ui_fg_color, Fl::foreground);
++      Fl::background(r, g, b);
++   }
+ 
+-   if (prefs.ui_selection_color == -1)
+-      rgb = Fl::get_color(fl_contrast(FL_SELECTION_COLOR,
+-                                      FL_BACKGROUND2_COLOR));
+-   else
+-      rgb = prefs.ui_selection_color << 8;
+-   Fl::set_color(FL_SELECTION_COLOR, rgb);
+-
+-   setColorPrefWdef(prefs.ui_button_highlight_color,
+-                    fl_lighter(FL_BACKGROUND_COLOR));
+-   setColorPrefWdef(prefs.ui_tab_active_bg_color, FL_BACKGROUND2_COLOR);
+-   setColorPrefWdef(prefs.ui_tab_bg_color, FL_BACKGROUND_COLOR);
+-   setColorPrefWdef(prefs.ui_tab_active_fg_color, FL_FOREGROUND_COLOR);   
+-   setColorPrefWdef(prefs.ui_tab_fg_color, FL_FOREGROUND_COLOR);   
++   setUIColorWdef(FL_BACKGROUND2_COLOR, prefs.ui_text_bg_color, 0xFFFFFFFF);
++   setUIColorWdef(FL_FOREGROUND_COLOR, prefs.ui_fg_color, 0xFFFFFFFF);
++   setUIColorWdef(FL_SELECTION_COLOR, prefs.ui_selection_color,
++                  fl_contrast(FL_SELECTION_COLOR, FL_BACKGROUND2_COLOR));
++   setUIColorWdef(PREFS_UI_BUTTON_HIGHLIGHT_COLOR,
++                  prefs.ui_button_highlight_color,
++                  fl_lighter(FL_BACKGROUND_COLOR));
++   setUIColorWdef(PREFS_UI_TAB_ACTIVE_BG_COLOR, prefs.ui_tab_active_bg_color,
++                  Fl::get_color(FL_BACKGROUND2_COLOR));
++   setUIColorWdef(PREFS_UI_TAB_BG_COLOR, prefs.ui_tab_bg_color,
++                  Fl::get_color(FL_BACKGROUND_COLOR));
++   setUIColorWdef(PREFS_UI_TAB_ACTIVE_FG_COLOR, prefs.ui_tab_active_fg_color,
++                  Fl::get_color(FL_FOREGROUND_COLOR));
++   setUIColorWdef(PREFS_UI_TAB_FG_COLOR, prefs.ui_tab_fg_color,
++                  Fl::get_color(FL_FOREGROUND_COLOR));   
+ }
+ 
+ /*
+diff -r df1a2f4f9d5a src/menu.cc
+--- a/src/menu.cc	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/menu.cc	Sun Jan 13 05:29:37 2013 +0000
+@@ -12,6 +12,7 @@
+ // Functions/Methods for menus
+ 
+ #include <FL/Fl.H>
++#include <FL/Fl_Menu_.H>
+ #include <FL/Fl_Menu_Item.H>
+ 
+ #include "lout/misc.hh"    /* SimpleVector */
+@@ -659,6 +660,14 @@
+       ui->change_panel(VOIDP2INT(user_data), ui->get_smallicons());
+ }
+ 
++static void Menu_color_theme_cb(Fl_Widget *w, void*)
++{
++   Fl_Menu_Item *mi = (Fl_Menu_Item*)w;
++   const char *theme = mi->label();
++
++   a_UIcmd_change_color_theme(theme);
++}
++
+ /*
+  * Toggle loading of images -- and load them if enabling.
+  */
+@@ -700,6 +709,11 @@
+          {"small icons", 0,Menu_panel_change_cb,(void*)10,
+            FL_MENU_TOGGLE,0,0,0,0},
+          {0,0,0,0,0,0,0,0,0},
++      {"UI Colors", 0, Menu_nop_cb, 0, FL_SUBMENU,0,0,0,0},
++         {"traditional", 0, Menu_color_theme_cb, 0,0,0,0,0,0},
++         {"earth", 0, Menu_color_theme_cb, 0,0,0,0,0,0},
++         {"green", 0, Menu_color_theme_cb, 0,0,0,0,0,0},
++         {0,0,0,0,0,0,0,0,0},
+       {0,0,0,0,0,0,0,0,0}
+    };
+ 
+diff -r df1a2f4f9d5a src/prefs.h
+--- a/src/prefs.h	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/prefs.h	Sun Jan 13 05:29:37 2013 +0000
+@@ -23,6 +23,13 @@
+ #define PREFS_GEOMETRY_DEFAULT_XPOS  -9999
+ #define PREFS_GEOMETRY_DEFAULT_YPOS  -9999
+ 
++/* FLTK free color indices from 16 to 31 */
++#define PREFS_UI_BUTTON_HIGHLIGHT_COLOR 16
++#define PREFS_UI_TAB_ACTIVE_BG_COLOR 17
++#define PREFS_UI_TAB_ACTIVE_FG_COLOR 18
++#define PREFS_UI_TAB_BG_COLOR 19
++#define PREFS_UI_TAB_FG_COLOR 20
++
+ /* Panel sizes */
+ enum { P_tiny = 0, P_small, P_medium };
+ 
+diff -r df1a2f4f9d5a src/tipwin.cc
+--- a/src/tipwin.cc	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/tipwin.cc	Sun Jan 13 05:29:37 2013 +0000
+@@ -174,7 +174,7 @@
+    TipWinButton(x,y,w,h,l)
+ {
+    norm_color = color();
+-   light_color = prefs.ui_button_highlight_color;
++   light_color = PREFS_UI_BUTTON_HIGHLIGHT_COLOR;
+ }
+ 
+ int CustButton::handle(int e)
+diff -r df1a2f4f9d5a src/ui.cc
+--- a/src/ui.cc	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/ui.cc	Sun Jan 13 05:29:37 2013 +0000
+@@ -404,23 +404,31 @@
+ /*
+  * Create the archetipic browser buttons
+  */
++void UI::make_deactivated_icons()
++{
++   if (icons->ImgLeftIn)
++      delete icons->ImgLeftIn;
++   icons->ImgLeftIn = icons->ImgLeft->copy();
++   icons->ImgLeftIn->desaturate();
++   icons->ImgLeftIn->color_average(FL_BACKGROUND_COLOR, .14f);
++
++   if (icons->ImgRightIn)
++      delete icons->ImgRightIn;
++   icons->ImgRightIn = icons->ImgRight->copy();
++   icons->ImgRightIn->desaturate();
++   icons->ImgRightIn->color_average(FL_BACKGROUND_COLOR, .14f);
++
++   if (icons->ImgStopIn)
++      delete icons->ImgStopIn;
++   icons->ImgStopIn = icons->ImgStop->copy();
++   icons->ImgStopIn->desaturate();
++   icons->ImgStopIn->color_average(FL_BACKGROUND_COLOR, .14f);
++}
++
+ void UI::make_toolbar(int tw, int th)
+ {
+-   if (!icons->ImgLeftIn) {
+-      icons->ImgLeftIn = icons->ImgLeft->copy();
+-      icons->ImgLeftIn->desaturate();
+-      icons->ImgLeftIn->color_average(FL_BACKGROUND_COLOR, .14f);
+-   }
+-   if (!icons->ImgRightIn) {
+-      icons->ImgRightIn = icons->ImgRight->copy();
+-      icons->ImgRightIn->desaturate();
+-      icons->ImgRightIn->color_average(FL_BACKGROUND_COLOR, .14f);
+-   }
+-   if (!icons->ImgStopIn) {
+-      icons->ImgStopIn = icons->ImgStop->copy();
+-      icons->ImgStopIn->desaturate();
+-      icons->ImgStopIn->color_average(FL_BACKGROUND_COLOR, .14f);
+-   }
++   if (!icons->ImgLeftIn)
++      make_deactivated_icons();
+    Back = make_button("Back", icons->ImgLeft, icons->ImgLeftIn, UI_BACK, 1);
+    Forw = make_button("Forw", icons->ImgRight, icons->ImgRightIn, UI_FORW);
+    Home = make_button("Home", icons->ImgHome, NULL, UI_HOME);
+@@ -645,6 +653,7 @@
+   CustGroupVertical(x, y, ui_w, ui_h, label)
+ {
+    LocBar = NavBar = StatusBar = NULL;
++   bg_val = Fl::get_color(FL_BACKGROUND_COLOR);
+ 
+    Tabs = NULL;
+    TopGroup = this;
+@@ -792,6 +801,19 @@
+    return ret;
+ }
+ 
++void UI::draw()
++{
++   uint new_bg = Fl::get_color(FL_BACKGROUND_COLOR);
++
++   if (bg_val != new_bg) {
++      bg_val = new_bg;
++      make_deactivated_icons();
++      Back->deimage(icons->ImgLeftIn);
++      Forw->deimage(icons->ImgRightIn);
++      Stop->deimage(icons->ImgStopIn);
++   }
++   CustGroupVertical::draw();
++}
+ 
+ //----------------------------
+ // API for the User Interface
+diff -r df1a2f4f9d5a src/ui.hh
+--- a/src/ui.hh	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/ui.hh	Sun Jan 13 05:29:37 2013 +0000
+@@ -137,11 +137,13 @@
+    // Panel customization variables
+    int PanelSize, Small_Icons;
+    int p_xpos, p_ypos, bw, bh, mh, lh, nh, fh, sh, pw, lbl;
++   uint bg_val;
+    bool PanelTemporary;
+ 
+    UIPanelmode Panelmode;
+    CustButton *make_button(const char *label, Fl_Image *img, Fl_Image*deimg,
+                            int b_n, int start = 0);
++   void make_deactivated_icons();
+    void make_toolbar(int tw, int th);
+    void make_location(int ww);
+    void make_progress_bars(int wide, int thin_up);
+@@ -149,6 +151,7 @@
+    Fl_Widget *make_filemenu_button();
+    void make_panel(int ww);
+    void make_status_bar(int ww, int wh);
++   void draw();
+ 
+ public:
+ 
+diff -r df1a2f4f9d5a src/uicmd.cc
+--- a/src/uicmd.cc	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/uicmd.cc	Sun Jan 13 05:29:37 2013 +0000
+@@ -110,7 +110,6 @@
+    Fl_Pack *Pack;
+    Fl_Group *Control;
+    CustButton *CloseBtn;
+-   int tabcolor_inactive, tabcolor_active;
+ 
+    void update_pack_offset(void);
+    void resize(int x, int y, int w, int h)
+@@ -138,8 +137,6 @@
+       Pack = NULL;
+       focus_counter = 0;
+       tab_w = 50, tab_h = th, ctab_h = 1, btn_w = 20, ctl_w = 1*btn_w+2;
+-      tabcolor_active = prefs.ui_tab_active_bg_color;
+-      tabcolor_inactive = prefs.ui_tab_bg_color;
+       resize(0,0,ww,ctab_h);
+       /* tab buttons go inside a pack within a scroll */
+       Scroll = new Fl_Scroll(0,0,ww-ctl_w,ctab_h);
+@@ -283,9 +280,8 @@
+    btn->copy_label(DEFAULT_TAB_LABEL);
+    btn->clear_visible_focus();
+    btn->box(FL_GTK_THIN_UP_BOX);
+-   btn->color(focus ? tabcolor_active : tabcolor_inactive);
+-   btn->labelcolor(focus ? prefs.ui_tab_active_fg_color :
+-                   prefs.ui_tab_fg_color);
++   btn->color(focus ? PREFS_UI_TAB_ACTIVE_BG_COLOR : PREFS_UI_TAB_BG_COLOR);
++   btn->labelcolor(focus ? PREFS_UI_TAB_ACTIVE_FG_COLOR:PREFS_UI_TAB_FG_COLOR);
+    btn->ui(new_ui);
+    btn->callback(tab_btn_cb, this);
+    Pack->add(btn); // append
+@@ -413,8 +409,8 @@
+       // Set old tab label to normal color
+       if ((idx = get_btn_idx(old_ui)) != -1) {
+          btn = (CustTabButton*)Pack->child(idx);
+-         btn->color(tabcolor_inactive);
+-         btn->labelcolor(prefs.ui_tab_fg_color);
++         btn->color(PREFS_UI_TAB_BG_COLOR);
++         btn->labelcolor(PREFS_UI_TAB_FG_COLOR);
+          btn->redraw();
+       }
+       /* We make a point of calling show() before value() is changed because
+@@ -428,8 +424,8 @@
+        */
+       cbtn->ui()->show();
+       Wizard->value(cbtn->ui());
+-      cbtn->color(tabcolor_active);
+-      cbtn->labelcolor(prefs.ui_tab_active_fg_color);
++      cbtn->color(PREFS_UI_TAB_ACTIVE_BG_COLOR);
++      cbtn->labelcolor(PREFS_UI_TAB_ACTIVE_FG_COLOR);
+       cbtn->redraw();
+       update_pack_offset();
+ 
+@@ -1145,6 +1141,61 @@
+ }
+ 
+ /*
++ * Change the color theme
++ */
++void a_UIcmd_change_color_theme(const char *theme)
++{
++   typedef struct {
++      const char *name;
++      uint fg;
++      uint main_bg;
++      uint text_bg;
++      uint selection;
++      uint button_hl;
++      uint tab_active_bg;
++      uint tab_active_fg;
++      uint tab_bg;
++      uint tab_fg;
++   } theme_t;
++
++   static const theme_t themes[] = {
++   {"traditional", FL_BLACK, 0xC0C0C000, 0xBFDABF00, FL_BLUE, 0xD5D5D500,
++    0x87ACA700, FL_BLACK, 0xB7BEB700, FL_BLACK},
++   {"green", 0x10040400, 0xC8D39400, 0xBDD8B600, 0x7C5F4200, 0xBDBD8000,
++    0xB5B67900, 0xB6090700, 0xCAC68200, 0x10040400},
++   {"earth", 0x10040400, 0xC2A47B00, 0xCDC9A500, 0x76302400, 0xD5C3A400,
++    0xAF4B3F00, FL_WHITE, 0xD2B48C00, 0x10040400},
++   };
++
++   int n = sizeof(themes) / sizeof(themes[0]);
++
++   for (int i = 0; i < n; i++) {
++      if (!strcmp(theme, themes[i].name)) {
++         const theme_t *t = themes + i;
++         uint rgb = t->main_bg;
++
++         Fl::background(rgb >> 24, (rgb >> 16) & 0xff, (rgb >> 8) & 0xff);
++         Fl::set_color(FL_BACKGROUND2_COLOR, t->text_bg);
++         Fl::set_color(FL_FOREGROUND_COLOR, t->fg);
++         Fl::set_color(FL_SELECTION_COLOR, t->selection);
++         Fl::set_color(PREFS_UI_BUTTON_HIGHLIGHT_COLOR, t->button_hl);
++         Fl::set_color(PREFS_UI_TAB_ACTIVE_BG_COLOR, t->tab_active_bg);
++         Fl::set_color(PREFS_UI_TAB_ACTIVE_FG_COLOR, t->tab_active_fg);
++         Fl::set_color(PREFS_UI_TAB_BG_COLOR, t->tab_bg);
++         Fl::set_color(PREFS_UI_TAB_FG_COLOR, t->tab_fg);
++
++         n = a_Bw_num();
++         for (i = 0; i < n; i++) {
++            BrowserWindow *bw = a_Bw_get(i);
++            ((UI*)bw->ui)->window()->redraw();
++         }
++         break;
++      }
++   }
++         
++}
++
++/*
+  * Ask the vsource dpi to show this URL's source
+  */
+ void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url)
+diff -r df1a2f4f9d5a src/uicmd.hh
+--- a/src/uicmd.hh	Sat Jan 12 20:35:54 2013 +0000
++++ b/src/uicmd.hh	Sun Jan 13 05:29:37 2013 +0000
+@@ -50,6 +50,7 @@
+                         bool_t showing_hiddens);
+ void a_UIcmd_file_popup(void *vbw, void *v_wid);
+ void a_UIcmd_copy_urlstr(BrowserWindow *bw, const char *urlstr);
++void a_UIcmd_change_color_theme(const char *theme);
+ void a_UIcmd_view_page_source(BrowserWindow *bw, const DilloUrl *url);
+ void a_UIcmd_view_page_bugs(void *vbw);
+ void a_UIcmd_bugmeter_popup(void *vbw);

@@ -1,0 +1,2365 @@
+[Dillo-dev]Dillo weekly news
+
+From: Allan Clark <shark@bl...> - 2000-09-28 16:10
+
+The first Dillo weekly news has been posted.
+The url for those interested is
+http://www.shark.pwp.blueyonder.co.uk/news240900.html
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+[Dillo-dev]Developer News
+
+From: Allan Clark <shark@bl...> - 2000-09-29 10:18
+
+(Sorry if this is a repeat but I didn't get one back and there isn't one in
+the archives.)
+The first Dillo weekly news has been posted.
+The url for those interested is
+http://www.shark.pwp.blueyonder.co.uk/news240900.html
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+RE: [Dillo-dev]Repeated patch
+
+From: Allan Clark <shark@bl...> - 2000-09-24 14:46
+
+Jorge, have you applied this patch? you're right the problem is deeper
+routed, the fact is we shouldn't be getting the null pointer there, however
+we should probably check for them just incase, so although this doesn't
+solve the problem I think the patch should go in, alternatively in the mean
+time use an assert there to assert that there is not a null pointer, this
+way we know where it is failing and why and don't just get a crash.
+
+> -----Original Message-----
+> From: dillo-dev-admin@li...
+> [mailto:dillo-dev-admin@li...]On Behalf Of Jorge
+> Arellano Cid
+> Sent: 22 September 2000 19:19
+> To: dillo dev list
+> Subject: Re: [Dillo-dev]Repeated patch
+>
+>
+>
+> Sam,
+>
+> > ... here's the patch I
+> > sent again, as I never received a copy back (sorry if this is a repeat).
+>
+> Yes, the problem has very deep roots, and I'm still trying to
+> find out a design solution that gets rid of all related problems.
+>
+> Whether to apply the "patch" is a matter of pragmatism.
+>
+> I'll keep trying to solve the problems behind...
+>
+> Jorge.-
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Sorry
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-24 01:43
+
+Sorry if any of my last mails have got to you: they haven't got to me.
+
+Check the archives if they haven't, however.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Not again
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-24 01:24
+
+Getting tired of repeating. Check archives for messages. 
+
+
+
+Re: [Dillo-dev]Missing mails again
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-24 01:01
+
+Argh! Why is it that only the important mails disappear?
+
+Well, they seem to be appearing on the archives, so if you're not receiving
+them, best to check there.
+
+On the other hand, it could just be me.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Missing mails again
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-24 00:50
+
+I think it's done it to me again. Did anyone receive my reply to the comments
+on the segfaults?
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Repeated patch
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-24 00:08
+
+On Fri, Sep 22, 2000 at 02:19:16PM -0400, Jorge Arellano Cid wrote:
+> 
+> Sam,
+> 
+> > ... here's the patch I
+> > sent again, as I never received a copy back (sorry if this is a repeat).
+> 
+> Yes, the problem has very deep roots, and I'm still trying to
+> find out a design solution that gets rid of all related problems.
+> 
+> Whether to apply the "patch" is a matter of pragmatism.
+> 
+> I'll keep trying to solve the problems behind...
+
+Obviously I've been looking for the root causes, too. I get the impression
+that this is some how to do with widgets that don't (or shouldn't) exist
+receiving data from the caching system, but I'm probably completely wrong.
+
+As for applying the patch, I know that covering up the problem is generally
+speaking a bad thing, but when it causes the program to crash extremely
+frequently in normal usage unless the user is extremely cautious I think
+that some soft of temporary measure is needed. Besides, there's another
+problem that just occurs in images that I think is related, where the
+structure that parent points to is filled with garbage, so the problem isn't
+really covered up.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Dw (was new here)
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-09-23 15:45
+
+Hi Allan!
+
+I've still some doubts if the port is really a good thing, because:
+
+1. Gtk+ was designed for GUIs, but not for size negotiation e.g.
+needed for tables. This could be solved by a Gtk+ widget set, see my
+post to the list (subject "[Dillo-dev]Dw -> Gtk").
+
+2. Gtk+ adopts the limitation of 32k pixels for an X window even for
+windowless widgets, so you have a limited height for pages (when only
+a part of DwPage is seen in a viewport), or at least for tables (when
+the DwPage is itself the viewport). 
+
+I've included my thoughts, which I sent Jorge, at the end of this
+mail.
+
+Allan Clark wrote:
+> [...]
+> This all sounds great, if you need any help porting Dw just let me know what
+> needs to be done.
+
+Send your ideas and comments on this topic. If you have an idea how to
+solve the problem with the height limitation, without a new widget
+set, that would be great.
+
+> I realised after I had sent the patch to the list that it was going to be a
+> little obsolete as you were working on the port of Dw. I think the cvs
+> version of the tree should be kept more up to date, I sent an e-mail to
+> Jorge about that, below is part of that e-mail (which discussed a number of
+> things) it is just an idea for dw_page which I think might help us with
+> table and frame support, and you may be in a better position to decide.
+
+Currently, the ported DwPage is only on my local harddisk, according
+to Jorge's philosophy of long holded patches, and since no one else
+showed interest in it, before. If you are interested, I may send you
+what I've done yet.
+
+Sebastian
+
+My mail to Jorge:
+
+I now think that is indeed not a good idea to use Gtk+ for the layout
+of the html elements, but to continue using a much improved Dw.
+Improvements coming currently to mind, are:
+
+- Include Dw into the Gtk+ object model, i.e. derive it from
+GtkObject. So, Dw can use the strengths of Gtk+ objects.
+
+- Write a Gtk+ Widget GtkDwEmbed for embedding a Dw widget, replacing
+GtkDwView, and probably best derived from GtkLayout. This widget must
+first handle all embedded Gtk+ widgets (see below), and second wrap
+the events for the Dw widgets.
+
+- Dw (or a derived class DwContainer) must strictly distinguish
+between Dw widgets and Gtk+ widgets. E.g., the forall "method" of
+GtkDwEmbed (defined by GtkContainer) should only work on the Gtk+
+widgets. Embedding Gtk+ widgets should be a mechanism of Dw itself,
+not of DwEmbedGtk.
+
+An incomplete "class" hierarchy could look like this:
+
+
+[GtkObject]
+___________|_______________
+/ \
+Dw [GtkWidget]
+__________|___________ |
+/ | \ |
+DwBullet DwImage DwContainer GtkDwEmbed
+___|___
+/ \
+DwPage DwTable
+
+
+Dw and DwContainer should be similar to GtkWidget and GtkContainer,
+but with a few modifications, e.g. in size negotiation. An idea from
+Gtk+, that containers are (partly) responsible for resising their
+children, could also be adopted (see my post to the list). 
+
+
+
+RE: [Dillo-dev]Dw (was new here)
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-23 05:08
+
+-- En reponse de "RE: [Dillo-dev]Dw (was new here)" de Allan Clark, le
+22-Sep-2000 :
+> Lastly (bet you're glad) how far are we with tables/frames support, if the
+> answer is "still discussing design options" then I would like to add my idea
+> into the arena, I'm sure someone has probably suggested this, but, why don't
+> we extend dw_page so that it can be one of the following
+> 1)Contain a number of horizontal sub pages
+> 2)Contain a number of vertical sub pages
+> 3)Be a page as they are now, stored as lines.
+
+That should do it for frames, but tables are more complex than that : one can
+colspan and rowspan a cell. Table implementation is difficult to be done with
+the current line/word page structure.
+
+> Or we could have a wrapper, say dw_frame which could either contain
+> horizontal subframes or vertical subframes or contain one dw_page, either
+> way it is the same principle.
+
+Do we really need a whole dw_page for a frameset ? I don't think so. I think it
+would be fairly easy to implement frames as a frameset (gtk) widget being mostly
+a gtk containers tree, each containing a dw_page.
+
+> Also a page could be divided up for other things such as alignment, eg if
+> you have two paragraphs the top is left aligned, and the bottom is center
+> aligned, then we just divide it into two horizontal sub frames and all that
+> would be needed would be coding to render a page whose lines are
+> center/right alligned.
+
+This is intereseting. It looks like an extension of the current line/word page
+construction. This probably can be done without the frame idea, though.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Sep-2000 a 13:56:14
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Repeated patch
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-09-22 20:09
+
+Sam,
+
+> ... here's the patch I
+> sent again, as I never received a copy back (sorry if this is a repeat).
+
+Yes, the problem has very deep roots, and I'm still trying to
+find out a design solution that gets rid of all related problems.
+
+Whether to apply the "patch" is a matter of pragmatism.
+
+I'll keep trying to solve the problems behind...
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Plugins design
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-09-22 20:09
+
+Eric,
+
+
+> Hi all,
+> I'm currently working for plugins support in dillo, and I feel the need
+> for a communication protocol between the plugin and dillo.
+
+Yes, but please try to make as much as possible with the
+current scheme (bookmarks).
+
+I also see the need for a second plugin scheme, with
+communication protocol, and better integration. The problem is
+that currently we're trying to design the future widget scheme
+and until that's done, the second scheme will have to wait.
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Dw (was new here)
+
+From: Allan Clark <shark@bl...> - 2000-09-22 19:39
+
+Sebastian,
+
+
+<snip>
+> It is planned to port Dw to Gtk+, and I'm currently working on DwPage.
+> DwHruler will then not used anymore (at least, unless all attributes
+> will be supported), but simply GtkHSeparator.
+>
+> (I've some general doubts on the port, and wrote Jorge about it, but
+> didn't get an anser yet.)
+>
+> I thought that size negotiation should be similar as in Gtk+, i.e.
+> containers should (mainly) be responsible for it, plus a few
+> extensions (look into the list archives). This is just your idea,
+> except that all parameters are stored in the container. For this I
+> defined:
+>
+> struct _DwPageChild
+> {
+> GtkWidget *widget;
+> gfloat rel_width; /* 0: do not resize,
+> otherwise: relative to DwPage's width */
+> gfloat rel_height; /* analogue */
+> };
+>
+> /* ... */
+>
+> void a_Dw_page_add_widget (DwPage *page,
+> GtkWidget *widget,
+> gfloat rel_width,
+> gfloat rel_height,
+> gint attr);
+>
+> Compare it e.g. with GtkBoxChild resp. gtk_box_pack_start.
+>
+> I tested it with GtkHSeparator (setting rel_width to 1.0), and it
+> (mainly) works. This also makes rules with other widths simple (as
+> soon as centered text is implemented).
+<snip>
+
+This all sounds great, if you need any help porting Dw just let me know what
+needs to be done.
+I realised after I had sent the patch to the list that it was going to be a
+little obsolete as you were working on the port of Dw. I think the cvs
+version of the tree should be kept more up to date, I sent an e-mail to
+Jorge about that, below is part of that e-mail (which discussed a number of
+things) it is just an idea for dw_page which I think might help us with
+table and frame support, and you may be in a better position to decide.
+
+<part of e-mail I sent to Jorge>
+Next is the topic of the dillo widget, it says that on the dillo homepage
+http://dillo.so....net/Notes.txt that the dillo widget needs a
+revision, I gather from the list that Sebastian Geerken is porting the Dw to
+plain GTK+ just like to say that this solution gets my vote, I don't see why
+we should re-implement stuff that has already been done and tested and will
+be further tested and updated for us.
+Lastly (bet you're glad) how far are we with tables/frames support, if the
+answer is "still discussing design options" then I would like to add my idea
+into the arena, I'm sure someone has probably suggested this, but, why don't
+we extend dw_page so that it can be one of the following
+1)Contain a number of horizontal sub pages
+2)Contain a number of vertical sub pages
+3)Be a page as they are now, stored as lines.
+Or we could have a wrapper, say dw_frame which could either contain
+horizontal subframes or vertical subframes or contain one dw_page, either
+way it is the same principle.
+This as far as I can tell should be capable of coping with frames and
+tables, even nested frames or tables, also it shouldn't be to difficult to
+code the support for both tables and frames as frames are already divide a
+page either horizontally or vertically, a table as well is just a divided
+horizontally, with each horizontal division (ie a row) being divided up
+vertically, so the html already lends itself to this kind of design. Also a
+page could be divided up for other things such as alignment, eg if you have
+two paragraphs the top is left aligned, and the bottom is center aligned,
+then we just divide it into two horizontal sub frames and all that would be
+needed would be coding to render a page whose lines are center/right
+alligned.
+<end of the part of e-mail I sent to Jorge>
+
+Allan 
+
+
+
+Re: [Dillo-dev]new here
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-09-22 18:06
+
+Allan Clark wrote:
+> 
+> Hi
+> As the subject says I'm new here,
+
+Welcome!
+
+> but I would like to submit a patch,
+> which I *think* fixes bug number 62 where the horizontal rules mean that
+> when Dillo reformats after being down-sized it gives the user an
+> unneccesary horizontal slider.
+> I defined a new flag in dw.c which is set when a widget is a set to fill
+> all the horizontal space available, then dw_hruler.c is changed to set
+> this flag and then dw_page.c is changed so that we check for the flag
+> when reformating and deal with it accordingly.
+> The way I have dealt with it means that the hrule will be as long as the
+> text of the page is, this means that it won't be as long as an image
+> which may be longer (check with dillo on the dillo homepage to see
+> this), this is the way Netscape renders it, but would be easy to change
+> if you don't like it.
+
+It is planned to port Dw to Gtk+, and I'm currently working on DwPage.
+DwHruler will then not used anymore (at least, unless all attributes
+will be supported), but simply GtkHSeparator.
+
+(I've some general doubts on the port, and wrote Jorge about it, but
+didn't get an anser yet.)
+
+I thought that size negotiation should be similar as in Gtk+, i.e.
+containers should (mainly) be responsible for it, plus a few
+extensions (look into the list archives). This is just your idea,
+except that all parameters are stored in the container. For this I
+defined:
+
+struct _DwPageChild
+{
+GtkWidget *widget;
+gfloat rel_width; /* 0: do not resize,
+otherwise: relative to DwPage's width */
+gfloat rel_height; /* analogue */
+};
+
+/* ... */
+
+void a_Dw_page_add_widget (DwPage *page,
+GtkWidget *widget,
+gfloat rel_width,
+gfloat rel_height, 
+gint attr);
+
+Compare it e.g. with GtkBoxChild resp. gtk_box_pack_start.
+
+I tested it with GtkHSeparator (setting rel_width to 1.0), and it
+(mainly) works. This also makes rules with other widths simple (as
+soon as centered text is implemented).
+
+> Also I think it mucks up slightly if the horizontal rule is not directly
+> after a hard break, (that is the hrule isn't on a line all by itself, again
+> this should be easy to fix) it seems to render slightly further than it should.
+> Anyway see what you think.
+
+Since <hr>'s are allways the only widget on a line, it is probably the
+best to insert hard breaks before and after them.
+
+> [...]
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]email problems
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-22 03:59
+
+-- En reponse de "Re: [Dillo-dev]email problems" de Jorge Arellano Cid, le
+20-Sep-2000 :
+> 
+> Eric,
+> 
+>> Jorge,
+>> I'm having the hardest time with my ISP loosing email for some domains.
+>> Please
+>> confirm you have received my patches.
+> 
+> I haven't received a single one!
+> 
+
+Damn ! I haven't even got a non-delivery warning !
+
+> (and I wrote to your address reporting that some time ago...)
+> 
+> Shame I can't suggest you a good email provider. I switch
+> between nettaxi and ematic :-). (Maybe you can try ematic as an
+> alternative account).
+> 
+
+Actually, I tried 2 different smpt in 2 different countries with the same
+(no-)result. 
+Do you mind if I try to send you some test emails to nettaxi and ematic ?
+
+Anyway, I posted all my patches and some explanations at :
+http://www.rti-zone.org/dillo/
+
+I'll try to fix these email problems soon.
+
+> Jorge.-
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 22-Sep-2000 a 12:39:40
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]email problems
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-09-22 01:58
+
+Eric,
+
+> Jorge,
+> I'm having the hardest time with my ISP loosing email for some domains. Please
+> confirm you have received my patches.
+
+I haven't received a single one!
+
+(and I wrote to your address reporting that some time ago...)
+
+Shame I can't suggest you a good email provider. I switch
+between nettaxi and ematic :-). (Maybe you can try ematic as an
+alternative account).
+
+Jorge.- 
+
+
+
+[Dillo-dev]Repeated patch
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-19 15:59
+
+Attachments: html_loading.diff      
+
+I think the mail server is eating my messages... anyway, here's the patch I
+sent again, as I never received a copy back (sorry if this is a repeat).
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev](no subject)
+
+From: Allan Clark <allan@al...> - 2000-09-19 13:16
+
+Attachments: hrule2.diff      
+
+Sorry about the empty e-mail I pressed the wrong button.
+Here is the newer patch for the hrules which differ slightly from the original
+and takes into account the feedback from Jorgen and Eric. 
+
+
+
+[Dillo-dev](no subject)
+
+From: Allan Clark <allan@al...> - 2000-09-19 13:11
+
+
+
+
+
+RE: [Dillo-dev]horizontal rules
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-19 13:01
+
+-- En reponse de "[Dillo-dev]horizontal rules" de Allan Clark, le 19-Sep-2000 :
+> Quick question for you all.
+> Should horizontal rules always be on a line by themeselves or should they be
+> allowed to follow text.
+> eg
+> allan------
+> is that correct or should it be forced to be
+> allan
+> -----------
+> 
+
+The latter is correct (html spec).
+Stop worrying about hrulers, I sent a patch for HR full rendering and
+correcting this behavior a few weeks ago (against 0.2.4, not published yet, but
+likely due for next version)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 19-Sep-2000 a 21:54:46
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]horizontal rules
+
+From: Jörgen Viksell <vsksga@ho...> - 2000-09-19 12:54
+
+>Quick question for you all.
+>Should horizontal rules always be on a line by themeselves or should they 
+>be
+>allowed to follow text.
+>eg
+>allan------
+>is that correct or should it be forced to be
+>allan
+>-----------
+
+The w3 recommendation defines it as a divider of sections of text. So I'd 
+say that it should be on its own line.
+
+// Jörgen
+
+
+_________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com.
+
+Share information about yourself, create your own public profile at 
+http://profiles.msn.com. 
+
+
+
+Re: [Dillo-dev]cache patch
+
+From: Luca Rota <drake@it...> - 2000-09-19 12:32
+
+Il sab, 16 set 2000, hai scritto:
+
+> actually. i have placed all released versions of dillo in cvs. Jorge is now
+> using cvs. So cvs is newer than the release.
+
+Wow! Thank you, I didn't know.
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]horizontal rules
+
+From: Allan Clark <shark@bl...> - 2000-09-19 11:37
+
+Quick question for you all.
+Should horizontal rules always be on a line by themeselves or should they be
+allowed to follow text.
+eg
+allan------
+is that correct or should it be forced to be
+allan
+-----------
+
+Let me know what you think I can do it either way but I'm not sure which is
+correct.
+p.s. I realise the formatting of the above example might not work on some
+e-mail clients but I kept it small so that it should on most.
+
+Allan Clark
+allan@al...
+shark@bl... 
+
+
+
+[Dillo-dev]Test
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-18 20:30
+
+Just testing, haven't received any mails back from this thing, oddly.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Actual fix
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-18 16:10
+
+Attachments: html_loading.diff      
+
+Sorry about the last patch, I didn't have a version of gdb that worked with
+dillo so diagnosing the problem was difficult. It turns out that to fix bugs
+#74 and #69, all that is needed is two simple checks. I'm sure that there's
+a deeper problem, but it doesn't hurt to check for null pointers, which is
+what we are currently getting, and this *does* solve the problem.
+
+Patch enclosed.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]new here
+
+From: Allan Clark <allan@al...> - 2000-09-18 10:52
+
+Attachments: hrule.diff      
+
+Hi
+As the subject says I'm new here, but I would like to submit a patch,
+which I *think* fixes bug number 62 where the horizontal rules mean that
+when Dillo reformats after being down-sized it gives the user an
+unneccesary horizontal slider.
+I defined a new flag in dw.c which is set when a widget is a set to fill
+all the horizontal space available, then dw_hruler.c is changed to set
+this flag and then dw_page.c is changed so that we check for the flag
+when reformating and deal with it accordingly.
+The way I have dealt with it means that the hrule will be as long as the
+text of the page is, this means that it won't be as long as an image
+which may be longer (check with dillo on the dillo homepage to see
+this), this is the way Netscape renders it, but would be easy to change
+if you don't like it.
+Also I think it mucks up slightly if the horizontal rule is not directly
+after a hard break, (that is the hrule isn't on a line all by itself, again
+this should be easy to fix) it seems to render slightly further than it should.
+Anyway see what you think.
+I am also hoping that the new flag defined might help us in frames and tables,
+where the frame or table cell width is not an absolute value but is given as
+"whatever space is left after drawing the previous frames/table cells.
+Also I don't think I have made the patch correctly, it says in the docs to use
+diff -pru but when I did cvs came back with an error saying no such option, in
+the end I used cvs diff > hrule.diff, please tell me if this is wrong and what
+I should be doing.
+
+Allan 
+
+
+
+[Dillo-dev]Debugging problems
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-17 23:48
+
+Has anyone else had problems debugging dillo with gdb? I'm getting unkown
+signals soon after I run or attach.
+
+Admittedly, I am using a gdb release from '96...
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]cache patch
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-16 17:04
+
+> Please, sends your patches to Jorge. But before takes the new dillo's version
+> from download.so....net/dillo/ the cvs version is quite outdated.
+> 
+
+actually. i have placed all released versions of dillo in cvs. Jorge is now
+using cvs. So cvs is newer than the release. 
+
+
+
+Re: [Dillo-dev]cache patch
+
+From: Luca Rota <drake@it...> - 2000-09-16 13:42
+
+Il sab, 16 set 2000, hai scritto:
+
+Welcome,
+
+> Hi, I'm new to dillo development, although I worked with armadillo for a
+> while, I've been looking at your cache system and have made a change which
+
+Oh, yes. I remember a justification patch and the html stack patch. Right?
+
+> seems to cause less segfaults when moving around without waiting for things
+> to finish downloading (which has crashed dillo many times for me). It's
+> probably not correct, but it does seem to improve the situation.
+
+Please, sends your patches to Jorge. But before takes the new dillo's version
+from download.so....net/dillo/ the cvs version is quite outdated.
+
+Ciao,
+Luca 
+
+
+
+[Dillo-dev]cache patch
+
+From: Sam Dennis <sdennis101@ge...> - 2000-09-16 04:15
+
+Attachments: cache_patch.gz      
+
+Hi, I'm new to dillo development, although I worked with armadillo for a
+while, I've been looking at your cache system and have made a change which
+seems to cause less segfaults when moving around without waiting for things
+to finish downloading (which has crashed dillo many times for me). It's
+probably not correct, but it does seem to improve the situation.
+
+-- 
+Sam Dennis <sdennis101@ge...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Sizes in html
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-09-14 12:07
+
+Hi!
+
+While porting the DwPage, I'm thinking about how widgets in the page
+should be resized. (Anything except text will be a widget, even
+probably <div>'s with align=left/right (a new DwPage), but alignments
+are far away from an implementation.)
+
+DwPage is derived from GtkContainer, and Gtk+ containers typically are
+responsible on positioning and resizing of their children. (An
+exception is, of course, when widgets resize thereselves, then the
+container has to react on this.) E.g., if you want to add a widget to
+a GtkBox, you use gtk_box_pack_start and set the arguments expand,
+fill and padding to the appropriate values, and anything else is done
+by the GtkBox.
+
+So, which parameters should be used by a_Dw_page_add_widget? My
+current idea is based on relative width and height, or zero to prevent
+resizing by DwPage. It the latter case, the widget's size has to be
+set otherwise (e.g. by the html parser). This is quite obvious for
+images, but it is also suitable for tables: they should (in most
+cases) be added with a relative width of 100%, since they should be
+resized when the page is resized, but then can calculate the size they
+really need.
+
+Send any comments, about this idea in general, or if you find that my
+idea is not suitable for a specified html elemtent.
+
+Another point is positioning. The only thing which comes currently to
+mind, is the "align" attribute of some tags. But this will be done
+later.
+
+Sebastian 
+
+
+
+[Dillo-dev]email problems
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-13 06:27
+
+Jorge,
+I'm having the hardest time with my ISP loosing email for some domains. Please
+confirm you have received my patches.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 13-Sep-2000 a 15:26:12
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Plugins design
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-13 00:30
+
+> I have two options :
+> - use a special Content-Type=x-dillo-command. What if we need to send
+> both commands and a document in a single answer ? Either I'll have to
+> dirty-hack the header parsing function to ignore and redirect 
+> x-dillo-command content until it finds an other content-type, or
+> I'll have to add support for multipart-mime, which seems an overkill.
+> - use special http header fields. Pragma seems to be an application
+> specific sort-of field. Sending Pragma: AddMenu="Add Bookmark" would be
+> understood by dillo to be a command sent by the plugin for him.
+> Alternatively, we can use a non-http field (X-Dillo-Command:), as
+> fields begining with X- can't exist in future http implementations, and
+> it's a local communication anyway.
+> 
+
+If you must use http, you definately want to use X- headers. 
+
+
+
+Re: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-09-12 09:35
+
+Sean 'Shaleh' Perry wrote:
+> [...]
+> > (Although the implementation looks a bit strange: 1. I think there
+> > should be a global font list; 2. The Gdk fonts are not removed? But
+> > this is a separate problem.)
+> >
+> 
+> yes, a global list would be nice, also, a global size array. I have font
+> size=2 or font size=+3 working, but i had to implement a local size list
+> because the open_h() function need a list in descending order and I wanted a
+> list in ascending order.
+
+I think, it is not very important, where the fonts are stored, when
+you have a simple interface to access them. This is an implementian
+detail, which does not effect the code outside.
+
+BTW: Other widgets (e. g. buttons) use fonts, too. Currently, there
+fonts are given by Gtk, but may the html author change them?
+
+> > I remember that there are a few more attributes (e.g. underlining,
+> > backgrounds), which I will add perhaps, after my Gtk port of DwPage is
+> > running correctly.
+> >
+> 
+> I am trying to implement the <u> tag now. It looks like all I have to do is
+> modify dw_page_expose_line(), this is where the link is underlined. However my
+> boolean is not surviving into the function call. Most confusing. If I don't
+> get it in a day or so, would you mind taking a peek?
+
+The best way will be to extend the DwPageAttr structure. Then any
+attributes can be simply set by filling an DwPageAttr structure, and
+DwPage will be responsible for render them. (I can do the last, but
+first I want to finish the Gtk+ port to DwPage.)
+
+> > a_Dw_page_init_attr (DW_PAGE (page), &attr);
+> > attr.font = a_Dw_page_find_font (DW_PAGE (page), &font);
+> > attr_i = a_Dw_page_add_attr(DW_PAGE (page), &attr);
+> > 
+> 
+> but a_Dw_page_find_font() does not actually check to see if a font can be
+> rendered. What if your system lacked 'times new roman'.
+> 
+> <font face="Lucida,Verdana,Helvetica,Arial">My text</font>
+> 
+> I have to decide which in that list of fonts I can use. In this case, Lucida
+> and Helvetica are known to work, I am sure Arial will. But I have no way to
+> query dillo to find out if font 'foo' can be loaded.
+> 
+> Perhaps find_font should try to look up the font via gdk and give back a "could
+> not find it" error? Or perhaps we need a query_system_font() to see if a font
+> is valid, then find_font() to load it into dillo.
+
+The font is loaded in Dw_page_realize_font. Perhaps this function
+could be modified, so that you may specify alternatives, when calling
+a_Dw_page_find_font. As I wrote above, the interface should be as
+simple as possible, so a query function is probably not a good idea.
+
+Sebastian 
+
+
+
+[Dillo-dev]Plugins design
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-12 01:58
+
+Hi all,
+I'm currently working for plugins support in dillo, and I feel the need
+for a communication protocol between the plugin and dillo.
+
+So far, dillo calls a plugin, sends a bunch of <name=value> parameters,
+and waits for an http-like answer, most of the time being
+Content-Type=text/html <html> ... </html>
+
+Now, say the Bookmarks plugin wants to ask dillo to ask an "Add
+Bookmark" menu, and also an "Edit Bookmarks" menu. How can it do that ?
+Say the Ftp plugin wants to tell dillo he can handle "ftp://" urls, as
+well as the "Mailto" plugin want to tell dillo he can handle "mailto:"
+urls. How can it do that ?
+
+I have two options :
+- use a special Content-Type=x-dillo-command. What if we need to send
+both commands and a document in a single answer ? Either I'll have to
+dirty-hack the header parsing function to ignore and redirect 
+x-dillo-command content until it finds an other content-type, or
+I'll have to add support for multipart-mime, which seems an overkill.
+- use special http header fields. Pragma seems to be an application
+specific sort-of field. Sending Pragma: AddMenu="Add Bookmark" would be
+understood by dillo to be a command sent by the plugin for him.
+Alternatively, we can use a non-http field (X-Dillo-Command:), as
+fields begining with X- can't exist in future http implementations, and
+it's a local communication anyway.
+
+What do you think ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Sep-2000 a 10:38:04
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-12 01:36
+
+--- En reponse de "Re: [Dillo-dev]Misc." de Luca Rota, le 11-Sep-2000 :
+> Il dom, 10 set 2000, hai scritto:
+> 
+> > If you'd like to know some of the reasons of current goals in
+> > dillo, may I suggest:
+> > 
+> > - Cathedral & the Bazaar (ESR)
+> > - Homesteading the noosphere (ESR) 
+> > - http://www.levien.com/free/decommoditizing.html (Raph Levien)
+> > - http://www.mcsr.olemiss.edu/~mudws/font.html
+> > - http://www.tuxedo.org/~esr/html-hell.html
+> 
+> May I suggest:
+> http://www.levien.com/free/gzilla-tour.html (A tour of Gzilla 0.1.7)
+> 
+
+All these links deserve to be in dillo's home page.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 12-Sep-2000 a 10:35:42
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: Luca Rota <drake@it...> - 2000-09-11 16:55
+
+Il dom, 10 set 2000, hai scritto:
+
+> If you'd like to know some of the reasons of current goals in
+> dillo, may I suggest:
+> 
+> - Cathedral & the Bazaar (ESR)
+> - Homesteading the noosphere (ESR) 
+> - http://www.levien.com/free/decommoditizing.html (Raph Levien)
+> - http://www.mcsr.olemiss.edu/~mudws/font.html
+> - http://www.tuxedo.org/~esr/html-hell.html
+
+May I suggest:
+http://www.levien.com/free/gzilla-tour.html (A tour of Gzilla 0.1.7)
+
+I'd like focus your attention on:
+levien> the main design goals were that Gzilla be small, simple, and fast. I
+had a few other goals. For one, I wanted Gzilla to be really good at
+incremental rendering. 
+
+levien> the Gzw (Gzilla Widget) framework was in place, providing a much more
+powerful infrastructure for future development such as tables.
+
+Please, read the GZW section carefully.
+
+Note: Dillo is based on gzilla code and GZW is the original name of Dw.
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]Misc.
+
+From: <ikluft@th...> - 2000-09-11 01:19
+
+>From: "Jorge Arellano Cid" <jcid@ne...>
+>> Embbeding Perl 5...
+>
+> Although not a bad idea "per se", this is not the project for
+>trying it. Dillo can't even render HTML by now, a module API is
+>inexistent, and the Dw (dillo widget) is migrating to GTK+ in an
+>effort to overcome a bunch of rendering-related problems. 
+>
+> May I suggest galeon? It uses gecko, has an API, is smaller
+>than mozilla and it's also free.
+
+Thanks for the pointer. I didn't see them on Freshmeat since they got
+categorized under GNOME instead of with the other web browsers.
+
+I'll go look over there. Consider the patch that I sent for using glib
+hash tables on the About menus to be a gift from an Open Source supporter
+who was "passing through". (But I can understand if you'll want to
+pull my personal URL out of there - I was planning on sticking around
+when I put that there. :-) For future reference, that kind of patch
+can also serve as an example of replacing linear searches with hash
+lookups to build future scalability into your project. That's experience
+I've gotten from 10 years working in the industry, including on OS's from
+a mainframe Unix to an embedded OS for large routers. I hope it helps.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+Re: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 23:19
+
+> 
+> a_Dw_page_init_attr (DW_PAGE (page), &attr);
+> attr.font = a_Dw_page_find_font (DW_PAGE (page), &font);
+> attr_i = a_Dw_page_add_attr(DW_PAGE (page), &attr);
+> 
+
+but a_Dw_page_find_font() does not actually check to see if a font can be
+rendered. What if your system lacked 'times new roman'.
+
+<font face="Lucida,Verdana,Helvetica,Arial">My text</font>
+
+I have to decide which in that list of fonts I can use. In this case, Lucida
+and Helvetica are known to work, I am sure Arial will. But I have no way to
+query dillo to find out if font 'foo' can be loaded.
+
+Perhaps find_font should try to look up the font via gdk and give back a "could
+not find it" error? Or perhaps we need a query_system_font() to see if a font
+is valid, then find_font() to load it into dillo. 
+
+
+
+Re: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 23:04
+
+> 
+> It's quite simple, but I think, you should only use the
+> a_Dw_page_find_font function: Fill out a DwPageFont structure, then
+> call this function, and you will get an index you can use in the
+> DwPageAttr structure. I wrote something like the following, and it
+> worked:
+> 
+> <code snipped>
+> 
+> Only as an example. You don't have to bother about loading and
+> removing of fonts.
+> 
+> (Although the implementation looks a bit strange: 1. I think there
+> should be a global font list; 2. The Gdk fonts are not removed? But
+> this is a separate problem.)
+> 
+
+yes, a global list would be nice, also, a global size array. I have font
+size=2 or font size=+3 working, but i had to implement a local size list
+because the open_h() function need a list in descending order and I wanted a
+list in ascending order.
+
+> I remember that there are a few more attributes (e.g. underlining,
+> backgrounds), which I will add perhaps, after my Gtk port of DwPage is
+> running correctly.
+> 
+
+I am trying to implement the <u> tag now. It looks like all I have to do is
+modify dw_page_expose_line(), this is where the link is underlined. However my
+boolean is not surviving into the function call. Most confusing. If I don't
+get it in a day or so, would you mind taking a peek?
+
+> PS2: Two wishes: 1. Give the user the possibility to turn off any
+> loading of non-standard fonts (except the user's style sheet), 2. A
+> factor for size would be nice, i.e. the user should specify that dillo
+> should use x times the font size specified by the author of the page.
+> 
+
+these are both great options.
+
+Once my font patch is accepted, I would also like a standard size list created
+as mentioned above. I just winged it.
+
+Once I get underline working, I have all of the font modifying tags implemented. 
+
+
+
+Re: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-09-10 22:55
+
+Sean 'Shaleh' Perry wrote:
+> 
+> >
+> > However, this is widely used. If you can do it easily, why not ?
+> >
+> 
+> it can be done fairly easily. style sheets also allow for aribitrary fonts to
+> be used.
+> 
+> My initial question was: how do we want to implement this? My experience with
+> gtk is minimal, fonts even less.
+
+It's quite simple, but I think, you should only use the
+a_Dw_page_find_font function: Fill out a DwPageFont structure, then
+call this function, and you will get an index you can use in the
+DwPageAttr structure. I wrote something like the following, and it
+worked:
+
+DwPageFont font;
+DwPageAttr attr;
+gint attr_i;
+
+/* ... */
+
+font.name = "times";
+font.size = 14;
+font.bold = FALSE;
+font.italic = FALSE;
+
+a_Dw_page_init_attr (DW_PAGE (page), &attr);
+attr.font = a_Dw_page_find_font (DW_PAGE (page), &font);
+attr_i = a_Dw_page_add_attr(DW_PAGE (page), &attr);
+
+a_Dw_page_add_text (DW_PAGE (page), "Some text.", attr_i);
+
+Only as an example. You don't have to bother about loading and
+removing of fonts.
+
+(Although the implementation looks a bit strange: 1. I think there
+should be a global font list; 2. The Gdk fonts are not removed? But
+this is a separate problem.)
+
+I remember that there are a few more attributes (e.g. underlining,
+backgrounds), which I will add perhaps, after my Gtk port of DwPage is
+running correctly.
+
+Sebastian
+
+PS1: I'm currently porting DwPage to Gtk, but the interface will be
+the same (except adding widgets), so I hope, your changes will run
+with both versions of DwPage.
+
+PS2: Two wishes: 1. Give the user the possibility to turn off any
+loading of non-standard fonts (except the user's style sheet), 2. A
+factor for size would be nice, i.e. the user should specify that dillo
+should use x times the font size specified by the author of the page. 
+
+
+
+RE: [Dillo-dev]Misc.
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 22:22
+
+> 
+> Gentleman, please, there's no CSS support in dillo by now, it's
+> NOT a near future concern, and it can't cope with preferences
+> like: 
+> 
+> "don't allow cookies"
+> "download directory = ~/download"
+> "discard animated gifs"
+> "Don't load images"
+> "Start with 600x400"
+> etc...
+> 
+
+indeed, but it does handle:
+
+"no white backgrounds"
+"use font "blah" for tag foo"
+and just about any form of "I want html to look like"
+
+> --------------------------------------------------------------
+> 
+>> Badly written HTML...
+> 
+> Well, certainly an arguable topic, but the current position is
+> NOT to support badly written HTML.
+> 
+
+dillo should support the "oops" as much as possible. Simply forgetting to
+close a tag should not ruin the rest of the page. Users will see this as a bug
+in dillo.
+
+> - If the publisher wants to reach a broad spectrum, he'll
+> strive for correct HTML.
+
+Web sites that allow users to post responses with embedded html have no means
+to control what users enter. Letting a fellow open a font or bold tag and
+making the rest of the page look horrid just seems wrong. It is trivial to get
+tags like bold to clean up after previous bold tags.
+
+> --------------------------------------------------------------
+> 
+>> The question is do we want to actually make dillo display
+>> html like the web author intended?
+> 
+> Quite interesting question!
+> 
+> The answer is: NO!
+> 
+> Ideally, in dillo, the html should be displayed the way the
+> user wants, not the author.
+> 
+
+back to CSS here. Load YOUR sheet last, and you override the author. 
+
+
+
+[Dillo-dev]Misc.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-09-10 21:59
+
+Hi!
+
+
+Lots of email lately, hmmmm...
+
+Let's clarify some things:
+
+- Dillo is a lean, small and fast web client.
+- Dillo still can't render HTML (This is the main goal)
+- Dillo is very far away from supporting scripting languages.
+- CSS is NOT a priority, nor a concern by now.
+- Dillo aims to be a usable HTML web browser.
+
+The "fully standards compliant" browser project is mozilla, a
+better start for scripting languages is galeon (uses the gecko
+engine), if you also want to "get&feel" M$ content, you should go
+with the latest flavour of IE (probably on Windoze!;), and if you
+don't like Win* and also want the as-full-as-possible Internet
+experience, you'd probably should keep with Netscape.
+
+If you'd like to know some of the reasons of current goals in
+dillo, may I suggest:
+
+- Cathedral & the Bazaar (ESR)
+- Homesteading the noosphere (ESR) 
+- http://www.levien.com/free/decommoditizing.html (Raph Levien)
+- http://www.mcsr.olemiss.edu/~mudws/font.html
+- http://www.tuxedo.org/~esr/html-hell.html
+
+--------------------------------------------------------------
+
+> I have one problem that I can't seem to get around. Our site uses a SSL
+> (security socket layer) that the standard http_proxy setting doesn't allow
+> for. I would like some help regarding this issue if possible!
+
+Probably the easiest way around it is to grab the https pages
+with 'curl' and sending them to dillo using dillo's simple plugin
+scheme (currently in alpha, but working).
+Sean's idea is also a good starting point (libssl).
+
+> Thanks again for making Dillo such a great product!
+
+Thanks to you for greeting us
+(Would you believe that aprox. only 1 of 8 persons take time to
+write a gentle comment at first post?)
+
+--------------------------------------------------------------
+
+> Embbeding Perl 5...
+
+Although not a bad idea "per se", this is not the project for
+trying it. Dillo can't even render HTML by now, a module API is
+inexistent, and the Dw (dillo widget) is migrating to GTK+ in an
+effort to overcome a bunch of rendering-related problems. 
+
+May I suggest galeon? It uses gecko, has an API, is smaller
+than mozilla and it's also free.
+
+--------------------------------------------------------------
+> ...
+> as I mentioned in a previous mail, user preferences could easily 
+> be stored as a local style sheet which was added to the end of the style
+> sheet reading.
+
+Gentleman, please, there's no CSS support in dillo by now, it's
+NOT a near future concern, and it can't cope with preferences
+like: 
+
+"don't allow cookies"
+"download directory = ~/download"
+"discard animated gifs"
+"Don't load images"
+"Start with 600x400"
+etc...
+
+--------------------------------------------------------------
+
+> Badly written HTML...
+
+Well, certainly an arguable topic, but the current position is
+NOT to support badly written HTML.
+
+Mainly due to: 
+
+* http://www.levien.com/free/decommoditizing.html
+- If the publisher wants to reach a broad spectrum, he'll
+strive for correct HTML.
+
+Note: I'm sure there're different opinions on this.
+
+--------------------------------------------------------------
+
+> The question is do we want to actually make dillo display
+> html like the web author intended?
+
+Quite interesting question!
+
+The answer is: NO!
+
+Ideally, in dillo, the html should be displayed the way the
+user wants, not the author.
+
+One of the things a dislike more about Netscape is to have to
+see the page's as the author wants. No matter how hard I try to
+set my preferences to use certain fonts and sizes, they seem to
+always find the trick to get over my settings.
+Not to mention scaled fonts that look trembling & tiny, etc.
+
+Finally, I definitively agree that those pages have, by far, a
+better looking result when looked from a distance :-). Personally
+I do prefer dillo's rendering for reading HTML documentation.
+
+--------------------------------------------------------------
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 19:46
+
+> 
+> However, this is widely used. If you can do it easily, why not ?
+> 
+
+it can be done fairly easily. style sheets also allow for aribitrary fonts to
+be used.
+
+My initial question was: how do we want to implement this? My experience with
+gtk is minimal, fonts even less. 
+
+
+
+RE: [Dillo-dev]implementation question: how to decide if a font
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-10 09:38
+
+--- En reponse de "RE: [Dillo-dev]implementation question: how to
+decide if a font" de Sean 'Shaleh' Perry, le 10-Sep-2000 :
+> > 
+> > A good thing would be to load 2 fonts (proportionnal and mono) from
+> > dillorc and use only these everywhere in dillo.
+> > I'm not sure you want to load fonts on request. You probably can do
+> > it,
+> > it's even possible other browsers do it, but I'm not sure it's
+> > needed. 
+> > 
+> 
+> dillo currently uses: courier and lucida for special tags and
+> helvetica for everything else. The question is do we want to
+> actually make dillo display html like the web author intended? I
+> can understand not wanting to load each and every font asked for,
+> but requests for items like arial or in the case of
+> freshmeat lucida, which we are already using, why not allow it?
+
+The html author is not supposed to ask for a font (even if he can) :
+only if it's proportionnal or fixed width. He's not even supposed to
+specify B(old), I(talic) or any style, but use instead STRONG, EM tags.
+That's the same thing of using special chars instead of entities.
+
+However, this is widely used. If you can do it easily, why not ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2000 a 18:32:45
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]implementation question: how to decide if a font
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 06:56
+
+> 
+> A good thing would be to load 2 fonts (proportionnal and mono) from
+> dillorc and use only these everywhere in dillo.
+> I'm not sure you want to load fonts on request. You probably can do it,
+> it's even possible other browsers do it, but I'm not sure it's needed. 
+> 
+
+dillo currently uses: courier and lucida for special tags and helvetica for
+everything else. The question is do we want to actually make dillo display
+html like the web author intended? I can understand not wanting to load each
+and every font asked for, but requests for items like arial or in the case of
+freshmeat lucida, which we are already using, why not allow it? 
+
+
+
+RE: [Dillo-dev]implementation question: how to decide if a font 
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-10 06:46
+
+--- En reponse de "[Dillo-dev]implementation question: how to decide if
+a font is v" de Sean 'Shaleh' Perry, le 10-Sep-2000 :
+> I am working on <font face="foo,bar">. There is no central list of
+> fonts dillo
+> is willing to support or a way to query them. Html_page_check
+> declares an array
+> of 4 font names, but only helvetica ([0]) is used from that array.
+> 
+
+teletype style and PRE use courier, but hard-coded, not from this array
+(which is local anyway). 
+
+...
+> 
+> can dillo load font 'foo'?
+> 
+> Suggestions? I suspect this will require code in dw_page.c.
+> 
+
+A good thing would be to load 2 fonts (proportionnal and mono) from
+dillorc and use only these everywhere in dillo.
+I'm not sure you want to load fonts on request. You probably can do it,
+it's even possible other browsers do it, but I'm not sure it's needed. 
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2000 a 15:34:09
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]implementation question: how to decide if a font is valid
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 06:00
+
+I am working on <font face="foo,bar">. There is no central list of fonts dillo
+is willing to support or a way to query them. Html_page_check declares an array
+of 4 font names, but only helvetica ([0]) is used from that array.
+
+the face attribute of font is a comma separated list of the fonts the html
+author wanted to use, in order of preference. To continue with freshmeat:
+
+<FONT FACE="Lucida,Verdana,Helvetica,Arial">
+
+so, try Lucida, then Verdana, then Helvetica, then settle for Arial.
+
+What I need is a way to say:
+
+can dillo load font 'foo'?
+
+Suggestions? I suspect this will require code in dw_page.c. 
+
+
+
+[Dillo-dev]handling poorly written html
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 05:45
+
+So, was reading the recent freshmeat editorial when i noticed that freshmeat's
+html creation software likes to leave <b>'s open. So I tried to make bold
+close any open bold tags. First I tried Html_cleanup_tag(), which was already
+in use and thus documented. However cleanup_tag only handles the case of
+"<p><p>", i.e. back to back tags. freshmeat was doing "<b><font></font><b>". 
+So I looked at pop_tag. This function appears to properly handle the case
+where there are extra tags between the tag in question and the one I want
+removed. my dillo can now read html that has dangling b tags. Will probably
+add more of this type code as we discover other bad html.
+
+Point of this letter is this: Html_cleanup_tag is redundant considering the
+power of Html_pop_tag. Html_cleanup_tag also fails miserably on many pieces of
+html. I have a patch prepared which removes this function and replaces all
+calls to it with Html_pop_tag.
+
+Comments?
+
+P.S. Html_pop_tag has a todo comment, handle the case where tags dont nest. As
+I have stated above, it seems to do so. Can anyone point to cases where it
+fails? 
+
+
+
+RE: [Dillo-dev]on the subject of SCRIPT tags
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 02:41
+
+> 
+> I guess the events (onClick in a A tag,...) are to be done yet.
+> 
+
+yep, setup the events and then make it so they call the interpeter. 
+
+
+
+RE: [Dillo-dev]News
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-10 02:40
+
+> 
+> I remember that. Do we support style sheets now ? (or are we about to ?)
+> Good idea anyway.
+> 
+
+no, but it is on my todo list. As I mentioned we can inch our way in by
+storing prefs in style sheet format. This gets the style sheet parser working. 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: <ikluft@th...> - 2000-09-10 02:27
+
+>From: Eric GAUDET <egaudet@in...>
+>Embeding perl in dillo would probably never go into dillo's main
+>distribution. But that doesn't mean it's not interesting nor you
+>shouldn't do it. Find your way doing it as a side project for dillo
+>using dillo's standard interfaces (plugin or module).
+
+Well, it's too big an effort to undertake unless it's likely the
+project will embrace it to a greater degree than that.
+
+I fully respect that the volunteers who have contributed to the project
+should determine its direction. And I think Dillo looks promising.
+
+But I'm sure it won't be a surprise if I continue looking for a place
+where the browser-side perl idea would have a stronger acceptance. I'm
+willing to do this work but I most certainly don't want it to disturb
+volunteers who have already contributed. Maybe the idea's time just
+hasn't come yet.
+
+In any case, I appreciate the time you've taken to help me consider what
+the options were for this idea. I wish you success. I'll mention this
+project to anyone who sounds like they might be interested in volunteering.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+RE: [Dillo-dev]News
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-10 02:14
+
+--- En reponse de "RE: [Dillo-dev]News" de Sean 'Shaleh' Perry, le
+09-Sep-2000 :
+> > 
+> > I'm working on the Bookmarks plugin right now, and I've got lots of
+> > ideas fo plugins things. I'm willing to make a Preferences plugin
+> > too, as I saw the project is suspended and drake is most likely
+> > out of dillo.
+> > 
+> 
+> as I mentioned in a previous mail, user preferences could easily be
+> stored as a local style sheet which was added to the end of the
+> style sheet reading. This way user prefers override the author's
+> prefs. Or maybe an option "override web author?". If no, the
+> style would be read first.
+>
+> style sheets let the user specifiy almost anything about the look of
+> a web page
+> -- bg color, image, text colors by tag, etc.
+> 
+> If you could make the preference item output a style sheet formatted
+> file, we can only load it and ignore style sheets for right now.
+
+I remember that. Do we support style sheets now ? (or are we about to ?)
+Good idea anyway.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2000 a 11:12:05
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: <ikluft@th...> - 2000-09-10 02:14
+
+>From: "Sean 'Shaleh' Perry" <shaleh@vi...>
+>And here I was thinking the point of dillo was not to be the next mozilla.
+>
+>Guys, just once could a project do its job and only its job. I want a lean,
+>mean, web browser. It should support whatever the w3c says a web browser
+>should support and that is about it. Maybe some little tweaks to make a user's
+>life happier.
+
+OK, I understand.
+
+That was why I asked. I didn't know the opinions out there. You're all
+the ones who have done the work so far and that must be respected in
+any volunteer effort. The polite thing to do was bring it up for
+discussion and actually listen to the answers.
+
+Well, I'm listening and it's 0 for 2 right now. One more makes it
+a trend. :-) Oh well. It was worth the try.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-10 02:11
+
+--- En reponse de "Re: [Dillo-dev]idea: embed Perl5 in Dillo" de Ian
+Kluft, le 09-Sep-2000 :
+<snip snip>
+> Those examples were looking further out in the future, assuming this
+> feature were accepted by the group and had time to build out
+> access to lots of Dillo's APIs. I'm thinking of starting with a
+> module, adding perl interfaces to existing Dillo module APIs one
+> at a time, and seeing where it goes from
+> there. The idea of a plugin could be explored as a follow-on.
+> 
+<snip snip>
+
+Ok, as you seem quite excited by this idea, here are your options:
+
+- If you don't feel the need for constant interaction with dillo, go
+for a plugin. You can do that without any dillo-dev consensus : this is
+an external program (a project outside of dillo) launched in a shell by
+dillo when clicking on a fake url "dpi://<plugin-name>/<parameters>",
+doing his job (such as saving a file), sending datas to dillo (such as
+an html page), then exit. Plugins are being implemented now (I did a
+plugin-lib and I'm studying dillo's side calls), you'll be able to test
+your plugin quite soon, and you'll have support (by me at least ;-)
+
+- If you can live without dillo's interactions, you'll need a module.
+There's no module interface planned for now : you'll have to design it,
+and it will be accepted only if it's a generic module interface (not
+perl-specific) so others can benefit your work and do other modules.
+You'll have to work alone because we don't want to bloat dillo with a
+bunch of modules, and we don't feel immediate use of modules (you've
+heard Sean : I believe he doesn't want modules at all, I'm not sure I
+want that myself).
+
+Embeding perl in dillo would probably never go into dillo's main
+distribution. But that doesn't mean it's not interesting nor you
+shouldn't do it. Find your way doing it as a side project for dillo
+using dillo's standard interfaces (plugin or module).
+
+ciao
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2000 a 10:45:10
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]on the subject of SCRIPT tags
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-10 01:19
+
+--- En reponse de "[Dillo-dev]on the subject of SCRIPT tags" de Sean
+'Shaleh' Perry, le 09-Sep-2000 :
+> One of the patches I have given Jorge is to have script tags use the
+> stash. 
+> So, now all of the script code is stored somewhere, you just have to
+> get
+> it to the interpreter and add support for script hooks in html tags.
+
+I guess the events (onClick in a A tag,...) are to be done yet.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2000 a 10:17:46
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]News
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 19:12
+
+> 
+> I'm working on the Bookmarks plugin right now, and I've got lots of
+> ideas fo plugins things. I'm willing to make a Preferences plugin too,
+> as I saw the project is suspended and drake is most likely out of dillo.
+> 
+
+as I mentioned in a previous mail, user preferences could easily be stored as a
+local style sheet which was added to the end of the style sheet reading. This
+way user prefers override the author's prefs. Or maybe an option "override web
+author?". If no, the style would be read first.
+
+style sheets let the user specifiy almost anything about the look of a web page
+-- bg color, image, text colors by tag, etc.
+
+If you could make the preference item output a style sheet formatted file, we
+can only load it and ignore style sheets for right now. 
+
+
+
+[Dillo-dev]on the subject of SCRIPT tags
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 19:08
+
+One of the patches I have given Jorge is to have script tags use the stash. 
+So, now all of the script code is stored somewhere, you just have to get
+it to the interpreter and add support for script hooks in html tags. 
+
+
+
+RE: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 19:07
+
+And here I was thinking the point of dillo was not to be the next mozilla.
+
+Guys, just once could a project do its job and only its job. I want a lean,
+mean, web browser. It should support whatever the w3c says a web browser
+should support and that is about it. Maybe some little tweaks to make a user's
+life happier. 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: <ikluft@th...> - 2000-09-09 18:49
+
+>From: Eric GAUDET <egaudet@in...>
+>I'm not really against the idea : I know perl, I like perl, I don't
+>know javascript. If you think you can achieve that fast and _as_a_
+>_dillo_module_, good for you and for us. (I don't see immediate
+>applications, though, but if you do it, I'll most likely use it ;-)
+
+OK, thank for that note. :-)
+
+Yes, as I re-read the docs for the difference between a module and a plug-in,
+I think a module is what I had in mind. The intent behind it could also
+be thought of as a way to write new Dillo modules in perl.
+
+It's something that I've thought since the dawn of the web that someone
+should do with a browser. Nearly all my web software development over
+that time has been on the server side. Over the years, work on several
+closed-source web servers has occasionally prevented me from contributing
+to projects like Apache. Although I did take one opportunity to contribute
+a module (mod_mime_magic) that Apache accepted in 1997.
+
+In the meantime, perl never happened on the browser side. So I'm looking
+around for a project which would be receptive to the idea. Dillo is the
+first choice after a quick survey because it uses GTK with no Motif legacy,
+it's GPL, it's relatively new, etc. Admittedly, I'm in no political
+position to push this on any project so this idea completely depends on
+others liking it too. If I can't convince anyone, the idea goes nowhere.
+
+>But we need to keep dillo's priorities in mind : dillo's still lacking
+>a lot of important features for a browser, and we sure can use some
+>extra coders. (If you know gtk+ and you want to help with tables and
+>frames support, contact Jorge)
+
+Sorry - I've been on the server side of the web. I don't have that
+kind of experience.
+
+I can understand that the project needs to have priorities. Even if this
+idea doesn't (yet) serve a higher priority, I'll accept the repsonsibility
+to make sure it doesn't get in the way of them. I think after some of the
+implementation is started, it could actually help implement some of the
+priorities.
+
+>Having an embeded language would be nice, but IMHO the criterias for
+>such a thing in dillo are :
+>- either a quick-hack, very lightweight, non-standard language (ie: not
+>javascript) : no wasting our time doing that, just add some dillo-only
+>dynamic html pages.
+>- or javascript, with all the efforts it needs.
+>
+>My main concern is : why perl ? If you spend a lot of time glueing perl
+>with dillo, I'd prefer you do it in a way other languages can be
+>interfaced too. I know you link about embeding perl in a C program, but
+>it's too much perl-specific to my taste.
+
+Well, yeah, it's still in the thinking/proposal stage. But the idea looks
+like the perl-specific code would have to be kept to its own separate module.
+On the surface of it, except for occasional additional functions in some
+API's to make information available to other modules (like the perl module),
+I don't yet see any reason why it can't be contained in its own module
+much like mod_perl contains all the perl-specific code in Apache.
+
+As I continue to form the idea with your input, this Dillo module would
+be glue code between the Dillo APIs and Perl APIs. Each would view the
+other as a module, and access to their APIs.
+
+>> The thought I had for Dillo was not to replace any existing C code
+>> in Perl. But rather it should allow access to as many as possible
+>> of the APIs so that some new features can be prototyped or
+>> implemented as an embedded perl script calling Dillo API functions. 
+>> It could also customize things like menus by putting embedded
+>> perl scripts behind some of the callbacks that handle them. 
+>> (Imagine having live Slashdot headlines in a pulldown menu. :-)
+>
+>This has been discussed in this list a few weeks ago (check the
+>archives), under the name of "modules", and rejected (for now) because
+>it seemed too much work and second priority.
+
+OK, sorry. Then that wasn't a good example. :-) Time to go through
+the archives... (So far I've gone through the web site and been watching
+the mail list for a couple weeks.)
+
+But the point is that such extensions could be possible to write in perl,
+not just in C.
+
+>Some of your examples let me think you might want to implement a perl
+>"plugin", which is not a "module", much more like a local CGI (check
+>the archives for that too, or ask me, as I'm the one working on
+>plugins). I like _this_ idea : you could put together and maintain your
+>perl plugin without bothering patching/linking with dillo, because it
+>would be an _external_ program called by dillo.
+
+Those examples were looking further out in the future, assuming this feature
+were accepted by the group and had time to build out access to lots of
+Dillo's APIs. I'm thinking of starting with a module, adding perl interfaces
+to existing Dillo module APIs one at a time, and seeing where it goes from
+there. The idea of a plugin could be explored as a follow-on.
+
+>Anyway, embeding whatever in dillo will be Jorge's decision eventually:
+>wait for his answer before you begin something big ;-)
+
+:-) Yup, don't worry. I did read the authors page. I haven't written
+any code for this yet.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-09 13:37
+
+--- En reponse de "Re: [Dillo-dev]idea: embed Perl5 in Dillo" de Ian
+Kluft, le 09-Sep-2000 :
+> The main question is whether people want it. I clearly understand
+> your first impression was against the idea, and respect your
+> opinion. If you're still open for some more technical info, take
+> a look at
+...
+
+I'm not really against the idea : I know perl, I like perl, I don't
+know javascript. If you think you can achieve that fast and _as_a_
+_dillo_module_, good for you and for us. (I don't see immediate
+applications, though, but if you do it, I'll most likely use it ;-)
+But we need to keep dillo's priorities in mind : dillo's still lacking
+a lot of important features for a browser, and we sure can use some
+extra coders. (If you know gtk+ and you want to help with tables and
+frames support, contact Jorge)
+Having an embeded language would be nice, but IMHO the criterias for
+such a thing in dillo are :
+- either a quick-hack, very lightweight, non-standard language (ie: not
+javascript) : no wasting our time doing that, just add some dillo-only
+dynamic html pages.
+- or javascript, with all the efforts it needs.
+
+My main concern is : why perl ? If you spend a lot of time glueing perl
+with dillo, I'd prefer you do it in a way other languages can be
+interfaced too. I know you link about embeding perl in a C program, but
+it's too much perl-specific to my taste.
+
+> The thought I had for Dillo was not to replace any existing C code
+> in Perl. But rather it should allow access to as many as possible
+> of the APIs so that some new features can be prototyped or
+> implemented as an embedded perl script calling Dillo API functions. 
+> It could also customize things like menus by putting embedded
+> perl scripts behind some of the callbacks that handle them. 
+> (Imagine having live Slashdot headlines in a pulldown menu. :-)
+
+This has been discussed in this list a few weeks ago (check the
+archives), under the name of "modules", and rejected (for now) because
+it seemed too much work and second priority.
+
+Some of your examples let me think you might want to implement a perl
+"plugin", which is not a "module", much more like a local CGI (check
+the archives for that too, or ask me, as I'm the one working on
+plugins). I like _this_ idea : you could put together and maintain your
+perl plugin without bothering patching/linking with dillo, because it
+would be an _external_ program called by dillo.
+
+Anyway, embeding whatever in dillo will be Jorge's decision eventually:
+wait for his answer before you begin something big ;-)
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 09-Sep-2000 a 22:04:07
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: <ikluft@th...> - 2000-09-09 12:42
+
+>From: Eric GAUDET <egaudet@in...>
+>"Embeding" perl can be done in two ways : you can merge perl in dillo,
+>or link to perl dynamically.
+>IMHO, the fist is not doable : perl is too much heavy and I think we
+>want to keep dillo's light weight.
+
+I'm sure it's doable. But I'd have to implement it one API function
+at a time. It can also be done so that it's optional and you could
+leave it out at compile time.
+
+The main question is whether people want it. I clearly understand your
+first impression was against the idea, and respect your opinion. If you're
+still open for some more technical info, take a look at
+http://www.cpan.org/doc/manual/html/pod/perlembed.html
+http://www.cpan.org/doc/manual/html/pod/perlguts.html
+That's how a Perl5 interpreter can be embedded into any C program, or
+vice versa. A number of performance-critical Perl modules have been
+reimplemented in C too.
+
+So the embedding can go both ways. The perl interpreter can be a shared
+library. Or it can accept any module as a shared library.
+
+The counterpart to this idea on the server side is mod_perl for Apache.
+Perl and Apache each think the other is a module. :-) The perl interpreter
+runs inside the Apache process. I've used mod_perl on the job or on
+my personal web servers almost as long as it's been out.
+
+The thought I had for Dillo was not to replace any existing C code in Perl.
+But rather it should allow access to as many as possible of the APIs so
+that some new features can be prototyped or implemented as an embedded perl
+script calling Dillo API functions. It could also customize things like
+menus by putting embedded perl scripts behind some of the callbacks that
+handle them. (Imagine having live Slashdot headlines in a pulldown menu. :-)
+
+Also, depending on what access there might be to control the display
+window, it could be possible to have some kinds of local forms and pages
+controllable within the browser, and feed responses directly into
+browser-side perl code instead of a remote web server. So it could be a
+kind of scriptable local GUI in addition to a remote web browser. But it
+would take a lot of incremental API support before enough internal APIs
+could be covered to allow that.
+
+If the consensus is not to do this on Dillo, I can look around for another
+browser to try this on. But I like Dillo so far and think it has good
+potential. So I'm still holding out hope that some others will like
+the idea.
+
+>The latter seems better, adding support for the SCRIPT tag (a script in
+>an html page can actually be in any language, albeit javascript is the
+>only one used). But that's a lot of work : adding event calls on each
+>widget (links, images, words, almost all javascript's Document calls),
+>then figure out an interface between perl and dillo.
+>Though perl is quite an interesting language, my advice would be to
+>support javascript first (there's 2 open sourced javascript engines
+>around), because this will be immediatly usefull. Then you can add perl
+>with the same scripting interface.
+>
+>A few days ago, I tried to evaluate how hard it would be to embed a
+>tiny scripting language in dillo (10KB max), dillo-specific, so I can
+>add dynamic behavior to my dillo-plugins-generated pages. I suspended
+>this project for now, but if you dillo guys think that can be an
+>interesting add-on, tell me.
+>
+>Ian, if you want to add SCRIPT tag to dillo, I can help.
+
+Well, the SCRIPT tag will be needed for future Javascript support anyway.
+No doubt about that.
+
+But I'd be hesitant to allow it to use Perl. There is a Perl5 SAFE module
+which is intended to act as a kind of sandbox. But it doesn't have wide
+enough testing or trust to confidently use as downloadable code in a
+browser. I can almost see the CERT advisories already...
+
+Besides, there's no support among current web sites or browsers for such
+functionality right now.
+
+Though you would probably still have needed to use the perlembed interface
+to link a perl interpreter in for the SCRIPT tag. So I don't think it
+would have turned out any better on your concerns of a larger program size.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+RE: [Dillo-dev]idea: embed Perl5 in Dillo
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-09 11:35
+
+"Embeding" perl can be done in two ways : you can merge perl in dillo,
+or link to perl dynamically.
+IMHO, the fist is not doable : perl is too much heavy and I think we
+want to keep dillo's light weight.
+The latter seems better, adding support for the SCRIPT tag (a script in
+an html page can actually be in any language, albeit javascript is the
+only one used). But that's a lot of work : adding event calls on each
+widget (links, images, words, almost all javascript's Document calls),
+then figure out an interface between perl and dillo.
+Though perl is quite an interesting language, my advice would be to
+support javascript first (there's 2 open sourced javascript engines
+around), because this will be immediatly usefull. Then you can add perl
+with the same scripting interface.
+
+A few days ago, I tried to evaluate how hard it would be to embed a
+tiny scripting language in dillo (10KB max), dillo-specific, so I can
+add dynamic behavior to my dillo-plugins-generated pages. I suspended
+this project for now, but if you dillo guys think that can be an
+interesting add-on, tell me.
+
+Ian, if you want to add SCRIPT tag to dillo, I can help.
+
+--- En reponse de "[Dillo-dev]idea: embed Perl5 in Dillo" de Ian Kluft,
+le 09-Sep-2000 :
+> Part of my intent behind the just-submitted about-URL-hashing
+> experiment was
+> to dig around the sources to check what it might take to embed Perl5
+> in
+> Dillo. I envision this as an optional feature, not a requirement,
+> since
+> it would fit Dillo's goal of extensibility very well but would also
+> add
+> to its size. Such compromises should be weighed by group
+> discussion.
+> (I haven't been on the list long enough to know the Dillo developer
+> community well.)
+> 
+> I've wanted for a long time to try to embed Perl in a web browser. 
+> The
+> possibilities for local user interface control seem very powerful. 
+> But it
+> would be better to work on such changes with a relatively new
+> browser where
+> the concept can grow with the project if it's accepted by other
+> participants.
+> I'll watch the following discussion for everyone's opinions...
+> -- 
+> Ian Kluft KO6YQ PP-ASEL sbay.org
+> coordinator
+> ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San
+> Jose, CA
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 09-Sep-2000 a 20:17:40
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]idea: embed Perl5 in Dillo
+
+From: <ikluft@th...> - 2000-09-09 11:03
+
+Part of my intent behind the just-submitted about-URL-hashing experiment was
+to dig around the sources to check what it might take to embed Perl5 in
+Dillo. I envision this as an optional feature, not a requirement, since
+it would fit Dillo's goal of extensibility very well but would also add
+to its size. Such compromises should be weighed by group discussion.
+(I haven't been on the list long enough to know the Dillo developer
+community well.)
+
+I've wanted for a long time to try to embed Perl in a web browser. The
+possibilities for local user interface control seem very powerful. But it
+would be better to work on such changes with a relatively new browser where
+the concept can grow with the project if it's accepted by other participants.
+I'll watch the following discussion for everyone's opinions...
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+[Dillo-dev]patch: add hashing to "about:" handler
+
+From: <ikluft@th...> - 2000-09-09 11:00
+
+Attachments: dillo-about-patch      
+
+Hello. This is a simple patch while I'm learning my way around Dillo.
+It changes the "about:" URL handler to use a hash table. It also adds an
+a_About_add() function so other parts of Dillo can dynamically add their
+own about-string/URL pairs on the fly.
+
+Though I submit to the editorial authority of the project coordinators,
+I used the patch to show how this can more easily and scalably add
+about-URLs for developer resources (like the Dillo, gtk and glib home pages)
+or for project participants to add their own URLs (with two of mine shown
+as an example.) Hopefully that will be viewed as a "perk" for contributing
+source code and add to the popularity of the project.
+
+The patch is submitted to the project as an attachment to this message.
+Or if you want to give me permission to commit it myself, my SourceForge
+user name is ikluft.
+-- 
+Ian Kluft KO6YQ PP-ASEL sbay.org coordinator
+ikluft(at)thunder.sbay.org http://www.kluft.com/~ikluft/ San Jose, CA 
+
+
+
+[Dillo-dev]seen this a couple of times
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 10:03
+
+***** BUG found! (buffer needs allocation) *****
+Width = 1, Height = 1
+
+I can not reproduce it. 
+
+
+
+[Dillo-dev]word of caution and my status
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 09:35
+
+I have initial working of the FONT tag functional. I can say <font
+color="blue">Hi there</font> and get blue text. Will code the rest.
+
+The warning is that html_push_tag has to be called as early in a function as
+possible. I was having problems with open_font() because I was calling
+html_push_tag() at the end and thus pushing myself too far onto the stack it
+seems. the close font tag would not reset the text color. simply moving the
+function call fixed it. 
+
+
+
+RE: [Dillo-dev]Great Product!
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-09-09 03:29
+
+> 
+> I have one problem that I can't seem to get around. Our site uses a SSL
+> (security socket layer) that the standard http_proxy setting doesn't allow
+> for. I would like some help regarding this issue if possible!
+> 
+
+dillo could use ssl support -- feel free to help us code it. Or find someone
+else to contribute the code to us.
+
+start with libssl. 
+
+
+
+[Dillo-dev]Great Product!
+
+From: Bill Brooks <wdbrooksiii@ea...> - 2000-09-09 02:52
+
+To all concerned!
+
+Dillo is a great tool! I am working on a project that involves kiosk web
+browsing on thin clients with Linux RH61. We need to keep the operation
+simple and lock the user down to a limited range of use. Dillo seems to be
+the best browser that I have come across. It is simple (if browsers can be
+termed simple), fast, and can be extensible with knowledge of C and gtk+
+programming.
+
+I have one problem that I can't seem to get around. Our site uses a SSL
+(security socket layer) that the standard http_proxy setting doesn't allow
+for. I would like some help regarding this issue if possible!
+
+Thanks again for making Dillo such a great product!
+Bill Brooks
+MIS Anaylst
+Lowe's Companies, Inc. 
+
+
+
+RE: [Dillo-dev]News
+
+From: Eric GAUDET <egaudet@in...> - 2000-09-08 19:00
+
+06-Sep-2000, Jorge said : 
+> Personally, I gave a look to reload and double-click bugs, and
+> noted that they're most the same problem. 
+...
+> As a matter of fact, I'm currently working on it.
+...
+
+Shouldn't you register in the bug tracking database accordingly ?
+
+Anyway, I had email sending problems lately, and I was wondering if
+you've received my patches.
+
+I'm working on the Bookmarks plugin right now, and I've got lots of
+ideas fo plugins things. I'm willing to make a Preferences plugin too,
+as I saw the project is suspended and drake is most likely out of dillo.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 08-Sep-2000 a 22:25:38
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]News
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-09-06 13:58
+
+Hi!
+
+The list has been quiet for some time, and that's a good sign!
+(we are diligently working on the code by now).
+
+Personally, I gave a look to reload and double-click bugs, and
+noted that they're most the same problem. There're also a several
+more problems related to this that are not recorded in the
+bug-track. The main problem is the lack of implementation of a
+consistent error control and abort systems between different
+layers in dillo. This is a design concern.
+
+I also noted that it deserves a high priority on my list,
+because new developers don't know the internals of the browser
+and perceive dillo as crash-prone, and get discouraged, instead
+of knowing that this is just a lack of implementation that's to
+be overcomed soon.
+
+As a matter of fact, I'm currently working on it.
+
+I checked and fixed the cache clients scheme to handle not only
+concurrent clients on the same connection, but also to provide a
+handler for error control and aborting (This means that
+concurrent download functionality is working).
+
+As a mentioned above, the problem is among middle layers. For
+instance: do you remember Sebastian's post about image
+backgrounds? Yes, current scheme handles image transfers directly
+to rendering image widgets. I'm also working on that.
+
+Note that this is not a patching task, but a design one, that
+takes time and key decisions have to be made, so I'll take some
+time in trying to get it right.
+
+
+Jorge.-
+
+
+PS: I wander if some among the new memebers are experienced GTK+
+developers... 
+

@@ -1,0 +1,665 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Entrevista
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<div lang=es>
+<table border='1' cellpadding='5'>
+<tr><td>
+  Esta es una entrevista que di para
+  <a href='http://www.tux.cl/'>tux.cl</a>
+  a fines del 2002. Es interesante que todavía (2009) los tópicos tratados
+  mantienen su relevancia original.
+  &nbsp;&nbsp;--Jorge
+</td></tr>
+</table>
+
+<br><br>
+<H2><A NAME="s1">¿Básicamente, de que se trata el proyecto Dillo?</A></H2>
+
+<P>Los 
+<A HREF="funding/objectives.html">objetivos</A>
+del proyecto son:</P>
+<P>
+<UL>
+<LI>La democratización del acceso a la información de Internet.</LI>
+<LI>Seguridad y privacidad personal.</LI>
+<LI>Alta eficiencia del software.</LI>
+</UL>
+
+
+<P>y para eso estamos desarrollando un navegador (web browser) que:</P>
+<P>
+<UL>
+<LI>Está completamente escrito en C.</LI>
+<LI>Pesa menos de 300 Kilobytes (Sí, KILOBYTES!).</LI>
+<LI>Se distribuye bajo licencia GPL (Es Free Software).</LI>
+<LI>Funciona en un 
+<A HREF="Compatibility.html">amplísimo</A> rango de hardware.</LI>
+<LI>Es rapidísimo.</LI>
+</UL>
+
+
+<P> 
+De  hecho,  con Dillo, un PC 486 y una conexión telefónica, es
+suficiente para disfrutar de un buen acceso a Internet.</P>
+
+<P>La  eficiencia  de Dillo es tal que incluso puede funcionar en
+un pequeño asistente digital personal (computadores del tamaño de
+una calculadora).</P>
+
+<P>En  resumen:  estamos  entregando  un navegador que permite al
+usuario  acceder de forma rápida, segura y eficiente al vastísimo
+espectro  informativo de internet, manteniendo los requerimientos
+de hardware al mínimo.</P>
+
+
+<H2><A NAME="s2">¿Cuál sería el principal uso de Dillo?</A></H2>
+
+<P>¡Acceso a la información!</P>
+
+<P>Dillo  podría  abrir  las  puertas  a  una  nueva  experiencia
+Internet a decenas de millones de personas en el mundo.</P>
+
+<P>Es importante saber que las barreras de entrada a Internet son
+_artificiales_.  Fueron creadas y sustentadas para hacer un mejor
+negocio.</P>
+
+<P>(Si  usted compra un computador del año, lo renueva cada dos o
+tres,  y además paga mensualmente por un servicio de banda ancha,
+es  mucho  más  caro que si conserva su computador y sólo paga la
+cuenta del teléfono.)</P>
+
+<P>Así que ya lo saben: no se requiere de un computador moderno y
+un ancho de banda amplio para acceder a Internet.</P>
+
+
+<H2><A NAME="s3">Se menciona que Dillo podria ser usado hasta en un 486,
+¿existe</A> alguna distribución "ideal" para este tipo de equipos?</H2>
+
+<P>Existe  un gran número de distribuciones llamadas minimalistas,
+que  buscan acomodarse  a distintos grados de "pequeñez". Las hay
+desde un diskette hasta unos cuantas decenas de Megabytes.</P>
+
+<P>¡Yo  no las he probado!, pero sí instale una vez Slackware (3.5
+creo) en un 486DX66 y funcionaba de lo más bien.</P>
+
+<P>Ahora, considerando que 
+<A HREF="http://f5nlg.free.fr/drinou-linux/">Drinou Linux</A>
+está basada  en  Slackware  y  que  además  incluye  de  fábrica
+dillo-0.6.6,  yo  la  recomendaría,  y  es  la  que utilizaría si
+tuviera que habilitar un 486.</P>
+
+
+<H2><A NAME="s4">¿Se conoce la cantidad estimada de usuarios de Dillo?</A></H2>
+
+<P>Eso es muy difícil de precisar, ya que dillo no se distribuye
+sólo  desde  nuestro  sitio: hay paquetes debian, rpm, ipk, fink,
+BSD* etc. dispersos por el ciberespacio. Además de distribuciones
+que lo incluyen como paquete base del sistema.</P>
+
+<P>Si sólo se considera el paquete con el código fuente (opción
+muchísimo menos usada que un .rpm), dillo-0.6.6 debe tener unos
+20000 downloads desde nuestro sitio.</P>
+
+<P>A eso habría que sumarle una cantidad mucho mayor.</P>
+
+<P>¡Ya se me ocurrirá algo para contarlos!</P>
+
+
+<H2><A NAME="s5">¿Cómo ha sido la "aceptación" de Dillo por parte de la comunidad GNU/Linux?</A></H2>
+
+<P>Muy pero muy buena.</P>
+
+<P>He notado que de la gente que se toma el tiempo para escribir y
+dar las gracias por el aporte que les significa usar dillo,
+tenemos más fans que usuarios.</P>
+
+<P>Es extraordinariamente enriquecedor recibir las cartas de
+agradecimiento de tantas y diversas, partes y personas del mundo.</P>
+
+
+<H2><A NAME="s6">¿Cómo se lleva a cabo el desarrollo de Dillo?</A></H2>
+
+<P>Dillo es un proyecto internacional con integrantes de diversas
+nacionalidades que colaboran desde sus respectivos países. Todo
+esto es posible mediante la integración de diversas tecnologías
+que permiten configurar el equivalente de una "oficina virtual"
+sobre el espacio Internet.</P>
+
+<P>El grupo de desarrollo está compuesto por dos desarrolladores
+principales, tres estables y varios ocasionales.</P>
+
+<P>La distribución geográfica de los integrantes está
+principalmente en Europa y Sudamérica!</P>
+
+<P>Dentro de las tecnologías utilizadas para crear nuestro
+espacio de trabajo destacan: http server, CGI, log analizer, bug
+tracker, navegadores, shell servers, mailing lists, ssh, CVS,
+FTP, IRC, scripts, python, gcc/gdb, Sistemas Operativos POSIX,
+debuggers, release publishers, ..., y el idioma inglés!</P>
+
+
+<H2><A NAME="s7">¿Porqué GTK y no QT?</A></H2>
+
+<P>Hay varias razones. La principal es que cuando comenzó el
+proyecto Dillo, las bibliotecas QT no eran Free Software (eso
+cambió  después). Además, a la sazón, ellos estaban desarrollando
+la  biblioteca  KHTML para su futuro web browser (Konqueror).</P>
+
+<P>Por otro lado, gzilla se basaba en GTK+, que si era Free
+Software y las extensiones para imágenes que yo planeaba estaban
+garantizadas ya que GTK+ es la base de GIMP!</P>
+
+
+<H2><A NAME="s8">¿Ya que Dillo esta programado en C es portable a otros sistemas operativos. Sería de más impacto la  "democratización de internet" si se tuviera como objetivo Windows, con su gran cantidad de usuarios?</A></H2>
+
+<P>Definitivamente NO.</P>
+
+<P>Vamos  por  partes:  el hecho de que esté programado en C no es
+garantía  de  portabilidad.  De hecho, es mucho más importante la
+dependencia de bibliotecas.</P>
+
+<P>Si las bibliotecas son portables, o han sido homologadas en sus
+APIs,  es  relativamente  sencillo  hacer  una  versión  para  la
+plataforma  que  las  provee.  Si las bibliotecas de funciones no
+existen  en  la  plataforma  destino,  portar  se torna una tarea
+titánica.</P>
+
+<P>Por  otra  parte, la tarea de democratizar el acceso a internet
+va muy ligada a dos hechos:</P>
+<P>
+<OL>
+<LI>Dillo deja bajos y constantes los requerimientos de Hardware.</LI>
+<LI>No se requiere pagar licencias para usar Free Software.</LI>
+</OL>
+
+
+<P>Micro$oft  (windoze)  hace precisamente lo contrario, y es más,
+aumenta   artificialmente  los  requerimientos  de  hardware.  Si
+alguien  usa  esa  plataforma,  tendrá  que renovar su computador
+periódicamente  (para  hacer lo mismo que hacía antes), y también
+pagar la nueva licencia cada vez que haya "upgrade".</P>
+
+<P>Si, en cambio, se opta por una plataforma de Free Software como
+GNU/Linux  (con  dillo),  se  puede usar un computador (antiguo o
+nuevo)  por  tanto  tiempo  como dure el hardware sin temor a que
+deje de funcionar. ¡Y sin pagar licencias!</P>
+
+<P>La  segunda  alternativa,  permite a las personas que no tienen
+acceso  a  internet,  "debido  a su alto costo", disfrutar de las
+bondades de la era de la información.</P>
+
+<P>Es cierto que se requiere educar e informar que: </P>
+<P>
+<UL>
+<LI>Es falso que los computadores hay que renovarlos cada 3 años.</LI>
+<LI>Es falso que se requiere de un computador ultra moderno para conectarse a Internet.</LI>
+<LI>Es falso que no se puede acceder bien a internet por teléfono</LI>
+</UL>
+
+
+<P>Dichos  mitos (tomados como verdaderos) ¡sólo son la base de un
+negocio multimillonario que explota a quienes los creen!</P>
+
+
+<H2><A NAME="s9">¿Que implica ser el coordinador del proyecto?</A></H2>
+
+<P>Responsabilidad, conocimiento, consistencia y liderazgo.</P>
+
+<H2><A NAME="ss9.1">¿Surgen problemas de organización?</A>
+</H2>
+
+<P>Sí, como en toda dinámica grupal, pero con ribetes muy
+particulares.</P>
+
+<P>Quizás lo más interesante es que como es un proyecto compuesto
+por voluntarios, no se puede exigir a alguien que haga una
+determinada tarea, de una cierta forma y en un cierto tiempo.</P>
+
+<P>Cuando se desea que alguien desarrolle una determinada tarea,
+se debe fundamentar muy bien para conseguir su anuencia, y además
+debe coincidir con su área de interés.</P>
+
+<P>El otro punto destacable, es que a veces se pierde un tiempo
+valiosísimo explicando/coordinando/precisando como hacer cierta
+tarea a alguien que finalmente, después de intentar, se declarará
+incapaz de llevarla a cabo.</P>
+
+<H2><A NAME="ss9.2">¿Ha demandado mucho de tu tiempo?</A>
+</H2>
+
+<P>En el proyecto Dillo, hago dos trabajos:</P>
+<P>
+<UL>
+<LI>Coordinador del proyecto</LI>
+<LI>Desarrollador principal</LI>
+</UL>
+
+
+<P>Si  además  se  considera la enorme complejidad y dinamismo de
+las  tecnologías  que  debe  manejar  un  web  browser,  es fácil
+comprender que hay mucho más trabajo que tiempo.</P>
+
+<P>De  hecho,  desde  los  inicios  del  proyecto hasta ahora, he
+trabajado  Full  time, tres años, Sab. y Dgos. incluidos.</P>
+
+
+<H2><A NAME="s10">¿Qué plataforma (GNU/Linux, distro) usas para el desarrollo de Dillo?</A></H2>
+
+<P>Yo uso Slackware, pero en el grupo de desarrollo hay gente que
+usa  NetBSD, FreeBSD, OpenBSD, Solaris y otras distros GNU/Linux,
+así  que  nuestro  software  es  probado  en  un  buen  número de
+plataformas antes de hacer cada release.</P>
+
+<P>En  mi  opinión, Slackware es la mejor distribución para aquel
+que  sabe  lo  que  está haciendo, o que quiere aprender bien los
+fundamentos técnicos de un ambiente GNU/Linux.</P>
+
+
+<H2><A NAME="s11">¿Cómo y cuando empezaste con GNU/Linux?</A></H2>
+
+<P>Debió ser alrededor de 1996, instalé Slackware 3.5 o 3.6, pero
+antes usé "monkey linux" sobre un sistema de archivos DOS (kernel
+2.0.30)</P>
+
+<P>En todo caso, mis primeros pasos en ambientes Unix fueron en 1990.</P>
+
+
+<H2><A NAME="s12">¿Porqué afirmas que Dillo es Free Software pero no Open Source?</A></H2>
+
+<P>Respuesta corta:</P>
+<P>
+<UL>
+<LI>Free Software es un movimiento social</LI>
+<LI>Open Source es sólo una técnica de desarrollo.</LI>
+</UL>
+
+
+<P>Respuesta mediana:</P>
+
+<P>Después  de  saber que existe un sistema operativo de altísimo
+nivel,  desarrollado  por  voluntarios  alrededor del mundo en su
+tiempo  libre,  que  se  distribuye  como  Free  Software (lo que
+implica,  entre  otras,  que  se  puede usar legalmente sin pagar
+licencia),   cualquier   persona  intelectualmente  despierta  se
+pregunta  ¿Qué  motiva  a  dicho  grupo  a  dedicar  su  tiempo a
+semejante tarea? </P>
+
+<P>La  respuesta  es una ética y una filosofía compartida, de tal
+fuerza  que  es  capaz  de  crear  un  movimiento  basado  en las
+convicciones de sus miembros. Unificados por un instrumento común,
+el Free Software o Software libre, al amparo de la licencia GPL.</P>
+
+<P>(Necio aquel que cree que es sólo por el gusto de programar, o
+peor aún, por una técnica de programación.)</P>
+
+<P>¿Qué es el Software Libre?</P>
+
+<P>Es un software que otorga cuatro _libertades_ básicas:</P>
+<P>
+<OL>
+<LI>La libertad de usar el programa, con cualquier propósito.</LI>
+<LI>La libertad de estudiar como funciona el programa, y
+adaptarlo a tus necesidades (acceso al código fuente).</LI>
+<LI>La libertad de distribuir copias, con lo que puedes ayudar
+a tu vecino.</LI>
+<LI>La libertad de mejorar el programa y hacer públicas las
+mejoras a los demás, de modo que toda la comunidad se beneficie.</LI>
+</OL>
+
+
+<P>Expresado  de  manera  simple, la licencia GPL es el mecanismo
+legal  que  obliga que, cuando se redistribuya el programa, no se
+puedan  agregar  restricciones  para denegar a otras personas las
+libertades centrales.</P>
+
+<P>Es  decir,  un  programa  GPL  siempre  entregará  las  cuatro
+libertades anteriormente señaladas.</P>
+
+<P>Estos  simples  elementos han ido creando una base de software
+enorme,  compartida  por  una  gran cantidad de gente a través de
+todo  el  mundo. De hecho, todo el software GNU y el Kernel Linux
+están bajo licencia GPL. Son Free Software.</P>
+
+<P>¿Pero _qué_ motiva a los miembros de este movimiento?</P>
+
+<P>La  respuesta  a  ésta pregunta es muy amplia, incluso a nivel
+genérico,  y  posiblemente me explaye en otra ocasión, pero valga
+señalar  que  para  una  mente  analítica abstracta, la respuesta
+surge   del  análisis  de  las  sociedades  de  competencia,  las
+sociedades de intercambio y las sociedades de cooperación.</P>
+
+<P>Es más, la conocida "paradoja del prisionero" arroja mucha luz
+sobre el tema.</P>
+
+<P>Una respuesta detallada (en español) se podría obtener leyendo 
+acerca de la 
+<A HREF="http://www.gnu.org/philosophy/philosophy.es.html">Filosofía del Proyecto GNU</A>.</P>
+
+
+<H2><A NAME="s13">¿Qué piensas del hecho de que la mayoría confunde el</A>Software Libre con el software Open Source?</H2>
+
+<P>No es extraño, ya que el término fue acuñado un poco para
+confundir.</P>
+
+<P>El  movimiento  de  Free  Software  (Software  Libre)  es  muy
+anterior a la definición de Open Source Software (OSS). De hecho,
+si  la  memoria  no  me  falla, el sistema GNU/Linux ya existía y
+estaba operativo antes de la aparición del término OSS.</P>
+
+<P>En  pocas  palabras,  lo  que  sucedió  fue  que  como el Free
+Software  despertaba  reticencias por parte del mundo empresarial
+(ya que pone el énfasis en las libertades que otorga al usuario),
+un  pequeño  grupo  tomó  una decisión pragmática: ocultar dichos
+aspectos  éticos y filosóficos, presentando al Free Software como
+una metodología de desarrollo y no como el movimiento que es.</P>
+
+<P>Así, desarrollaron una definición de OSS suficientemente amplia
+como  para  incluir  al Free Software dentro de un grupo mayor (y
+así  poder  decir que un dicho programa es OSS cuando en realidad
+es Free Software).</P>
+
+<P>El problema es que OSS permite limitar algunas libertades que
+entrega el Free Software.</P>
+
+<P>Lo divertido es que tuvieron un éxito enorme, y como la mayoría
+de   la  prensa  escrita  recibe  sus  dineros  por  concepto  de
+publicidad  (pagada  por  empresas),  decidieron seguir usando el
+término OSS y no ofender a sus clientes.</P>
+
+<P>El  punto  es  que  quienes  se  enteraron  de la existencia de
+GNU/Linux  en  alguna  de esas publicaciones, comenzaron creyendo
+que se trataba de OSS.</P>
+
+<P>Hoy  en  día, el término OSS, ha causado un gran daño a la Free
+Software  Foundation  y  el  proyecto  GNU, ya que se arroga como
+propios  los  logros  de esta, y oculta la filosofía subyacente.</P>
+
+<P>De  hecho  fue una espada de doble filo: por una parte abrió la
+puerta  de  entrada a las empresas y por otro ocultó la parte más
+importante: un tema de libertades.</P>
+
+<P>Por  eso  hoy  en  día  es muy importante hacer la distinción y
+explicar cual es la diferencia entre Free Software y Open Source.</P>
+
+<P>Espero haber contribuido a ello.</P>
+
+<P>Información relacionada; acerca de la 
+<A HREF="http://www.gnu.org/fsf/fsf.es.html">FSF</A> (en español),
+acerca del 
+<A HREF="http://www.gnu.org/home.es.html">Proyecto GNU</A> (en español).</P>
+
+
+<H2><A NAME="s14">¿Cómo ves la comunidad Linux Chilena?</A></H2>
+
+<P>La  verdad  no he tenido mucho tiempo de involucrarme. Pero me
+parece  que  está  bastante  activa,  con  encuentros nacionales,
+conferencias etc.</P>
+
+<P>De  hecho  hoy  29  de  Noviembre  se  está llevando a cabo un
+encuentro nacional de GNU/Linux en Concepción.</P>
+
+<P>Me gustaría  participar y dar alguna charla, pero para otra 
+vez será. </P>
+
+<P>Creo que la lista "linux" de la UTFSM ha hecho mucho por la
+comunidad, de hecho aglutina una gran cantidad de público en
+torno a un interés común.</P>
+
+
+
+<H2><A NAME="s15">¿Cómo crees se podría incentivar a los linuxeros chilenos para</A>que participen o inicien proyectos de software libre?</H2>
+
+<P>¡Ay!, no es cosa de llegar y meterse. Hay que saber.</P>
+
+<P>Para  trabajar  en  un  proyecto  de Free Software se necesita
+gente con conocimientos, no sólo las ganas.</P>
+
+<P>Yo  recomendaría primero que se informen muy bien sobre que es
+el Software Libre, y si comparten la filosofía subyacente, que se
+integren en un proyecto en un área que conozcan bien (como podría
+ser la misma área sobre la que hicieron la memoria o tesis).</P>
+
+
+
+<H2><A NAME="s16">¿Cómo ves el futuro de Dillo?</A></H2>
+
+<P>Eso  es  algo  que  está  por verse, ya que lamentablemente no
+depende sólo de nosotros...</P>
+
+<P>Técnicamente,  tenemos  toda  la capacidad, ganas e ideas para
+hacer  "grandes  cosas"  con  Dillo.  De  hecho  lo  que  tenemos
+desarrollado hoy en día, ¡ya hace una enorme diferencia!</P>
+
+<P>Por  ejemplo,  muchos habrán oído hablar de la llamada "brecha
+digital" (o digital divide).</P>
+
+<P>(La  llamada  "brecha  digital"  consiste en la separación que
+existe  entre  aquellos que tienen acceso a las tecnologías de la
+información  y  los que no. Como es fácil comprender, en un mundo
+interconectado,  que  abarca  un  conjunto  cada  vez  mayor  del
+quehacer  humano  dentro  del  dominio  informático, dicha brecha
+viene  a constituir lo que podríamos llamar "el analfabetismo del
+siglo XXI").</P>
+
+<P>Así,  es  fácil  comprender  porqué la ONU y la mayoría de los
+países  (desarrollados  o  no)  están  preocupados  de ello. Como
+también  porqué periódicamente realizan cumbres para debatir como
+superarlo  y  porqué asignan miles de millones de dólares a dicho
+item.</P>
+
+<P>Lamentablemente,  y como el mismísimo secretario general de la
+ONU ha reconocido, la tarea no va a ser fácil ya que es frecuente
+que  sean los mismos monopolios estatales los que asignen tarifas
+exhorbitantes  por  el ancho de banda y que han de ser los mismos
+gobiernos   los   que  revisen  sus  políticas  y  acuerdos  para
+asegurarse  que  no  están  negando a la población el acceso a la
+revolución digital... (piénselo)</P>
+
+<P>Es  fácil  ver  que  los intereses económicos involucrados son
+enormes.</P>
+
+<P>Valga un pequeño ejemplo:</P>
+
+<P>Dillo  es  la  demostración palpable de que la tecnología para
+hacer un PDA (computador portátil tamaño calculadora) que integre
+navegador de internet y telefonía EXISTE hoy.</P>
+
+<P>Dillo  es la demostración palpable de que es posible construir
+un teléfono fijo con pantalla y browser por unos U$250 y entregar
+acceso a Internet a una enorme cantidad de gente.</P>
+
+<P>¿Por qué dichos productos no están en el mercado?</P>
+
+<P>Si   consideramos  los  miles  de  millones  (de  dólares)  en
+ganancias que genera la explotación del mercado informático tal y
+como está hoy, ¡es fácil comprender porqué no quieren cambiarlo!</P>
+
+<P>En  resumen: la tecnología para masificar el acceso a Internet
+a  bajo  costo  existe  (hoy). Sólo falta la voluntad política de
+algún gobierno para hacerlo.</P>
+
+<P>De  hecho, en Chile, con GNU/Linux + Dillo, hoy es posible con
+un  computador  viejo  y una línea telefónica, acceder a una gran
+cantidad   de   información  disponible  en  los  servidores  del
+gobierno, universidades, diarios, revistas, foros, etc... (¡y eso
+que no se ha acordado ninguna política de acceso!).</P>
+
+<P>Nuestro  proyecto  esta buscando fondos que permitan financiar
+un conjunto de desarrolladores estable, con dedicación exclusiva,
+de   manera  de  acelerar  y  mejorar  nuestro  navegador  y  así
+contribuir a construir una sociedad más informada.</P>
+
+<P>Toda  la  información  referente  al  proyecto  Dillo se puede
+encontrar en nuestro 
+<A HREF="index.html">sitio web</A>.</P>
+
+
+<H2><A NAME="s17">Mencionas que Uds. (equipo desarrollo de Dillo) están</A>buscando fondos para Dillo, ¿han tenido algún exito?</H2>
+
+<P>Lo que se necesita para establecer el proyecto, es una cantidad
+suficiente  para  pagar a unos pocos desarrolladores principales,
+para que puedan dedicarse tiempo completo a mejorar dillo.</P>
+
+<P>Eso  no  parece fácil de lograr en Chile ya que la mayoría vive
+en Europa y el costo de la vida allá es otro...
+<A HREF="funding/index.html">[más detalles]</A></P>
+
+<P>Hasta hace unos pocos días no habíamos conseguido absolutamente
+nada, pero un par de días atrás, supimos que 
+<A HREF="http://www.linuxfund.org">linuxfund</A> 
+nos había asignado un "grant".</P>
+
+<P>¡Espero que sea un buen comienzo!</P>
+
+<H2><A NAME="ss17.1">¿Mantienen contacto con alguna entidad pública o privada?</A>
+</H2>
+
+<P>Varias veces he tenido conversaciones aquí en Chile, pero nunca
+ha surgido nada concreto.</P>
+
+
+<H2><A NAME="s18">¿Existe algún proyecto donde Dillo es usado "comercialmente"?</A></H2>
+
+<P>Sí. Hay un 
+<A HREF="http://www.linuxdevices.com/articles/AT2869412121.html">proyecto interesante</A> que implementa una  red  interna  
+de información para hoteles sobre computadores embebidos (USA).</P>
+
+<P>Además  me  han escrito que en una universidad implementaron un
+sistema  de información electrónico sobre pantallas planas que se
+controla por interfaz web desde un servidor central (Australia).</P>
+
+<P>Una  vez  recibimos  una carta de agradecimiento de una persona
+que   había   podido  hacer  un  gran  trabajo  de  investigación
+(recopilación  de información), rápida y eficientemente gracias a
+dillo.</P>
+
+<P>Las posibilidades son muchas, sólo se requiere del conocimiento
+y las ganas de hacerlo.</P>
+
+
+<H2><A NAME="s19">¿De que forma se podría aportar al desarrollo de Dillo?</A></H2>
+
+<P>Creo que de tres maneras:</P>
+<P>
+<OL>
+<LI>Aportando directamente con parches y código fuente (lo que
+requiere de bastante conocimiento y experiencia).
+</LI>
+<LI>¡Hablando de él! 
+
+Conociendo  los  objetivos del proyecto, y comunicándolos a las
+personas. Usando dillo y mostrándolo a la gente. Haciendo ver que
+es  posible moverse rápidamente en internet con poco computador y
+con un teléfono.
+
+<P>Leyendo manuales y sitios, investigando con dillo y disfrutando
+de  la velocidad y facilidad con que se puede hacer, para después
+contarles a los demás.</P>
+
+</LI>
+<LI>Ayudando a encontrar la forma de financiar el proyecto.</LI>
+</OL>
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

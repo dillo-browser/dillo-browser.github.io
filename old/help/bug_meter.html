@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  About Dillo's Bug Meter
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="../db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="../db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="../index.html">Home</a><br>
+      <a href="../screenshots/index.html">Screenshots</a><br>
+      <a href="../download.html">Download</a><br>
+      <a href="../FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="../Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="../Plans.html">Current Plans</a><br>
+      <a href="../MList.html">Mailing List</a><br>
+      <a href="../conferences.html">Conferences</a><br>
+      <a href="../donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="../dillo3-help.html">Help</a><br>
+      <a href="../Icons/index.html">Icons</a><br>
+      <a href="bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="../developer.html">New Developer</a><br>
+      <a href="../documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="../NC_design.html">Naming&amp;Coding</a><br>
+      <a href="../source.html">Source&nbsp;repository</a><br>
+      <a href="../dpi1.html">Dpi1 Spec</a><br>
+      <a href="../CSS.html">CSS Spec</a><br>
+      <a href="../D_authors.html">Authors</a><br>
+      <a href="../authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="../press.html">Dillo in the Press!</a><br>
+        <a href="../interview.html">Interview</a><br>
+        <a href="../interview.es.html">Entrevista</a>
+         <img src="../chile.png" alt="*"><br>
+        <a href="../Links.html">Links</a><br>
+        <a href="../logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="../authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="../abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<div lang=en>
+<h1>About Dillo's Bug Meter</h1>
+
+<div class=section>
+<h3>Introduction:</h3>
+
+Dillo's bug meter shows the number of <b>detected bugs</b> inside a web
+page. The bugs are caught at parsing time, and therefore the error messages
+also show the line where they occur and provide a
+<b>hint</b> of what was expected instead!
+<p>
+The primary goal of the bug meter is to <b>help</b> webmasters and page authors
+to polish the contents of their sites with a view to make them standards
+compliant.
+</div>
+
+<div class=section>
+<h3>How does it work?</h3>
+
+Mainly, the parser catches
+"<a href='http://www.bu.edu/tech/web/departments/non-wordpress/start/html-introduction/syntax/nesting-tags/'>nesting</a>"
+bugs. That is, improperly closed or
+unclosed elements. This is, actually, one of the most
+<a href='http://www.htmlhelp.com/tools/validator/problems.html'>common
+mistakes</a> found in web pages, so the chances of a dillo-validated
+web page to be
+<a href='http://validator.w3.org/'>W3C</a> or
+<a href='http://www.htmlhelp.org/tools/validator/'>WDG</a>
+compliant are very high!
+<p>
+The rest of the reported bugs set is basically related to proper format
+and allowed contents for elements and attributes.
+</div>
+
+<div class=section>
+<h3>What's the difference with the W3C and WDG validators?</h3>
+
+Mainly the <b>ease of use</b> and completeness.
+<p>
+Dillo's bug meter is not a substitute for formal validators but a
+<b>tool</b> to help towards standards compliance.
+<p>
+Every page displayed by Dillo shows the bug meter count, and also keeps
+an error message list. That is, for the sole act of displaying a
+page you know whether it validates with Dillo or not.
+The error message list (with hints) is a single click away!
+<p>
+Once the page validates you can double check it either with the W3C
+or WDG by right-clicking the bug meter and making your choice. These
+validators make a formal check of the page contents.
+<p>
+Most of the time the page will pass this second check!
+</div>
+
+<div class=section>
+<h3>Why are standards so important?</h3>
+
+When a page is not standards compliant it becomes <b>slang</b>, and as
+such its interpretation is subjective or, at best, only known to
+its creators.
+<p>
+Such pages, and particularly those with multiple slang instances,
+start to become only understandable by one interpreter (browser).
+<p>
+Once this happens, the universality of the Web fails, because it 
+restricts site usage to a certain browser.
+<p>
+Making  your  sites  standards-compliant  will  help ensure every
+browser, old and new, will be able to present the sites
+<b>properly</b>, and also that they will
+<b>work in the future</b>, making your site
+accessible  from  a wide range of devices ranging from desktops to
+cell phones.
+<p>
+The universality and interoperability of the Web is one of the biggest
+assets of mankind today. Liberty of expression and freedom of information
+have found their new home inside the fertile Web space.
+<p>
+If you let a single corporation or entity the power to
+control the Internet's protocols, they would be
+able to control the Web just as much as the mass-media.
+<p>
+Please don't let that happen.
+</div>
+
+<div class=section>
+<h3>What can I do?</h3>
+<ul>
+<li>Be aware of the importance of Web standards, and help
+ to spread the word.
+<li>Help page authors and webmasters to provide standards-compliant contents
+(For  instance, you can copy&amp;paste the error messages produced by
+Dillo, and mail them to the author).
+<li>Reject  slang  and  proprietary  protocols,
+  use alternative standard-compliant sites.
+</ul>
+</div>
+
+<div class=section>
+<h3>Links:</h3>
+
+<ul>
+<li>The Web Standards Project's 
+<a href='http://www.webstandards.org/learn/faq/'>FAQ</a>.
+<li><a href='http://tidy.sourceforge.net'>Tidy</a>:
+an  extraordinary tool that automatically corrects a lot
+of errors found in web pages.
+<li>
+<a href='http://www.w3.org/'>W3C</a> and
+<a href='http://www.htmlhelp.org/'>WDG</a>.
+</ul>
+</div>
+
+<p>Note: near the release of dillo-3.0.4 a person that teaches HTML
+wrote me with some suggested links of their own. I lost the email in
+the server migration and wish he could send it again.
+
+</div>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

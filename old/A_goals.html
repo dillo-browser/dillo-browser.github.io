@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Achieved Goals
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="index.html">Home</a><br>
+      <a href="screenshots/index.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/tip/ChangeLog">
+             Changelog</a><br>
+      <a href="Plans.html">Current Plans</a><br>
+      <a href="MList.html">Mailing List</a><br>
+      <a href="conferences.html">Conferences</a><br>
+      <a href="donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="dillo3-help.html">Help</a><br>
+      <a href="Icons/index.html">Icons</a><br>
+      <a href="help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="developer.html">New Developer</a><br>
+      <a href="documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="NC_design.html">Naming&amp;Coding</a><br>
+      <a href="source.html">Source&nbsp;repository</a><br>
+      <a href="dpi1.html">Dpi1 Spec</a><br>
+      <a href="CSS.html">CSS Spec</a><br>
+      <a href="D_authors.html">Authors</a><br>
+      <a href="authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="press.html">Dillo in the Press!</a><br>
+        <a href="interview.html">Interview</a><br>
+        <a href="interview.es.html">Entrevista</a>
+         <img src="chile.png" alt="*"><br>
+        <a href="Links.html">Links</a><br>
+        <a href="logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+  <h1> Achieved Goals</h1>
+
+    <h2> (Chronological order)</h2>
+    <hr>
+
+    <ul>
+    <li> Introduced a new Domain Name Resolver engine. It's a 98%-new
+         thread-based (pthreads), non-blocking stable design. The good news is
+         that it allows gdb debugging and compatibility with libc5 systems; two
+         major features that were missing with the former scheme. </li>
+
+     <li> Designed a <A href="NC_design.html">Naming&amp;Coding standard</A> 
+          for the project. </li>
+  
+     <li> Introduced an interactive bug-track engine at the Web site. It allows
+          developers and testers to coordinate their efforts, and also serves as
+          an information center on project status. </li>
+
+     <li> Introduced other interactive pages that helped to coordinate particular
+          tasks (as stage 1 of the Naming&amp;Coding effort).</li>
+
+     <li> Introduced the layered Naming&amp;Coding design into the the source
+          tree (up to stage 1).<br> It helps developers to easily understand
+          Dillo's internal function calls, and to figure it out quickly where
+          they came from. It also provides a two layer ADT (Abstract Data Type)
+          that serves as an all around lib (when prefixed 'a_') and as a module
+          lib (when prefixed with the module name).<br> It also provides a
+          framework that supports concurrent developing.
+          <!-- <br> You can check stage 1 log <a href="Dname.html">here</a>. --> </li>
+
+     <li> Completed stage 2 of the Naming&amp;Coding effort. It was a 1.2 Mb
+          source!<br> (Stage 2 was the last stage) </li>
+
+     <li> Removed all compile time warnings from the source</li>
+
+     <li> Added PNG image support </li>
+
+     <li> Added POST method support </li>
+
+     <li> Standarized all the memory management to glib functions </li>
+
+     <li> Fixed the image rendering bugs that were affecting GIFs and JPGs </li>
+
+     <li> Improved rendering with support for image resizing (images without
+          size tags) </li>
+
+     <li> Fixed the plugin handler (FTP works again) </li>
+
+     <li> Fixed bugs that affected image URLs (segfaults) </li>
+
+     <li> Documented internal work of the browser (to be extended) </li>
+
+     <li> Eliminated several memory leaks </li>
+
+     <li> Introduced a readable config file for preferences </li>
+
+     <li> Made a public developer's release; a major milestone in our project,
+          cause we had a lot of work to make it possible.<br> </li>
+
+     <li> Reimplemented the whole networking process (One half of the browser is
+          completely NEW) </li>
+
+     <li> Stabilized dillo to a better degree than gzilla-0.2.2 (another milestone!) </li>
+
+     <li> Made a public announcement in freshmeat and in
+          comp.os.linux.announce.<br> Finally the house-cleanning has finished
+          and we have a stable, consistent, commented, documented and extensible
+          code base to work on. <br> (Thanks to everyone that contributed to
+          make it possible.)</li>
+
+     <li> Fixed the blank rendering bug </li>
+
+     <li> Documented dillo widget! </li>
+
+     <li> Designed and implemented a new data-transfer mechanism for internal
+          layers </li>
+
+     <li> Redesigned the cache to hold both images and pages, and to handle its
+          clients with a primary key </li>
+
+     <li> Added ISINDEX support </li>
+
+     <li> Made several fixes, improvements and extensions </li>
+
+     <li> Rewrote most of the Dw module from scratch! </li>
+
+     <li> Reimplemented image rendering with GdkRGB and the new DwImage </li>
+
+     <li> Enabled dillo to work with low screen depths </li>
+
+     <li> Fixed lots of memory leaks </li>
+
+     <li> Improved error-handling in the IO engine. </li>
+
+     <li>Rewrote the HTML tag parsing functions in a standards compliant 
+     way.</li>
+                                                                               
+     <li>Introduced an optimized URL resolving module (96% RFC2396
+     compliant). </li>
+     
+     <li>Reduced dicache's memory usage. </li> 
+     
+     <li>Added cookies support! (RFC-2965 compliant).</li>
+     
+     <li>Restarted working on simple plugins design (dpi1)</li>
+
+     <li>Added IPv6 support!
+     <li>Implemented alignments inside tables
+     <li>Added iterators (the basis for find text and future copy&amp;paste
+     <li>Added a simple command line interface
+     <li>Made Dillo embeddable into other GTK+ applications!
+     <li>Extended the Concomitant Control Chain (CCC) theory to 
+         allow bidirectional message passing.
+     <li>Extended IO's functionallity with a threaded operation that
+       allows buffered writes of small chunks on the same FD.
+     <li>Used the new CCC and IO to implement dillo plugins! (dpi).
+     <li>Wrote a dpi-program for bookmarks.
+     <li>Implemented Copy&amp;Paste! (aka. Text selection)
+
+     <li>Introduced a new way of handling dillo plugins! Now the
+         communications and managing is done by a daemon: dpid.
+         This comes with a lot of advantages described in Dpid.txt.
+     <li>Developed a plugin for downloads. It uses wget and can handle
+         several connections at the same time.
+     <li>Developed a plugin for FTP.
+     <li>Made an example plugin (hello), and 
+         started developing the https plugin.
+     <li>Adapted the generic parser to make HTML error detection, providing
+         the line number and a hint (expected tag) in the error message!
+         -- this feature is also known as the <em>bug meter</em>.
+     <li>Added a context sensitive popup menu for images.
+     <li>Made even more portability enhancements.
+     <li>Made significant improvements to the HTML parser. This brings
+         better HTML rendering, and better bug detection (hints).
+     <li>Tested dillo extensively on several platforms reaching the
+         very stable beta SW status.
+     <li>Finished the feasibility analysis for an FLTK port.
+     <li>Orthogonalized the generic parser:
+      <ul>
+       <li> Fixes memory leaks and widget state when recovering from bad
+            HTML.
+       <li> Improves error detection and validation (needed by XHTML).
+       <li> Makes DOC tree generation possible (needed by CSS).
+       <li> Cleaner design of handling routines for bad HTML.
+       <li> Orthodox treatment of double optional elements (HTML, HEAD,
+            BODY).
+       <li> Lots of minor code cleanups.
+      </ul>
+     <li>Cookies became a plugin to allow sharing between multiple copies
+         of dillo.
+     <li>New Abstraction Layer.
+     <li>New image handling code.
+     <li>Parsing of empty XML tags (e.g &lt;script/&gt; as
+         &lt;script&gt;&lt;/script&gt;).
+     <li>Port to FLTK2.
+     <li>Universal CCC (Concomitant Control Chain) idea.
+     <li>Implement tabs in the user interface.
+     <li>Rewrite of tables code.
+     <li>accept multiple character sets (in both HTTP and META).
+     <li>optional image loading.
+     <li>gzip decoder.
+     <li>64-bit ready out of the box.
+     <li>Implement the "file input" control for forms.
+     <li>Optimized scrolling.
+     <li>HTTP-1.1's chunked transfer support.
+     <li>GUI dpi for downloads.
+     <li> Basic authentication.                                                
+     <li> Configurable keybindings.
+     <li> Empty cache-entries removal.
+     <li> DPI cleanup.                                                         
+     <li> Cookies cleanup.
+     <li> Limit concurrent connections to a host.                              
+     </ul>
+  <p>
+  [Oops. Old page forgotten about and no longer updated...]
+  <hr>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

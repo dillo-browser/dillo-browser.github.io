@@ -1,0 +1,5334 @@
+Re: [Dillo-dev][RFC] Limiting the size of Cache
+
+From: Pekka Lampila <medar@ka...> - 2002-02-28 23:04
+
+On Sat, 23 Feb 2002 14:50:04 +0200
+Pekka Lampila <medar@ka...> wrote:
+
+> I'll try to clean up my patch tomorrow and post it here.
+
+Took little longer, but here it is.
+http://kirjasto.org/medar/dillo/cache-limit.medar.2002-02-28.diff
+5 files changed, 117 insertions(+), 1 deletion(-)
+
+There are surely some bugs and shortcomings included. General idea
+should be clear though.
+
+It doesn't file sizes in account when making up removing order. That
+would be easy to add, but could be an overkill.
+
+But anyway Livio's approach is propably much better. Or better suited
+for Dillo atleast.
+
+cache_size="-1" -> cache everything (default)
+cache_size="0" -> cache nothing
+cache_size="x" -> cache size x kilobytes
+
+-- 
+Pekka Lampila
+medar@ka... 
+
+
+
+[Dillo-dev]Small make install issue
+
+From: Michael Duelli <m.duelli@we...> - 2002-02-28 11:03
+
+Hi all,
+
+when installing dillo as root using ginstall from install (GNU fileutils) 
+4.0 I get this tiny error message
+
+--------------snip----------------
+make[1]: Entering directory `/usr/src/packages/SOURCES/DEV/dillo'
+make[2]: Entering directory `/usr/src/packages/SOURCES/DEV/dillo'
+make[2]: Nothing to be done for `install-exec-am'.
+if [ -d /usr/local/etc ]; then \
+/usr/bin/ginstall -c -m 644 --backup=t ./dillorc /usr/local/etc/; \
+elif [ -d /etc/ ]; then \
+/usr/bin/ginstall -c -m 644 --backup=t ./dillorc /etc/; \
+fi
+make[2]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+make[1]: Leaving directory `/usr/src/packages/SOURCES/DEV/dillo'
+--------------snap----------------
+
+It seems like you have to export the argument for backup as 
+SIMPLE_BACKUP_SUFFIX.
+Maybe this is different with newer versions of ginstall.
+
+TIA,
+Michael
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net - A 3D chess interface 
+
+
+
+[Dillo-dev]aa font question
+
+From: Sajed Chowdhury <src@ac...> - 2002-02-27 20:42
+
+Hi,
+
+I've just installed dillo and I think it has the potential to be a great 
+minimalistic browser.
+I question I have is how can I make dillo display anti-aliased ttf fonts?
+
+thanks,
+
+-Sajed 
+
+
+
+[Dillo-dev]Dillo (in the) News!
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-27 18:22
+
+Hello everyone,
+
+I guess Dillo is more famous then I had imagined! We are making
+headlines! ;-)
+
+There is an article published yesterday on the Linux Journal about
+Dillo! It's a review by a Ralph Krause, made yesterday (26/02/2002):
+http://www.linuxjournal.com/article.php?sid=5847
+
+I caught this link from the front page of NewsForge (newsforge.net):
+http://www.newsforge.com/article.pl?sid=02/02/26/2358247&mode=thread
+
+And another article mentions Dillo, made by Kevin Reichard at
+BrowserWatch:
+http://browserwatch.internet.com/news/stories2002/news-20020122-4.html
+
+I don't know if Dillo is still too "ripe" for this kind of
+attention, but, as the saying goes: "Bad press is better then no
+press"! ;-)
+
+Congratulations to all Dillo developers! Hope we grow a lot more
+this year and make more users (and headlines ;).
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-27 15:21
+
+Sebastian (Leske),
+
+> >
+> > g_strtod() from glib does almost the same. It tries to call strtod
+> > with the current locale and if that fails it does the above trick.
+> >
+> > J=F6rgen
+>
+> I fear that is not the proper way to do it; strtod may work with the
+> correct locale, but produce incorrect results. You cannot expect it to
+> fail when used with the wrong locale.
+> Example:
+> "1.001" would be a correct string representation of a decimal number in
+> both the C and the DE locale, but in C it would mean 1.001 (e.g. 1 +
+> 1/1000), whereas in DE it would mean 1,001 (e.g. 1000 + 1), since in
+> German, the dot is used to make big numbers more readable (like the
+> comma in English).
+>
+> So I think you really need to explicitly disable the locale for parsing
+> the conf file.
+
+I just commited a patch to the CVS, please check if it solves
+the problem as I can't reproduce it here.
+
+Thanks
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Makefile problem??
+
+From: John Utz <john@ut...> - 2002-02-26 17:19
+
+you need gnu make it's available as a pkg called gmake
+
+On Mon, 25 Feb 2002, Yu-Fong Cho wrote:
+
+> Hi,
+> 
+> This is not an exact development question.
+> 
+> I downloaded Dillo 0.64 from sourceforge ftp and tried to compile it on
+> FreeBSD 4.5.
+> Everytime it said:
+> 
+> "Makefile", line 306: Need an operator
+> make: fatal errors encountered -- cannot continue
+> *** Error code 1
+> 
+> Is makefile broken? or I miss something?
+> 
+> Thanks
+> 
+> 
+> Yu-Fong
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Makefile problem??
+
+From: Miklos Magyari <miklos.magyari@et...> - 2002-02-26 07:38
+
+hi,
+
+> I downloaded Dillo 0.64 from sourceforge ftp and tried to compile it on
+> FreeBSD 4.5.
+> Everytime it said:
+> 
+> "Makefile", line 306: Need an operator
+> make: fatal errors encountered -- cannot continue
+> *** Error code 1
+> 
+> Is makefile broken? or I miss something?
+
+Dillo's Makefile is not compatible with the BSD make. You have to use
+GNU make.
+
+cheers,
+Miki 
+
+
+
+[Dillo-dev]Makefile problem??
+
+From: Yu-Fong Cho <yfcho@ms...> - 2002-02-26 04:45
+
+Hi,
+
+This is not an exact development question.
+
+I downloaded Dillo 0.64 from sourceforge ftp and tried to compile it on
+FreeBSD 4.5.
+Everytime it said:
+
+"Makefile", line 306: Need an operator
+make: fatal errors encountered -- cannot continue
+*** Error code 1
+
+Is makefile broken? or I miss something?
+
+Thanks
+
+
+Yu-Fong 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Sebastian Leske <sleske@en...> - 2002-02-24 15:18
+
+Hi,
+
+> > > The proper solution, of course, would be to disable locale for
+> > > the parsing of the conf file. This can be done using the
+> > > setlocale function.=20
+[...]
+> > The way we do it in Dia:
+> >
+> > #include <locale.h>
+> > [...]
+> > char *old_locale;
+> > old_locale =3D setlocale(LC_NUMERIC, "C");
+> > [... locale-free parsing ...]
+> > setlocale(LC_NUMERIC, old_locale);
+>
+> g_strtod() from glib does almost the same. It tries to call strtod
+> with the current locale and if that fails it does the above trick.
+>
+> J=F6rgen
+
+I fear that is not the proper way to do it; strtod may work with the=20
+correct locale, but produce incorrect results. You cannot expect it to=20
+fail when used with the wrong locale.
+Example:
+"1.001" would be a correct string representation of a decimal number in=20
+both the C and the DE locale, but in C it would mean 1.001 (e.g. 1 +=20
+1/1000), whereas in DE it would mean 1,001 (e.g. 1000 + 1), since in=20
+German, the dot is used to make big numbers more readable (like the=20
+comma in English).
+
+So I think you really need to explicitly disable the locale for parsing=20
+the conf file.
+
+Greetings,
+
+Sebastian Leske 
+
+
+
+Re: [Dillo-dev][RFC] Limiting the size of Cache
+
+From: Pekka Lampila <medar@ka...> - 2002-02-23 12:49
+
+Hi,
+
+On Wed, 20 Feb 2002 15:22:58 -0300
+Livio Baldini Soares <livio@im...> wrote:
+
+> I have started writing a patch that adds a `cache_size' to Dillo's
+> options, because currently the cache has no limit, therefore,
+> everything you download gets cached into memory. I've made a very
+> premature patch, which has a few know bugs...
+
+I too looked to this issue, and even wrote little patch. Though never
+got it ready to send here. My patch has little different approach.
+
+
+> But what I want to know is, is this a wanted feature? Now that I've
+> made Dicache optional, does anyone still see Dillo hogging up RAM?
+> Before the Dicache removal, I could get 40MiB of use from Dillo after
+> a fews hours of browsing. But now the _maximum_ I've hit is 20MiB.
+
+I think this is definately needed. 20 megs can be just too much for old
+systems. And if you have fast connection (local proxy maybe), and not
+too slow machine, there is no reason to waste the memory. :)
+
+> The problem with making this patch, is that it'll eventually be an
+> overhead, especially for low cache_sizes... Maybe I'll have to try
+> harder to make a "low/no-overhead" solution.
+
+I haven't had time to test your patch (only read it through). But I
+don't think it will make too much overhead.
+
+My implementation is based on counting the references on cache entrys.
+So it has separate mode for totally disabling cache (always removes
+cache entry when no references left). This should limit the need to use
+very small cache sizes. And even with small cache size profiling looked
+very good.
+
+Another feature which could also be implemented without need to refcount
+(I think). Is prioritising the removal of cache entrys by their sizes.
+Don't know if this is usefull or not.
+
+Your patch is much more cleaner and smaller than mine. I never even
+though of doing this some other way than refcounting. Don't know what
+style should be used for final implementation.
+
+I'll try to clean up my patch tomorrow and post it here.
+
+-- 
+Pekka Lampila
+medar@ka... 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-02-23 08:00
+
+fre 2002-02-22 klockan 16.54 skrev Lars Clausen:
+> On Fri, 22 Feb 2002, Sebastian Leske wrote:
+> > Hi,
+> >=20
+> > recently I had the same problem with the font sizes.
+> > I managed to track it down, and it really is a locale problem, as Lars
+> > Clausen pointed out.
+> [...]
+> > The proper solution, of course, would be to disable locale for the
+> > parsing of the conf file. This can be done using the setlocale
+> > function. I don't know enough C to implement a patch, but there is an
+> > example for temporarily changing the locale in the glic Texinfo
+> > documentation (Main Menu / Locales / Setting the Locale ). This would
+> > probably only need minor adaption. In the meantime, I would propose to
+> > patch Dillo to deactivate locales.
+>=20
+> The way we do it in Dia:
+>=20
+> #include <locale.h>
+> [...]
+> char *old_locale;
+> old_locale =3D setlocale(LC_NUMERIC, "C");
+> [... locale-free parsing ...]
+> setlocale(LC_NUMERIC, old_locale);
+
+g_strtod() from glib does almost the same. It tries to call strtod with
+the current locale and if that fails it does the above trick.
+
+J=F6rgen
+
+> -Lars
+>=20
+> --=20
+> Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+> "I do not agree with a word that you say, but I |----------------------=
+------
+> will defend to the death your right to say it." | Where are we going, a=
+nd
+> --Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket?
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev] off-topic: font size doesn't adapt to ~/.dillo/dillorc
+
+From: higuita <higuita@GM...> - 2002-02-22 20:47
+
+On Wed, 20 Feb 2002 23:51:42 -0300, Livio Baldini Soares
+<livio@im...> wrote:> Andreas Goesele writes:
+> Guten Tag! (Hey... everyone's learning portuguese in the world lately!
+> I think I better start learning some other languages too...)
+
+hey, Portuguese is about the 4º most spoken language in the
+world, so this is a good reason to learn it ;)
+
+if we could, we spoke about 10 languages, but we have no time
+to learn then all (yet, just wait for the "uploading things to the
+brain" technology )
+
+um abraco
+
+higuita
+-- 
+One Unix to rule them all, One Resolver to find them,
+One IP to bring them all and in the zone bind them. 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-22 15:54
+
+On Fri, 22 Feb 2002, Sebastian Leske wrote:
+> Hi,
+>=20
+> recently I had the same problem with the font sizes.
+> I managed to track it down, and it really is a locale problem, as Lars
+> Clausen pointed out.
+[...]
+> The proper solution, of course, would be to disable locale for the
+> parsing of the conf file. This can be done using the setlocale
+> function. I don't know enough C to implement a patch, but there is an
+> example for temporarily changing the locale in the glic Texinfo
+> documentation (Main Menu / Locales / Setting the Locale ). This would
+> probably only need minor adaption. In the meantime, I would propose to
+> patch Dillo to deactivate locales.
+
+The way we do it in Dia:
+
+#include <locale.h>
+[...]
+char *old_locale;
+old_locale =3D setlocale(LC_NUMERIC, "C");
+[... locale-free parsing ...]
+setlocale(LC_NUMERIC, old_locale);
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+RE: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Sebastian Leske <Sebastian.Leske@bi...> - 2002-02-22 14:56
+
+Hi,
+
+recently I had the same problem with the font sizes.
+I managed to track it down, and it really is a locale problem, as Lars
+Clausen pointed out.
+
+The problem is in prefs.c, lines 159 ff. (as of Dillo 0.6.4):
+
+case DRC_TOKEN_FONT_FACTOR:
+prefs.font_factor =3D strtod(scanner->value.v_string, NULL);
+break;
+
+As you can see, Dillo uses the strtod function from the C library to pars=
+e
+the string you supply as a font factor.
+As the manpage for strtod states:
+
+The expected form of the string is optional leading white
+space as checked by isspace(3), an optional plus (``+'')
+or minus sign (``-'') followed by a sequence of digits
+optionally containing a decimal-point character, option=AD
+ally followed by an exponent.
+[...]=20
+If the locale is not "C" or "POSIX", different formats may be
+used.
+
+Note the last line!
+In this case, the user used a locale setting where the decimal separator
+character is not a point ".", as in English. Therefore Dillo cannot parse
+a floating point number using "." .=20
+
+Workaround:
+Using a comma instead of a point does not seem to work, maybe other parts
+of Dillo expect a point. What does work is to disable locales (which are
+not really used anyway at the moment).=20
+To do this:
+
+either
+
+* execute
+unset LANG LC_ALL LANGUAGE LC_NUMERIC
+before starting Dillo (this will only affect the terminal window where
+you type this). If you put it in a script, like this:
+
+#!/bin/sh
+unset LANG LC_ALL LANGUAGE LC_NUMERIC
+exec dillo
+
+you can run Dillo through this wrapper, and nothing else will be distur=
+bed
+
+or=20
+
+* patch Dillo not to use locale:
+In dillo.c , comment out or delete the line containing
+gtk_set_locale (in Dillo 0.6.4 it's line 70).
+
+The proper solution, of course, would be to disable locale for the parsin=
+g
+of the conf file. This can be done using the setlocale function. I don't
+know enough C to implement a patch, but there is an example for
+temporarily changing the locale in the glic Texinfo documentation (Main
+Menu / Locales / Setting the Locale ).
+This would probably only need minor adaption. In the meantime, I would
+propose to patch Dillo to deactivate locales.
+
+Greetings,
+
+Sebastian Leske 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Andreas Goesele <Goesele@hf...> - 2002-02-21 20:19
+
+Lars Clausen <lrclause@cs.uiuc.edu> writes:
+
+> On 21 Feb 2002, Andreas Goesele wrote:
+
+> > I now see that it is a locale problem: If I move from de_DE to C dillo
+> > shows the right font sizes. (I recompiled my dillo 0.6.1 and it's not
+> > affected: It shows independently from the locale setting the right
+> > size.)
+> 
+> Sounds like the problem we had in Dia a while back: Numbers are parsed
+> according to the locale, however sometimes you don't want that. Try
+> setting
+> 
+> font_factor=2,0
+> 
+> (I believe German uses the comma for the decimal separator, right?). The
+> correct way to fix this in Dillo would be to set the locale to C just
+> before parsing the prefs.
+
+Yes, German uses the comma for the decimal separator. But using it in
+the font_factor doesn't help. Starting dillo then gives the following
+output:
+
+Setting locale to de_DE
+dillorc:24: unexpected character `1', expected string constant
+dillorc:24: unexpected character `,', expected symbol
+dillorc:24: unexpected character `8', expected symbol
+
+And I already had hoped this would be a workaround ...
+
+Andreas Goesele 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-21 18:08
+
+On 21 Feb 2002, Andreas Goesele wrote:
+> Livio Baldini Soares <livio@im...> writes:
+>=20
+>> and see if you get any fonts available. But, hey, these are only
+>> guesses too.
+>=20
+> I now see that it is a locale problem: If I move from de_DE to C dillo
+> shows the right font sizes. (I recompiled my dillo 0.6.1 and it's not
+> affected: It shows independently from the locale setting the right
+> size.)
+
+Sounds like the problem we had in Dia a while back: Numbers are parsed
+according to the locale, however sometimes you don't want that. Try
+setting
+
+font_factor=3D2,0
+
+(I believe German uses the comma for the decimal separator, right?). The
+correct way to fix this in Dillo would be to set the locale to C just
+before parsing the prefs.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+[Dillo-dev]Excellent Browser! (fwd)
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-21 13:13
+
+---------- Forwarded message ----------
+Date: Mon, 18 Feb 2002 07:20:29 -0600
+From: ron <ronlankford@at...>
+To: jcid@us...
+Subject: Excellent Browser!
+
+
+I just wanted to take a moment to say what an excellent
+browser you and your Dillo team have put together. I found
+out about Dillo from the XFce site.
+
+With the help of some documentation from a newbie site, I
+was able to compile Dillo after loading a few libraries,
+and was surprised at how easy the process was. Dillo IS a
+very fast browser. Dillo and XFce make my old Pentium I
+machine usable again, and my Pentium III is really fast
+with the two of them.
+
+I was surprised at the functionality of Dillo...you said
+version 0.6.4 is alpha code, but for viewing and navigating
+web pages, it is very stable and (again) fast! The
+about:splash screen and the dillorc file make configuring
+Dillo easy.
+
+Again, many thanks to the Dillo team for a most excellent
+project. Please keep up the good work.
+
+Ron. 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Martin Samuelsson <cosis@ly...> - 2002-02-21 04:57
+
+On Thu, Feb 21, 2002 at 04:22:16AM +0100, Andreas Goesele wrote:
+> > http://www.ime.usp.br/~livio/dillo/patches/check_font_factor.diff
+> 
+> Actually I wanted to move to precompiled binaries ...
+
+did you deinstall gcc?
+
+try cutting and pasting the following lines as root.
+
+cd /usr/src
+wget http://www.ime.usp.br/~livio/dillo/patches/check_font_factor.diff
+apt-get source dillo
+cd dillo*
+patch -p1 < ../check_font_factor.diff
+dpkg-buildpackage
+cd ..
+dpkg -i dillo*deb 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Andreas Goesele <Goesele@hf...> - 2002-02-21 03:25
+
+Livio Baldini Soares <livio@im...> writes:
+
+> Guten Tag! (Hey... everyone's learning portuguese in the world lately! =
+I
+> think I better start learning some other languages too...)
+
+Tr=EAs n=E3o bastam? :-)
+=20
+> > Anything else I could try?
+>=20
+> Well, you can try this patch (against Dillo 0.6.4):
+> http://www.ime.usp.br/~livio/dillo/patches/check_font_factor.diff
+
+Actually I wanted to move to precompiled binaries ...
+=20
+> It will spill out one or maybe two different types of messages.
+> It will always print out what's the value of prefs.font_factor. It
+> should be the same as in the dillorc.
+>=20
+> The second message will only appear if Dillo can't load the desired
+> font. It should spill out the name of the font which it tried to
+> search for. My guess is that probably you don't have any iso8859-1
+> fonts installed.
+>=20
+> You could try doing something like:
+
+> # xlsfonts | grep iso8859-1 | grep helvetica
+
+$ xlsfonts | grep iso8859-1$ | grep -c helvetica
+120
+
+> and see if you get any fonts available. But, hey, these are only
+> guesses too.
+
+I now see that it is a locale problem: If I move from de_DE to C dillo
+shows the right font sizes. (I recompiled my dillo 0.6.1 and it's not
+affected: It shows independently from the locale setting the right
+size.)
+
+Does it still make sense to compile dillo with your patch?
+
+Mais uma vez: Obrigado!
+
+Andreas Goesele 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-21 02:51
+
+Andreas Goesele writes:
+> Olá Livio,
+
+Guten Tag! (Hey... everyone's learning portuguese in the world lately! I
+think I better start learning some other languages too...)
+
+> Livio Baldini Soares <livio@im...> writes:
+
+[...]
+
+> > What bugs me though is that you said that the dillorc worked in
+> > 0.6.1, so that's probably not the problem.
+> > 
+> > Did you try various values to font_factor, even extreme ones like:
+> > 
+> > font_factor=4.0
+> > font_factor=0.6 # this one should be unreadably tiny
+> 
+> Tried those, no effect.
+> 
+> > I'm just shooting in the dark here, though, cause I can't see where
+> > the problem could be.
+> 
+> Anything else I could try?
+
+Well, you can try this patch (against Dillo 0.6.4):
+http://www.ime.usp.br/~livio/dillo/patches/check_font_factor.diff
+
+It will spill out one or maybe two different types of messages.
+It will always print out what's the value of prefs.font_factor. It
+should be the same as in the dillorc.
+
+The second message will only appear if Dillo can't load the desired
+font. It should spill out the name of the font which it tried to
+search for. My guess is that probably you don't have any iso8859-1
+fonts installed.
+
+You could try doing something like:
+
+# xlsfonts | grep iso8859-1
+
+or, more specifically:
+
+# xlsfonts | grep iso8859-1 | grep helvetica
+
+and see if you get any fonts available. But, hey, these are only
+guesses too.
+
+> Obrigado!
+
+Bitte schön!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Andreas Goesele <Goesele@hf...> - 2002-02-21 02:21
+
+Jorge Arellano Cid <jcid@em...> writes:
+
+> On 21 Feb 2002, Andreas Goesele wrote:
+
+> > I recently moved to dillo 0.6.4 (Debian package) from 0.6.1 (self
+> > compiled).
+> >
+> > 0.6.1 respected the font_factor setting in ~/.dillo/dillorc, 0.6.4
+> > doesn't. Is this a bug (as I assume), or is there some way to get
+> > 0.6.4 to honor the font_factor setting.
+> 
+> It works perfect here.
+> 
+> If 0.6.1 still works for you (with the same dillorc), I'm
+> puzzled...
+
+I recompiled 0.6.1 and the font_factor is heeded if I start this
+version.
+
+> If not, check the spellings, the font factor to use a period,
+> and the font to be installed.
+
+How could I check the font to be installed?
+
+Thanks!
+
+Andreas Goesele 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Andreas Goesele <Goesele@hf...> - 2002-02-21 02:12
+
+Ol=E1 Livio,
+
+Livio Baldini Soares <livio@im...> writes:
+
+> This is awfully odd. I have 0.6.4-1 from Debian Woody installed here
+> at home and it seems to be working just fine (the font_factor, I
+> mean). Also, we haven't had any complaints about this particular issue
+> before...
+>=20
+> Well, just to sort out some obvious mistakes:
+>=20
+> [1] Make sure you are changing ~/.dillo/dillorc and not /etc/dillorc
+> (the latter is only parsed if the first doesn't exist!)
+
+I'm changing ~/.dillo/dillorc and I'm shure that it is parsed, as the
+geometry setting is heeded.
+
+> [2] The font_factor which is active is the _last_ font_factor defined
+> in the dillorc file. So:
+>=20
+> font_factor=3D2.0
+> font_factor=3D1.0
+>=20
+> Gives you a final font_factor containing `1.0'.
+
+There's only one font_factor line in dillorc
+
+> What bugs me though is that you said that the dillorc worked in
+> 0.6.1, so that's probably not the problem.
+>=20
+> Did you try various values to font_factor, even extreme ones like:
+>=20
+> font_factor=3D4.0
+> font_factor=3D0.6 # this one should be unreadably tiny
+
+Tried those, no effect.
+
+> I'm just shooting in the dark here, though, cause I can't see where
+> the problem could be.
+
+Anything else I could try?
+
+> best of luck!
+
+Obrigado!
+
+Andreas Goesele 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-21 01:45
+
+Andreas Goesele writes:
+> Hi,
+
+Hello Andreas!
+
+> I recently moved to dillo 0.6.4 (Debian package) from 0.6.1 (self
+> compiled).
+> 
+> 0.6.1 respected the font_factor setting in ~/.dillo/dillorc, 0.6.4
+> doesn't. Is this a bug (as I assume), or is there some way to get
+> 0.6.4 to honor the font_factor setting.
+
+This is awfully odd. I have 0.6.4-1 from Debian Woody installed here
+at home and it seems to be working just fine (the font_factor, I
+mean). Also, we haven't had any complaints about this particular issue
+before...
+
+Well, just to sort out some obvious mistakes:
+
+[1] Make sure you are changing ~/.dillo/dillorc and not /etc/dillorc
+(the latter is only parsed if the first doesn't exist!)
+
+[2] The font_factor which is active is the _last_ font_factor defined
+in the dillorc file. So:
+
+font_factor=2.0
+font_factor=1.0
+
+Gives you a final font_factor containing `1.0'.
+
+What bugs me though is that you said that the dillorc worked in
+0.6.1, so that's probably not the problem.
+
+Did you try various values to font_factor, even extreme ones like:
+
+font_factor=4.0
+font_factor=0.6 # this one should be unreadably tiny
+
+I'm just shooting in the dark here, though, cause I can't see where
+the problem could be.
+
+best of luck!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-21 01:39
+
+On 21 Feb 2002, Andreas Goesele wrote:
+
+> Hi,
+>
+> I recently moved to dillo 0.6.4 (Debian package) from 0.6.1 (self
+> compiled).
+>
+> 0.6.1 respected the font_factor setting in ~/.dillo/dillorc, 0.6.4
+> doesn't. Is this a bug (as I assume), or is there some way to get
+> 0.6.4 to honor the font_factor setting.
+
+It works perfect here.
+
+If 0.6.1 still works for you (with the same dillorc), I'm
+puzzled...
+
+If not, check the spellings, the font factor to use a period,
+and the font to be installed.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]font size doesn't adapt to ~/.dillo/dillorc
+
+From: Andreas Goesele <Goesele@hf...> - 2002-02-21 01:10
+
+Hi,
+
+I recently moved to dillo 0.6.4 (Debian package) from 0.6.1 (self
+compiled).
+
+0.6.1 respected the font_factor setting in ~/.dillo/dillorc, 0.6.4
+doesn't. Is this a bug (as I assume), or is there some way to get
+0.6.4 to honor the font_factor setting.
+
+Because the default fonts are way too small for me, dillo is unusable
+for me at the moment. Any suggestion would be welcome.
+
+Andreas Goesele
+
+PS: As I'm not subscribed, please include an Cc: to my e-mail address. 
+
+
+
+[Dillo-dev]Re: Help
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-20 22:35
+
+Attachments: Message as HTML      dillo-external-patch-2      Message as HTML      
+
+
+
+
+
+[Dillo-dev]Help
+
+From: Miguel Angel Hernando Fernandez <mhernand@gs...> - 2002-02-20 20:29
+
+Attachments: Message as HTML      
+
+Hello,
+I used the external vierwers patch and what I added
+was:
+IO/mime.c=20
+posteriormente esta funcion la trato de esta forma
+=20
+DwWidget* a_Mpg_video(const char *Type,void *web,
+CA_Callback_t *Call, void **Data)
+{
+a_External_make_process("xine",*Call,*Data);
+return NULL;
+}
+
+I think something isn't working. I execute xine but it
+doesn't receive anything from the conection. What I
+think isn't working is the second parameter.
+Could you help me with this problem?. The only thing I
+try to achieve is read from the conection and pass the
+flow to xine.
+Do you have any alternative solution?. What I still
+don't get is: the secuence of the parameters and the
+way it works.
+
+Tranks
+> El vie, 15-02-2002 a las 19:21, Lars Clausen escribi=F3:
+>> On 15 Feb 2002, Miguel Angel Hernando Fernandez wrote:
+>> > Hello,
+>> > Iam a student of Informatcs in Spain and I am doing a
+>> > proyect with dillo and Compaq iPAQ.
+>> > What I intend to do is when I receive a video type:
+>> > video/mpg, I jump to a funcion that should read this
+>> > conexion and transfer everything read to a programm
+>> > that shows the video received.
+>> > This is my problem: the funcion I deal with is mime
+>> > video/mpg and I need to know a tip or funcion to allow
+>> > me to read the conection. Something like a key to
+>> > bring me back the conection FD so I can read from it.
+>> > Something like that...
+>>=20
+>> Take a look at the external viewers patch at
+>> <URL:http://shasta.cs.uiuc.edu/~lrclause/dillo-patchomatic>. It has
+>>in
+>> src/external.c a function that feeds the stream to an external
+>>program.
+>> You may be able to just set the mime type handler to point to your
+>> program.
+
+--=20
+Miguel Angel Hernando Fernandez
+Escuela Superior de Ciencias Experimentales y Tecnologicas(ESCET)
+Universidad Rey Juan Carlos 
+
+
+
+[Dillo-dev][RFC] Limiting the size of Cache
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-20 18:23
+
+Hello everyone!
+
+I have started writing a patch that adds a `cache_size' to Dillo's
+options, because currently the cache has no limit, therefore,
+everything you download gets cached into memory. I've made a very
+premature patch, which has a few know bugs...
+
+But what I want to know is, is this a wanted feature? Now that I've
+made Dicache optional, does anyone still see Dillo hogging up RAM?
+Before the Dicache removal, I could get 40MiB of use from Dillo after
+a fews hours of browsing. But now the _maximum_ I've hit is 20MiB.
+(which isn't a lot, if you consider that Netscape 4.77 here at home
+eats 20Mib if I _only_ open freshmeat.net and slashdot.org :(
+
+The problem with making this patch, is that it'll eventually be an
+overhead, especially for low cache_sizes... Maybe I'll have to try
+harder to make a "low/no-overhead" solution.
+
+What are the opinions of the Dillo users/developers?
+
+The patch is at (against _today's_ cvs, 20-Feb-2002, I've made some
+changes to the cache module, so it won't work with prior versions of
+Dillo):
+
+http://www.ime.usp.br/~livio/dillo/patches/cache-size-limit.diff
+
+Missing from the patch is the option in dillorc. As said, the option
+is `cache_size' and should contain number of _bytes_. If no option is
+given in the dillorc, cache_size gets set to 3145728 (3MiB). So if you
+can 5MiB of cache, just do:
+
+cache_size=5242880
+
+Or if you want to set it up zero, just do:
+
+cache_size=00 #just plain `0' will make the parser yell :(
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Return of Patch-o-matic!
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-19 00:07
+
+On Tue, 12 Feb 2002, Andreas Schweitzer wrote:
+> On Tue, Feb 12, 2002 at 08:30:03PM -0600, Lars Clausen wrote:
+>>=20
+>> Since the old patchomatic site seems to be gone to a happier place, I'=
+ve
+>> started to make a replacement. It's not as prettily laid out, but on
+>> the
+>=20
+> Cool !
+>=20
+> Can I actually update my patch via the web ?
+
+No, that would need more interface (esp. authentication) than I feel like
+putting in right now.
+
+> Also, it is not quite clear what patch-error and compile-error
+> imply. Does the process actually stop when there are patch errors ?
+> Or do you try to compile anyways ?
+
+I've cleared that up. After a patch-error compiling would be rather
+pointless.=20
+
+> Because my patch has a compile error (for one version) and I cannot
+> tell why mine fails - possibly because the patching failed before (whic=
+h
+> most likely happened) ?
+
+This is now fixed.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+[Dillo-dev]Referer patch
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-19 00:00
+
+Attachments: Message as HTML      dillo-referer-patch      Message as HTML      
+
+
+
+
+
+Re: [Dillo-dev][RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Jyri Jokinen <autumn.rider@su...> - 2002-02-18 17:05
+
+On Mon, Feb 18, 2002 at 12:17:54PM -0300, Livio Baldini Soares wrote:
+> Jyri, I hope (and expect) this helps you a bit with respect to
+> CPU-hogging. 
+
+It's much better, thank you. Can hardly tell a difference between normal
+and patched.
+
+Thank you again.
+
+-- 
+jyri jokinen 
+
+
+
+Re: [Dillo-dev][RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-18 15:18
+
+Hello!
+
+Jorge Arellano Cid writes:
+>
+> > So what? What's this poll() have to do with anything? Well the
+> > poll() system call is using in Glib's main loop when you register a IO
+> > watch via g_io_add_watch(). AND Glib has a (stupid) behavior of
+> > making each poll _independent_. So, it add a distinct pollfd for each
+> > file-descriptor. Most of the time we have 2 watches on each socket
+> > (one for G_IO_IN and another for G_IO_OUT), Glib does not
+> > "concatenate" the pollfd's, so we will have two times as many fd's in
+> > poll then we have open.
+> 
+> It's not a glib problem.
+
+No, it's not a Glib problem. It's a kernel bug. Nevertheless I think
+that trying to aggroup calls with the same FD into PollFDs would be a
+smart think to do. Because we would have to copy less data into/from
+kernel-space. I imagine with an HTTP server having thousands of
+pending sockets, this may be an issue. Unfortunately I have no time to
+re-right the g_main_loop() in Glib to perform some stats. I'm still
+not convinced which method brings out more overhead.
+
+> Thanks a lot for your excellent work Livio!
+
+You're welcome! It's my pleasure... I got to look into some kernel
+stuff and learn a little more into poll()/select(). :-)
+
+> AFAIS it's a kernel bug (it had caused trouble to other apps.),
+> so I'll write a warning about it in the README file, with a
+> link to your patch, for those that can't upgrade the kernel.
+
+All right. But Jyri has mailed me about serious CPU hog-gage problems,
+and I've seen them too. To that respect, I've made the patch a _lot_
+less CPU intensive, but the code is uglier, adds about 64KiB and
+accepts of most 1024 connections. The new patch is at:
+
+http://www.ime.usp.br/~livio/dillo/patches/poll-fix-fast.diff
+
+I've tested a little and it seems to be more CPU intensive then
+normal Dillo, but by just a tad. So Jorge, if you intend to point to a
+patch in the README, please point to this one.
+
+Jyri, I hope (and expect) this helps you a bit with respect to
+CPU-hogging. 
+
+And this is my _final_ patch about this issue. I think I can try to
+contribute to Dillo better if I tackle other issues. So if anyone
+wants to improve/maintain this patch, feel free to do it.
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Facing problem while loading
+
+From: Pradeep <pradeep@nc...> - 2002-02-18 13:03
+
+Hi all,
+
+I figured out the problem , the target machine which I am using
+is SA1100 based monochrome display device , when I cross
+compiled Dillo and run it on my Customboard it gets killed ,
+that is the function gdk_draw_rgb_image does not return ,
+
+The samething works just fine for me on my iPAQ .
+
+I tried to change it to gdk_draw_gray_image , even that did not return ,
+
+Can anyone tell me what the problem could be , how to use
+gdk_draw_gray_image
+function in Dillo source , waiting for your reply .
+
+thanks,
+
+
+Pradeep
+
+
+
+
+Michael Duelli wrote:
+
+> Hi,
+>
+> I am sorry I only use the x86 platform. I have never even cross-compiled a
+> program so far!
+> So I got to admit that I was not fully aware of this bug's dimension.
+>
+> Regards,
+> Michael
+> ___________________________________
+> Michael Duelli
+> m.duelli@we...
+> http://glchess.s...net - A 3D chess interface
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]Facing problem while loading
+
+From: Michael Duelli <m.duelli@we...> - 2002-02-18 10:16
+
+Hi,
+
+I am sorry I only use the x86 platform. I have never even cross-compiled a 
+program so far!
+So I got to admit that I was not fully aware of this bug's dimension.
+
+Regards,
+Michael
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net - A 3D chess interface 
+
+
+
+[Dillo-dev]Dillo web browser compiles easily and works on Debian hppa platform!
+
+From: B. Douglas Hilton <doug.hilton@en...> - 2002-02-18 06:27
+
+I thought I would mention it, as the only browsers available
+so far appear to be Emacs, konqueror, and Lynx.
+
+Requirements:
+libglib1.2-dev
+libgtk1.2-dev
+libpng-dev
+libjpeg-dev
+xlibs-dev
+
+I just did a "./configure; make" and it built and works!
+
+Very nice - what a nifty little browser, and IMHO much
+more pretty than Lynx! Possibly the ultimate lightweight browser,
+and on a 715/80 you need all the speed you can get!
+
+http://dillo.so....net
+
+Test System: HP 9000 715/80 with Debian "testing" 
+
+
+
+Re: [Dillo-dev]Facing problem while loading
+
+From: Pradeep <pradeep@nc...> - 2002-02-18 04:08
+
+Hi ,
+
+I went throught the BUG81 , its very much the same bug ,
+on x86 dillo works fine for me also , but the problem is when
+cross compiled , I can set up an http server in the target machine
+and browse the txt files , but not for gif,png and jpg when cross
+compiled
+to SA1100 for both http request and an ordinary request .
+
+Waiting for your reply .
+
+Thanks,
+
+Pradeep
+
+
+
+Michael Duelli wrote:
+
+> Hi,
+>
+> I am using dillo on x86 and I can't see any problems directly viewing
+> gifs, jpgs or pngs via the command line, even non-html files!!
+>
+> I actually thought that this might have already been the end of BUG#81
+>
+> Am 2002-02-15, 13:06:29 schrieb(en) Pradeep:
+> > Hi all ,
+> >
+> > I have compiled Dillo for arm target , when I run dillo as
+> > it is (without file name or url) it executes , but when
+> > I open with command ./dillo some.gif or ./dillo some.png ,
+> >
+> > It gets killed some how ? I am wondering whats the problem ?
+> >
+> > Waiting for your reply ,
+> >
+> > Thanks,
+> >
+> > PRADEEP
+> >
+> >
+> >
+> >
+> > _______________________________________________
+> > Dillo-dev mailing list
+> > Dillo-dev@li...
+> > https://lists.so....net/lists/listinfo/dillo-dev
+> >
+> ___________________________________
+> Michael Duelli
+> m.duelli@we...
+> http://glchess.s...net - A 3D chess interface
+>
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev][RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-16 16:55
+
+On Fri, 15 Feb 2002, Livio Baldini Soares wrote:
+
+> Hello Jorge and Jyri!
+
+Hi.
+
+> [I'm including the list on this issue, might be good for everyone to
+> know this, or maybe someone has a clearer view as to what's going on]
+>
+> [...]
+>
+> Linux 2.2.X series have a bug in the system call poll(). It only
+> allows the user to poll on as many files descriptors as it has
+> open. At first this seemed reasonable to me. But we will see that it
+> might be useful to not impose such a limit. This "feature"/"bug" is
+> fixed in 2.4.X kernels. Here's a piece of sys_poll() from Linux 2.2.19
+> (linux/fs/select.c):
+>
+> asmlinkage int sys_poll(struct pollfd * ufds, unsigned int nfds, long timeout)
+> {
+>
+> (...)
+> lock_kernel();
+> /* Do a sanity check on nfds ... */
+> err = -EINVAL;
+> if (nfds > current->files->max_fds)
+> goto out;
+>
+> (...)
+>
+> out:
+> if (wait)
+> free_wait(wait_table);
+> unlock_kernel();
+> return err;
+> }
+>
+> The variable current->file->max_fds is initialized during fork
+> (linux/kernel/fork.c) at copy_files() with NR_OPEN_DEFAULT ==
+> BITS_PER_LONG == 32 (on the i386). But it _might_ get expanded if the
+> parent process has a lot of file descriptors open.
+
+It's a kernel BUG!
+
+More info at:
+
+http://www.geocrawler.com/archives/3/35/1999/11/50/2931849/
+
+http://www.cs.helsinki.fi/linux/linux-kernel/2001-32/0572.html (patch)
+
+
+BTW, Changelog 2.4.9-pre4 says:
+
+"David Miller: undo poll() limit braindamage."
+
+and, FWIW, the final patch in 2.4.9 was:
+
+/* Do a sanity check on nfds ... */
+if (nfds > NR_OPEN)
+return -EINVAL;
+
+
+> So what? What's this poll() have to do with anything? Well the
+> poll() system call is using in Glib's main loop when you register a IO
+> watch via g_io_add_watch(). AND Glib has a (stupid) behavior of
+> making each poll _independent_. So, it add a distinct pollfd for each
+> file-descriptor. Most of the time we have 2 watches on each socket
+> (one for G_IO_IN and another for G_IO_OUT), Glib does not
+> "concatenate" the pollfd's, so we will have two times as many fd's in
+> poll then we have open.
+
+It's not a glib problem.
+
+Glib tries hard to be portable, and it's specially designed to
+do that. IMHO, finding and reporting a bug in glib is a very
+delicate matter.
+
+For instance: some time ago, I felt like reporting that
+_delivering events on already closed FDs_ was a bug, but thinking
+twice, and thrice, led me to think it was ok as it is, because
+some programs may need the exact information on what's been
+delivered (or happened) at lower level layers...
+
+
+> As you can see, it is not proxy related. I can reproduce this
+> easily with:
+>
+> ./strace dillo
+> or
+> gdb ./dillo
+>
+> With a site which has more than 16 distinct pictures. Observe that
+> with normal shell invocation, it will take a site with more than 128
+> distinct pictures (or have Dillo concurrently accessing 128 sockets
+> with all it's windows).
+>
+> It took me an entire day to discover what was going on with this
+> bug! :-(
+
+Thanks a lot for your excellent work Livio!
+
+> It took me another day to fix it. But I'm not sure that I have a
+> good solution for this. So I would like to hear comments from all of
+> you.
+>
+> [...]
+>
+> But I want to know is what do you guys think about this? And am I
+> correct about this bug? How do we fix it? _Should_ we fix it? Does
+> anyone see a better fix?
+
+AFAIS it's a kernel bug (it had caused trouble to other apps.),
+so I'll write a warning about it in the README file, with a
+link to your patch, for those that can't upgrade the kernel.
+
+
+Best
+Jorge.- 
+
+
+
+[Dillo-dev]Re: [RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Jyri Jokinen <autumn.rider@su...> - 2002-02-16 00:17
+
+On Sat, Feb 16, 2002 at 01:59:53AM +0200, Jyri Jokinen wrote:
+> > Yes, it fixes. It works perfectly. No more freeze-ups!
+> Tried browsing the dillo-dev mailign list archives, and CPU jumps to
+> 100% and stays there. Doesn't come down but after like 5 minutes or so.
+
+Right! This doesn't happen enymore. That's it. I'm sure we all agree by
+now that i'm going to take a good night sleep, and try this all again
+tomorrow after work and a nice afternoon nap. Sorry for all the lint.
+
+-- 
+jyri jokinen
+say no to spam - http://www.politik-digital.de/spam/ 
+
+
+
+Re: [Dillo-dev]Re: [RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Jyri Jokinen <autumn.rider@su...> - 2002-02-16 00:05
+
+On Sat, Feb 16, 2002 at 01:17:30AM +0200, Jyri Jokinen wrote:
+> > [ livio writes: ]
+> > My patch is at (against todays CVS):
+> > http://www.ime.usp.br/~livio/dillo/patches/poll-fix.diff
+> > Jyri, this patch fixes my problems here, do they fix yours?
+
+> Yes, it fixes. It works perfectly. No more freeze-ups!
+
+Then again, the first impression might be decieving...
+
+I tried surfing a bit more.. patch does fix the problem with
+http://www.openssl.org, but makes other pages work unnice.
+
+Tried browsing the dillo-dev mailign list archives, and CPU jumps to
+100% and stays there. Doesn't come down but after like 5 minutes or so.
+
+Oh well, attleast it doesn't freeze anymore.
+
+Want to try out the mailing list archives Livio? Do you get the same?
+
+-- 
+jyri jokinen
+say no to spam - http://www.politik-digital.de/spam/ 
+
+
+
+[Dillo-dev]Re: [RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Jyri Jokinen <autumn.rider@su...> - 2002-02-15 23:23
+
+On Fri, Feb 15, 2002 at 06:34:38PM -0300, Livio Baldini Soares wrote:
+> Some days ago, Jorge asked me to look up a (very good) bug report
+> from Jyri. He even had the trouble to make a page:
+> http://surffi.net/~arider/dillo/
+
+... that lacks some important things I see now. No kernel version.. no,
+actually, not even an indicator it's Linux in question. Maybe next time.
+
+Good thing there were smart people reading it.
+
+> My patch is at (against todays CVS):
+> http://www.ime.usp.br/~livio/dillo/patches/poll-fix.diff
+> Jyri, this patch fixes my problems here, do they fix yours?
+
+Yes, it fixes. It works perfectly. No more freeze-ups!
+
+Thank you Livio for taking so much of your time and effort into this.
+
+-- 
+jyri jokinen
+say no to spam - http://www.politik-digital.de/spam/ 
+
+
+
+[Dillo-dev][RFC][PATH] Bug with "Dillo" in Linux 2.2.X and Glib
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-15 21:34
+
+Hello Jorge and Jyri!
+
+[I'm including the list on this issue, might be good for everyone to
+know this, or maybe someone has a clearer view as to what's going on]
+
+Some days ago, Jorge asked me to look up a (very good) bug report
+from Jyri. He even had the trouble to make a page:
+http://surffi.net/~arider/dillo/
+
+The bug report so so detailed, I thought.. this one will be a piece
+of cake! To cut a long story short, it wasn't. I have browsed sources
+from Linux kernel 2.2.19 and 2.4.17, Glib 1.2 and 1.3, strace,
+bash... and then I discovered the error.. it's not pretty.
+
+So the problem is the following: 
+
+Linux 2.2.X series have a bug in the system call poll(). It only
+allows the user to poll on as many files descriptors as it has
+open. At first this seemed reasonable to me. But we will see that it
+might be useful to not impose such a limit. This "feature"/"bug" is
+fixed in 2.4.X kernels. Here's a piece of sys_poll() from Linux 2.2.19
+(linux/fs/select.c):
+
+asmlinkage int sys_poll(struct pollfd * ufds, unsigned int nfds, long timeout)
+{
+
+(...)
+lock_kernel();
+/* Do a sanity check on nfds ... */
+err = -EINVAL;
+if (nfds > current->files->max_fds)
+goto out;
+
+(...)
+
+out:
+if (wait)
+free_wait(wait_table);
+unlock_kernel();
+return err;
+}
+
+The variable current->file->max_fds is initialized during fork
+(linux/kernel/fork.c) at copy_files() with NR_OPEN_DEFAULT ==
+BITS_PER_LONG == 32 (on the i386). But it _might_ get expanded if the
+parent process has a lot of file descriptors open.
+
+So what? What's this poll() have to do with anything? Well the
+poll() system call is using in Glib's main loop when you register a IO
+watch via g_io_add_watch(). AND Glib has a (stupid) behavior of
+making each poll _independent_. So, it add a distinct pollfd for each
+file-descriptor. Most of the time we have 2 watches on each socket
+(one for G_IO_IN and another for G_IO_OUT), Glib does not
+"concatenate" the pollfd's, so we will have two times as many fd's in
+poll then we have open.
+
+As you can see, it is not proxy related. I can reproduce this
+easily with:
+
+./strace dillo
+or
+gdb ./dillo
+
+With a site which has more than 16 distinct pictures. Observe that
+with normal shell invocation, it will take a site with more than 128
+distinct pictures (or have Dillo concurrently accessing 128 sockets
+with all it's windows).
+
+It took me an entire day to discover what was going on with this
+bug! :-( 
+
+It took me another day to fix it. But I'm not sure that I have a
+good solution for this. So I would like to hear comments from all of
+you.
+
+Solution 1) Glib let's you replace the poll() function by anything
+else you desire. So I thought of making a wrapper around poll(), which
+would get the fd_array from GLib's main loop, look for matching
+file-descriptors and OR the events. The call poll. Get the result and
+see which revents do we set.
+
+I did not choose this solution. It seems like too much of an
+overhead, analyzing _every_ poll. And believe if you've ever seen a
+strace output on Dillo, it's probably the most called syscall...
+(heheh just for, here is the output of:
+# cat /tmp/dillo.strace | cut -f 1 -d'(' | sort | uniq -c | sort -r | head -10
+
+34610 gettimeofday
+17630 poll
+17541 ioctl
+2317 read
+608 write
+364 select
+303 writev
+227 fcntl
+134 brk
+131 readv
+
+Solution 2) Define a new gio. This is the solution I chose. I've
+copied giounix.c from the newest stable (1.2.10) and made an
+giodillo.c. I have had to change most of the functions so that we
+would register one pollfd per file-descriptor. This seems that some
+watches shared pollfd, and caused the implementation to look a little
+ugly...
+
+
+My patch is at (against todays CVS):
+http://www.ime.usp.br/~livio/dillo/patches/poll-fix.diff
+
+It's kind of big (11Kib) because it introduces the module
+giodillo.[ch]. But as you can see it changes only one line in IO.c and
+another in http.c
+
+Jyri, this patch fixes my problems here, do they fix yours?
+
+But I want to know is what do you guys think about this? And am I
+correct about this bug? How do we fix it? _Should_ we fix it? Does
+anyone see a better fix?
+
+Any comments an this issue is appreciated.
+
+best regards to all,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]help
+
+From: Miguel Angel Hernando Fernandez <mhernand@gs...> - 2002-02-15 21:01
+
+Attachments: Message as HTML      
+
+El vie, 15-02-2002 a las 19:21, Lars Clausen escribi=F3:
+> On 15 Feb 2002, Miguel Angel Hernando Fernandez wrote:
+> > Hello,
+> > Iam a student of Informatcs in Spain and I am doing a
+> > proyect with dillo and Compaq iPAQ.
+> > What I intend to do is when I receive a video type:
+> > video/mpg, I jump to a funcion that should read this
+> > conexion and transfer everything read to a programm
+> > that shows the video received.
+> > This is my problem: the funcion I deal with is mime
+> > video/mpg and I need to know a tip or funcion to allow
+> > me to read the conection. Something like a key to
+> > bring me back the conection FD so I can read from it.
+> > Something like that...
+>=20
+> Take a look at the external viewers patch at
+> <URL:http://shasta.cs.uiuc.edu/~lrclause/dillo-patchomatic>. It has in
+> src/external.c a function that feeds the stream to an external program.
+> You may be able to just set the mime type handler to point to your progra=
+m.
+>=20
+> -Lars
+With a_External_make_process??, What params??
+What CA_Callback??.
+
+Thank you very much.
+--=20
+Miguel Angel Hernando Fernandez
+Escuela Superior de Ciencias Experimentales y Tecnologicas(ESCET)
+Universidad Rey Juan Carlos 
+
+
+
+Re: [Dillo-dev]Facing problem while loading
+
+From: Michael Duelli <m.duelli@we...> - 2002-02-15 18:27
+
+Hi,
+
+I am using dillo on x86 and I can't see any problems directly viewing 
+gifs, jpgs or pngs via the command line, even non-html files!!
+
+I actually thought that this might have already been the end of BUG#81
+
+Am 2002-02-15, 13:06:29 schrieb(en) Pradeep:
+> Hi all ,
+> 
+> I have compiled Dillo for arm target , when I run dillo as
+> it is (without file name or url) it executes , but when
+> I open with command ./dillo some.gif or ./dillo some.png ,
+> 
+> It gets killed some how ? I am wondering whats the problem ?
+> 
+> Waiting for your reply ,
+> 
+> Thanks,
+> 
+> PRADEEP
+> 
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+___________________________________
+Michael Duelli
+m.duelli@we...
+http://glchess.s...net - A 3D chess interface 
+
+
+
+Re: [Dillo-dev]help
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-15 18:22
+
+On 15 Feb 2002, Miguel Angel Hernando Fernandez wrote:
+> Hello,
+> Iam a student of Informatcs in Spain and I am doing a
+> proyect with dillo and Compaq iPAQ.
+> What I intend to do is when I receive a video type:
+> video/mpg, I jump to a funcion that should read this
+> conexion and transfer everything read to a programm
+> that shows the video received.
+> This is my problem: the funcion I deal with is mime
+> video/mpg and I need to know a tip or funcion to allow
+> me to read the conection. Something like a key to
+> bring me back the conection FD so I can read from it.
+> Something like that...
+
+Take a look at the external viewers patch at
+<URL:http://shasta.cs.uiuc.edu/~lrclause/dillo-patchomatic>. It has in
+src/external.c a function that feeds the stream to an external program.
+You may be able to just set the mime type handler to point to your progra=
+m.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+[Dillo-dev]help
+
+From: Miguel Angel Hernando Fernandez <mhernand@gs...> - 2002-02-15 17:43
+
+Attachments: Message as HTML      
+
+Hello,
+Iam a student of Informatcs in Spain and I am doing a
+proyect with dillo and Compaq iPAQ.
+What I intend to do is when I receive a video type:
+video/mpg, I jump to a funcion that should read this
+conexion and transfer everything read to a programm
+that shows the video received.
+This is my problem: the funcion I deal with is mime
+video/mpg and I need to know a tip or funcion to allow
+me to read the conection. Something like a key to
+bring me back the conection FD so I can read from it.
+Something like that...
+Thank you very much.
+--=20
+Miguel Angel Hernando Fernandez
+Escuela Superior de Ciencias Experimentales y Tecnologicas(ESCET)
+Universidad Rey Juan Carlos 
+
+
+
+[Dillo-dev]Facing problem while loading
+
+From: Pradeep <pradeep@nc...> - 2002-02-15 12:07
+
+Hi all ,
+
+I have compiled Dillo for arm target , when I run dillo as
+it is (without file name or url) it executes , but when
+I open with command ./dillo some.gif or ./dillo some.png ,
+
+It gets killed some how ? I am wondering whats the problem ?
+
+Waiting for your reply ,
+
+Thanks,
+
+PRADEEP 
+
+
+
+Re: [Dillo-dev]spaces in URL
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-15 01:13
+
+Ok, I understand that we don't want to put too much efforts to support br=
+oken
+html all right
+But not supporting borken html _on_purpose_ is kind of different. Here it=
+'s
+almost the same code (so it's not a "bloating issue") to fix either all u=
+rls
+(even comming from the page itself) or the location bar only.
+I'm not sure we want to put too much effort to prevent broken pages to be
+displayed either.
+
+Best,
+Eric
+
+On 13-Feb-2002 Livio Baldini Soares wrote:
+> Hi Eric & people,
+>=20
+> Eric GAUDET writes:
+>> Jorge,
+>> I get your point about not supporting broken html. However, somebody i=
+n the
+>> list pointed that pasting a URL from a text source (say an email forma=
+tted
+>> to
+>> 80 characters wide) often leaded to \n characters in the string, which=
+is a
+>> annoyance common enough so you might want to reconsider including Livi=
+o=B4s
+>> patch.
+>=20
+> Yeah, but Livio is doing it the wrong way! This has moved from the
+> URL/HTML realm to the UI-space. Therefore Livio's patch is not the way
+> to go about fixing this issue... but my new patch, for instance, I
+> think is something completely allowable in Dillo.
+>=20
+> All I do is rip the "illegal" chars from the URL coming from an
+> _entry_ in Dillo's interface. This would take care of pasting and
+> accidentally hitting space. _Plus_ it prevents Dillo from sending out
+> bogus URLs to HTTP servers out there (heheh.. not really ;).
+>=20
+> I'm sending this for comments, since it's a small patch.
+>=20
+> PS: Does anyone think I should rip out _all_ the chars considered
+> illegal from RFC-2396, or just these which I've selected?
+>=20
+> best regards,
+>=20
+> -- =20
+> Livio <livio@im...>
+
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 14-Feb-2002 Time: 17:07:58
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!=
+"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]spaces in URL
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-15 00:35
+
+Hi there!
+
+> Eric GAUDET writes:
+> > Jorge,
+> > I get your point about not supporting broken html. However, somebody in=
+the
+> > list pointed that pasting a URL from a text source (say an email format=
+ted to
+> > 80 characters wide) often leaded to \n characters in the string, which =
+is a
+> > annoyance common enough so you might want to reconsider including Livio=
+=B4s patch.
+
+I agree, and as Livio points:
+
+> [Livio writes :)]
+> Yeah, but Livio is doing it the wrong way! This has moved from the
+> URL/HTML realm to the UI-space. Therefore Livio's patch is not the way
+> to go about fixing this issue... but my new patch, for instance, I
+> think is something completely allowable in Dillo.
+
+Bingo! The UI-space.
+
+> All I do is rip the "illegal" chars from the URL coming from an
+> _entry_ in Dillo's interface. This would take care of pasting and
+> accidentally hitting space. _Plus_ it prevents Dillo from sending out
+> bogus URLs to HTTP servers out there (heheh.. not really ;).
+>
+> I'm sending this for comments, since it's a small patch.
+>
+> PS: Does anyone think I should rip out _all_ the chars considered
+> illegal from RFC-2396, or just these which I've selected?
+
+I think it's OK as it solves the main problem of pasting...
+
+BTW: it's on CVS.
+
+One thing more:
+
+> [Livio writes]
+>
+> Well because a_Url_new() processes _all_ URLs inside Dillo. So if
+> Dillo doesn't want to support broken HTML my proposed changes can't go
+> in a_Url_new(). As a matter of fact, now that you mention it, these two
+> lines are broken from a_Url_new():url.c:
+>
+> /* ensure no leading whitespace */
+> for (urlstring =3D (gchar *)url_str; isspace(*urlstring); ++urlstring);
+>
+> They should be _removed_, if we want to be consistent.
+>
+> I inserted the "clean" to URLs in the Interface part, because that's
+> where it's supposed to be if we want to be strict with the HTML pages
+> and not the user (I believe that there is no such thing as a broken
+> user... ;).
+
+That was a side effect of a not yet finished Html_get_attr2();
+the SPEC says the user-agent MAY strip leading and trailig white
+space from CDATA, and as I prefered to strip, I left the
+stripping code inside the URI parser for the interim.
+
+Well, now I finished Html_get_attr2() and removed the stripping
+from url.c.
+
+> Jorge, this patch cleans the whitespace removal from
+> a_Url_new(). With the previous patch I've sent (to "clean" URLs in
+> a_Interface_entry_open_url()) this removal is correct, I think.
+>
+> Attached is the 2-liner.
+
+That patch leaves 'urlstring' uninitialized...
+
+But don't worry, the CVS has all of these updated,
+just hope it works! ;)
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Broken CVS -- fontname selection
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-14 17:03
+
+Attachments: font-typo.diff      
+
+Howdy,
+
+with today's CVS, if your dillorc doesn't have the vw_fontname set,
+Dillo gets a SegV right at the start. It took me about 10-20 minutes to
+find the typo which caused the problem. prefs.vw_fontname is NULL
+because it's not correctly declared in a_Prefs_init():prefs.c.
+
+The following patch fixes the typo and adds NULL check for font name
+in Dw_style_font_new_internal(). It still exits, but it exits spitting
+out useful information for detecting the problem. By The Way, the
+actual SegV comes from inside g_str_hash() from Glib, which can't
+handle NULL pointers. 
+
+Best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]spaces in URL
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-13 20:30
+
+Attachments: url-no-clean-whites.diff      
+
+Eric GAUDET writes:
+> On 13-Feb-2002 Livio Baldini Soares wrote:
+> > Hi Eric & people,
+
+(...)
+
+> > Yeah, but Livio is doing it the wrong way! This has moved from the
+> > URL/HTML realm to the UI-space. Therefore Livio's patch is not the way
+> > to go about fixing this issue... but my new patch, for instance, I
+> > think is something completely allowable in Dillo.
+> > 
+> > All I do is rip the "illegal" chars from the URL coming from an
+> > _entry_ in Dillo's interface. This would take care of pasting and
+> > accidentally hitting space. _Plus_ it prevents Dillo from sending out
+> > bogus URLs to HTTP servers out there (heheh.. not really ;).
+> > 
+> > I'm sending this for comments, since it's a small patch.
+> 
+> Ok. Why don't you just do that in a_Url_new where you remove the leading
+> white spaces, kinda like you did before?
+
+Well because a_Url_new() processes _all_ URLs inside Dillo. So if
+Dillo doesn't want to support broken HTML my proposed changes can't go
+in a_Url_new(). As a matter of fact, now that you mention it, these two
+lines are broken from a_Url_new():url.c:
+
+/* ensure no leading whitespace */
+for (urlstring = (gchar *)url_str; isspace(*urlstring); ++urlstring);
+
+They should be _removed_, if we want to be consistent.
+
+I inserted the "clean" to URLs in the Interface part, because that's
+where it's supposed to be if we want to be strict with the HTML pages
+and not the user (I believe that there is no such thing as a broken
+user... ;).
+
+I don't want to start a flame-war about providing support for broken
+HTML (I have mixed feelings about this issue myself), but since
+Dillo's philosophy is to be strict with respect to RFCs, let's do that
+and be consistent in all places.
+
+Jorge, this patch cleans the whitespace removal from
+a_Url_new(). With the previous patch I've sent (to "clean" URLs in
+a_Interface_entry_open_url()) this removal is correct, I think.
+
+Attached is the 2-liner.
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]spaces in URL
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-13 19:33
+
+On 13-Feb-2002 Livio Baldini Soares wrote:
+> Hi Eric & people,
+>=20
+> Eric GAUDET writes:
+>> Jorge,
+>> I get your point about not supporting broken html. However, somebody i=
+n the
+>> list pointed that pasting a URL from a text source (say an email forma=
+tted
+>> to
+>> 80 characters wide) often leaded to \n characters in the string, which=
+is a
+>> annoyance common enough so you might want to reconsider including Livi=
+o=B4s
+>> patch.
+>=20
+> Yeah, but Livio is doing it the wrong way! This has moved from the
+> URL/HTML realm to the UI-space. Therefore Livio's patch is not the way
+> to go about fixing this issue... but my new patch, for instance, I
+> think is something completely allowable in Dillo.
+>=20
+> All I do is rip the "illegal" chars from the URL coming from an
+> _entry_ in Dillo's interface. This would take care of pasting and
+> accidentally hitting space. _Plus_ it prevents Dillo from sending out
+> bogus URLs to HTTP servers out there (heheh.. not really ;).
+>=20
+> I'm sending this for comments, since it's a small patch.
+
+Ok. Why don't you just do that in a_Url_new where you remove the leading
+whitepsaces, kinda like you did before?
+
+>=20
+> PS: Does anyone think I should rip out _all_ the chars considered
+> illegal from RFC-2396, or just these which I've selected?
+>=20
+> best regards,
+>=20
+> -- =20
+> Livio <livio@im...>
+
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 13-Feb-2002 Time: 11:31:14
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!=
+"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]spaces in URL
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-13 19:04
+
+Attachments: url-entry-exclude-chars.diff      
+
+Hi Eric & people,
+
+Eric GAUDET writes:
+> Jorge,
+> I get your point about not supporting broken html. However, somebody in the
+> list pointed that pasting a URL from a text source (say an email formatted to
+> 80 characters wide) often leaded to \n characters in the string, which is a
+> annoyance common enough so you might want to reconsider including Livio´s patch.
+
+Yeah, but Livio is doing it the wrong way! This has moved from the
+URL/HTML realm to the UI-space. Therefore Livio's patch is not the way
+to go about fixing this issue... but my new patch, for instance, I
+think is something completely allowable in Dillo.
+
+All I do is rip the "illegal" chars from the URL coming from an
+_entry_ in Dillo's interface. This would take care of pasting and
+accidentally hitting space. _Plus_ it prevents Dillo from sending out
+bogus URLs to HTTP servers out there (heheh.. not really ;).
+
+I'm sending this for comments, since it's a small patch.
+
+PS: Does anyone think I should rip out _all_ the chars considered
+illegal from RFC-2396, or just these which I've selected?
+
+best regards,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Return of Patch-o-matic!
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-13 03:30
+
+Attachments: dillo-fake-id.v1.2.diff      
+
+On Tue, Feb 12, 2002 at 08:30:03PM -0600, Lars Clausen wrote:
+> 
+> Since the old patchomatic site seems to be gone to a happier place, I've
+> started to make a replacement. It's not as prettily laid out, but on the
+
+Cool !
+
+Can I actually update my patch via the web ?
+Also, it is not quite clear what patch-error and compile-error
+imply. Does the process actually stop when there are patch errors ?
+Or do you try to compile anyways ?
+Because my patch has a compile error (for one version) and I cannot
+tell why mine fails - possibly because the patching failed before (which
+most likely happened) ?
+
+I have a newer one, anyways. And for simplicity, I attach a patch
+against the current CVS version.
+
+And I completely agree with Jorge that this will never go into
+dillo. Yet, I'll keep this patch more or less up to date.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Return of Patch-o-matic!
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-13 02:30
+
+Since the old patchomatic site seems to be gone to a happier place, I've
+started to make a replacement. It's not as prettily laid out, but on the
+other hand it will actually verify whether the patch applies and compiles=
+,
+and automatically update itself as CVS updates. Look at
+<URL:http://shasta.cs.uiuc.edu/~lrclause/dillo-patchomatic>.
+I've been scrounging around for patches, but I'm sure I didn't get all of
+them. If anybody has an interesting patch (for 0.6.0+) that I haven't
+included, please mail me!
+
+On a related note, I've noticed that several generated files are in CVS.
+That creates trouble when making a patch where you've modified a
+Makefile.am, for instance, as things like ./configure will be different.
+Could we take those out? I've even been getting conflicts in the directo=
+ry
+where I never make changes, only update and compile.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+[Dillo-dev]Description File
+
+From: Miguel Angel Hernando Fernandez <mhernand@gs...> - 2002-02-12 23:13
+
+Attachments: Message as HTML      
+
+Hello People.
+
+I am student of computer in Spain. I am having a project with dillo and
+Compaq iPAQ in my university .
+
+My question:
+
+I have one function that read of the connection http, i need the
+description file of this connection for read.What functions need???
+
+Excuse me, my English is bad :-)
+
+Thanks you
+--=20
+Miguel Angel Hernando Fernandez
+Escuela Superior de Ciencias Experimentales y Tecnologicas(ESCET)
+Universidad Rey Juan Carlos 
+
+
+
+[Dillo-dev](no subject)
+
+From: chris lapthorn <chris.lapthorn@nt...> - 2002-02-11 10:33
+
+unsubscribe Dillo-dev chrislapthorn@si... 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-10 20:16
+
+On Sun, 10 Feb 2002, Mark Schreiber wrote:
+> Thanks for the repost, Jorge!
+>=20
+> This does make more sense. I was under the impression that enter
+> always submitted in a text field in other browsers, even if there were
+> multiple fields...so I did some testing on the browsers installed on
+> my system. Turns out that I was wrong.
+>=20
+> lynx: Enter advances to the next text field
+> links: Enter advances to the next text field
+> navigator: Enter advances to the next text field
+> galeon: Enter always submits
+> mozilla: Enter always submits
+
+Oooh, data points:)
+
+w3m: Text is entered in a separate line, terminated by enter.
+konqueror: Enter always submits
+arena: Couldn't easily install this, but it would be an interesting point.
+chimera: Enter does nothing (ugh! What a nasty browser:)
+
+Cornell University Ergonomics (useful guidelines for general UI issues)
+http://ergo.human.cornell.edu/ahtutorials/interface.html
+
+There are two points of UI design that conflict here:
+
+Strive for consistency (Enter should always do the same thing)
+Reduce errors (Don't send a half-filled form)
+
+The more I think about it, the more I prefer the idea that enter submits =
+on
+the last text field only. Most forms that we want to go through quickly
+are single-textfield anyway. I'm of two minds whether enter should submi=
+t
+if there are non-text entries after the last text field.=20
+
+> Jorge Arellano Cid writes:
+>>=20
+>>=20
+>> If you're willing to implement this idea, please let me know.
+>> If not, volunteers are welcome ;). Note that this is not complex
+>> and very suitable for those of you that feel like helping.
+>=20
+> Anyway, this sounds reasonable, and I'd be happy to take a stab at a
+> patch, but I'm probably not going to get a chance for a week or so.
+> If anyone's going to be faster than that, you're welcome to beat me to
+> the punch.
+
+I'm going to look at my patch browser again. It still too flakey to real=
+ly
+use. So please go ahead and do this.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Paul <paul@sp...> - 2002-02-10 20:05
+
+What if an enter key toggled the next empty input box. When all are full,
+enter submits.
+
+-Paul
+
+On Sun, 10 Feb 2002, Jorge Arellano Cid wrote:
+
+> The point is that when facing multiple input fields, the form
+> may be submitted incomplete as a result of pressing enter after
+> filling one text entry (almost a reflex-act these days). 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Mark Schreiber <mark7@an...> - 2002-02-10 19:32
+
+Thanks for the repost, Jorge!
+
+This does make more sense. I was under the impression that enter
+always submitted in a text field in other browsers, even if there were
+multiple fields...so I did some testing on the browsers installed on
+my system. Turns out that I was wrong.
+
+lynx: Enter advances to the next text field
+links: Enter advances to the next text field
+navigator: Enter advances to the next text field
+galeon: Enter always submits
+mozilla: Enter always submits
+
+Jorge Arellano Cid writes:
+> 
+> 
+> If you're willing to implement this idea, please let me know.
+> If not, volunteers are welcome ;). Note that this is not complex
+> and very suitable for those of you that feel like helping.
+
+Anyway, this sounds reasonable, and I'd be happy to take a stab at a
+patch, but I'm probably not going to get a chance for a week or so.
+If anyone's going to be faster than that, you're welcome to beat me to
+the punch.
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-10 16:52
+
+Hi there,
+
+Considering that searching the mailing list archives has become
+somewhat hard, I decided to repost some things...
+
+(I hope the mailing list problems to finish when we move from
+SF, and set a new mailing list...)
+
+
+
+On 9 Feb 2002, Lars Clausen wrote:
+
+> On Sat, 9 Feb 2002, Mark Schreiber wrote:
+> > Is there a reason dillo avoids submitting a form when the enter key is
+> > pressed in a form's text field and a submit button exists?
+> >
+> > I see the code to do this, so I'd imagine that someone wanted this
+> > behavior, but I can't see the rationale, and I know that
+> > Navigator/Moz/etc always have the enter key in a text field submit the
+> > form.
+>
+> There was a discussion of this a bit back. I submitted a patch to make
+> enter always mean submit, but the official stance seems to be that enter
+> should work like tab if there's more than one text field.
+
+Actually, my original answer was:
+
+>>
+From jcid@em... Sun Feb 10 13:25:56 2002
+Date: Fri, 18 Jan 2002 21:25:23 -0300 (CLST)
+From: Jorge Arellano Cid <jcid@em...>
+To: Dillo mailing list <dillo-dev@li...>
+Subject: Re: [Dillo-dev]Forms & enter
+
+
+Lars,
+
+> I've been wondering about the design decision to make forms only submit on
+> Enter when there is no Submit button. It is obviously not becuase it would
+> be hard to code (just pick the first submit button). The specs don't
+> (AFAICS) say anything for or against it. It's certainly very practical to
+> have Enter submit input text. Why has it been explicitly coded so that it
+> only happens if there is no Submit button?
+
+The point is that when facing multiple input fields, the form
+may be submitted incomplete as a result of pressing enter after
+filling one text entry (almost a reflex-act these days).
+
+There's also another reason: as javascript is not supported,
+and as it's often used to verify form submitions, it becomes very
+important not to try to send an incomplete form.
+
+Well, that's the idea behind it, but in practice, I must
+recognize that after some tests, the current implentation is
+certainly lacking, and that forms without submit, send whatever
+they have (or not) at enter-press time. Certainly not the desired
+effect...
+
+There's also the issue of input types that don't generate enter
+presses (as selection boxes); when they lack a submit. Current
+code doesn't submit anything, and as you noticed, the SPECS don't
+throw any light on that.
+
+It'd be very handy to fix all these annoyances at once. I
+think:
+
+When there's a submit:
+
+- Only submit on enter when there's a single enter-press
+generating input ('text' and 'password').
+Note: this can be further constrained to "one and only one
+single enter-press input", but it may be overkill...
+
+
+When there's no submit:
+
+- If there's more than one single enter-press input, render the
+submit (added internally), and apply the above rules.
+
+
+If you're willing to implement this idea, please let me know.
+If not, volunteers are welcome ;). Note that this is not complex
+and very suitable for those of you that feel like helping.
+
+
+Sincerely
+Jorge.-
+<<
+
+
+Although Lars told me he "might" (!?) do it, I haven't received
+a patch that implements it as described above.
+
+Note that the described procedure allows google's form
+submition with enter (single "text" entry case).
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Doug Kearns <djkea2@mu...> - 2002-02-10 09:28
+
+On Sun, Feb 10, 2002 at 12:36:09AM -0600, John Utz wrote:
+
+<snip>
+
+> well, i feel that if there is a spec that says that it *shouldnt* work 
+> that way then to make enter do the submit would be in conflict with a 
+> core dillo objective. but, if this behavior is undefined and everybody 
+> else (meaning, 
+> NS,Opera,IE,moz, etc) has chosen to implement submit via enter well, then 
+> that seems awfully reasonable.
+> 
+> i know that it's something that *i* really miss, but i am just one 
+> person....
+
+Not without support though :-)
+
+Regards,
+Doug 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: John Utz <john@ut...> - 2002-02-10 06:36
+
+:-)
+
+On Sat, 9 Feb 2002, Mark Schreiber wrote:
+
+> Hmm...well, currently on even CVS dillo, enter doesn't advance to the
+> next field or anything. Right now, it's just a dead key...and
+> searching on google and having to go find the mouse to click submit is
+> kind of frusterating.
+
+yup! esp. after you use the submit button and then google helpfully tells
+you that all you have to do on most browsers is hit the enter key to 
+submit ( oh yeah? not on the browser *i* am running, buddy! )
+
+> So, since enter isn't currently doing anything (including advancing),
+> does anyone have a problem with it submitting? I could see this being
+> a prefs option if someone wants to have code that advances through
+> fields, and make the behavior changeable.
+
+well, i feel that if there is a spec that says that it *shouldnt* work 
+that way then to make enter do the submit would be in conflict with a 
+core dillo objective. but, if this behavior is undefined and everybody 
+else (meaning, 
+NS,Opera,IE,moz, etc) has chosen to implement submit via enter well, then 
+that seems awfully reasonable.
+
+i know that it's something that *i* really miss, but i am just one 
+person....
+
+
+> Mark Schreiber writes:
+> > Hmm...well, currently on even CVS dillo, enter doesn't advance to the
+> > next field or anything. Right now, it's just a dead key...and
+> > searching on google and having to go find the mouse to click submit is
+> > kind of frusterating.
+> > 
+> > So, since enter isn't currently doing anything (including advancing),
+> > does anyone have a problem with it submitting? I could see this being
+> > a prefs option if someone wants to have code that advances through
+> > fields, and make the behavior changeable.
+> 
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Memory leak patch
+
+From: Mark Schreiber <mark7@an...> - 2002-02-10 04:37
+
+Attachments: dillo-leak-patch.cvsdiff.gz      Message as HTML      
+
+This patch eliminates a minor memory leak that occurs if the user
+specifies multiple proxies in their dillorc. 
+
+
+
+[Dillo-dev]Selectable fonts patch
+
+From: Mark Schreiber <mark7@an...> - 2002-02-10 04:20
+
+Attachments: dillo-fontspatch.cvsdiff.gz      Message as HTML      
+
+The attached patch lets users select their desired render font via
+dillorc instead of at compile time. 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Mark Schreiber <mark7@an...> - 2002-02-10 03:42
+
+Hmm...well, currently on even CVS dillo, enter doesn't advance to the
+next field or anything. Right now, it's just a dead key...and
+searching on google and having to go find the mouse to click submit is
+kind of frusterating.
+
+So, since enter isn't currently doing anything (including advancing),
+does anyone have a problem with it submitting? I could see this being
+a prefs option if someone wants to have code that advances through
+fields, and make the behavior changeable.
+
+Mark Schreiber writes:
+> Hmm...well, currently on even CVS dillo, enter doesn't advance to the
+> next field or anything. Right now, it's just a dead key...and
+> searching on google and having to go find the mouse to click submit is
+> kind of frusterating.
+> 
+> So, since enter isn't currently doing anything (including advancing),
+> does anyone have a problem with it submitting? I could see this being
+> a prefs option if someone wants to have code that advances through
+> fields, and make the behavior changeable.
+
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+Re: [Dillo-dev]Enter key submissions?
+
+From: Lars Clausen <lrclause@cs...> - 2002-02-10 02:50
+
+On Sat, 9 Feb 2002, Mark Schreiber wrote:
+> Is there a reason dillo avoids submitting a form when the enter key is
+> pressed in a form's text field and a submit button exists?
+>=20
+> I see the code to do this, so I'd imagine that someone wanted this
+> behavior, but I can't see the rationale, and I know that
+> Navigator/Moz/etc always have the enter key in a text field submit the
+> form.
+
+There was a discussion of this a bit back. I submitted a patch to make
+enter always mean submit, but the official stance seems to be that enter
+should work like tab if there's more than one text field.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |----------------------=
+------
+will defend to the death your right to say it." | Where are we going, a=
+nd
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handb=
+asket? 
+
+
+
+[Dillo-dev]Enter key submissions?
+
+From: Mark Schreiber <mark7@an...> - 2002-02-10 02:45
+
+Is there a reason dillo avoids submitting a form when the enter key is
+pressed in a form's text field and a submit button exists?
+
+I see the code to do this, so I'd imagine that someone wanted this
+behavior, but I can't see the rationale, and I know that
+Navigator/Moz/etc always have the enter key in a text field submit the
+form.
+-- 
+Best of luck,
+Mark Schreiber 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Sam Dennis <sam@ma...> - 2002-02-09 05:23
+
+Some time around 3 o'clock AM on February 8, a Friday, Jorge Arellano Cid wrote:
+> 
+> 
+> On Thu, 7 Feb 2002, Livio Baldini Soares wrote:
+> 
+> >
+> > <A HREF="ftp://some.server.com/some/directory/Some%20Artist%20-%20Some%20Title.mp3">
+> >
+> > If I'm not mistaken (which I could, of course), anything other than
+> > this is just plain wrong.
+> >
+> > BTW: It seems Jorge has removed bug #292 from the bugtrack... Jorge
+> > what's your take on this? If you didn't like the patch, I can try to
+> > redo it...
+> 
+> The same as always Livio: to follow the standards and not to
+> try to render badly formed HTML.
+> 
+> AFAIS current code parses the href as SGML CDATA, and parses
+> the URI as RFC-2396 says afterwards.
+> 
+> If there's a SPEC, or RFC that states to remove spaces
+> from URIs, we follow.
+
+Apart from the fact that the behaviour is obviously wrong, there is evidence
+to suggest that merely encoding whitespace is the preferred behaviour in RFC
+1738, which calls a space (and various other characters) "unsafe" and suggests
+that it be encoded. This is possibly a difference between URIs and URLs?
+
+-- 
+r@,,+2 'a,kd" 
+
+
+
+[Dillo-dev]spaces in URL
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-09 04:25
+
+Jorge,
+I get your point about not supporting broken html. However, somebody in t=
+he
+list pointed that pasting a URL from a text source (say an email formatte=
+d to
+80 characters wide) often leaded to \n characters in the string, which is=
+a
+annoyance common enough so you might want to reconsider including Livio=B4=
+s patch.
+
+just my 2 cents.
+
+Best,
+------------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 08-Feb-2002 a 20:19:35
+"Parler pour ne rien dire et ne rien dire pour parler sont les deux
+principes majeurs et rigoureux de tous ceux qui feraient mieux de la
+fermer avant de l'ouvrir."
+------------------------------------------------------------------------ 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-08 03:44
+
+On Thu, 7 Feb 2002, Livio Baldini Soares wrote:
+
+>
+> <A HREF="ftp://some.server.com/some/directory/Some%20Artist%20-%20Some%20Title.mp3">
+>
+> If I'm not mistaken (which I could, of course), anything other than
+> this is just plain wrong.
+>
+> BTW: It seems Jorge has removed bug #292 from the bugtrack... Jorge
+> what's your take on this? If you didn't like the patch, I can try to
+> redo it...
+
+The same as always Livio: to follow the standards and not to
+try to render badly formed HTML.
+
+AFAIS current code parses the href as SGML CDATA, and parses
+the URI as RFC-2396 says afterwards.
+
+If there's a SPEC, or RFC that states to remove spaces
+from URIs, we follow.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Pthreads broken on Solaris
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-08 01:08
+
+> things... Changing the pthread detection back to simple
+> (AC_CHECK_LIB(pthread, pthread_create)) makes Solaris happy.
+
+I have been looking into this and come to the comclusion that
+Solaris sucks ;-) .... the thing is it seems gcc on
+Solaris will link a program which has pthread_create even when
+there is no -lpthread in the linker line - try it out yourslef !
+(at least here it does do it so ....)
+
+This make things tough.
+
+Another thing is : unregogized options will simly be reported
+by gcc and do not change the exit status.
+
+That means -pthread will return an unregoginzed option but yet
+will link the very first thread test. And although solaris
+claims it could link the thing, it will not work as you asid.
+
+A radical suggestion : put 
+AC_CHECK_LIB(pthread, pthread_create)
+before any subsequent thread testing - like a "one catch all brain
+dead implementations" ...
+
+One caveat : I do have access to a solaris box - but this box
+does not have GTK or jpeg. So I can't really test dillo. I only
+could test how much configure finds.
+
+Another thing : the line that includes /usr/local/lib should be
+-L/usr/local/lib not -I/usr/local/lib - my fault.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-08 01:06
+
+Hi Ivo!
+
+Ivo van Poorten writes:
+> On Thursday 07 February 2002 00:28, Livio Baldini Soares wrote:
+
+(...)
+
+> > Paul Chamberlain, thanks for the remarks, and I think you'll be
+> > happy to know that this patch works with
+> >
+> > h t t p: / /sl as h d ot.o rg /
+> >
+> > just fine. The patch is small (1.8KiB), so I'm sending it
+> > attached. As always, comments are greatly appreciated!
+> 
+> I'm not an active developer on dillo, though I appreciate your
+> efforts alot!
+
+Thanks a lot! We're always glad to hear!
+
+> I was just wondering, what would happen to URL's like this:
+> 
+> <A HREF="ftp://some.server.com/some/directory/Some Artist - Some Title.mp3">
+> 
+> Depending on your hobbies, you will run across such links a lot. With spaces 
+> removed, the link won't work I suppose?
+
+Hehe, well, it won't work. But it shouldn't work! (At least that's
+what the RFS states). What should be done in these cases, is what's
+called `escaping', i.e. something like %HEX_CODE, so this example
+should be coded (correctly) as:
+
+<A HREF="ftp://some.server.com/some/directory/Some%20Artist%20-%20Some%20Title.mp3">
+
+If I'm not mistaken (which I could, of course), anything other than
+this is just plain wrong.
+
+BTW: It seems Jorge has removed bug #292 from the bugtrack... Jorge
+what's your take on this? If you didn't like the patch, I can try to
+redo it...
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-08 01:02
+
+On 08-Feb-2002 Ivo van Poorten wrote:
+> On Thursday 07 February 2002 00:28, Livio Baldini Soares wrote:
+>> everything lower than 0x1F, 0x7F, ' ', '<', '>', and '"'
+>>
+>> Is there a portable way of doing this? Should I ignore other chars?
+>> Oh, and this is only applied to URL's. Parsing of other kinds of
+>> attributes were left unchanged... (aiieee... I think we're going to
+>> discuss attribute parsing again? ;)
+>>
+>> Paul Chamberlain, thanks for the remarks, and I think you'll be
+>> happy to know that this patch works with
+>>
+>> h t t p: / /sl as h d ot.o rg /
+>>
+>> just fine. The patch is small (1.8KiB), so I'm sending it
+>> attached. As always, comments are greatly appreciated!
+> 
+> I'm not an active developer on dillo, though I appreciate your efforts alot!
+> I was just wondering, what would happen to URL's like this:
+> 
+> <A HREF="ftp://some.server.com/some/directory/Some Artist - Some Title.mp3">
+> 
+> Depending on your hobbies, you will run across such links a lot. With spaces 
+> removed, the link won't work I suppose?
+> 
+
+Such links are not conform with the RFC. IMHO dillo should not support this
+link.
+
+The proper way to write such a link would be to escape the forbidden characters:
+<A HREF="ftp://some.server.com/some/directory/Some Artist%20-%20Some Title.mp3">
+
+> Regards,
+> --Ivo
+> 
+> -- 
+> Codito, ergo sum
+> 2:25am up 106 days, 2:51, 3 users, load average: 0.00, 0.00, 0.00
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 07-Feb-2002 Time: 16:58:08
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Ivo van Poorten <ivop@eu...> - 2002-02-08 00:53
+
+On Thursday 07 February 2002 00:28, Livio Baldini Soares wrote:
+> everything lower than 0x1F, 0x7F, ' ', '<', '>', and '"'
+>
+> Is there a portable way of doing this? Should I ignore other chars?
+> Oh, and this is only applied to URL's. Parsing of other kinds of
+> attributes were left unchanged... (aiieee... I think we're going to
+> discuss attribute parsing again? ;)
+>
+> Paul Chamberlain, thanks for the remarks, and I think you'll be
+> happy to know that this patch works with
+>
+> h t t p: / /sl as h d ot.o rg /
+>
+> just fine. The patch is small (1.8KiB), so I'm sending it
+> attached. As always, comments are greatly appreciated!
+
+I'm not an active developer on dillo, though I appreciate your efforts alot!
+I was just wondering, what would happen to URL's like this:
+
+<A HREF="ftp://some.server.com/some/directory/Some Artist - Some Title.mp3">
+
+Depending on your hobbies, you will run across such links a lot. With spaces 
+removed, the link won't work I suppose?
+
+Regards,
+--Ivo
+
+-- 
+Codito, ergo sum
+2:25am up 106 days, 2:51, 3 users, load average: 0.00, 0.00, 0.00 
+
+
+
+Re: [Dillo-dev]Special characters in dillo
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-02-08 00:36
+
+Hi.
+
+The result multibytes sequence should depend on the locale.
+The length of the result sequence is undecided. Not a character.
+I tried to convert the isocode to utf-8 and then to convert from the
+utf-8 sequence to the locale specific sequence by iconv.
+But it could not work well on some characters. So if you fix it, please
+consider at the point.
+
+If you are intrested in, see
+http://todo.org/en/tiki.cgi?p=3DDillo dillo-0.6.3-uo-branch-2 html.c
+Html_store_isocode
+
+Michael Raidel <raidel@i-...> writes:
+
+> Hello!
+> =
+
+> I have just tried to patch dillo for the following behaviour: html-code=
+s =
+
+> such as &#8217; &#8220; and so on are correctly shown by other browsers=
+=
+
+> I use (fe: &#8217; =3D =B4 ). This was very easy by adding a switch to =
+the =
+
+> "// Numeric token" section in Html_parse_entity() in html.c which check=
+s =
+
+> all of the tags i know if the existing check returned -1. But I don't =
+
+> think this is good way to code, because the list of codes is not so eas=
+y =
+
+> to maintain.
+> =
+
+> So I went for the second solution, which does works sometimes but not =
+
+> always and I don't understand why (I am learning C/C++ since two weeks.=
+=2E).
+> = 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: jason shen <shenkr@ih...> - 2002-02-08 00:29
+
+Hi, have modified the file and recompiled. It works and has better look
+now Thanks. Jason.
+
+=A6b =B6g=A5|, 2002-02-07 21:18, TANAKA Keishiro =BCg=B9D=A1G
+> Hi.
+>=20
+> >May I know where to find the document to set fonts ? I've no problem to
+> >display big-5 Chinese but it looks terrible. Thanks.=20
+>=20
+> I think, at this stage, you have to add font name by hand to
+> dillo source.=20
+> # I don't know the Hungarian font name...
+>=20
+> dw_style.c: Search gdk_fontset_load function.
+> > sprintf (fontname,=20
+> > ("-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*,"
+> > "-*-*-%s-%s-*-*-%d-*-*-*-*-*-jisx0208.1983-*"), # the line
+> > font->name, font->bold ? "bold" : "medium",
+> > font->italic ? ItalicChar : "r", font->size,=20
+> > font->bold ? "bold" : "medium", font->italic ? ItalicChar : "r",
+> > font->size);
+> You have to change the line to the your prefered font name.
+>=20
+> And type on command line
+>=20
+> setenv LANG your_locale; dillo &
+>=20
+>=20
+>=20
+>=20
+>=20
+>=20 
+
+
+
+[Dillo-dev][nettaxi] warning
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-07 22:32
+
+Hi,
+
+Those of you that had used my nettaxi address, please review
+your sent-mail because it has lost all the email since maybe more
+than a full month.
+
+Yes, I haven't used it quite a good amount of time, but the
+address may remain in ancient emails, and thus, replies may end
+somewhere near /dev/null.
+
+
+That's all
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: HORVATH Szabolcs <horvaths@fi...> - 2002-02-07 19:22
+
+* TANAKA Keishiro (ksr@lp.nm.fujitsu.co.jp) [20020207 16:03]:
+> I wonder I don't know correctly what you want.
+> 
+> m17n dillo is available. Maybe Hungarian will be supported by setting
+> suitable locale and fonts selection.
+
+No, I think Miklos thought to localization project (gettext, po/*).
+I've just finished dillo+l10n patch, you can download from:
+http://fi.inf.elte.hu/~horvaths/dillo/
+(patch and the complete source tree can be found)
+
+Sorry for my bad English and I hope you'll see what I mean.
+
+Take care.
+
+-- 
+Horváth Szabolcs, <horvaths@fi.inf.elte.hu> 
+
+
+
+Re: [Dillo-dev]Pthreads broken on Solaris
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-07 16:49
+
+On Thu, Feb 07, 2002 at 01:22:10PM -0300, Jorge Arellano Cid wrote:
+> 
+> Andreas, Livio:
+> 
+> > >
+> > > checking whether threads work with -pthread... yes
+> > >
+> > > BUT, here's what really happened in config.log:
+> > >
+> > > gcc: unrecognized option `-pthread'
+> > > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I just tried it on a Solaris 2.6 - same result :
+gcc: unrecognized option `-pthread'
+configure:2744: $? = 0
+configure:2747: test -s conftest
+configure:2750: $? = 0
+configure:2760: result: yes
+
+which looks pretty much like bogus to me ....
+
+I also modified configure.in to a non-existent option on my linux
+box and it does fall back to checking the libraries.
+
+> > hmmm ... that should end up in a in, "no, it's not working with -pthread"
+> > and it should proceed to check the libs individually .... bummer ....
+> > I'll check that.
+> 
+> I noticed current AC_TRY_LINK call shifts one parameter, so:
+> 
+> -AC_TRY_LINK_FUNC(pthread_create, pthread_ok=yes, pthread_ok=no)
+> +AC_TRY_LINK_FUNC(, pthread_create, pthread_ok=yes, pthread_ok=no)
+> 
+> and, just in case the linker doesn't report an error with an
+> exit code. Settings can be tested with:
+> 
+> AC_TRY_RUN(
+> [int main() {return !pthread_equal(pthread_self(), pthread_self());}],
+> AC_MSG_RESULT(yes),
+> AC_MSG_RESULT(no),
+> AC_MSG_RESULT(crosscompiling: no run-test))
+
+Maybe this is what we need.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-07 16:30
+
+On Thu, Feb 07, 2002 at 11:08:41AM -0500, Jonathan P Springer wrote:
+> On Thu, Feb 07, 2002 at 12:45:14PM -0300, Jorge Arellano Cid wrote:
+> > 
+> > It'd be easy to test for the 3 image formats, and after that
+> > for "<HTML" somewhere in the beginning (provided the former chars
+> > are space-chars or within ASCII for instance); if neither test
+> > cucceeds and it has only ASCII, it can try text/plain.
+> 
+> Probably want to test for a few HTML tags. TITLE? H1? IMG? Many pages
+> are still poorly formed HTML.
+
+Well, this test is only a last resort anyways. In the case that the server
+doesn't give as a content/type header field.
+I looked at the garbage that IIS delivers from ebay's sites and it seems
+it is the re-direct pages that don't have content/type (so that does not
+matter anyways) but the final stopper is the login page where IIS has
+all these cookie settings in the header and forgets the content/type
+over all this cookie trouble ;-) ....
+What I want to say : hopefully, the hand coded pages will have a server
+that always sends the content type.
+
+Anyways, here is how OpenBSD's (as a random OS - they all do it almost
+identical) magic file detects HTML :
+0 string \<!DOCTYPE\ HTML HTML document text
+0 string \<!doctype\ html HTML document text
+0 string \<HEAD HTML document text 
+0 string \<head HTML document text
+0 string \<TITLE HTML document text
+0 string \<title HTML document text
+0 string \<html HTML document text 
+0 string \<HTML HTML document text 
+
+Hey, and if you can't code correct HTML you are not worthy being
+looked at ;-) ....
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]Pthreads broken on Solaris
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-07 16:25
+
+Andreas, Livio:
+
+> >
+> > checking whether threads work with -pthread... yes
+> >
+> > BUT, here's what really happened in config.log:
+> >
+> > gcc: unrecognized option `-pthread'
+> > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>
+> hmmm ... that should end up in a in, "no, it's not working with -pthread"
+> and it should proceed to check the libs individually .... bummer ....
+> I'll check that.
+
+I noticed current AC_TRY_LINK call shifts one parameter, so:
+
+-AC_TRY_LINK_FUNC(pthread_create, pthread_ok=yes, pthread_ok=no)
++AC_TRY_LINK_FUNC(, pthread_create, pthread_ok=yes, pthread_ok=no)
+
+and, just in case the linker doesn't report an error with an
+exit code. Settings can be tested with:
+
+AC_TRY_RUN(
+[int main() {return !pthread_equal(pthread_self(), pthread_self());}],
+AC_MSG_RESULT(yes),
+AC_MSG_RESULT(no),
+AC_MSG_RESULT(crosscompiling: no run-test))
+
+
+Hope this helps
+Jorge.- 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-07 16:24
+
+On Thu, Feb 07, 2002 at 12:45:14PM -0300, Jorge Arellano Cid wrote:
+> 
+> Note that this doesn't need any external magic files, just a
+> self contained function that performs the above-mentioned tests.
+
+If we/I code that elegantly enough, then it doesn't really matter :-)
+and we can exchange the self contained test with a magic.mime test
+easily.
+
+> PS: Andreas: the *BSD patch is already on CVS.
+
+I noticed it ! Cool ! :-)
+
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-02-07 16:08
+
+On Thu, Feb 07, 2002 at 12:45:14PM -0300, Jorge Arellano Cid wrote:
+> 
+> It'd be easy to test for the 3 image formats, and after that
+> for "<HTML" somewhere in the beginning (provided the former chars
+> are space-chars or within ASCII for instance); if neither test
+> cucceeds and it has only ASCII, it can try text/plain.
+
+Probably want to test for a few HTML tags. TITLE? H1? IMG? Many pages
+are still poorly formed HTML.
+
+--
+-Jonathan P Springer <jonathan.springer@ve...>
+------------------------------------------------------------------------------
+"A standard is an arbitrary solution to a recurring problem." - Joe Hazen 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-07 15:47
+
+On Wed, 6 Feb 2002, Andreas Schweitzer wrote:
+
+> On Wed, Feb 06, 2002 at 04:00:49PM -0800, Eric GAUDET wrote:
+> > > --------------------------------------
+> > > Bug 216 (answers without content/type)
+> > > --------------------------------------
+> > Ok, I'm volunteering ... to have a look at that ;-)
+>
+> I was thinking about volunteering (I would not be able to *deliver*
+> until the end of the month, though ....) and I was reading the man
+> page magic(5) and peeking into how file(1) works. Now, the problem is
+> that it first checks the first byte(s) and by doing so
+> killing a gazillion types. Only after that it cecks if it is an ASCII
+> (without the use of the magic(5) file).
+> Unless I'm missing something it may not be trivial to find
+> out weather dillo is looking at an ASCII file or not by only
+> eliminating 3 image formats.
+
+It'd be easy to test for the 3 image formats, and after that
+for "<HTML" somewhere in the beginning (provided the former chars
+are space-chars or within ASCII for instance); if neither test
+cucceeds and it has only ASCII, it can try text/plain.
+Finally, if it doesn't fit any of the above, default to
+"application/octet-stream".
+
+Note that this doesn't need any external magic files, just a
+self contained function that performs the above-mentioned tests.
+
+> OTOH, isn't Netscape just dumping everything that it doesn't know ?
+
+That's what the RFC says!
+
+
+Cheers
+Jorge.-
+
+
+PS: Andreas: the *BSD patch is already on CVS. 
+
+
+
+Re: [Dillo-dev]Pthreads broken on Solaris
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-07 15:17
+
+> 
+> checking whether threads work with -pthread... yes
+> 
+> BUT, here's what really happened in config.log:
+> 
+> gcc: unrecognized option `-pthread'
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+hmmm ... that should end up in a in, "no, it's not working with -pthread"
+and it should proceed to check the libs individually .... bummer ....
+I'll check that.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Special characters in dillo
+
+From: Michael Raidel <raidel@i-...> - 2002-02-07 14:43
+
+Hello!
+
+I have just tried to patch dillo for the following behaviour: html-codes 
+such as &#8217; &#8220; and so on are correctly shown by other browsers 
+I use (fe: &#8217; = ´ ). This was very easy by adding a switch to the 
+"// Numeric token" section in Html_parse_entity() in html.c which checks 
+all of the tags i know if the existing check returned -1. But I don't 
+think this is good way to code, because the list of codes is not so easy 
+to maintain.
+
+So I went for the second solution, which does works sometimes but not 
+always and I don't understand why (I am learning C/C++ since two weeks..).
+
+all of the following happens in html.c of dillo0.6.4:
+
+line 604:
+
+#define NumEnt 257 // added 5 to the original 252 elements
+static const Ent_t Entities[NumEnt] = {
+{"#8217",39}, {"#8220",34}, {"#8221",34}, {"#8211",45}, 
+{"#8216",39},
+{"AElig",0306}, {"Aacute",0301}, {"Acirc",0302}, {"Agrave",0300}, 
+// and so on, I didn't change the array after this line..
+
+line 700:
+static gint Html_parse_entity(const gchar *token, gint toksize)
+{
+gint base, isocode, i;
+gchar *eoe, *name;
+
+g_return_val_if_fail (token[0] == '&', -1);
+
+eoe = (toksize) ? memchr(token, ';', toksize) : strchr(token, ';');
+if (eoe) {
+// I changed the order of the if expression, it now checks first 
+for the named entity:
+
+// Search for named entity
+name = g_strndup(token + 1, eoe - token - 1);
+i = Html_entity_search(name);
+g_free(name);
+
+if (token[1] == '#' && i == -1) { // it searches only for 
+numeric tokens if it hasn't already found the token in the Entities-array
+// Numeric token
+base = (token[2] == 'x' || token[2] == 'X') ? 16 : 10;
+
+isocode = strtol(token + 2 + (base==16), NULL, base);
+
+return (isocode > 0 && isocode <= 255) ? isocode : -1;
+}
+return (i != -1) ? Entities[i].isocode : -1;
+
+
+}
+return -1;
+}
+
+
+My trouble is: it doesn't work really good: if I use only one additional 
+element in the entities array (fe &#8217;) it works correct, when I add 
+some elements it stops working for some of the characters or all of 
+them. I used printf(name); and it was always the correct output (fe: 
+#8217, which is exactly one of the elements in the entities-Array..
+
+Maybe some of you can help me completing it, so the dillo-crew can 
+integrate it in the browser if they want to do so. 
+
+
+
+[Dillo-dev]Pthreads broken on Solaris
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-07 14:23
+
+Hello,
+
+I'm sad to say that the current changes to support *BSD has broken
+Dillo on Solaris. I think the stuff changed in configure.in broke
+things... Changing the pthread detection back to simple
+(AC_CHECK_LIB(pthread, pthread_create)) makes Solaris happy.
+To sum up things, here's the output from configure:
+
+checking whether threads work with -pthread... yes
+
+BUT, here's what really happened in config.log:
+
+configure:1654: checking whether threads work with -pthread
+configure:1669: gcc -o conftest -I/usr/openwin/include -I/usr/local/lib/glib/include -I/usr/local/include -g -O2 -D_REENTRANT -D_THREAD_SAFE -Wall -Waggregate-return -I/usr/local/include -I/usr/local/lib -pthread conftest.c -L/usr/local/lib -L/usr/openwin/lib -R/usr/openwin/lib -lgtk -lgdk -lgmodule -lglib -ldl -lintl -lXext -lX11 -lsocket -lnsl -lw -lm 1>&5
+gcc: unrecognized option `-pthread'
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+That's what I get during normal Dillo compilation. It compiles
+fines, but never gets support for pthreads, therefore, DNS is broken,
+and Dillo can't open anything :-(
+
+What I did was hand edited src/Makefile from:
+LDFLAGS = -I/usr/local/lib -pthread
+to
+LDFLAGS = -I/usr/local/lib -lpthread
+
+And everything worked. I know it's not the fix, but I have no time
+right now to fix this (maybe next week).
+
+best regards to all,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-02-07 13:22
+
+On Wed, Feb 06, 2002 at 05:31:29PM -0800, Eric GAUDET wrote:
+> On 07-Feb-2002 Andreas Schweitzer wrote:
+> > On Wed, Feb 06, 2002 at 04:00:49PM -0800, Eric GAUDET wrote:
+> >> > --------------------------------------
+> >> > Bug 216 (answers without content/type)
+> >> > --------------------------------------
+> >> Ok, I'm volunteering ... to have a look at that ;-)
+> > 
+> > I was thinking about volunteering (I would not be able to *deliver*
+> > until the end of the month, though ....) and I was reading the man
+> 
+> We can probably join our efforts, because I don't have much time either.
+> 
+> > page magic(5) and peeking into how file(1) works. Now, the problem is
+> > that it first checks the first byte(s) and by doing so
+> > killing a gazillion types. Only after that it cecks if it is an ASCII
+> > (without the use of the magic(5) file).
+> > Unless I'm missing something it may not be trivial to find
+> > out weather dillo is looking at an ASCII file or not by only
+> > eliminating 3 image formats.
+> > 
+> 
+> I think we should proceed this way:
+> 
+> 1) add a entry in the preference file for the path to the magic.mime:
+> magicmime=/usr/share/misc/magic.mime
+> and have the pref.c find it and call the loading function
+> 
+> 2) build a function loading the magic.mime and fill an array of structures for
+> each mime type.
+> 
+> 3) build the a_Mime_get_type function that will use the array to decide what
+> mime type to return.
+> 
+> 4) have Jorge find some time to make the data passed to this function.
+> 
+
+This looks like the way 'gnome_mime_type_from_magic' works. You may
+want to look there for code to liberate.
+
+-js
+
+
+--
+-Jonathan P Springer <jonathan.springer@ve...>
+------------------------------------------------------------------------------
+"A standard is an arbitrary solution to a recurring problem." - Joe Hazen 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-02-07 11:07
+
+Hi.
+
+>AFAIK uo-branch use my font_charset and encodings_selection
+>patches. Both work nice together ;)
+Ok, Where can I get it ?
+
+The second image of
+http://ccns.ncku.edu.tw/~jimchyun/dillo/snapshot/
+shows the charset encoding selection menu of 0.6.3-m17n. It uses your
+(before) encoding selection patch. 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: Grigory Bakunov <black@as...> - 2002-02-07 10:37
+
+On =FE=D4=D7, 2002-02-07 at 13:31, TANAKA Keishiro wrote:
+> Hi.
+>=20
+> > > setenv LANG your_locale; dillo &
+> > Ugly.
+> Yeah. It is for 0.6.3-uo-branch-2. 0.6.3-m17n has smarter solution,
+> 0.6.3-m17n can choose one of CKJ, maybe.
+>=20
+> m17n effort has not been adopted to the tree.
+> =20
+> > See patch in attachment.
+> > in dillorc add
+> > font_charset=3Djisx0208.1983-*
+> It is just kludge, you know.=20
+> Dynamic font selection menu cooperating with charset encoding is
+> required. (0.6.4 has it?)
+
+AFAIK uo-branch use my font_charset and encodings_selection
+patches. Both work nice together ;)
+
+--=20
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-02-07 10:31
+
+Hi.
+
+> > setenv LANG your_locale; dillo &
+> Ugly.
+Yeah. It is for 0.6.3-uo-branch-2. 0.6.3-m17n has smarter solution,
+0.6.3-m17n can choose one of CKJ, maybe.
+
+m17n effort has not been adopted to the tree.
+
+> See patch in attachment.
+> in dillorc add
+> font_charset=jisx0208.1983-*
+It is just kludge, you know. 
+Dynamic font selection menu cooperating with charset encoding is
+required. (0.6.4 has it?)
+
+Best Regards. 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: Grigory Bakunov <black@as...> - 2002-02-07 08:39
+
+Attachments: dillo_0.64.charset_selection.patch      
+
+On =FE=D4=D7, 2002-02-07 at 11:18, TANAKA Keishiro wrote:
+> Hi.
+>=20
+> >May I know where to find the document to set fonts ? I've no problem to
+> >display big-5 Chinese but it looks terrible. Thanks.=20
+>=20
+> I think, at this stage, you have to add font name by hand to
+> dillo source.=20
+> # I don't know the Hungarian font name...
+>=20
+> dw_style.c: Search gdk_fontset_load function.
+> > sprintf (fontname,=20
+> > ("-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*,"
+> > "-*-*-%s-%s-*-*-%d-*-*-*-*-*-jisx0208.1983-*"), # the line
+> > font->name, font->bold ? "bold" : "medium",
+> > font->italic ? ItalicChar : "r", font->size,=20
+> > font->bold ? "bold" : "medium", font->italic ? ItalicChar : "r",
+> > font->size);
+> You have to change the line to the your prefered font name.
+>=20
+> And type on command line
+>=20
+> setenv LANG your_locale; dillo &
+Ugly.
+
+See patch in attachment.
+in dillorc add
+font_charset=3Djisx0208.1983-*
+
+>=20
+--=20
+
+-------------------------------------------------------
+Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-02-07 08:19
+
+Hi.
+
+>May I know where to find the document to set fonts ? I've no problem to
+>display big-5 Chinese but it looks terrible. Thanks. 
+
+I think, at this stage, you have to add font name by hand to
+dillo source. 
+# I don't know the Hungarian font name...
+
+dw_style.c: Search gdk_fontset_load function.
+> sprintf (fontname, 
+> ("-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*,"
+> "-*-*-%s-%s-*-*-%d-*-*-*-*-*-jisx0208.1983-*"), # the line
+> font->name, font->bold ? "bold" : "medium",
+> font->italic ? ItalicChar : "r", font->size, 
+> font->bold ? "bold" : "medium", font->italic ? ItalicChar : "r",
+> font->size);
+You have to change the line to the your prefered font name.
+
+And type on command line
+
+setenv LANG your_locale; dillo & 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: jason shen <shenkr@ih...> - 2002-02-07 07:44
+
+Hi,
+May I know where to find the document to set fonts ? I've no problem to
+display big-5 Chinese but it looks terrible. Thanks. 
+Jason
+-------------
+On 07 Feb 2002 16:03:41 +0900
+TANAKA Keishiro <ksr@lp.nm.fujitsu.co.jp> wrote:
+
+> Hi.
+> I wonder I don't know correctly what you want.
+> 
+> m17n dillo is available. Maybe Hungarian will be supported by setting
+> suitable locale and fonts selection.
+> 
+> See http://ccns.ncku.edu.tw/~jimchyun/dillo/dillo-0.63-m17n.tgz
+> or http://todo.org/cgi-bin/en/tiki.cgi?p=Dillo
+> 
+> Localization of menu string and other GUI properties etc has not been
+> supported yet.
+> 
+> Miklos Magyari <miklos.magyari@et...> writes:
+> 
+> > hi,
+> > 
+> > are there any plans for translating Dillo to other languages? I
+guess it> > wouldn't be so hard to create the translations (and the code
+that> > supports compile-time language selection) and that would only
+add some> > kilobytes to the source.
+> > I would be happy to create the Hungarian version, but first I want
+to> > make sure that I'm not working on a completely unsupported thing.
+> > 
+> > cheers,
+> > Miki
+> > 
+> > _______________________________________________
+> > Dillo-dev mailing list
+> > Dillo-dev@li...
+> > https://lists.so....net/lists/listinfo/dillo-dev
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Non-English Dillo?
+
+From: TANAKA Keishiro <ksr@lp...> - 2002-02-07 07:03
+
+Hi.
+I wonder I don't know correctly what you want.
+
+m17n dillo is available. Maybe Hungarian will be supported by setting
+suitable locale and fonts selection.
+
+See http://ccns.ncku.edu.tw/~jimchyun/dillo/dillo-0.63-m17n.tgz
+or http://todo.org/cgi-bin/en/tiki.cgi?p=Dillo
+
+Localization of menu string and other GUI properties etc has not been
+supported yet.
+
+Miklos Magyari <miklos.magyari@et...> writes:
+
+> hi,
+> 
+> are there any plans for translating Dillo to other languages? I guess it
+> wouldn't be so hard to create the translations (and the code that
+> supports compile-time language selection) and that would only add some
+> kilobytes to the source.
+> I would be happy to create the Hungarian version, but first I want to
+> make sure that I'm not working on a completely unsupported thing.
+> 
+> cheers,
+> Miki
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-07 01:31
+
+On 07-Feb-2002 Andreas Schweitzer wrote:
+> On Wed, Feb 06, 2002 at 04:00:49PM -0800, Eric GAUDET wrote:
+>> > --------------------------------------
+>> > Bug 216 (answers without content/type)
+>> > --------------------------------------
+>> Ok, I'm volunteering ... to have a look at that ;-)
+> 
+> I was thinking about volunteering (I would not be able to *deliver*
+> until the end of the month, though ....) and I was reading the man
+
+We can probably join our efforts, because I don't have much time either.
+
+> page magic(5) and peeking into how file(1) works. Now, the problem is
+> that it first checks the first byte(s) and by doing so
+> killing a gazillion types. Only after that it cecks if it is an ASCII
+> (without the use of the magic(5) file).
+> Unless I'm missing something it may not be trivial to find
+> out weather dillo is looking at an ASCII file or not by only
+> eliminating 3 image formats.
+> 
+
+I think we should proceed this way:
+
+1) add a entry in the preference file for the path to the magic.mime:
+magicmime=/usr/share/misc/magic.mime
+and have the pref.c find it and call the loading function
+
+2) build a function loading the magic.mime and fill an array of structures for
+each mime type.
+
+3) build the a_Mime_get_type function that will use the array to decide what
+mime type to return.
+
+4) have Jorge find some time to make the data passed to this function.
+
+> OTOH, isn't Netscape just dumping everything that it doesn't know ?
+> Like tgz files displayed in binary ;-) .... not that dillo should
+> behave like Netscape ....
+> 
+
+Isn't our goal to replace Netscape? ;-)
+
+> Cheers
+> Andreas
+> 
+> 
+> -- 
+> Department of Physics & Astronomy and Center for Simulational Physics
+> University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+> Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+> USA http://dilbert.physast.uga.edu/~andy/
+
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 06-Feb-2002 Time: 17:23:59
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-07 01:22
+
+On Wed, Feb 06, 2002 at 04:00:49PM -0800, Eric GAUDET wrote:
+> > --------------------------------------
+> > Bug 216 (answers without content/type)
+> > --------------------------------------
+> Ok, I'm volunteering ... to have a look at that ;-)
+
+I was thinking about volunteering (I would not be able to *deliver*
+until the end of the month, though ....) and I was reading the man
+page magic(5) and peeking into how file(1) works. Now, the problem is
+that it first checks the first byte(s) and by doing so
+killing a gazillion types. Only after that it cecks if it is an ASCII
+(without the use of the magic(5) file).
+Unless I'm missing something it may not be trivial to find
+out weather dillo is looking at an ASCII file or not by only
+eliminating 3 image formats.
+
+OTOH, isn't Netscape just dumping everything that it doesn't know ?
+Like tgz files displayed in binary ;-) .... not that dillo should
+behave like Netscape ....
+
+Cheers
+Andreas
+
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-07 00:00
+
+Ok, I'm volunteering ... to have a look at that ;-)
+
+On 06-Feb-2002 Jorge Arellano Cid wrote:
+> 
+> Hi there!
+> 
+...
+>> Anyway, someone (don't look at me!!1) should really implement proper
+>> mime-type detection.
+> 
+> This is quite easy!
+> And since I wrote the following quote on 22 Sep 2001, I've been
+> surprised for the lack of volunteers.
+> 
+>>>
+> --------------------------------------
+> Bug 216 (answers without content/type)
+> --------------------------------------
+> 
+> Yes, I also had this problem with ebay (made a little hack, and
+> won my bid!). Since that moment the idea of handling this case
+> the rigth way is present. Note that the problem arises from a
+> http answer lacking the content/type info; the RFC says it SHOULD
+> be present, so it's not an error :(
+> 
+> The solution is simple, do you remember magic numbers and the
+> 'file' command? Well, that's the way to go. I don't mean calling
+> 'file' and parsing its output, but to examine the magic numbers
+> file uses (and its format) for the small set of MIME types dillo
+> supports:
+> 
+> image/{png, jpeg, gif}
+> text/{plain, html}
+> 
+> and afterward, to create a custom function that returns the
+> MIME type of a file, by examining a few bytes from the start of
+> it. Ex:
+> 
+> gchar *a_Mime_get_content_type(const gchar *FewBytesString);
+> 
+> After having this function, it's just a matter of binding it to
+> header parsing.
+>>>
+> 
+> 
+> That's all folks.
+> 
+> Cheers
+> Jorge.-
+> 
+> PS: don't get scared, just give me the function, and I bind it!
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 06-Feb-2002 Time: 16:00:09
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-06 23:34
+
+On 06-Feb-2002 Livio Baldini Soares wrote:
+> Oh, and this is only applied to URL's. Parsing of other kinds of
+> attributes were left unchanged... (aiieee... I think we're going to
+> discuss attribute parsing again? ;)
+> 
+
+That's fine: we don't want to parse attributes that contain text to be
+displayed, such as img alts.
+
+Best,
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 06-Feb-2002 Time: 15:33:08
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!"
+------------------------------------------------------------------- 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-06 23:28
+
+Attachments: url-exclude-chars.diff      
+
+Hello Eric! (and Paul)
+
+Eric GAUDET writes:
+> On 06-Feb-2002 Livio Baldini Soares wrote:
+> > Howdy guys,
+> > 
+> > bug #292 is bogus, Jorge feel free to remove it. I was finishing up
+> > an implementation, but then resolved to check the specs...
+> > 
+> 
+> What do you mean is bogus? do you mean we don't want to support such broken
+> links?
+
+Err... yes that's what I meant, but...
+
+> Still, some pages have hrefs with disallowed characters, and my interpretation
+> of the rfc is that dillo should ignore them (by removing them from the
+> attributes).
+
+I think I like your interpretation of the RFC better! I've made a
+small patch to clear out _some_ of the excluded chars. I don't know,
+but something like '#' can't be cleared out.. My patch ignores:
+
+everything lower than 0x1F, 0x7F, ' ', '<', '>', and '"'
+
+Is there a portable way of doing this? Should I ignore other chars?
+Oh, and this is only applied to URL's. Parsing of other kinds of
+attributes were left unchanged... (aiieee... I think we're going to
+discuss attribute parsing again? ;)
+
+Paul Chamberlain, thanks for the remarks, and I think you'll be
+happy to know that this patch works with
+
+h t t p: / /sl as h d ot.o rg /
+
+just fine. The patch is small (1.8KiB), so I'm sending it
+attached. As always, comments are greatly appreciated!
+
+kind regards,
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]About Bug #292
+
+From: Paul Chamberlain <tif@ti...> - 2002-02-06 21:51
+
+Livio Baldini Soares wrote:
+> As you can see whitespaces are disallowed and so are Line Feeds (0x0A) and
+> Carriage Returns (0x0D), which are in the 00-1F range.
+
+I'd like to see these characters silently deleted from URLs.
+Having said that, I should point out that I haven't really
+thought through all the implications of that, I'm merely
+reacting to a gripe I have about Netscape. When I paste a
+URL into Netscape that I've selected from an xterm and it
+was long enough that it was wrapped around on the screen,
+I end up with a space (I think) in the URL where it was
+wrapped and the server almost always gives an error. Then I
+have to find the space in the URL and delete it manually.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+RE: [Dillo-dev]About Bug #292
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-06 21:32
+
+On 06-Feb-2002 Livio Baldini Soares wrote:
+> Howdy guys,
+> 
+> bug #292 is bogus, Jorge feel free to remove it. I was finishing up
+> an implementation, but then resolved to check the specs...
+> 
+
+What do you mean is bogus? do you mean we don't want to support such broken
+links?
+Still, some pages have hrefs with disallowed characters, and my interpretation
+of the rfc is that dillo should ignore them (by removing them from the
+attributes).
+
+> His is an excerpt from RFC 2396 (Uniform Resource Identifiers (URI):
+> Generic Syntax), section 2.4.3:
+> 
+... blah blah, snip, snip ...
+> 
+> As you can see whitespaces are disallowed and so are Line Feeds (0x0A) and
+> Carriage Returns (0x0D), which are in the 00-1F range.
+> 
+> best regards to all!
+> 
+> -- 
+> Livio <livio@im...>
+> 
+-------------------------------------------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 06-Feb-2002 Time: 13:30:03
+"Le premier qui me reveille pendant que je travaille, ca va mal aller !!!"
+------------------------------------------------------------------- 
+
+
+
+[Dillo-dev]About Bug #292
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-06 21:24
+
+Howdy guys,
+
+bug #292 is bogus, Jorge feel free to remove it. I was finishing up
+an implementation, but then resolved to check the specs...
+
+His is an excerpt from RFC 2396 (Uniform Resource Identifiers (URI):
+Generic Syntax), section 2.4.3:
+
+***************************************
+2.4.3. Excluded US-ASCII Characters
+
+Although they are disallowed within the URI syntax, we include here
+a description of those US-ASCII characters that have been excluded
+and the reasons for their exclusion.
+
+The control characters in the US-ASCII coded character set are not
+used within a URI, both because they are non-printable and because
+they are likely to be misinterpreted by some control mechanisms.
+
+control = <US-ASCII coded characters 00-1F and 7F hexadecimal>
+
+The space character is excluded because significant spaces may
+disappear and insignificant spaces may be introduced when URI are
+transcribed or typeset or subjected to the treatment of word-
+processing programs. Whitespace is also used to delimit URI in
+many contexts.
+
+space = <US-ASCII coded character 20 hexadecimal>
+***************************************
+
+As you can see whitespaces are disallowed and so are Line Feeds (0x0A) and
+Carriage Returns (0x0D), which are in the 00-1F range.
+
+best regards to all!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-06 13:09
+
+Hi there!
+
+
+
+On Wed, 6 Feb 2002, Pekka Lampila wrote:
+
+> Hi,
+> On 05.02.2002, Eric GAUDET wrote:
+> > here=B4s a quick and dirty patch I want to share with all of you who wa=
+nt to
+> > browse ebay.com [BUG#261]:
+> > In IO/mime.c, line 150, add the following:
+> >
+> > return a_Mime_set_viewer("text/html", Ptr, Call, Data);
+>
+> There's already hack for this in source (but commented out):
+>
+> cache.c:484:
+> // entry->Type =3D Type ? Type : g_strdup("text/html"); Hack
+> for ebay --Jcid
+>
+> > The trade-off is that any link to a binary file will be loaded by dillo=
+and
+> > displayed.
+>
+> Your patch will make every unhandled mime-type handled as text/html (if I
+> understood correctly), while the one in cache.c will only mark file as
+> text/html if server doesn't tell what mime-type it is.
+
+The commented hack is there from a long time ago (I used it to
+win a bid on ebay!, and commented it out afterwards.
+
+
+> Anyway, someone (don't look at me!!1) should really implement proper
+> mime-type detection.
+
+This is quite easy!
+And since I wrote the following quote on 22 Sep 2001, I've been
+surprised for the lack of volunteers.
+
+>>
+--------------------------------------
+Bug 216 (answers without content/type)
+--------------------------------------
+
+Yes, I also had this problem with ebay (made a little hack, and
+won my bid!). Since that moment the idea of handling this case
+the rigth way is present. Note that the problem arises from a
+http answer lacking the content/type info; the RFC says it SHOULD
+be present, so it's not an error :(
+
+The solution is simple, do you remember magic numbers and the
+'file' command? Well, that's the way to go. I don't mean calling
+'file' and parsing its output, but to examine the magic numbers
+file uses (and its format) for the small set of MIME types dillo
+supports:
+
+image/{png, jpeg, gif}
+text/{plain, html}
+
+and afterward, to create a custom function that returns the
+MIME type of a file, by examining a few bytes from the start of
+it. Ex:
+
+gchar *a_Mime_get_content_type(const gchar *FewBytesString);
+
+After having this function, it's just a matter of binding it to
+header parsing.
+>>
+
+
+That's all folks.
+
+Cheers
+Jorge.-
+
+PS: don't get scared, just give me the function, and I bind it! 
+
+
+
+[Dillo-dev]Non-English Dillo?
+
+From: Miklos Magyari <miklos.magyari@et...> - 2002-02-06 09:20
+
+hi,
+
+are there any plans for translating Dillo to other languages? I guess it
+wouldn't be so hard to create the translations (and the code that
+supports compile-time language selection) and that would only add some
+kilobytes to the source.
+I would be happy to create the Hungarian version, but first I want to
+make sure that I'm not working on a completely unsupported thing.
+
+cheers,
+Miki 
+
+
+
+Re: [Dillo-dev]the bad and the ugly
+
+From: Pekka Lampila <medar@ka...> - 2002-02-06 06:15
+
+Hi,
+
+On 05.02.2002, Eric GAUDET wrote:
+> here=B4s a quick and dirty patch I want to share with all of you who wa=
+nt to
+> browse ebay.com [BUG#261]:
+> In IO/mime.c, line 150, add the following:
+>=20
+> return a_Mime_set_viewer("text/html", Ptr, Call, Data);
+
+There's already hack for this in source (but commented out):
+
+cache.c:484:
+// entry->Type =3D Type ? Type : g_strdup("text/html"); Hack
+for ebay --Jcid
+
+> The trade-off is that any link to a binary file will be loaded by dillo=
+and
+> displayed.
+
+Your patch will make every unhandled mime-type handled as text/html (if I
+understood correctly), while the one in cache.c will only mark file as
+text/html if server doesn't tell what mime-type it is.
+
+> =B4cause ebay.com is sending a mime type of application/octet-stream fo=
+r some
+> of its pages
+
+If it would do this, nobody shouldn't display those pages in text/html,
+but actually it just doesn't send Content-Type-header. (Which for some
+reason isn't absolutely required in RFCs)
+
+$ w3m -no-proxy -dump_head "http://cgi.ebay.com/aw-cgi/eBayISAPI.dll?View=
+Item&item=3D2000276751"
+HTTP/1.0 200 OK
+Connection: close
+Server: Microsoft-IIS/4.0
+Date: Wed, 06 Feb 2002 06:03:04 GMT
+
+
+Anyway, someone (don't look at me!!1) should really implement proper
+mime-type detection.
+
+--=20
+Pekka Lampila - medar@ka... 
+
+
+
+[Dillo-dev]the bad and the ugly
+
+From: Eric GAUDET <egaudet@in...> - 2002-02-06 05:43
+
+Hi all,
+here=B4s a quick and dirty patch I want to share with all of you who =
+want to
+browse ebay.com [BUG#261]:
+In IO/mime.c, line 150, add the following:
+
+return a_Mime_set_viewer("text/html", Ptr, Call, Data);
+
+The trade-off is that any link to a binary file will be loaded by dil=
+lo and
+displayed.
+
+I know Jorge wants a clean mime detection, and I=B4m all for it, but =
+right now we
+only have this.=20
+=B4cause ebay.com is sending a mime type of application/octet-stream =
+for some of
+its pages, and the only way to prove the bastard wrong is to parse th=
+e begining
+of the file, which we don=B4t have when the http header is received.
+
+BTW, ebay category links have the nasty habit of containing carriage =
+returns
+[BUG#292] that dillo doesn=B4t filter: just edit the navbar to remove=
+them.
+
+Hope this helps, (it helps me, at least ;-)
+---------------------------------------------------------------------=
+---
+Eric GAUDET <egaudet@in...>
+Le 05-Feb-2002 a 21:28:44
+"Parler pour ne rien dire et ne rien dire pour parler=20
+sont les deux principes majeurs et rigoureux de tous ceux
+qui feraient mieux de la fermer avant de l'ouvrir."
+---------------------------------------------------------------------=
+--- 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-05 20:48
+
+Imad,
+
+> Casting the -1 as pthread_t removes the warning, but dillo still
+> crashes.
+
+Ok, what dillo are we talking about?
+d065a2 or 0.6.4 with Andreas patch?
+The first also adds -D_THREAD_SAFE and who knows...
+
+> > Specially since you're using a Sparc, and if I'm not
+> > mistaken, sparcs are 64 bits no?
+>
+> OT: Ultrasparcs and newer are 64 bits, but the microSPARC II
+> processor (or compatible) in the Sparc 5s is only 32 bits.
+
+Considering this feedback:
+
+Krzysztof:
+FreeBSD 4.4 without any updates.
+Dillo on my system is stable. No crashes. (d065a2)
+Out of the box compile.
+
+Miklos:
+0.6.4 compiles and runs fine on s SparcStation 5 with Solaris 8.
+
+Andreas:
+FreeBSD 4.3, OpenBSD 3.0, Mandrake 7.2
+
+Imad:
+OpenBSD 3.0, Sparc 5 it crashes.
+
+Note that there's one OpenBSD 3.0 where it works and other that
+don't. Also note that Andreas has up to patch-012. What about
+your system Imad?
+
+
+> > If this doesn't work, could you please get a backtrace and post it
+> > on the list?
+>
+> Sure!
+>
+> (gdb) r
+> Starting program: /home/magius/DOWNLOAD/dillo-0.6.4/src/dillo
+> [...]
+
+Hmmm, backtraces seem to point to a thread problem and not a
+typesize. I may be wrong though.
+
+I'd check the OS patch level first, then the gcc compiler
+version, then comparing the gcc invocations for linking (and
+compiling), then the typesizes and finally a mail to openbsd.org!
+
+
+Cheers
+Jorge.-
+
+PS: Has someone tested NetBSD? 
+
+
+
+Re: [Dillo-dev]Dillo and GTK+ 2.0pre
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-02-05 18:38
+
+Hi,
+
+On Mon, Jan 28, 2002 at 07:58:44PM +0100, Michael Krueger wrote:
+> I compiled GTK+ 2.0pre (aka 1.3.11) with both the linux-fb and directfb port. 
+> My goal is to write a small Linux/GNU distribution which fits on two floppies 
+> and includes GUI applications. But compiling Dillo v0.6.3 (which would be the 
+> included browser) seems to be not possible, even after handcoding fixes in 
+> configure for pkg-config and the source. src/IO is compiled without any 
+> problems, but the dw* framework files make gcc-2.95 stop. There are many 
+> irrelationships with GtkArg{GetFunc,SetFunc} ("function not found") and klass 
+> ("structure: no member 'klass'"). I don't know how to fix these problems, the 
+> GTK+ migration manual does not offer useful information.
+> Has somebody ported Dillo to GTK+ 2.0pre? Or has somebody ideas to fix those 
+> problems?
+
+Porting to Gtk+ 2.0 is a very large work, since Dw makes much use of
+Gtk+ (GtkObject and much use of Gdk drawing functions). From my first
+glance, the migration manual focuses on programs with less use of
+low-level features, so the only way is to look what has changed in
+detail. AFAIK, nobody works on this, at least there is no entry in the
+bug tracking engine.
+
+BTW: Gtk+ 2.0 will be the base for unicode support, see
+http://dillo.so....net/Notes.txt.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Imad <magius@pu...> - 2002-02-05 17:06
+
+On Tue, 5 Feb 2002, Livio Baldini Soares wrote:
+
+Hi, Livio!
+
+Casting the -1 as pthread_t removes the warning, but dillo still
+crashes.
+
+> Specially since you're using a Sparc, and if I'm not
+> mistaken, sparcs are 64 bits no?
+
+OT: Ultrasparcs and newer are 64 bits, but the microSPARC II
+processor (or compatible) in the Sparc 5s is only 32 bits.
+
+> If this doesn't work, could you please get a backtrace and post it
+> on the list?
+
+Sure!
+
+(gdb) r
+Starting program: /home/magius/DOWNLOAD/dillo-0.6.4/src/dillo
+Setting locale to C
+dillo_dns_init: Here we go!
+Loading bookmarks...
+Nav_open_url: Url=>about:splash<
+Nav_open_url: Url=>http://dillo.so....net/<
+Dns_server [0]: dillo.so....net is d888abc9
+Dns_server [0]: so....net is d888abc4
+
+Program received signal SIGBUS, Bus error.
+0x8071014 in jinit_upsampler ()
+(gdb) bt
+#0 0x8071014 in jinit_upsampler ()
+#1 0x807068c in jpeg_idct_1x1 ()
+#2 0x806cda8 in jinit_phuff_decoder ()
+#3 0x8066cdc in jpeg_read_scanlines ()
+#4 0x184d8 in Jpeg_write (jpeg=0x98000, Buf=0xf0000, BufSize=7160) at
+jpeg.c:302
+#5 0x18304 in Jpeg_callback (Op=0, Client=0xf0000) at jpeg.c:236
+#6 0x4574 in Cache_process_queue (entry=0x8f060) at cache.c:731
+#7 0x4384 in Cache_process_io (Op=0, VPtr=0x8b940) at cache.c:636
+#8 0x48ac in a_Cache_ccc (Op=2, Branch=2, Info=0xae420, Data=0x8b940,
+ExtraData=0x0) at cache.c:902
+#9 0x2ab8 in a_Chain_fcb (Op=2, Branch=2, Info=0xae400, Data=0x8b940,
+ExtraData=0x0) at chain.c:71
+#10 0x2fb74 in a_IO_ccc (Op=2, Branch=2, Info=0xae400, Data=0x8b940,
+ExtraData=0x0) at IO.c:314
+#11 0x2f87c in IO_read (io=0x8b940) at IO.c:160
+#12 0x2f990 in IO_callback (src=0x0, cond=G_IO_IN, data=0x8b940) at
+IO.c:237
+#13 0x828dea8 in g_io_add_watch ()
+#14 0x828fe00 in g_get_current_time ()
+#15 0x8290704 in g_get_current_time ()
+#16 0x8290a4c in g_main_run ()
+#17 0x814ada0 in gtk_main ()
+#18 0x152a8 in main (argc=1, argv=0xf7fffb44) at dillo.c:120
+(gdb)
+
+Trying again, this time with a local file:
+
+...
+Nav_open_url: Url=>file:/home/magius/DOWNLOAD/dillo-0.6.4/src/Makefile<
+pid 29026: Fatal error 'Thread has returned from sigreturn or switch'
+at line 573 in file /usr/src/lib/libc_r/uthread/uthread_kern.c (errno =
+0)
+
+Program received signal SIGABRT, Aborted.
+0x8434064 in _thread_exit ()
+(gdb) bt
+#0 0x8434064 in _thread_exit ()
+#1 0x84354ec in _thread_kern_sched ()
+#2 0x8430cfc in realloc ()
+#3 0x829188c in g_realloc ()
+#4 0x829f4a0 in g_string_chunk_insert_const ()
+#5 0x829fb8c in g_string_append_c ()
+#6 0x232b0 in a_Misc_expand_tabs (str=0x92280 "Makefile:
+$(srcdir)/Makefile.in $(top_builddir)/config.status
+$(BUILT_SOURCES)") at misc.c:68
+#7 0x28e70 in Plain_write (plain=0x9d660, Buf=0x605, BufSize=10364,
+Eof=0) at plain.c:178
+#8 0x28db8 in Plain_callback (Op=634368, Client=0x87c40) at
+plain.c:147
+#9 0x4574 in Cache_process_queue (entry=0x8f030) at cache.c:731
+#10 0x4384 in Cache_process_io (Op=0, VPtr=0xb8bc0) at cache.c:636
+#11 0x48ac in a_Cache_ccc (Op=2, Branch=2, Info=0x9da00, Data=0xb8bc0,
+ExtraData=0x0) at cache.c:902
+#12 0x2ab8 in a_Chain_fcb (Op=2, Branch=2, Info=0x879a0, Data=0xb8bc0,
+ExtraData=0x0) at chain.c:71
+#13 0x2fb74 in a_IO_ccc (Op=2, Branch=2, Info=0x879a0, Data=0xb8bc0,
+ExtraData=0x0) at IO.c:314
+#14 0x2f898 in IO_read (io=0xb8bc0) at IO.c:165
+#15 0x2f990 in IO_callback (src=0x0, cond=G_IO_IN, data=0xb8bc0) at
+IO.c:237
+#16 0x828dea8 in g_io_add_watch ()
+#17 0x828fe00 in g_get_current_time ()
+#18 0x8290704 in g_get_current_time ()
+#19 0x8290a4c in g_main_run ()
+#20 0x814ada0 in gtk_main ()
+#21 0x152a8 in main (argc=1, argv=0xf7fffb44) at dillo.c:120
+(gdb)
+
+
+> best regards and thanks in advance!
+
+No, thank you!
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Livio Baldini Soares <livio@im...> - 2002-02-05 12:37
+
+Hi Imad!
+
+Imad writes:
+> 
+> The patch is nice in that it alleviates the need for lots of weird
+> configuration options. However, I still get a few errors...
+> 
+> During the compile process:
+> 
+> dns.c: In function `a_Dns_init':
+> dns.c:211: warning: assignment makes pointer from integer without a
+> cast
+> 
+> For reference, this is the assignment "dns_server[i].th1 = -1" that's
+> being referred to.
+>
+> Running dillo results in a core dump rather quick:
+
+(...)
+
+> All of the above applies to my Sparc 5 running OpenBSD 3.0. I wonder if
+> fixing that cast would fix all my problems, since the error seems to lie
+> in DNS resolution...
+
+Maybe. Specially since you're using a Sparc, and if I'm not
+mistaken, sparcs are 64 bits no? Plus I think pthread_t is defined as
+a long... Humm, if you have any time, could you please try the
+following "patch":
+
+Change line 211 from:
+dns_server[i].th1 = -1;
+to:
+dns_server[i].th1 = (pthread_t) -1;
+
+This works here on my Linux and on Solaris (running also in a Sparc
+5). If this doesn't work, could you please get a backtrace and post it
+on the list? Something like:
+
+$ cd dillo/src; gdb
+
+(gdb) r
+:
+: (do your stuff till dillo crashes)
+:
+(gdb) bt
+
+Then you'll the trace of the current frames. This helps a lot for
+diagnosing the problem,
+
+best regards and thanks in advance!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-05 05:31
+
+On Mon, Feb 04, 2002 at 10:07:38PM -0500, Imad wrote:
+> 
+> The patch is nice in that it alleviates the need for lots of weird
+> configuration options. However, I still get a few errors...
+> 
+> During the compile process:
+> 
+> dns.c: In function `a_Dns_init':
+> dns.c:211: warning: assignment makes pointer from integer without a
+> cast
+
+Yep, I get the same warning on a i386 OpenBSD 3.0
+
+> All of the above applies to my Sparc 5 running OpenBSD 3.0. I wonder if
+> fixing that cast would fix all my problems, since the error seems to lie
+> in DNS resolution...
+
+However, I can run it just fine. I have a local namerver in my home
+network - if that makes a difference.
+
+As I said - OpenBSD 3.0 with patches up to patch-012 (013 came out
+just today ...)
+
+I'll post if FreeBSD or Linux give trouble.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Imad <magius@pu...> - 2002-02-05 03:07
+
+The patch is nice in that it alleviates the need for lots of weird
+configuration options. However, I still get a few errors...
+
+During the compile process:
+
+dns.c: In function `a_Dns_init':
+dns.c:211: warning: assignment makes pointer from integer without a
+cast
+
+For reference, this is the assignment "dns_server[i].th1 = -1" that's
+being referred to.
+
+Running dillo results in a core dump rather quick:
+
+> dillo
+Setting locale to C
+Dillo: error reading /home/magius/.dillo: No such file or directory
+dillo_dns_init: Here we go!
+Loading bookmarks...
+Nav_open_url: Url=>about:splash<
+Nav_open_url: Url=>http://dillo.so....net/<
+Dns_server [0]: dillo.so....net is d888abc9
+pid 16806: Fatal error 'accelerator != NULL' at line 573 in file
+gtk_accel_groups_from_object (errno = 0)
+Abort (core dumped)
+
+Trying again...
+
+> dillo README
+Setting locale to C
+dillo_dns_init: Here we go!
+Loading bookmarks...
+Nav_open_url: Url=>about:splash<
+Nav_open_url: Url=>file:/home/magius/DOWNLOAD/dillo-0.6.4/README<
+Nav_open_url: Url=>http://www.penny-arcade.com<
+Dns_server [0]: http://www.penny-arcade.com is c6ca270
+pid 31888: Fatal error 'SM_CLIENT_ID' at line 573 in file (errno = 0)
+Abort (core dumped)
+
+I get a memory fault if I dare to start dillo with a web address on the
+command line:
+
+Dns_server [0]: http://www.penny-arcade.com is c6ca277
+Memory fault (core dumped)
+
+On the other hand, as long as I simply navigate my local files,
+everything works fine.
+
+
+All of the above applies to my Sparc 5 running OpenBSD 3.0. I wonder if
+fixing that cast would fix all my problems, since the error seems to lie
+in DNS resolution...
+
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+Re: [Dillo-dev]pthread detection and compilation on BSD's
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-04 21:37
+
+Andreas and *BSDers!
+
+> I have spent some time getting dillo compile out of the
+> box on Linux, FreeBSD and OpenBSD - sorry, I currently
+> don't have a NetBSD on a computer.
+
+So we need a NetBSD tester... Anyone?
+
+> Jorge, I have to admit I did not test your patch. I think,
+> the -D_THREAD_SAFE (or however the syntax was) should be ok.
+
+We've debugged it a bit with a poland user, but I decided to
+merge it with your patch.
+
+It needs testing though, so, everybody in the house c'mon let
+it have a try!
+
+http://dillo.so....net/d065a2.tar.gz
+
+(it's dillo-0.6.4 with the new patch applied).
+
+Test it and report back.
+
+> [...]
+> It works on my Mandrake 7.2, my
+> FreeBSD 4.3 (I really should upgrade) and OpenBSD 3.0.
+> [...]
+
+> Maybe I'll be making now nice ports for FreeBSD and OpenBSD.
+> Once this is settled we should mail the ports mainainers - or are
+> they on this list here ??? :-)
+
+Don't know. I'd rather prefer the patch to work out of the box.
+
+
+Good luck
+Jorge.- 
+
+
+
+[Dillo-dev]pthread detection and compilation on BSD's
+
+From: Andreas Schweitzer <andy@ph...> - 2002-02-03 22:41
+
+Attachments: configure.in.diff      
+
+Hi,
+I have spent some time getting dillo compile out of the
+box on Linux, FreeBSD and OpenBSD - sorry, I currently
+don't have a NetBSD on a computer.
+
+Jorge, I have to admit I did not test your patch. I think,
+the -D_THREAD_SAFE (or however the syntax was) should be ok.
+However, I don't think testing for an OS is the cleanest way.
+I came up with a test to check for features. I think my
+test is quite clean ;-). It works on my Mandrake 7.2, my
+FreeBSD 4.3 (I really should upgrade) and OpenBSD 3.0.
+
+It has 3 parts. The first part is quite arguable. Essentially
+it unconditionally adds /usr/local/lib and /usr/local/include which
+should be ok. On OpenBSD only the include part is needed, on
+FreeBSD both.
+
+The 2nd part of the patch tries to detect non-standard naming
+conventions of gtk-config. This is needed for FreeBSD which allows
+you to have both gtk1.2 and gtk1.3 (and gtk2 ??).
+
+The 3rd part is which I insist on ;-) ... it does a very clean
+detection of how to use pthreads. Actually, it turns out that
+all 3 OS's only need the -pthread linking option.
+However, this implementation may work on a number of untested
+OS's, too. Also, the AC_SEARCH_LIB test should allow you to
+easily add another library candidate.
+
+Maybe I'll be making now nice ports for FreeBSD and OpenBSD.
+Once this is settled we should mail the ports mainainers - or are
+they on this list here ??? :-)
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Re: Move from SF.
+
+From: Gustavo Noronha Silva <kov@de...> - 2002-02-03 13:43
+
+On Sat, 2 Feb 2002 16:04:19 -0200
+Eduardo Marcel Maçan <macan@co...> wrote:
+
+> I guess you should contact these two persons:
+> 
+> Henrique <hmh@de...> 
+> and
+> Gustavo <kov@de...>
+> 
+> They know what to do, specially Gustavo
+> which happens to be a dillo fan too. Henrique will
+> be very useful too, since he spends more time online
+> and works very closely to some of our servers. I think
+> Gustavo knows our plan of hosting dillo better than
+> Henrique, talk to him first.
+Hello all,
+
+Jorge, you can count on me on moving from SF. Henrique
+nows more about CIPSGA's machines, but I'm here to help
+on whatever you need...
+
+where is this going to happen? denver? ima? ima2? ima2
+I think, right?
+
+[]s!
+
+-- 
+Gustavo Noronha Silva - kov <http://www.metainfo.org/kov>
+*---------* -+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+-+
+| .''`. | Debian GNU/Linux: <http://www.debian.org> |
+| : :' : + Debian BR.......: <http://debian-br.cipsga.org.br>+
+| `. `'` + Q: "Why did the chicken cross the road?" +
+| `- | A: "Upstream's decision." -- hmh |
+*---------* -+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+--+-+-+ 
+
+
+
+[Dillo-dev]Re: Move from SF.
+
+From: Eduardo Marcel <macan@co...> - 2002-02-02 18:05
+
+I guess you should contact these two persons:
+
+Henrique <hmh@de...> 
+and
+Gustavo <kov@de...>
+
+They know what to do, specially Gustavo
+which happens to be a dillo fan too. Henrique will
+be very useful too, since he spends more time online
+and works very closely to some of our servers. I think
+Gustavo knows our plan of hosting dillo better than
+Henrique, talk to him first.
+
+Regards,
+
+Eduardo
+
+
+
+On Sat, 2 Feb 2002 10:25:25 -0300 (CLST)
+Jorge Arellano Cid <jcid@em...> wrote:
+
+> 
+> Eduardo,
+> 
+> 
+> > I am still on forced "vacations" from almost all
+> > my Free Software activities, but I can still help on the
+> > move to cipsga, even if only to put you in touch
+> > with the guys who can actively do it. :)
+> 
+> Yes, please send me some names, emails, and whatever you may
+> find necessary to do it.
+> 
+> 
+> Cheers
+> Jorge.-
+> 
+> 
+> 
+
+
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+Re: [Dillo-dev]Ditching pthreads (asynchronous dns)
+
+From: Tobin Fricke <tobin@sp...> - 2002-02-02 14:05
+
+On Fri, 1 Feb 2002, Sam Dennis wrote:
+
+> systems. IIRC, glibc does include facilities for asynchronous lookup but
+> these seem to use pthreads internally.
+
+I just happened across a library today called "adns", the GNU "advanced,
+alternative, asynchronous resolver".
+
+Some features that might be useful in Dillo includes:
+
+* It can be used in an asynchronous, non-blocking, manner. Many
+queries can be handled simultaneously.
+
+* There is no global state in the library; resolver state is an
+opaque data structure which the client creates explicitly. A
+program can have several instances of the resolver.
+
+http://www.chiark.greenend.org.uk/~ian/adns/
+
+I don't know anything about it other than what's in the README and on the
+webpage, but it sounded relevant to the current discussion here, so I
+thought I'd post a note about it, maybe we can learn something from it
+even if we don't use it.
+
+-- tobin 
+
+
+
+[Dillo-dev]Re: Move from SF.
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-02 13:27
+
+Eduardo,
+
+
+> I am still on forced "vacations" from almost all
+> my Free Software activities, but I can still help on the
+> move to cipsga, even if only to put you in touch
+> with the guys who can actively do it. :)
+
+Yes, please send me some names, emails, and whatever you may
+find necessary to do it.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: Eduardo Marcel <macan@co...> - 2002-02-01 18:49
+
+Hello
+
+John Utz <john@ut...> wrote:
+> does getting rid of pthreads allow dillo to run on a bunch of new
+> machines?
+> 
+> using gnome functionality would certainly cut a bunch of machines out.
+
+Sure, being simple is what makes dillo the ideal choice for devices
+like the iPAQ, in which each kb saved on flash is a victory. It would not
+be that successful on this arena if it depended on gnome.
+
+-- 
+"If you have an apple and I have an apple and we exchange apples then you 
+and I will still each have one apple. But if you have an idea and I have 
+an idea and we exchange these ideas, then each of us will have two ideas."
+George Bernard Shaw 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: John Utz <john@ut...> - 2002-02-01 18:19
+
+ooohhhh.....must restrain self......
+
+On Fri, 1 Feb 2002, Jonathan P Springer wrote:
+
+> Does anyone know of any other libraries that support non-blocking DNS?
+> I'm not sure of the wisdom of potentially tying dillo to GNOME as well
+> as to GTK. 
+
+gnome is very nice for many people and i am greatful for all of the 
+hard work that has been done to provide a comfortable interface for folks 
+that feel that they need such of thing.
+
+but man, that thing is a vigourous consumer of ram, cpu, disk, screen real 
+estate.....you name it.
+
+(there, i said it in a non confrontational, positive way :-) )
+
+also, note that the dillo home page sez that it doesnt use gnome.
+
+> Maybe we should just lift the code for the non-blocking DNS.
+
+it's a solution. but what is the problem? 
+
+threaded programming is indeed more complicated than non threads.
+
+but it allows the *functions* that do the jobs to be more simple because 
+they dont have to take responsibility for managing themselves *and* 
+managing the relationship with the other functions that have to implement 
+code that manages itself *and* manages the relationship between it's self 
+and other f..... ok, enuf goofy recursion :-)
+
+does getting rid of pthreads allow dillo to run on a bunch of new 
+machines?
+
+using gnome functionality would certainly cut a bunch of machines out.
+
+> -jonathan
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]dillo on *BSD
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-02-01 15:55
+
+Attachments: configure.in.diff      
+
+Hi there!
+
+Considering the interest in the *BSD threads configuration
+issue, and these facts:
+
+On FreeBSD:
+
+* gcc has a specific option "-pthread" to avoid problems.
+* it also needs (or needed) '-lpthread' to the linker
+* and -D_THREAD_SAFE in CFLAGS
+
+On OpenBSD:
+
+* I was reported that CFLAGS="-pthread" has worked.
+
+
+I'm attaching a skeleton-patch (not tested) for your hacking
+pleasure :-).
+
+At least it works on Linux. :-) !!!
+
+Ok, please remember to autoreconf and clearing the cache before
+trying it.
+
+BTW: the first test should have beeen getting the newest
+autoconf/automake/ stuff and seeing if it solves the problem with
+current configure.in.
+
+
+Cheers & good luck
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-02-01 15:52
+
+On Fri, Feb 01, 2002 at 02:42:19PM +0000, Sam Dennis wrote:
+> Some time around 2 o'clock PM on February 1, a Friday, Jonathan P Springer wrote:
+> > On Thu, Jan 31, 2002 at 11:28:24PM +0000, Sam Dennis wrote:
+...
+> > As for the pthreads question, I discovered this morning that the GNOME
+> > UI library has a non-blocking DNS call. In hacking through the code,
+> > the two places I'd found pthreads were in file reads and DNS. The
+> > former can be dealt with effectively by pacing reads using the glib
+> > idle loop; the latter could be accomplished using the GNOME UI call. It
+> > could be a conditional compile based on whether GNOME UI is available.
+> > 
+> > Does anyone know of any other libraries that support non-blocking DNS?
+> > I'm not sure of the wisdom of potentially tying dillo to GNOME as well
+> > as to GTK. Maybe we should just lift the code for the non-blocking DNS.
+> 
+> Ack! Please not GNOME, some of us don't want that sort of bloat on our
+> systems. IIRC, glibc does include facilities for asynchronous lookup but
+> these seem to use pthreads internally.
+> 
+> There do seem to be a good few libraries out there that will do this for us
+> though. (And not depend on something like GNOME.) If we decide to take this
+> route, it's just a matter of choosing which one is the most useful and
+> portable.
+> 
+
+The resounding gNO(me) has been heard and acknowledged. I'll do some more
+nosing around, including sneaking a peek into the GNOME code to see how
+they do it. I suspect they've built it on top of GIOChannel and the
+GLib idle loop. If that's the case (and it's not too bloated), we could
+swipe it (with appropriate credit, of course :-) ).
+
+Looks like I've just laid out my weekend...
+
+-jonathan 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: Sam Dennis <sam@ma...> - 2002-02-01 14:36
+
+Some time around 2 o'clock PM on February 1, a Friday, Jonathan P Springer wrote:
+> On Thu, Jan 31, 2002 at 11:28:24PM +0000, Sam Dennis wrote:
+> > Some time around 8 o'clock PM on January 31, a Thursday, Sam Dennis wrote many
+> > things about using GIOChannels in file.c to replace pthreads without first
+> > trying to implement it and therefore overlooking the inadequacy of GIOChannels
+> > with regard to detecting EOF and the fact that we already use them in http.c.
+> > This shows that the statement most likely to be true in the message was about
+> > him not being an expect on dillo's IO subsystem. He still holds that we don't
+> > need threads, though.
+> > 
+> 
+> Sam, I appreciate your humility; it's a lesson to us all.
+> 
+> As for the pthreads question, I discovered this morning that the GNOME
+> UI library has a non-blocking DNS call. In hacking through the code,
+> the two places I'd found pthreads were in file reads and DNS. The
+> former can be dealt with effectively by pacing reads using the glib
+> idle loop; the latter could be accomplished using the GNOME UI call. It
+> could be a conditional compile based on whether GNOME UI is available.
+> 
+> Does anyone know of any other libraries that support non-blocking DNS?
+> I'm not sure of the wisdom of potentially tying dillo to GNOME as well
+> as to GTK. Maybe we should just lift the code for the non-blocking DNS.
+
+Ack! Please not GNOME, some of us don't want that sort of bloat on our
+systems. IIRC, glibc does include facilities for asynchronous lookup but
+these seem to use pthreads internally.
+
+There do seem to be a good few libraries out there that will do this for us
+though. (And not depend on something like GNOME.) If we decide to take this
+route, it's just a matter of choosing which one is the most useful and
+portable. 
+
+
+
+Re: [Dillo-dev]Ditching pthreads
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-02-01 14:14
+
+On Thu, Jan 31, 2002 at 11:28:24PM +0000, Sam Dennis wrote:
+> Some time around 8 o'clock PM on January 31, a Thursday, Sam Dennis wrote many
+> things about using GIOChannels in file.c to replace pthreads without first
+> trying to implement it and therefore overlooking the inadequacy of GIOChannels
+> with regard to detecting EOF and the fact that we already use them in http.c.
+> This shows that the statement most likely to be true in the message was about
+> him not being an expect on dillo's IO subsystem. He still holds that we don't
+> need threads, though.
+> 
+
+Sam, I appreciate your humility; it's a lesson to us all.
+
+As for the pthreads question, I discovered this morning that the GNOME
+UI library has a non-blocking DNS call. In hacking through the code,
+the two places I'd found pthreads were in file reads and DNS. The
+former can be dealt with effectively by pacing reads using the glib
+idle loop; the latter could be accomplished using the GNOME UI call. It
+could be a conditional compile based on whether GNOME UI is available.
+
+Does anyone know of any other libraries that support non-blocking DNS?
+I'm not sure of the wisdom of potentially tying dillo to GNOME as well
+as to GTK. Maybe we should just lift the code for the non-blocking DNS.
+
+-jonathan 
+
+
+
+Re: [Dillo-dev]dillo 0.6.4 compilation on solaris
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-02-01 11:49
+
+fre 2002-02-01 klockan 12.30 skrev K. Prasad:
+> Hi,
+>=20
+> I figured that out. I removed the G_GNUC_UNUSED and
+> got dillo to compile. I did find G_GNUC_UNUSED in
+> glib.h in my glib installation. it was under some
+> other ifdefs that i couldn't really understand. My
+> idea is that G_GNUC_UNUSED is a #define , so couldn't
+> understand=20
+> G_GNUC_UNUSED static <fn_name>.
+> what is it supposed to do?
+
+If GCC is used, it should expand to __attribute__((unused)), which just
+tells the compiler to not spew out a warning about unused function.
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]dillo 0.6.4 compilation on solaris
+
+From: K. Prasad <mvkp@ya...> - 2002-02-01 11:30
+
+Hi,
+
+I figured that out. I removed the G_GNUC_UNUSED and
+got dillo to compile. I did find G_GNUC_UNUSED in
+glib.h in my glib installation. it was under some
+other ifdefs that i couldn't really understand. My
+idea is that G_GNUC_UNUSED is a #define , so couldn't
+understand 
+G_GNUC_UNUSED static <fn_name>.
+what is it supposed to do?
+
+regards
+
+K Prasad
+
+--- Jorgen Viksell <jorgen.viksell@te...> wrote:
+> fre 2002-02-01 klockan 09.05 skrev K. Prasad:
+> > Hi,
+> > 
+> > Iam getting a problem in compiling dillo 0.6.4 on
+> > solaris duu to the undefined symbol G_GNUC_UNUSED.
+> 
+> Strange. It should be defined in glib.h. Are you
+> sure
+> that you have all the glib headers installed?
+> 
+> If that is the only problem, you can safely remove 
+> G_GNUC_UNUSED from the source, it's only there to 
+> prevent some warnings.
+> 
+> Regards,
+> Jörgen
+> 
+> > my configuration is:
+> > Solaris 2.5.1,gtk 1.2.10,gcc version 2.7.2
+> > 
+> > regards
+> > 
+> > K Prasad
+> 
+> 
+
+
+__________________________________________________
+Do You Yahoo!?
+Great stuff seeking new owners in Yahoo! Auctions! 
+http://auctions.yahoo.com 
+
+
+
+Re: [Dillo-dev]dillo 0.6.4 compilation on solaris
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-02-01 09:48
+
+fre 2002-02-01 klockan 09.05 skrev K. Prasad:
+> Hi,
+>=20
+> Iam getting a problem in compiling dillo 0.6.4 on
+> solaris duu to the undefined symbol G_GNUC_UNUSED.
+
+Strange. It should be defined in glib.h. Are you sure
+that you have all the glib headers installed?
+
+If that is the only problem, you can safely remove=20
+G_GNUC_UNUSED from the source, it's only there to=20
+prevent some warnings.
+
+Regards,
+J=F6rgen
+
+> my configuration is:
+> Solaris 2.5.1,gtk 1.2.10,gcc version 2.7.2
+>=20
+> regards
+>=20
+> K Prasad 
+
+
+
+[Dillo-dev]dillo 0.6.4 compilation on solaris
+
+From: K. Prasad <mvkp@ya...> - 2002-02-01 08:05
+
+Hi,
+
+Iam getting a problem in compiling dillo 0.6.4 on
+solaris duu to the undefined symbol G_GNUC_UNUSED.
+
+my configuration is:
+Solaris 2.5.1,gtk 1.2.10,gcc version 2.7.2
+
+regards
+
+K Prasad
+
+
+__________________________________________________
+Do You Yahoo!?
+Great stuff seeking new owners in Yahoo! Auctions! 
+http://auctions.yahoo.com 
+

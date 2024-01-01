@@ -1,0 +1,2938 @@
+[Dillo-dev]ALT attribute in `img' tag
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-27 20:17
+
+Hi all!
+
+Recently I've inserted bug #116, to support ALT attributes in `img'
+tags. Starting out the code, I realized that some of the needed
+changes would go in dw_page.c and possibly html.c. Well I just read in
+Allan's News, that Sebastian is planning to release his new Dw...
+
+Sebastian, have you done anything about the ALT attribute? And if
+not should I wait a while for you to release what your doing before
+trying to support ALT?
+
+best regards,
+
+--
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]dillo-0.3.1
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-27 17:54
+
+Surprise!
+
+
+dillo-0.3.1 is ready for download (sourceforge is back :)
+
+Enjoy
+Jorge.- 
+
+
+
+[Dillo-dev]Window geometry (get_size fix and new dillorc option)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-26 06:04
+
+Hi guys,
+
+I've recently joined gtk list at gtk-list@gn..., and learned the
+proper way of finding out a window's dimension. I was getting:
+window->allocation.width
+window->alloction.height
+
+in the patch I sent to make a new windows the same as parent
+one. Seems that the "right" way to do it is calling
+`gdk_window_get_size()`. I've already sent a patch to Jorge fixing
+this up.. sorry guys.
+
+While I was on that "theme", I started to think about making an
+option in dillorc for initial geometry size, because the first thing I
+do when I open Dillo, is resize it...
+
+So that's what I've done. But I'm not sure the patch is good,
+specially the string manipulations I've done to extract width and
+height. The patch is at (I'm not sending it attached since it's 
+5k == 130 lines long):
+http://www.linux.ime.usp.br/~livio/dillo/geometry_pref.diff
+
+The sintax in your dillorc, should be something like:
+
+> geometry="800x600"
+
+The patch changes the following files:
+
+dillorc: added comments and the above example
+commands.c: changes the window size method to `gdk_window_get_size()',
+like described abouve.
+dillo.c: changed window initialization to get the preference size.
+prefs.c: humm... did it! Look at my string stuff to see if I'm doing
+it right
+prefs.h: added
+> #define DW_GEOMETRY_DEFAULT_WIDTH 640
+> #define DW_GEOMETRY_DEFAULT_HEIGHT 550
+
+and `width' and `height' in struct _DilloPrefs.
+
+That's all... hope you like it (I did, don't have to keep resizing
+dillo no more!)
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-25 17:10
+
+-- En reponse de "Re: [Dillo-dev]Entity parsing in links" de Jorge
+Arellano Cid, le 24-Dec-2000 :
+> I'll reply this post even though I know some posts hasn't
+> arrived to my inbox (Is anyone else losing emails from the list?)
+> 
+
+I received Livio's replies to Sam before Sam's messages a couple of
+times a few days ago.
+
+----------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Dec-2000 a 02:08:48
+"I remember Y1K, every abacus had to get another bead"
+---------------------------------------- 
+
+
+
+[Dillo-dev]Dillo Weekly News
+
+From: adc <shark@bl...> - 2000-12-24 23:12
+
+Hi, the latest Dillo Weekly News has been posted.
+You can find it at
+http://www.shark.pwp.blueyonder.co.uk/news/news231200.html
+please note that the links to the archives aren't filled in yet as I can't
+get connected to the sourceforge site, it looks like sadly the problems at
+sourceforge are continuing, I will fill them in as soon as possible.
+
+
+--
+adc 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-24 00:57
+
+Hi,
+
+I'll reply this post even though I know some posts hasn't
+arrived to my inbox (Is anyone else losing emails from the list?)
+
+
+> On Sat, Dec 23, 2000 at 09:33:39AM -0300, Jorge Arellano Cid wrote:
+> >
+> > * When HTML (4.0 or 4.1) was reformulated as a SGML
+> > application, the entities-parsing problem sprung-in. It wasn't
+> > there until this point. SGML say they MUST be parsed. And the URL
+> > rfc says that characters MUST be escaped according to the context
+> > in which they're used.
+> > So, URLs may have entities in them, and we should parse
+> > them.
+>
+> Uh, no. URLs don't have entities in them, it's attributes (SGML sense) that
+> have entities. Parsing entities in URLs would be a dire mistake.
+
+Once again:
+
+URLs don't have entities (as the URI/URL rfc say), but when
+dealing with:
+
+<A HREF=">
+
+in a SGML context, "A" becomes an element "HREF" an atribute
+and " the atribute value.
+
+Entities must be parsed inside atributes values.
+
+If you don't believe me, read [HTML 4.01 Appendix B 2.2]
+
+BTW: I just updated the home site and added a new link: MISC.
+It will drive you to a handful of useful locations (including
+docs, reading, etc; just click it!)
+
+
+Finally, today I tried three times to upload the 0.3.1 version
+to SourceForge, but it didn't work. Also checked the FTP incoming
+directory and found a huge list of uploaded SW (guess there're
+lots of people with the same problem).
+
+
+Have a nice Christmas and hope to see you before 2001.
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #71
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-23 21:27
+
+Jorge Arellano Cid writes:
+> 
+> Hi,
+> 
+> It seems I'm missing some emails from the list :(
+
+That's bad... You can always read from the archives:
+http://www.geocrawler.com/lists/3/SourceForge/702/0/ Call me
+suspicious, but I do that sometimes to check that I'm getting all
+email.
+
+> I haven't seen this one (and some others) until quoted later.
+> Sourceforge warned us that the mailing list was going to be moved
+> with the respective downtime and glitches; just hope this not to
+> continue...
+
+This was about a fix for bug #71 I
+made. (http://www.linux.ime.usp.br/~livio/dillo/bug_71.diff)
+
+<snip>
+
+> 
+> Well, I have the FTP-plugin code here in my machine, and is
+> time to put some work on it. The problem I face is that my todo
+> list is always bigger than the time I have, so the only solution
+> is to work on a priority basis.
+
+Uhh... and I was *"almost"* finishing mine... (about 10% done ;-)
+That's ok, I learned A LOT about Dillo's IO system!
+
+> I know some of you may have noticed that there're three BUGs in
+> the bug-track (taken by me) that haven't had any progress in the
+> past weeks. They were scheduled, but I spent lots of time fixing
+> patches; please help me by designning & reviewing your patches
+> carefully before submitting them, there's no better thing for a
+> maintainer to receive than a clean patch that's just a skim away
+> from integration.
+
+No stress man! 8^)
+Just for curiosity, what types of mistakes come up? What kind of
+reviewing to you wish us to perform to make your work easier? (I mean,
+what are the most common errors?)
+What I do is after making a patch, get a clean copy from CVS and apply
+my patch to it, and see if everything ok... besides always strinving
+to maintain clean codes.
+
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Sam Dennis <sam@ma...> - 2000-12-23 20:30
+
+On Sat, Dec 23, 2000 at 05:59:46PM -0200, Livio Baldini Soares wrote:
+> Jorge Arellano Cid writes:
+> > 
+> > Hi everyone!
+> 
+> Howdy!
+> 
+> <snip>
+> 
+> > So, URLs may have entities in them, and we should parse
+> > them.
+> > 
+> > 
+> > This problem is BUG#114.
+> 
+> Well in that case, a possible patch is at:
+> http://www.linux.ime.usp.br/~livio/dillo/entity_parse_in_url.diff
+> 
+> Humm. I've been thinking about this patch, and what it does is parse
+> entities in ALL attributes strings. Does anybody know if THAT's
+> correct or is entity parsing only allowed in URL's? (Don't mean to
+> start another polemic ;-)
+
+Not specific to URLs at all, honestly! It is specific to attributes
+containing literal character data, though, although we don't actually deal
+with any others yet, I think.
+
+> 
+> bye!
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+-- 
+Sam Dennis <sam@ma...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Sam Dennis <sam@ma...> - 2000-12-23 20:16
+
+On Sat, Dec 23, 2000 at 01:14:10AM -0200, Livio Baldini Soares wrote:
+> Eric GAUDET writes:
+> > -- En reponse de "Re: [Dillo-dev]Entity parsing in links" de Livio
+> > Baldini Soares, le 23-Dec-2000 :
+> 
+> <snip>
+
+<further snip>
+
+> PS: Just for the hell of it, I'm sending in a patch against today's
+> 0.3.1 version that enables entity parsing in attributes...
+> 
+> best regards to all,
+> 
+> ****************************************************************
+> --- dillo/src/html.c Fri Dec 22 23:45:10 2000
+> +++ dillo.new/src/html.c Sat Dec 23 00:50:21 2000
+> @@ -2484,10 +2484,14 @@ static gint Html_match_attr(const char *
+> * 0 if value is bigger than datasize
+> * (This code is complex, but avoids a second pass over the value --Jcid)
+> */
+> -static gint Html_get_attr_value(const char *tag, gint tagsize,
+> +static gint Html_get_attr_value(const gchar *old_tag, gint old_tagsize,
+> char *data, gint datasize)
+> {
+> - gint i;
+> + gint i, tagsize;
+> + gchar *tag;
+> +
+> + tag = Html_parse_entities((gchar *)old_tag, old_tagsize);
+> + tagsize = strlen(tag);
+> 
+> if (tag[0] == '"'|| tag[0] == '\´ ) {
+> /* copy to end quote or to datasize */
+> @@ -2502,6 +2506,8 @@ static gint Html_get_attr_value(const ch
+> if (i == tagsize - 1 && i >= 1 && tag[i - 1] == '/')
+> i--;
+> }
+> +
+> + g_free(tag);
+> 
+> if ( i < tagsize && i < datasize ) {
+> *--data = '\0';
+
+A bit messy, that would replace entites throughout the entire tag, which is
+not desirable as not even every type (although we treat them the same for
+now) of attribute allows entities.
+
+It would likely work in all cases (use of an ampersand elsewhere in tags
+would be extremely uncommon, even though it is allowed), but that's not the
+point.
+
+-- 
+Sam Dennis <sam@ma...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-23 19:59
+
+Jorge Arellano Cid writes:
+> 
+> Hi everyone!
+
+Howdy!
+
+<snip>
+
+> So, URLs may have entities in them, and we should parse
+> them.
+> 
+> 
+> This problem is BUG#114.
+
+Well in that case, a possible patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/entity_parse_in_url.diff
+
+Humm. I've been thinking about this patch, and what it does is parse
+entities in ALL attributes strings. Does anybody know if THAT's
+correct or is entity parsing only allowed in URL's? (Don't mean to
+start another polemic ;-)
+
+bye!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Sam Dennis <sam@ma...> - 2000-12-23 19:59
+
+On Sat, Dec 23, 2000 at 09:33:39AM -0300, Jorge Arellano Cid wrote:
+> 
+> * When HTML (4.0 or 4.1) was reformulated as a SGML
+> application, the entities-parsing problem sprung-in. It wasn't
+> there until this point. SGML say they MUST be parsed. And the URL
+> rfc says that characters MUST be escaped according to the context
+> in which they're used.
+> So, URLs may have entities in them, and we should parse
+> them.
+
+Uh, no. URLs don't have entities in them, it's attributes (SGML sense) that
+have entities. Parsing entities in URLs would be a dire mistake.
+
+-- 
+Sam Dennis <sam@ma...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-23 13:02
+
+Hi everyone!
+
+
+Once upon a time ;-) there was BUG#95 (Entities parsing within
+URLs) and now there's BUG#114 (basically the same), and a lot of
+email and doc-research had been done.
+
+The fact is somewhat complicated and although I explained it
+before, when re-reading my post I found it less clear to follow
+than when writing it.
+I hope this new explanation to be better...
+
+
+* The URL (URI) RFCs don't say a word about entities. The only
+escaping mechanism allowed there is hexadecimal (i.e. %xx
+sequences). So according to this source, they MUST NOT be parsed.
+
+* Up to HTML 3.2 this wasn't an issue, so no clue was found
+here (AFAIK).
+
+* When HTML (4.0 or 4.1) was reformulated as a SGML
+application, the entities-parsing problem sprung-in. It wasn't
+there until this point. SGML say they MUST be parsed. And the URL
+rfc says that characters MUST be escaped according to the context
+in which they're used.
+So, URLs may have entities in them, and we should parse
+them.
+
+
+This problem is BUG#114.
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Bug #71
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-23 13:02
+
+Hi,
+
+It seems I'm missing some emails from the list :(
+I haven't seen this one (and some others) until quoted later.
+Sourceforge warned us that the mailing list was going to be moved
+with the respective downtime and glitches; just hope this not to
+continue...
+
+> -- En reponse de "[Dillo-dev]Bug #71" de Livio Baldini Soares, le
+> 23-Dec-2000 :
+> > Oh, since I've looked though all the IO code carefully, I was
+> > thinking of adding a FTP handler in Dillo... do we have an interest
+> > for adding this support? Is there any other method that anyone wants
+> > supported? (Should I spend my time doing this stuff, or does anyone
+> > think there are more "pressing" issues to finish first?).
+>
+> Adding ftp would be very nice and is a short term to-do. IMHO a decent
+> web browser have to provide http:, file: and ftp: protocols.
+
+Well, I have the FTP-plugin code here in my machine, and is
+time to put some work on it. The problem I face is that my todo
+list is always bigger than the time I have, so the only solution
+is to work on a priority basis.
+
+I know some of you may have noticed that there're three BUGs in
+the bug-track (taken by me) that haven't had any progress in the
+past weeks. They were scheduled, but I spent lots of time fixing
+patches; please help me by designning & reviewing your patches
+carefully before submitting them, there's no better thing for a
+maintainer to receive than a clean patch that's just a skim away
+from integration.
+
+Sincerely
+Jorge.- 
+
+
+
+[Dillo-dev][ANN] Html.testsuite updated
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-23 09:29
+
+Hi all,
+assuming today's cvs version is the official v0.3.1, I tested it
+against the Html.testsuite and updated the testsuite accordingly.
+
+http://www.rti-zone.org/dillo/
+
+----------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Dec-2000 a 18:27:38
+"I remember Y1K, every abacus had to get another bead"
+---------------------------------------- 
+
+
+
+RE: [Dillo-dev]Bug #71
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-23 07:28
+
+-- En reponse de "[Dillo-dev]Bug #71" de Livio Baldini Soares, le
+23-Dec-2000 :
+> Oh, since I've looked though all the IO code carefully, I was
+> thinking of adding a FTP handler in Dillo... do we have an interest
+> for adding this support? Is there any other method that anyone wants
+> supported? (Should I spend my time doing this stuff, or does anyone
+> think there are more "pressing" issues to finish first?).
+> 
+
+Adding ftp would be very nice and is a short term to-do. IMHO a decent
+web browser have to provide http:, file: and ftp: protocols.
+
+----------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Dec-2000 a 16:23:20
+"I remember Y1K, every abacus had to get another bead"
+---------------------------------------- 
+
+
+
+[Dillo-dev]Bug #71
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-23 07:08
+
+Hi there,
+
+I started to track down bug #71 today. It's the one that when you
+have a HTML as the source of an image then that HTML title gets the
+window's title.
+
+I spent more than an hour going over IO/MIME/Callback
+code... Congratulations on whoever made this IO system, it's pretty
+nice! Ok, then I finally found out what the problem was. After we make
+the image request, when the document arrives there is a MIME lookup to
+see which callback to use to handle the incoming stuff. If we have an
+HTML then it's classified as text/html, which is ok.
+
+But the problem is that mime already calls text/html callback, which
+is `a_Html_text()' (html.c). And then that will set the callback to
+`Html_callback' and start "rendering" the HTML in the page (but we
+don't see anything expect for the window's title changing), and we
+were only expecting an image...
+
+The solution I've implemented is to verify in `a_Html_text' is the
+DilloWeb->flags is actually a WEB_RootUrl, if it's not just bail out.
+
+For you guys that are "Dillo-oldies", is there anything wrong in
+what I'm proposing? Should I initialize `html' in that function, waste
+some time/space, but cleanly exit, or return NULL, saving that
+time/space, but get a GTK_CRITICAL_ASSERT warning? Right now I chose
+the first option.
+
+The patch is really small (3 lines of code), you can get at:
+http://www.linux.ime.usp.br/~livio/dillo/bug_71.diff
+but I'm sending it below.
+
+Oh, since I've looked though all the IO code carefully, I was
+thinking of adding a FTP handler in Dillo... do we have an interest
+for adding this support? Is there any other method that anyone wants
+supported? (Should I spend my time doing this stuff, or does anyone
+think there are more "pressing" issues to finish first?).
+
+
+Here is the patch against 0.3.1 version (CVS 22/December/2000):
+**********************
+diff -pru dillo/src/html.c dillo.new/src/html.c
+--- dillo/src/html.c Fri Dec 22 23:45:10 2000
++++ dillo.new/src/html.c Sat Dec 23 04:17:18 2000
+@@ -72,6 +72,13 @@ Dw *a_Html_text(const char *Type, void *
+DilloWeb *web = P;
+DilloHtml *html = Html_new(web->bw);
+
++ if (!(web->flags & WEB_RootUrl)) {
++ /* Asked for non-RootUrl (image or other mime), and got an 
++ text/html MIME type... just bail out and save our skin. */
++ *Call = a_Cache_null_client;
++ return html->dw;
++ }
++
+*Data = (void *) html;
+*Call = (CA_Callback_t) Html_callback;
+
+***************************
+
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-23 03:14
+
+Eric GAUDET writes:
+> -- En reponse de "Re: [Dillo-dev]Entity parsing in links" de Livio
+> Baldini Soares, le 23-Dec-2000 :
+
+<snip>
+> 
+> That's not true at all : urls don't have entities parsing mecanism. The
+> only parsing for urls is escaping with % HEX HEX. '&' is a reserved
+> character for separating 'name=value' blocks in an url.
+> Unfortunatly, a few sites use entities in their urls, and some browsers
+> (nestcape at least) allow this (but netscape's entities parsing is
+> admitedly broken).
+> This issue have already been discussed a few weeks ago in the list,
+> please read the archives for more details
+
+Oops your right! Really sorry about that. There are two messages in the
+archive concerning that, seems that this was a deleted "bug" (#95):
+
+http://www.geocrawler.com/archives/3/702/2000/11/0/4658162/
+http://www.geocrawler.com/archives/3/702/2000/11/0/4701809/
+
+I should of read the archives... I think I assumed the Sourceforge
+wouldn't be wrong in making HTML...
+
+Jorge, when you have time, please delete bug #114 (the one I've
+inserted). 
+
+By the way, since version 0.3.1 is out, do you strip out the bugs
+with smileys on them (the `done` fixes)? Or do you keep them on for a
+while, so everyone knows hows Dillo's developing?
+
+PS: Just for the hell of it, I'm sending in a patch against today's
+0.3.1 version that enables entity parsing in attributes...
+
+best regards to all,
+
+****************************************************************
+--- dillo/src/html.c Fri Dec 22 23:45:10 2000
++++ dillo.new/src/html.c Sat Dec 23 00:50:21 2000
+@@ -2484,10 +2484,14 @@ static gint Html_match_attr(const char *
+* 0 if value is bigger than datasize
+* (This code is complex, but avoids a second pass over the value --Jcid)
+*/
+-static gint Html_get_attr_value(const char *tag, gint tagsize,
++static gint Html_get_attr_value(const gchar *old_tag, gint old_tagsize,
+char *data, gint datasize)
+{
+- gint i;
++ gint i, tagsize;
++ gchar *tag;
++
++ tag = Html_parse_entities((gchar *)old_tag, old_tagsize);
++ tagsize = strlen(tag);
+
+if (tag[0] == '"'|| tag[0] == '\´ ) {
+/* copy to end quote or to datasize */
+@@ -2502,6 +2506,8 @@ static gint Html_get_attr_value(const ch
+if (i == tagsize - 1 && i >= 1 && tag[i - 1] == '/')
+i--;
+}
++
++ g_free(tag);
+
+if ( i < tagsize && i < datasize ) {
+*--data = '\0';
+********************************************************
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]0.3.1 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-23 02:01
+
+Hi,
+
+I tryed to make a new release today(dillo-0.3.1), but
+sourceforge servers didn't work. They claim to be under DDOS
+atacks and it seems to be true :-)
+
+I'll try again tomorrow. The new version is in the CVS though.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-23 01:40
+
+-- En reponse de "Re: [Dillo-dev]Entity parsing in links" de Livio
+Baldini Soares, le 23-Dec-2000 :
+> 
+> Sam Dennis writes:
+>> On Fri, Dec 22, 2000 at 01:07:40AM -0200, Livio Baldini Soares
+>> wrote:
+> 
+> <snip>
+> 
+>> > 
+>> > And that's exactly what Dillo sends, but Netscape, p.e, parses
+>> > `&amp;' into a `&'. So what is the correct action to perform? Is
+>> > Dillo
+>> > wrong or is Sourceforge wrong?
+>> > 
+> 
+>> We're wrong, according to the specifications, character entities are
+>> allowed
+>> in attributes, and therefore '&amp;' *must* be used in place of just
+>> '&'.
+>> 
+>> It's not just links, it's all string attributes.
+>> 
+> 
+
+That's not true at all : urls don't have entities parsing mecanism. The
+only parsing for urls is escaping with % HEX HEX. '&' is a reserved
+character for separating 'name=value' blocks in an url.
+Unfortunatly, a few sites use entities in their urls, and some browsers
+(nestcape at least) allow this (but netscape's entities parsing is
+admitedly broken).
+This issue have already been discussed a few weeks ago in the list,
+please read the archives for more details
+
+> Thanks for looking this up Sam!
+> 
+> I've put in the bug in the bug-track, it's bug #114. I've already
+> assigned it to me ;^) I'll get to it after Christmas probably.
+> 
+> PS: Jorge, how you doing with 0.3.1 version? Will it come out
+> before
+> Christmas? Hope so!
+> 
+> best regards to all,
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Dec-2000 a 10:36:02
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-23 00:09
+
+Sam Dennis writes:
+> On Fri, Dec 22, 2000 at 01:07:40AM -0200, Livio Baldini Soares wrote:
+
+<snip>
+
+> > 
+> > And that's exactly what Dillo sends, but Netscape, p.e, parses
+> > `&amp;' into a `&'. So what is the correct action to perform? Is Dillo
+> > wrong or is Sourceforge wrong?
+> > 
+
+> We're wrong, according to the specifications, character entities are allowed
+> in attributes, and therefore '&amp;' *must* be used in place of just '&'.
+> 
+> It's not just links, it's all string attributes.
+> 
+
+Thanks for looking this up Sam!
+
+I've put in the bug in the bug-track, it's bug #114. I've already
+assigned it to me ;^) I'll get to it after Christmas probably.
+
+PS: Jorge, how you doing with 0.3.1 version? Will it come out before
+Christmas? Hope so!
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entity parsing in links
+
+From: Sam Dennis <sam@ma...> - 2000-12-22 21:30
+
+On Fri, Dec 22, 2000 at 01:07:40AM -0200, Livio Baldini Soares wrote:
+> Hi yall,
+> 
+> I'm not sure this is a Dillo bug yet, so that's why I haven't added
+> it to the bug-track. Does any one know if entities (like &gt; &nbsp;
+> &amp;) are supposed to be parsed in links (<a href=XXX>).
+> 
+> I was browsing through Dillo's CVS, looking in the Changelog, at:
+> http://cvs.so....net/cgi-bin/cvsweb.cgi/dillo/ChangeLog?cvsroot=dillo
+> 
+> And I clicked on `annotate` for revision 1.19, then I got an
+> error. If you look at that page's source you can see that the link is:
+> <a href="/cgi-bin/cvsweb.cgi/dillo/ChangeLog?annotate=1.19&amp;cvsroot=dillo">annotate</a>
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> And that's exactly what Dillo sends, but Netscape, p.e, parses
+> `&amp;' into a `&'. So what is the correct action to perform? Is Dillo
+> wrong or is Sourceforge wrong?
+> 
+> best regards,
+> 
+> -- 
+> Livio <livio@li...>
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+We're wrong, according to the specifications, character entities are allowed
+in attributes, and therefore '&amp;' *must* be used in place of just '&'.
+
+It's not just links, it's all string attributes.
+
+-- 
+Sam Dennis <sam@ma...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]Entity parsing in links
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-22 03:07
+
+Hi yall,
+
+I'm not sure this is a Dillo bug yet, so that's why I haven't added
+it to the bug-track. Does any one know if entities (like &gt; &nbsp;
+&amp;) are supposed to be parsed in links (<a href=XXX>).
+
+I was browsing through Dillo's CVS, looking in the Changelog, at:
+http://cvs.so....net/cgi-bin/cvsweb.cgi/dillo/ChangeLog?cvsroot=dillo
+
+And I clicked on `annotate` for revision 1.19, then I got an
+error. If you look at that page's source you can see that the link is:
+<a href="/cgi-bin/cvsweb.cgi/dillo/ChangeLog?annotate=1.19&amp;cvsroot=dillo">annotate</a>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+And that's exactly what Dillo sends, but Netscape, p.e, parses
+`&amp;' into a `&'. So what is the correct action to perform? Is Dillo
+wrong or is Sourceforge wrong?
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Modularization(?) in Dillo
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-18 17:17
+
+Hi Eric,
+
+Eric GAUDET writes:
+> I've been thinking about that some times ago. What I wanted to do is to
+> make a single bookmars menu attached the menubar of each browser
+> window, but it seems to be impossible to attach a menu more than once
+> in gtk, right ?
+
+Yes that's right! That's the whole problem with the bookmark menu
+issue. You can't attach the same menubar to more than one menu... the
+solution will have to be to create a new menubar widget... ok. But
+current `Bookmarks_goto_bookmark` (the callback from choosing a
+particular bookmark menuitem), sees if the selected widget is equal to
+the first created one... that won't work. A fix for this would be to
+pass the widget's index from `DilloBookmark bookmark[]`.
+
+But then we get another problem, we also need the browserwindow, or
+else we won't know which *bw should we give to a_Nav_push().
+
+So we need to pass the callback two arguments, but GTK only supports
+callbacks with one argument (actually two, but the first you don't
+choose, it's always the GTK_OBJECT which generated the event
+signal). The solution GTK recommends for this (which is the obvious
+one), is to create a struct with the desired fields and pass a pointer
+to the struct.
+
+That's what I'm doing now (actually, I'm not since I'm in the middle
+of final exams and they're *killing* me...), but I'll get to it at the
+end of this week. That's why I'm was asking about where to place the
+struct.
+
+So does `put it in bookmark.c` win?
+
+PS: What about the make new window the same size as the current one?
+Did you finally get to resolving that?
+
+see yall,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Modularization(?) in Dillo
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-18 12:09
+
+I've been thinking about that some times ago. What I wanted to do is to
+make a single bookmars menu attached the menubar of each browser
+window, but it seems to be impossible to attach a menu more than once
+in gtk, right ?
+
+-- En reponse de "[Dillo-dev]Modularization(?) in Dillo" de Livio
+Baldini Soares, le 18-Dec-2000 :
+> 
+> Hi all,
+> 
+> I'm working on bug #110 (the bookmarks menu not appearing in
+> new window) and was checking for the best way to fix this. I figured
+> that all have to create a struct with a pointer to a menuitem (or an
+> array index) and a pointer to the bw, and pass that struct to the
+> callback (it really doesn't matter for now). What I want to get to,
+> is
+> where should I put (define) this new struct?
+> 
+> I've seen that DilloBookmark is defined in browser.h, but should it
+> be there at all? Because that's a struct that has no interest for the
+> other modules, not even BrowserWindow, it is only used in
+> bookmark.c. Since no other module should know, or need to know, what
+> is a DilloBookmark, I suggest we take it out of browser.h and put it
+> in bookmark.h (and I even dare say bookmark.c). And the struct that
+> I'll create? I guess it should go in bookmark.c, since it is not
+> interesting for other modules including bookmark.h to know? Or should
+> I put it in bookmark.h, for cleanliness sake?
+> 
+
+I'll go for everything in bookmark.c, since it's not needed outside.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 18-Dec-2000 a 21:05:24
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Cookies
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-18 12:04
+
+-- En reponse de "Re: [Dillo-dev]Cookies" de Livio Baldini Soares, le
+18-Dec-2000 :
+>> How to
+>> manage persistant cookies, what kind of power the user should have
+>> over
+>> them, including, of course, denial of cookies, etc.
+> 
+> 
+... 
+> Netscape 6, for example, has a type of "cookie manager", where you
+> can define a rule (accept always, accept never) for each separate
+> URL. I thought it very good. So I enabled cookies from sourceforge
+> and
+> disabled for the rest of the world...
+> 
+> I would like Dillo to have something similar, a "cookie manager"
+> with flexible rules for accepting/denying cookies for diferent
+> sites. Maybe this manager could be integrated as a plugin...
+> 
+> Any ideas?
+> 
+
+That would be very nice. What about a cookierc (text) file containing
+all the rules (each line being a rule for an URL). I volunteer to code
+a plugin for the manager (once the cookierc specs are decided).
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 18-Dec-2000 a 20:59:06
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Modularization(?) in Dillo
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-18 11:15
+
+Hi all,
+
+I'm working on bug #110 (the bookmarks menu not appearing in
+new window) and was checking for the best way to fix this. I figured
+that all have to create a struct with a pointer to a menuitem (or an
+array index) and a pointer to the bw, and pass that struct to the
+callback (it really doesn't matter for now). What I want to get to, is
+where should I put (define) this new struct?
+
+I've seen that DilloBookmark is defined in browser.h, but should it
+be there at all? Because that's a struct that has no interest for the
+other modules, not even BrowserWindow, it is only used in
+bookmark.c. Since no other module should know, or need to know, what
+is a DilloBookmark, I suggest we take it out of browser.h and put it
+in bookmark.h (and I even dare say bookmark.c). And the struct that
+I'll create? I guess it should go in bookmark.c, since it is not
+interesting for other modules including bookmark.h to know? Or should
+I put it in bookmark.h, for cleanliness sake?
+
+bye yall,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Cookies
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-18 10:47
+
+Hello Sam,
+
+Sam Dennis writes:
+> I seem to remember someone mentioning haved worked on, or at least having
+> thought about, cookies in dillo. I'd like to bring it up again, as this
+> seems like a good time to start thinking about implementing them. How to
+> manage persistant cookies, what kind of power the user should have over
+> them, including, of course, denial of cookies, etc.
+
+
+I personally really dislike cookies. I only accept them when they're
+really necessary for some service (like when `logging in` at
+Sourceforge's web site). I would really like a finer control over
+ccokies than what Netscape 4.X gives me. 
+
+Netscape 6, for example, has a type of "cookie manager", where you
+can define a rule (accept always, accept never) for each separate
+URL. I thought it very good. So I enabled cookies from sourceforge and
+disabled for the rest of the world...
+
+I would like Dillo to have something similar, a "cookie manager"
+with flexible rules for accepting/denying cookies for diferent
+sites. Maybe this manager could be integrated as a plugin...
+
+Any ideas?
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]A few answers
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-17 17:48
+
+Hi,
+
+Dillo 0.3.1 is almost ready for a release; most probably by
+December 22. It is a very nice upgrade, you'll appreciate...
+In the mean time, SourceForge made the move to their new
+servers, but the download counters problem remain :( Just checked
+a few projects and no one got their file-hits right... Anyway,
+dillo-0.3.1 will be there before Christmas.
+
+
+Jorge.-
+
+-----
+[Bruno]
+
+> I have a rather small monitor, and for my taste dillo
+> displays text in a fontsize too small. It would be nice if
+> you could change fonts/fontsizes in the ~/.dillo/dillorc file.
+> ...
+
+Sometime ago Sebastian suggested a font-factor; that's a very
+good idea to implement. A single number in dillorc that scales
+font sizes (a flash skim through html.c showed that you'll have
+to search some hard coded font-size numbers within the code to
+implement it; not hard though!).
+
+-----
+[Cookies]
+
+J=F6rgen submitted a patch a long time ago. It's not complete and
+the unimplemented part is the cookie sending one. This patch has
+been procrastinated due to:
+
+a) priorities
+b) the url-passing scheme needs a new implementation
+
+Currently, POST and GET do some url-string hacking to get their
+data to the IO part, and then to the remote server. Cookies need
+to send some information too, and the same happens with
+authentication.
+
+This is basically a matter of defining a Url structure and
+passing it to a lot of functions. The complex part is that
+there're lots of functions that expect a URL string, there're
+several workarounds, some hacks also, and last but not the least:
+dillo's code is very tight and dependent on URLs (they are used
+as primary Keys in the cache for instance, and several decisions
+are being made in the URL passing chain from one module into
+another).
+
+Ah, there's also the problem of URL normalization in between.
+
+----
+[Patches]
+
+Please send them with 'diff -pru', that makes it easier for me. 
+
+
+
+[Dillo-dev][ANN] Dillo-pluginsin PHP
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-17 13:50
+
+Hi folks,
+I just posted "a Dillo-plugin for using PHP to build applications using
+the Dillo-plugins mechanism. This is really a wrapper to PHP compiled
+as CGI, not an Apache module. (enclosed in the archive a sample php
+application, and hints for compiling PHP)"
+
+http://www.rti-zone.org/dillo/
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 17-Dec-2000 a 22:45:21
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Fontsize
+
+From: Bruno Widmann <bwidmann@ut...> - 2000-12-15 15:27
+
+Hi,
+
+I have a rather small monitor, and for my taste dillo
+displays text in a fontsize too small. It would be nice if 
+you could change fonts/fontsizes in the ~/.dillo/dillorc file.
+
+I had a look around the sources, and found that in html.c
+the fontsize seems to be hardcoded.
+
+in Html_page_check there is
+
+font.size = 12;
+
+and in Html_tag_open_h there is
+
+gint sizes[] = {24, 18, 18, 14, 12, 10}
+
+which sets fontsizes for text under <H1> - <H6>
+
+I have allready played around with prefs.c/h and it's quite 
+simple to add config items there so that you can change these values
+via dillorc.
+
+But I don't know if this is the "right way" to do it.
+Or maybe thers something else planed for fonthandling? If it's ok
+to add these values to the configfiles i could submit a patch. 
+
+
+
+[Dillo-dev]Cookies
+
+From: Sam Dennis <sam@ma...> - 2000-12-14 22:37
+
+I seem to remember someone mentioning haved worked on, or at least having
+thought about, cookies in dillo. I'd like to bring it up again, as this
+seems like a good time to start thinking about implementing them. How to
+manage persistant cookies, what kind of power the user should have over
+them, including, of course, denial of cookies, etc.
+
+-- 
+Sam Dennis <sam@ma...>
+
+"The strstr() function finds the first occurrence of the substring needle in
+the string haystack." 
+
+
+
+[Dillo-dev]SourceForge downtime
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-14 12:24
+
+Hi,
+
+There's a downtime scheduled to Friday December 15, it will
+affect: Web site, CVS, mailing lists and mailing aliases.
+
+You have been warned... :-)
+
+Jorge.- 
+
+
+
+[Dillo-dev]Bug #109 <font> tag
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-12 12:17
+
+Hi,
+
+
+Please note that when making the bug-track entry for FONT
+tags, Livio did the right thing (according to the rules); even
+more, when he finally found out that there was someone else
+working on it, he apologized gently (even though it was not his
+fault), and offered his help. --meus parabêns pro senhor.
+
+BUGs are not owned: there's a explicit recommendation to those
+interested in helping the developer that first took them, to
+contact him and to offer any help.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-12 05:55
+
+Sean 'Shaleh' Perry writes:
+
+> > 
+> > Would you like me to change the bug-track entry so that the being
+> > `worked on` field points to you? (Of course, you can do it yourself if
+> > you want, it's but #109).
+> > 
+> 
+> I thought I was marked somewhere on that. WIll make sure I own 109.
+
+Ok, I've done this for you. I put in the `Being worked by:` field
+with value "shaleh@vi...". You can change that or add more info in
+the volunteering page (http://dillo.so....net/Dvolunteer.html).
+
+Sorry again for the mix-up,
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]html tag implementations
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-12-11 21:25
+
+Would anyone who has added support for an unsupported tag please mail me your
+patches. I see several new bugs where people claim to have implemented
+some new tag. I would like to integrate that work with my own. 
+
+
+
+RE: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-12-11 21:24
+
+> 
+> I think Sean made a patch for all font stuff. He should have made a
+> bugtrack entry too :-/
+> 
+
+yeah, i should use the bug engine more, I just hate it, sorry Jorge. It does
+not order the items at all, I can not easily find new items for old ones, or do
+many other things I am used to from a bug tracking system. Why not use the
+sourceforge one? Or something, anything. 
+
+
+
+Re: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-12-11 21:20
+
+> 
+> Would you like me to change the bug-track entry so that the being
+> `worked on` field points to you? (Of course, you can do it yourself if
+> you want, it's but #109).
+> 
+
+I thought I was marked somewhere on that. WIll make sure I own 109. 
+
+
+
+RE: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-12-11 21:19
+
+On 10-Dec-2000 Livio Baldini Soares wrote:
+> Hi yall,
+> 
+> I've included bug #109 into the bug-track, when I was looking at a
+> teacher's page when I noticed that some colored text wasn't colored
+>:-( So I checked the src/html.c, func Html_tag_open_font, and I saw:
+> 
+
+hmm, how many mails have I sent saying I had font (and most other font
+touching) tags working quite nicely (-: Would you mind sending me your
+patch so I could integrate your work.
+
+Jorge asked me to keep my html cleanups until after Sebastian releases his Dw
+widget. 
+
+
+
+Re: [Dillo-dev]Bug #96
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-10 20:30
+
+Hellos, forgot to mention something...
+
+Livio Baldini Soares writes:
+
+<BIG snip>
+
+> The patch is in:
+> http://www.linux.ime.usp.br/~livio/dillo/new_window_same_size.diff
+> 
+> If you want I can e-mail it to you personally, so I wouldn't
+> generate extar traffic on the list. Hope this helps you on what you're
+> doing. 
+
+This pacth is to be applied against current CVS version
+(Dec-10). Jorge uploaded a new version (yesterday), and those changes
+are necessary for this patch to work.
+
+
+that's all, bye,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-10 18:32
+
+Eric GAUDET writes:
+> -- En reponse de "[Dillo-dev]Bug #109 (<font> tag)" de Livio Baldini
+> Soares, le 10-Dec-2000 :
+> > Hi yall,
+> > 
+> > I've included bug #109 into the bug-track, when I was looking at a
+> > teacher's page when I noticed that some colored text wasn't colored
+> >:-( So I checked the src/html.c, func Html_tag_open_font, and I saw:
+> > 
+> 
+> I think Sean made a patch for all font stuff. He should have made a
+> bugtrack entry too :-/
+
+Oops! Sorry for the mix up, you're right. I checked the mailing
+archives and seems like Sean has being doing font stuff for some time
+now... Sorry abou that Sean! 
+
+Would you like me to change the bug-track entry so that the being
+`worked on` field points to you? (Of course, you can do it yourself if
+you want, it's but #109).
+
+I'll discontinue with my version, since your's is probably much
+better, and you have been in to this much longer than I.
+
+>
+> About SIZE, each browser is free to render it as it likes, so your idea
+> of multiplying by 4 is good. 
+> Let me propose something : make new dillorc parameters for these (say
+> default_font_size and default_font_step)
+>
+
+Good idea.
+
+> As for FACE, Jorge doesn't like it, and I agree with him on this point
+> : html is for client-side rendering, the author is not supposed to use
+> his own fonts. We choosed (so far) to ignore it.
+
+Hum... strange. But surelly Dillo will have an option 
+`Render it just like the author intended to be', will it not? I mean,
+it's really nice to have a very flexible rendering system, so the
+client can do all his heart's will, but sometimes the client's heart's
+is willing to see it like the author intended... and then you'd be
+taking away flexibility...
+
+*yeah my english sucks! Did you understand a word I said?*
+
+> (BTW number 1 to 7 is 7 font sizes, not 8 ;-)
+
+Oops... I guess I should catch up on my sleep :-o
+
+<snip>
+> > checking if all chars are valid hex digits [0-9a-fA-F]. Any body
+> > know someway better to do this?
+> > 
+> 
+> If you check first for named colors, then your hex 6-digits scan,
+> you're good.
+> ("0x" is not in HTML specs, only "#")
+
+Like Homer would say: "DOPE" (tap on the head!) Of course!
+
+
+bye all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug #96
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-10 18:18
+
+Hi Eric,
+
+before anything I would like to say that I really don't want to
+start arguments or flames or anything like that... I just want to help
+you out, like you've always done for me. So sorry if I still disagree
+with you, but I think this kind of stuff is worth discussing so that
+we ALL can learn from (specially me, who knows too little...). If I'm
+being a pest about this issue, let me know and I'll drop it, ok?
+
+With that said let's get to more interesting issues ;-)
+
+Eric GAUDET writes:
+
+<big snip>
+
+> > What do you need this info (focused window) for? Could you use the
+> > solution I've made for your problem too? Maybe I can help out...
+> > 
+> 
+> Well, that's actually why I made this proposal : your solution can't be
+> applied to my problem ;-)
+> But I though mine would solve both (and probably more) at the same time,
+> so it can have some good in it.
+> 
+> (since your want more infos, I needed to know the size and position of
+> the window that was clicked to open a new window and smartly adjust its
+> geometry)
+
+Ok, I've thought a little bit more about this and I think that both
+solutions are ok. But my solution seems easier for bug #96 and your
+solution to the "opening new same sized window" problem (or maybe
+not... read on).
+
+Let me see if I understand correctly this problem ... To use my
+solution on to implement this you'll have to connect a signal to a
+callback with two arguments: (1 = the clicked link, 2= the clicked bw,
+to extract the size). But this is already handled in
+Dw_page_handle_event... and then it calls
+a_Commands_open_link_nw_callback with the bw that was CLICKED by the
+user... (isn't this what you wanted?). So, theoretically, all you'd
+have to is get the size from the `bw` in
+a_Commands_open_link_nw_callback and pass it to a modified
+a_Interface_new_browser_window which takes the size as arguments...
+
+Sorry, if am still missing the point... but it still seems needless
+to have the last_clicked_bw. I think it is totally feasible to use my
+solution... hum, let me see...
+
+<Sometime passes .... >
+
+Ok, I have a patch here that opens new windows the same size as the
+parent window the call came from (wether from the menu `New Window`,
+or clicking with button 2, or clicking with button 3 and selecting
+`Open Link in new window`). Are looking to this something similar?
+
+The patch is in:
+http://www.linux.ime.usp.br/~livio/dillo/new_window_same_size.diff
+
+If you want I can e-mail it to you personally, so I wouldn't
+generate extar traffic on the list. Hope this helps you on what you're
+doing. 
+
+> 
+> I understand, and I would agree on this. Most of the time. But real life
+> coding made me a "get_the_big_picture_and_you_won't_have_to_waste_your_
+> time_fixing_many_similar_problems" kind of guy ;-)
+
+Yeah, you might be right, I lack lots of expericence. I'm still a
+newbie at this open source programming stuff, and you guys are my
+"gurus". So don't ever hesitate to say that I'm doing something wrong,
+or being too stubborn, chances are, I'm completely wrong about what
+I'm saying.
+
+later dude!
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Bug #109 (<font> tag)
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-10 08:00
+
+-- En reponse de "[Dillo-dev]Bug #109 (<font> tag)" de Livio Baldini
+Soares, le 10-Dec-2000 :
+> Hi yall,
+> 
+> I've included bug #109 into the bug-track, when I was looking at a
+> teacher's page when I noticed that some colored text wasn't colored
+>:-( So I checked the src/html.c, func Html_tag_open_font, and I saw:
+> 
+
+I think Sean made a patch for all font stuff. He should have made a
+bugtrack entry too :-/
+
+> 1) `size=absolute' or `size=[+-]relative'. 
+> What W3 says is that we should accept 8 font sizes (numbered from
+> 1-7), but in Dillo we have more granularity, ending up with more
+> numbered sizes (at least 24, which is in the <h1> tag). So how should
+> I deal with this? In my patch I multiply html size value by 4, giving
+> us Dillo size value... of course this isn't the "right" way to
+> convert from font numbering. Anybody has any ideas?
+> 
+
+About SIZE, each browser is free to render it as it likes, so your idea
+of multiplying by 4 is good. 
+Let me propose something : make new dillorc parameters for these (say
+default_font_size and default_font_step)
+As for FACE, Jorge doesn't like it, and I agree with him on this point
+: html is for client-side rendering, the author is not supposed to use
+his own fonts. We choosed (so far) to ignore it.
+(BTW number 1 to 7 is 7 font sizes, not 8 ;-)
+
+> 2) a_Color_parse issues...
+> 
+> There are two issues which I've encountered:
+> 
+> i) color="Aqua" doesn't resolve to anything! It should resolve to
+> "aqua" == 0x00ffff, shouldn't it? This issue seems to me like a
+> Dillo bug... To fix this I changed all words to their lower-case
+> representation. I did this with:
+>> for (i = 0; i < strlen(subtag); i++)
+>> subtag[i] = tolower(subtag[i]);
+> Is there a better/more efficient way of doing this?
+> 
+
+Unfortunatly not.
+
+> ii) color="ff00aa"
+> To read a color as a hex number Dillo requires a "0x" or "#"
+> prefix, but I've found many html's with just color="56abf3", or
+> something like this. Currently, to fix this, I did something
+> TOTALLY wrong! Just checked if (strlen(subtag) == 6). To only
+> real fix which I thought of was to run over `subtag' string
+> checking if all chars are valid hex digits [0-9a-fA-F]. Any
+> body
+> know someway better to do this?
+> 
+
+If you check first for named colors, then your hex 6-digits scan,
+you're good.
+("0x" is not in HTML specs, only "#")
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Dec-2000 a 16:03:49
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Bug #109 (<font> tag)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-10 05:43
+
+Hi yall,
+
+I've included bug #109 into the bug-track, when I was looking at a
+teacher's page when I noticed that some colored text wasn't colored
+:-( So I checked the src/html.c, func Html_tag_open_font, and I saw:
+
+#if 0
+<some_stuff>
+#endif
+Html_push_tag(...)
+
+Does anyone know/remember why this was commented out? Well it didn't
+work anyway, so I started to see if I could get the <font> tag
+working. After sometime I got a pretty good working version (it still
+has a small render bug, but I think it's pretty much working). I
+checked http://www.w3.org to see the qualifiers for the tag <font>, they are:
+`face', `size' and `color'. So those are the one I've implemented.
+
+The current patch is in:
+http://www.linux.ime.usp.br/~livio/dillo/font_tag.diff
+
+It will corretly render HTML like:
+http://www.rti-zone.org/dillo/Html.testsuite/color.html
+or
+http://www.linux.ime.usp.br/~livio/dillo/font-test.html
+
+
+The patch will change two files: src/html.c and src/colors.c.
+There is are two small issues that are pending so I can get this patch
+100% done.
+
+1) `size=absolute' or `size=[+-]relative'. 
+What W3 says is that we should accept 8 font sizes (numbered from
+1-7), but in Dillo we have more granularity, ending up with more
+numbered sizes (at least 24, which is in the <h1> tag). So how should
+I deal with this? In my patch I multiply html size value by 4, giving
+us Dillo size value... of course this isn't the "right" way to convert
+from font numbering. Anybody has any ideas?
+
+2) a_Color_parse issues...
+
+There are two issues which I've encountered:
+
+i) color="Aqua" doesn't resolve to anything! It should resolve to
+"aqua" == 0x00ffff, shouldn't it? This issue seems to me like a
+Dillo bug... To fix this I changed all words to their lower-case
+representation. I did this with:
+> for (i = 0; i < strlen(subtag); i++)
+> subtag[i] = tolower(subtag[i]);
+Is there a better/more efficient way of doing this?
+
+ii) color="ff00aa"
+To read a color as a hex number Dillo requires a "0x" or "#"
+prefix, but I've found many html's with just color="56abf3", or
+something like this. Currently, to fix this, I did something
+TOTALLY wrong! Just checked if (strlen(subtag) == 6). To only
+real fix which I thought of was to run over `subtag' string
+checking if all chars are valid hex digits [0-9a-fA-F]. Any body
+know someway better to do this?
+
+I think that's all my doubts for now... and ideas/critics/support
+are always supported,
+
+bye,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug #96
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-10 03:41
+
+-- En reponse de "Re: [Dillo-dev]Bug #96" de Livio Baldini Soares, le
+09-Dec-2000 :
+>> BrowserWindow *topmost_bw;
+>> This variable is updated in dw_page.c, GDK_BUTTON_PRESS event.
+>> 
+>> Any thought ?
+> 
+> Humm.. this could work too. But I think this solution is a little
+> more complex. 
+
+I don't quite see how a 3 lines-patch can be complex.
+
+> Not necessarilly, in all window managers/systems, does
+> clicked == focused. I think we might have a long and tiresome battle
+> to get all the cases where the window is focused, so the topmost_bw
+> is always correct and accurate.
+
+Hum, you noticed the question mark. We could change the name for
+last_clicked_bw, if you think it's less confusing.
+What we really need is CLICKED, so our popup menus (which can be used
+only when _click_ing) know what bw we're talking about.
+
+> I don't know, but it seems too tricky to get this to work out, and
+> maybe "unclean"...
+> 
+
+*cough*
+"unclean" is a dangerous concept : it makes you think the code is more
+important that the application.
+"maybe unclean" is even worse : it makes you think the same while
+admitting you didn't investigate the problem.
+
+(don't get me wrong : I'm not advocating dirty-but-cool hacks, I'm more
+like Jorge's "don't over-optimize" topic)
+
+> What do you need this info (focused window) for? Could you use the
+> solution I've made for your problem too? Maybe I can help out...
+> 
+
+Well, that's actually why I made this proposal : your solution can't be
+applied to my problem ;-)
+But I though mine would solve both (and probably more) at the same time,
+so it can have some good in it.
+
+(since your want more infos, I needed to know the size and position of
+the window that was clicked to open a new window and smartly adjust its
+geometry)
+
+> Sorry for the mean critic... but I think college has made me into a
+> "avoid_global_variables,_they_will_give_you_trouble_in_the_future"
+> kind of guy ;-)
+>
+
+I understand, and I would agree on this. Most of the time. But real life
+coding made me a "get_the_big_picture_and_you_won't_have_to_waste_your_
+time_fixing_many_similar_problems" kind of guy ;-)
+
+> best regards,
+> 
+
+likewise,
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Dec-2000 a 12:23:43
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Comments
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-10 03:18
+
+-- En reponse de "[Dillo-dev]Comments" de Jorge Arellano Cid, le
+09-Dec-2000 :
+> you'll notice in the Changelog that almost no patch got clean into
+> the sources, I had to rework most of them; please be more careful
+> before submitting.
+> 
+
+Can you tell us what are the common errors, so we can be more careful ?
+
+> ----
+> Checkboxes [Eric]
+> 
+> Have you checked what the Specs say about it?
+> 
+
+VALUE is a requiered attribute for CHECKBOXES (and RADIO). We're talking
+here about how to deal with faulty tag missing requiered attributes,
+which is not uncommon in web pages.
+Browsers have a different behavior :
+- Dillo sends "name="
+- Netscape and Amaya send "name=on"
+- Opera sends nothing (but renders the checkbox, which is the worse case
+IMHO)
+- (IE not tested)
+
+PS: another FORM related issue : the SUBMIT button's value is not
+POSTed by Dillo. It should.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Dec-2000 a 12:02:55
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Re: Comments (more on GIF bug 98)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-10 02:15
+
+Livio Baldini Soares writes:
+> Jorge Arellano Cid writes:
+
+<big snip>
+
+> > ----
+> > GIF spec [Livio]:
+> > 
+> > http://www.w3.org/Graphics/GIF/spec-gif89a.txt
+> > (thanks for checking)
+> 
+> Oh, should of looked in w3! Thanks, I'll check it later.
+> 
+
+Well I check it out. It *seems* to me that the coordinates from the
+Logical Screen Descriptor are in fact ignorable, but I'm not
+absolutely sure. Here is the part that matters from the GIF
+specification:
+
+**************************************
+> 18. Logical Screen Descriptor. 
+>
+> a. Description. The Logical Screen Descriptor contains the parameters
+> necessary to define the area of the display device within which the
+> images will be rendered. The coordinates in this block are given with
+> respect to the top-left corner of the virtual screen; they do not
+> necessarily refer to absolute coordinates on the display device. This
+> implies that they could refer to window coordinates in a window-based
+> environment or printer coordinates when a printer is used.
+**************************************
+
+Virtual-screen? Printer? It seems to me that it's ignorable, and we
+can really just rely on the coordinates from the Image
+Descriptor. Here's the spec info on the Image Descriptor:
+
+**************************************
+> 20. Image Descriptor.
+> 
+> 
+> a. Description. Each image in the Data Stream is composed of an Image
+> Descriptor, an optional Local Color Table, and the image data. Each
+> image must fit within the boundaries of the Logical Screen, as defined
+> in the Logical Screen Descriptor.
+> 
+> The Image Descriptor contains the parameters necessary to process a
+> table based image. The coordinates given in this block refer to
+> coordinates within the Logical Screen, and are given in pixels. This
+> block is a Graphic-Rendering Block, optionally preceded by one or more
+> Control blocks such as the Graphic Control Extension, and may be
+> optionally followed by a Local Color Table; the Image Descriptor is
+> always followed by the image data.
+*************************************
+
+Well can anybody who's a better english speaker and has more image
+knowledge tell me if I'd doing something wrong in ignoring the Logical
+Screen Descriptor's coordinates? I think it's okay, specially after
+reading this spec and reading xloadimage-4.1 source code (it ignores
+it too).
+
+If there are no objections, then the patch I have completely fixes
+bug #98.. just have to clean it up a bit before sending it in...
+
+Any feedback is appreciated, best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Comments
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-09 19:47
+
+Jorge Arellano Cid writes:
+> 
+> Hi,
+
+Hi Jorge!
+
+Nice work. I've seen that you've updated CVS versions twice after
+the 0.3.0 release. That's really nice, cause we can see dillo change
+dinamically and not in big jumps like before, hope you keep this
+up. If you do intend to keep updating CVS with certain frequency, then
+may I suggest a dillo-cvs-log@so...? I don't know how it's
+done, but I've seen other projects do this, and I thoght it really
+neat. Everytime someone (you) makes a CVS check-in, then the list
+(dillo-cvs-log) receives an e-mail with the the list of modified files
+and your log message, what do you think? If you like the idea, but
+don't know how to do it, I can try and read the sourceforge manuals
+for you and see if I discover something.
+
+<snip>
+
+> ----
+> GIF spec [Livio]:
+> 
+> http://www.w3.org/Graphics/GIF/spec-gif89a.txt
+> (thanks for checking)
+
+Oh, should of looked in w3! Thanks, I'll check it later.
+
+> 
+> Ah, have you finished BUG#96? The bug-track shows 90% and its
+> already integrated into my source tree!
+
+It's not 90% anymore ;-) Yes I have finished! I put 90% cause I was
+waiting to hear back from anybody to see if my bug fix was good
+enough... but thinking it over for a week now, I couldn't come up with
+anything better design, so I think it's good enough. I haven't changed
+anything so the version you integrated is probably up-to-date.
+
+
+> ----
+> Weekly news [Allan]
+> 
+> Huh? :-)
+
+Yeah, where are you Allan? Hope that everything's okay with
+you... (or hope you're travelling trough the world, meeting lots of
+beatiful girls, and that's why you're kind of gone). I miss those
+weekly news!
+
+bye yall,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Comments
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-09 19:17
+
+Hi,
+
+
+Well, it seems that dillo is getting better and improving
+faster than before. The patch queue is also being flooded at a
+higher rate and from different persons. I'm very happy with this,
+and also spent a lot of time integrating the patches; you'll
+notice in the Changelog that almost no patch got clean into the
+sources, I had to rework most of them; please be more careful
+before submitting.
+
+Maybe that's due to what I call "the rush effect": when a
+developer gets into a coding task and hasn't made the entry in
+the bug track, he gets eager to finnish before any one else does.
+Please avoid this situation (Yes, I received repeated patches,
+and had to make some bug-track-entries myself to stop it).
+
+On the other hand, the big patch queue was very interesting
+and after integration has made --no doubt!-- a better dillo;
+Thanks everybody.
+
+Yes, there's enough material for making a new release, I just
+want to test it some more, add a few improvements, wait for
+sourceforge's counters to start working again and it'll be there.
+
+
+Jorge.-
+
+
+----
+GIF spec [Livio]:
+
+http://www.w3.org/Graphics/GIF/spec-gif89a.txt
+(thanks for checking)
+
+Ah, have you finished BUG#96? The bug-track shows 90% and its
+already integrated into my source tree!
+
+
+----
+Checkboxes [Eric]
+
+Have you checked what the Specs say about it?
+
+
+----
+Weekly news [Allan]
+
+Huh? :-) 
+
+
+
+Re: [Dillo-dev]Bug #96
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-12-09 18:03
+
+Livio Baldini Soares writes:
+> [...]
+> Humm.. this could work too. But I think this solution is a little
+> more complex. Not necessarilly, in all window managers/systems, does
+> clicked == focused. I think we might have a long and tiresome battle
+> to get all the cases where the window is focused, so the topmost_bw is
+> always correct and accurate. I don't know, but it seems too tricky to
+> get this to work out, and maybe "unclean"...
+
+Not necessary. There are simpler ways to check which window is 
+focused, but in this case, you indeed want to get the last window the 
+user had clicked into, not the focus window (and a window manager 
+*does not need* to focus this window). Another way would be to store 
+the browser window belonging to the page into the popup menu, just 
+before popping it up.
+
+However, I'd prefer Livius' implementation, there is really no need 
+to make the code kludgier as needed just to save little memory 
+(compared to the memory anyway allocated for a browser window).
+
+> What do you need this info (focused window) for? Could you use the
+> solution I've made for your problem too? Maybe I can help out...
+> 
+> Sorry for the mean critic... but I think college has made me into a
+> "avoid_global_variables,_they_will_give_you_trouble_in_the_future"
+> kind of guy ;-)
+
+The college had reasons for it. ;-)
+
+Sebastian 
+
+
+
+[Dillo-dev]About bug #98 (GIF especification?)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-09 17:02
+
+Hi all!
+
+Since I went trough the png test suite, I couldn't help noticing the
+http://www.rti-zone.org/dillo/Html.testsuite/badgif.html, where
+there's a gif that's not drawn correctly. I've found the problem and
+made a patch to fix this, but I'm not sure I'm doing the "correct"
+thing to fix it... but my fix doesn't seem to break any other GIFs.
+
+The problem is that gif->width and gif->height are supposed to be
+read from 2 distinct places. From the Logical Screen Descriptor 
+(where:
+gif->Width = LM_to_uint(buf[0], buf[1]); 
+gif->Height = LM_to_uint(buf[2], buf[3]);
+)
+
+*and* from the Image Descriptor
+(where:
+gif->Width = LM_to_uint(buf[4], buf[5]);
+gif->Height = LM_to_uint(buf[6], buf[7]);
+)
+
+Currently Dillo is only reading it's width and height from the
+Logical Screen Descritor. I've checked sources from gif2png and
+xloadimage (xview), and they seem to respect only the Image Descriptor
+width and height, and almost ignore and coordinates from Logical
+Screen Desc (which is kind of strange). So what I've done is just
+that, I don't call a_Dicache_set_parms from within Gif_get_descriptor,
+but call it with the "correct" values from Gif_do_img_desc. This seems
+to work fine with all GIF's and should work with all GIF's are
+open-able(?) with xloadimage. (oh the patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/bad_gif.diff).
+
+But I want to make sure I'm doing the correct thing... So does
+anybody know where I can find an GIF especification? Or like GIF-RFC?
+IS there a GIF especification at all for public eyes? If I could get
+one, them I could really make sure that my patch is full proof.
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Bug #96
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-09 16:08
+
+Eric GAUDET writes:
+> Hey Livio,
+
+Hi Eric!
+
+> 
+> -- En reponse de "[Dillo-dev]Bug #96" de Livio Baldini Soares, le
+> 01-Dec-2000 :
+> > I started working on patch number 96. It was the bug that when
+> > trying to `View Source` with multiple windows open, Dillo would
+> > always get the last opened window and view that source, no matter on
+> > what window we clicked. 
+> 
+> How did you eventually manage the problem ? 
+
+Like I wrote in the previous e-mail, I've made each bw have it's own
+menu_pop, i.e. make menu_pop a member of the struct
+_BrowserWindow. This way the signal was corretly assigned to the right
+bw. Personally, I think this is a clean fix, which doesn't require a
+lot of rework, and seems to be robust. This way we don't have to worry
+which is the focused or clicked window, since GTK deals corretly with
+this when we connect the signal (right_button on bw -> open menu_pop).
+
+> I had a similar problem, needing to know what was the last clicked (==
+> focused ?) window. The solution I used would help both of us, I think. I
+> added a global variable in dillo.c :
+> BrowserWindow *topmost_bw;
+> This variable is updated in dw_page.c, GDK_BUTTON_PRESS event.
+> 
+> Any thought ?
+
+Humm.. this could work too. But I think this solution is a little
+more complex. Not necessarilly, in all window managers/systems, does
+clicked == focused. I think we might have a long and tiresome battle
+to get all the cases where the window is focused, so the topmost_bw is
+always correct and accurate. I don't know, but it seems too tricky to
+get this to work out, and maybe "unclean"...
+
+What do you need this info (focused window) for? Could you use the
+solution I've made for your problem too? Maybe I can help out...
+
+Sorry for the mean critic... but I think college has made me into a
+"avoid_global_variables,_they_will_give_you_trouble_in_the_future"
+kind of guy ;-)
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Bug #96
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-09 12:28
+
+Hey Livio,
+
+-- En reponse de "[Dillo-dev]Bug #96" de Livio Baldini Soares, le
+01-Dec-2000 :
+> I started working on patch number 96. It was the bug that when
+> trying to `View Source` with multiple windows open, Dillo would
+> always get the last opened window and view that source, no matter on
+> what window we clicked. 
+
+How did you eventually manage the problem ? 
+I had a similar problem, needing to know what was the last clicked (==
+focused ?) window. The solution I used would help both of us, I think. I
+added a global variable in dillo.c :
+BrowserWindow *topmost_bw;
+This variable is updated in dw_page.c, GDK_BUTTON_PRESS event.
+
+Any thought ?
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 09-Dec-2000 a 21:22:34
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Re: *
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-06 00:48
+
+Hi,
+
+> Eric GAUDET <egaudet@in...> writes:
+>
+> > Do you still have this hash function ? I need one and I'm not sure mine
+> > is that good.
+>
+> Doesn't glib include one? At least the header file suggests so. There
+> are several function declarations named 'g_hash_table_*()'. So, this
+> might be worth looking into.
+
+I digged into my archive and didn't find them :(
+(I surely had been so dissapointed that ...!)
+
+Anyway, I was using mph-1.2.tar.gz (22 Kb), an excellent
+package for generating minimal perfect hashes. Once you find a
+function, it can be tuned in steps and table size, very cool
+stuff. I remember that I built a hash function for every
+supported HTML tag in dillo, and tuned it to half the size and 2
+or three steps; it was faster than the binary search, sure (4% or
+so), but the added complexity, was not worth the trouble.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Final PNG transparent, file URI and bug 107
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-12-05 10:19
+
+Livio Baldini Soares writes:
+> 2)
+> Sometime ago I sent in a patch to correct, what I considered, a
+> misbehaviour, but since nobody said anything (neither against or in
+> favor), I'll ask again. When I type in the following in Dillo:
+> 
+> /home/livio/
+> 
+> Dillo will then try to resolve http://home/livio/, but that isn't what
+> I wanted him to do. Im my opinion Dillo should consider URL's starting
+> with a '/' (slash) as a file request. What do you guys think?
+
+Yes, since '/' is not allowed in host names, I'd say this is a good 
+idea.
+
+Another idea: With all the plugins in future, how about a common 
+scheme based on regular expressions, configured by the user, e.g:
+
+/^ftp\.[[:alnum:]\.]+\// -> ftp:// (assuming that ftp server names
+often begin with "ftp.")
+/^[[:alnum:]\.]+\// -> http://
+/^\// -> file:
+/^\(.+\)/ -> info:
+/^\w+\(\w+\)$/ -> man:
+
+> I've made a patch to do exactly this. It's small, check it out at:
+> http://www.linux.ime.usp.br/~livio/dillo/file.diff
+> 
+> 3)
+> I tried to reproduce bug #107, but I failed. If anyone on the list
+> registered bug 107, could you please explain how to reproduce it, so I
+> may that a llok at it?
+
+I didn't register it, but just try
+http://download.so....net/dillo/dillo-0.3.0.tar.gz
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Final PNG transparent, file URI and bug 107
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-05 09:53
+
+-- En reponse de "[Dillo-dev]Final PNG transparent, file URI and bug
+107" de Livio Baldini Soares, le 05-Dec-2000 :
+> 1)
+> Just wanted to write to say I've completely finished the png
+> transparency implementation. Including the gamma correction which I
+> didn't implement in the previous patch. So with that I think that the
+> PNG test suite on Eric's site is pretty much complete, or have I
+> skipped something?
+> 
+
+This png test suite is the official png test suite. 
+
+> 2)
+> Sometime ago I sent in a patch to correct, what I considered, a
+> misbehaviour, but since nobody said anything (neither against or in
+> favor), I'll ask again. When I type in the following in Dillo:
+> 
+> /home/livio/
+> 
+> Dillo will then try to resolve http://home/livio/, but that isn't
+> what I wanted him to do. Im my opinion Dillo should consider URL's
+> starting with a '/' (slash) as a file request. What do you guys
+> think?
+> 
+> I've made a patch to do exactly this. It's small, check it out at:
+> http://www.linux.ime.usp.br/~livio/dillo/file.diff
+> 
+
+That's too bad dillo's having a different behavior when getting a URL
+in the command line or in the nav bar. Should be the same.
+
+> 3)
+> I tried to reproduce bug #107, but I failed. If anyone on the list
+> registered bug 107, could you please explain how to reproduce it, so
+> I may that a look at it?
+> 
+
+No negfault for me either. I think it's the same bug with interrupting
+download again. I'm pretty sure whoever made this entry can't reproduce
+it every time.
+IMHO there should be a <b>big</b> warning on the bug insertion page
+asking people to test _several_ time the how-to-reproduce method before
+they submit.
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 05-Dec-2000 a 18:40:59
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+Re: [Dillo-dev]Re: *
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-05 09:39
+
+-- En reponse de "Re: [Dillo-dev]Re: *" de Livio Baldini Soares, le
+05-Dec-2000 :
+> Eric GAUDET writes:
+>> I had a quick look at the sources, and I don't understand why
+>> passing bw isn't enough for finding what page was clicked.
+>> However, I know the bug is there : _I_ did the bugtrack entry !
+> 
+> Well I'll try to explain it in my bad english...
+> 
+> Since there was only one (global) `menu_popup`, everytime a new
+> window was opened the same menu_popup would be (re)initialized (in
+> a_Menu_popup_new). In that initialization the Menu_add (to connect a
+> signal to a callback function), would be written over with the new
+> parameter (the new *bw). So when the signal (event) called the
+> callback, it would send the latest *bw NOT the current *bw.
+> 
+> Ummm, did it get any clearer, or just confused you more?
+> 
+> bye,
+
+I think I'm begining to see the light ;-) What I understand now is when
+registering a call-back, the parameter (bw) is registered too. I though
+the parameter was updated according to the calling widget each time the
+callback was invoked (&bw).
+... I should really read this gkt book I bought a while ago ;-)
+
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 05-Dec-2000 a 18:33:54
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Final PNG transparent, file URI and bug 107
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-05 02:32
+
+Hello again,
+
+Since I'm crowding too much this list lately I'll send in a 3 in 1
+e-mail. Here goes my three topics:
+
+1)
+Just wanted to write to say I've completely finished the png
+transparency implementation. Including the gamma correction which I
+didn't implement in the previous patch. So with that I think that the
+PNG test suite on Eric's site is pretty much complete, or have I
+skipped something?
+
+2)
+Sometime ago I sent in a patch to correct, what I considered, a
+misbehaviour, but since nobody said anything (neither against or in
+favor), I'll ask again. When I type in the following in Dillo:
+
+/home/livio/
+
+Dillo will then try to resolve http://home/livio/, but that isn't what
+I wanted him to do. Im my opinion Dillo should consider URL's starting
+with a '/' (slash) as a file request. What do you guys think?
+
+I've made a patch to do exactly this. It's small, check it out at:
+http://www.linux.ime.usp.br/~livio/dillo/file.diff
+
+3)
+I tried to reproduce bug #107, but I failed. If anyone on the list
+registered bug 107, could you please explain how to reproduce it, so I
+may that a llok at it?
+
+that's about all, see yall latter,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Re: *
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-05 01:39
+
+Eric GAUDET writes:
+> -- En reponse de "[Dillo-dev]Re: *" de Jorge Arellano Cid, le
+> 01-Dec-2000 :
+
+
+<big snip>
+
+> >> [BUG #96]
+> > 
+> > I'll answer this one when I look up the patch code. I'm
+> > interested cause a similar problem arises when trying to get the
+> > link the mouse was over at click time (for "Save link as").
+> > 
+> 
+> I had a quick look at the sources, and I don't understand why passing bw
+> isn't enough for finding what page was clicked.
+> However, I know the bug is there : _I_ did the bugtrack entry !
+
+Well I'll try to explain it in my bad english...
+
+Since there was only one (global) `menu_popup`, everytime a new
+window was opened the same menu_popup would be (re)initialized (in
+a_Menu_popup_new). In that initialization the Menu_add (to connect a
+signal to a callback function), would be written over with the new
+parameter (the new *bw). So when the signal (event) called the
+callback, it would send the latest *bw NOT the current *bw.
+
+Ummm, did it get any clearer, or just confused you more?
+
+bye,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Re: *
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-05 01:29
+
+Hi Jorge,
+
+Jorge Arellano Cid writes:
+> 
+> Hi!
+> 
+
+<snip>
+
+> 
+> Eric found a good solution by publishing pre-patches in his web
+> site, maybe you can ask him for some space when necessary.
+
+
+Ok, I agree that sometimes it can be annoying and waste of
+bandwidght to have all patches attached to the list. I should of
+thought of having my patches on a web page before :-(
+
+Here is a link to all the patches which I've made (or am currently
+working on):
+
+http://www.linux.ime.usp.br/~livio/dillo/
+
+It's my homepage from the University. It is REALLY slow, and
+sometimes the University has it's backbone down and won't respond at
+all. If anyone is trying to get a particular patch they can e-mail me
+and ask, I'll be happy to provide it.
+
+<snip>
+
+> > [PNG transaparency]
+> 
+> Please send me your last patch (when done) Livio.
+
+I've pretty much finished, and you can get it at:
+http://www.linux.ime.usp.br/~livio/dillo/pang_transparency.diff
+
+But I will sent it to you personally.
+
+<snip>
+
+> > [BUG #96]
+> 
+> I'll answer this one when I look up the patch code. I'm
+> interested cause a similar problem arises when trying to get the
+> link the mouse was over at click time (for "Save link as").
+> 
+
+I've tried it out, and the patch I've made fixes the problem with
+`Save link as...` too. The patch is here:
+
+http://www.linux.ime.usp.br/~livio/menu_pop.diff
+
+
+that's about all... best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Re: *
+
+From: Rafael R. Sevilla <dido@pa...> - 2000-12-03 18:37
+
+
+
+
+
+RE: [Dillo-dev]Re: *
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-03 16:42
+
+he was talking about a minimal perfect hash function, not a hash
+function robust for cryptography purposes. 
+However, I tested the the glib hash function for strings, and it's not
+good _at_all_ : not near perfect (lots of collisions, any XOR-based
+function is better). Almost unsuable.
+
+-- En reponse de "[Dillo-dev]Re: *" de Olaf Dietsche, le 03-Dec-2000 :
+> Eric GAUDET <egaudet@in...> writes:
+> 
+>> Do you still have this hash function ? I need one and I'm not sure
+>> mine
+>> is that good.
+> 
+> Doesn't glib include one? At least the header file suggests so. There
+> are several function declarations named 'g_hash_table_*()'. So, this
+> might be worth looking into.
+> 
+> Regards, Olaf.
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/mailman/listinfo/dillo-dev
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 04-Dec-2000 a 01:38:50
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Re: *
+
+From: Olaf Dietsche <olaf.dietsche@gm...> - 2000-12-03 15:48
+
+Eric GAUDET <egaudet@in...> writes:
+
+> Do you still have this hash function ? I need one and I'm not sure mine
+> is that good.
+
+Doesn't glib include one? At least the header file suggests so. There
+are several function declarations named 'g_hash_table_*()'. So, this
+might be worth looking into.
+
+Regards, Olaf. 
+
+
+
+[Dillo-dev]just subscribed, dillo is faaaast :-)
+
+From: Olaf Grüttner <olaf@se...> - 2000-12-02 13:13
+
+I just wanted to thank you guys. I recognize dillo being work in progress,
+but is so fast it is wonderful and compared
+to things like netscape 6 on linux it is lightning fast.
+
+can´t wait till tables are supported by dillo.
+
+keep up the good work!!!
+
+Olaf 
+
+-- 
+
+
+
+RE: [Dillo-dev]Re: *
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-02 01:32
+
+-- En reponse de "[Dillo-dev]Re: *" de Jorge Arellano Cid, le
+01-Dec-2000 :
+> Eric found a good solution by publishing pre-patches in his web
+> site, maybe you can ask him for some space when necessary.
+> 
+
+Sure :-) (any free web hosting will do, though)
+
+> The University told us that code optimization was a task to be
+> undertaken by the compiler (mainly peephole opt.), the real world
+> is different!
+> 
+
+I used to code demos in asm-68k, I must still have some in the blood ;-)
+
+> Finally, never try to over-optimize!!!
+> 
+
+right ! But don't stop until your done with sensible loops code.
+
+> Speed opt. is a highly tricky matter. For instance, what seems
+> faster in theory doesn't always show on reality: sometime ago I
+> was tunning a minimal perfect hash function for dillo, and I
+> succeeded!, but profiling revealed that the gain over a simple
+> binary search was around 2%, and the added complexity was
+> impressive.
+> 
+
+Do you still have this hash function ? I need one and I'm not sure mine
+is that good.
+
+> 
+>> [BUG #96]
+> 
+> I'll answer this one when I look up the patch code. I'm
+> interested cause a similar problem arises when trying to get the
+> link the mouse was over at click time (for "Save link as").
+> 
+
+I had a quick look at the sources, and I don't understand why passing bw
+isn't enough for finding what page was clicked.
+However, I know the bug is there : _I_ did the bugtrack entry !
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 02-Dec-2000 a 10:24:24
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+RE: [Dillo-dev]Re: *
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-12-01 21:44
+
+>> Another thing, there was a comment in the header of a_Url_squeeze
+>> made by Jorge, saying the he wasn't sure that it was necessary. Well I
+>> checked APACHE and it's NOT necessary to squeeze the URL. I sent in a
+>> request with a telnet to port 80, and sent an `GET /./FAQ/../ HTTP/1.0`,
+>> and got the /index.html. Seems to work fine with both /../ and /./,
+>> but I'm not sure if this is true to all HTTP servers. The only time
+>> APACHE complains is when we send in a request for /FAQ/../../, APACHE
+>> claims this is a BAD REQUEST, but the new a_Url_squeeze prevents
+>> this
+> 
+
+if the function is trivial, it probably saves the server some work. plus I
+wonder what IIS does with this?
+
+>> [Code optimization]
+> 
+> Eric's suggestions can be very insightful. I just want to add
+> my two-cents.
+> 
+> The University told us that code optimization was a task to be
+> undertaken by the compiler (mainly peephole opt.), the real world
+> is different!
+> 
+
+one thing I was taught was to profile, profile, profile. There is a nice GNU
+tool called gprof to help with this. You compile the app with profiling turned
+on, run it, then run gprof on the output (gmon.out I think). You get a
+function call tree, time spent in each, etc. Very useful. 
+
+
+
+[Dillo-dev]Re: *
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-12-01 20:16
+
+Hi!
+
+As usual, here you'll find several answers (batch mode!)
+
+> Another thing, do you (or anybody
+> else) have anything against sending patches to the list, so everyone
+> can "pitch" in, and publically(?) discuss them. If not do you want me
+> to CC: them to you, Jorge?
+
+I don't have an absolute answer for this question.
+Cartainly, final-patches must be sent to me for revision and
+inclusion, but those that can be considered as a "work in
+progress" can be sent to the list for discussion.
+
+This mailing list has a reputation (gained over time) to be low
+traffic and interesting, and I love it that way; maybe the best
+way is hold patches while still polishing them and only request
+some help or feedback when you really need it. Posting the patch
+is a last resource, cause you always have the chance to send it
+privately to the helping party.
+
+Eric found a good solution by publishing pre-patches in his web
+site, maybe you can ask him for some space when necessary.
+
+> [...]
+> I'll change the status to 100% in the bug-track when I get back net
+> connection. Oh, and I'm NOT suppossed to put `done`, this is done by
+> Jorge when he inserts the patch in the code (IF we agree the code is
+> worth putting in), is this correct Jorge?
+
+Absolutely.
+
+
+> Another thing, there was a comment in the header of a_Url_squeeze
+> made by Jorge, saying the he wasn't sure that it was necessary. Well I
+> checked APACHE and it's NOT necessary to squeeze the URL. I sent in a
+> request with a telnet to port 80, and sent an `GET /./FAQ/../ HTTP/1.0`,
+> and got the /index.html. Seems to work fine with both /../ and /./,
+> but I'm not sure if this is true to all HTTP servers. The only time
+> APACHE complains is when we send in a request for /FAQ/../../, APACHE
+> claims this is a BAD REQUEST, but the new a_Url_squeeze prevents
+> this
+
+Thanks for the info.
+
+BTW: Does anyone remember BUG#95? (Whether or not to parse
+entities within URIs) I answered that sometime ago but, ....!!!,
+my last research showed that although the URI RFC doesn't mention
+entities, when the w3c guys decided to define HTML as SGML,
+the entities parsing problem sprung-in, and the recomendation is
+to parse them!!! (HTML 4.01 Appendix B 2.2).
+
+I don't if they changed the recommendation when they decided to
+put-off SGML and defined XHTML as XML :-)
+
+
+> [PNG transaparency]
+
+Please send me your last patch (when done) Livio.
+
+
+> [Code optimization]
+
+Eric's suggestions can be very insightful. I just want to add
+my two-cents.
+
+The University told us that code optimization was a task to be
+undertaken by the compiler (mainly peephole opt.), the real world
+is different!
+
+Some time ago I made some local vars optimizations that yielded
+a bit more than a 100% percent speed gain!!!!! (with gcc :-).
+When I exposed the problem to one of the gcc-tester's team, he
+couldn't believe his eyes.
+
+Finally, never try to over-optimize!!!
+
+Speed opt. is a highly tricky matter. For instance, what seems
+faster in theory doesn't always show on reality: sometime ago I
+was tunning a minimal perfect hash function for dillo, and I
+succeeded!, but profiling revealed that the gain over a simple
+binary search was around 2%, and the added complexity was
+impressive.
+
+
+> [BUG #96]
+
+I'll answer this one when I look up the patch code. I'm
+interested cause a similar problem arises when trying to get the
+link the mouse was over at click time (for "Save link as").
+
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Re: About bug #60 (transparency in PNG's)
+
+From: Eric GAUDET <egaudet@in...> - 2000-12-01 09:29
+
+-- En reponse de "Re: [Dillo-dev]Re: About bug #60 (transparency in
+PNG's)" de Livio Baldini Soares, le 01-Dec-2000 :
+> By the way, I also had forgotten to add a "composite" support, for
+> when alpha value is between 0 (fully transparent) and 255 (totally
+> opaque). I'm sending the new version, look at it and see if it's more
+> 'decent' or is it still crappy? (Am sending it attached...)
+> 
+
+It's very nice. It's probably faster than the original code too.
+BTW, testing for 0 and 255 is a very nice optimisation over
+png_composite : as these values are more likely to be used, you avoid
+calling a function.
+
+> Oh and I also checked the PNG test suite and compared against
+> netscape 6 for Linux. The only thing that was different was the gamma
+> correction. I guess there isn't any gamma correction with current PNG
+> in dillo. Maybe I'll to do that some other time. Meanwhile, should I
+> put such small problem in the bug-track, or should I leave it alone,
+> hence it's "kind" of documented in the test suite?
+> 
+
+Isn't there a gamma-init function in pnglib ?
+Anyway, IMHO we should all make more bugtrack entries, even for such
+tiny problems, so we don't forget them. Jorge can always remove it if he
+thinks it's not important.
+
+> I still have a doubt though. I currently left alone the outer for:
+> for (i = 0; i < png->width; i++) {
+> but just to acknowledge when to stop, cause I don't use `i` anywhere
+> else. Do you see a better way to detect when png is over with.
+> 
+
+No, that's how it's done. Perhaps png->width can be calculated outside,
+but it shouldn't matter much.
+If it wasn't image processing (we're talking about hundred thousands
+pixels, one loop for each pixel), I wouldn't suggest the following
+(since i is not used) :
+for ( i = png->width ; i ; i-- )
+;-)))
+
+Last thing : you've probably reviewed the gif decoding to learn how
+transparency is delt with. Do you think the code is optimised enough ?
+
+ciao
+
+-----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Dec-2000 a 18:13:57
+"Le verbe inexister ... inexiste !"
+----------------------------------- 
+
+
+
+[Dillo-dev]Bug #96
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-01 04:21
+
+Attachments: menu_pop.diff      
+
+Hi!
+
+I started working on patch number 96. It was the bug that when
+trying to `View Source` with multiple windows open, Dillo would always
+get the last opened window and view that source, no matter on what
+window we clicked. First I went to look for the source of the problem,
+it appears to be the fact the the is only Menu_popup for all the
+windows. And when we open a new window using
+a_Interface_new_browser_window, we re-initilialize menu_popup, with:
+
+> menu_popup.menu = a_Menu_popup_new(bw);
+> menu_popup.menu_over_link = a_Menu_popup_ol_new(bw);
+
+And in a_Menu_popup_new we add the callback for selecting View
+Source, and all other Menu_popup entries. So for every new window, the
+callback are changed to look up it's data from that window, ignoring
+the possibility of other older windows...
+
+So I have thought up of two solutions, and for the first one I'm
+sending in the patch which I've made (almost minimal changes to
+current program):
+
+1) One solution is to have every window have it's own menu_popup. So
+basically I changed struct _BrowserWindow to include a
+DillowMenuPopup, and changed all ocurrences of menu_popup tp
+bw->menu_popup. This is the solution I've implemented and am sending
+the patch.
+
+2) The other soluion would involve more changes to current code, but
+might be more economic. Instead of having each BrowserWindow have it's
+own menu_popup like in (1), continue like current code, having a
+global menu_poup, but use the browser_window[] Vector(? array?) index
+to pass to the callback. So when the callback is called it checks,
+somehow, from what window is the signal coming from and them access
+the window using the browser_window[] array. I didn't like this idea
+so much as it would make the code uglier and even though we would
+economize a mune_popup per new window, we would create overhead to
+find out from what window was the signal coming from and process that
+information accordingly.
+
+
+Any ideas/comments? I would really apreciate, since I still haven't
+convinced myself I've chosen the right choice (or there may be
+others...). 
+
+Oh, and the patch is supposed to be applyied over the whole dillo
+directory (from CVS), but will only affect: src/bookmark.c,
+src/browser.h, src/commands.c, src/dw_page.c, src/interface.c,
+src/menu.c. 
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Re: About bug #60 (transparency in PNG's)
+
+From: Livio Baldini Soares <livio@li...> - 2000-12-01 03:04
+
+Attachments: png_transparent2.diff      
+
+Gee, thanks, Eric!
+
+Very nice tips you gave on my patch (some of the stuff I already
+knew but was too lazy/sleepy to get things out). Sorry about the
+newbie code... but with all of your suggestions, now I think the patch
+is looking good...
+
+By the way, I also had forgotten to add an "composite" support, for
+when alpha value is between 0 (fully transparent) and 255 (totally
+opaque). I'm sending the new version, look at it and see if it's more
+'decent' or is it still crappy? (Am sending it attached...)
+
+Oh and I also checked the PNG test suite and compared against
+netscape 6 for Linux. The only thing that was different was the gamma
+correction. I guess there isn't any gamma correction with current PNG
+in dillo. Maybe I'll to do that some other time. Meanwhile, should I
+put such small problem in the bug-track, or should I leave it alone,
+hence it's "kind" of documented in the test suite?
+
+Eric GAUDET writes:
+> 
+> IMHO there's several problem with your calculations :
+
+;-)
+
+> 
+> 1) the strol part is very inefficient, but that's not a real problem
+> because this code is _outside_ the loop. Anyway, here's how to do it :
+> (strip all the sprintf)
+> bg_blue = (prefs.bg_color0 & 0xFF;
+> bg_green = (prefs.bg_color>>8) & 0xFF;
+> bg_red = (prefs.bg_color>>16) & 0xFF;
+
+Yeah, this one I knew was really bad...
+
+> 
+> 2) The loop is _always_ the sensible part ! You _never_ want to allocate
+> local variables like you did : 
+> for (...) { 
+> gint p,a; 
+> (some compiler may optimize this, but you never know)
+> As a rule of thumb, it's better to allocate local variables at the
+> begining of a function.
+> 
+
+I agree completely, loops are what makes the code have a higher
+complexity, and everything that can, should be put outside of the
+loop.
+
+> 3) If you really want to improve speed, do all calculation only once in
+> local variables : i*3 is computed three times, it would be better to
+> have calculated i3 = i*3 and use i3. (same with i*4 used twice).
+> You could also have done i3 += 3 each loop, but on pentium-generation
+> cpu (whatever the brand, ppc, arm, ...) multiplications and additions
+> cost the same so it doesn't matter, and using i*3 is often more
+> readable and more robust (not sensible to initiallisation).
+> 
+> 4) Even better : look into a table is a calculation. png->linebuf[3*i]
+> is actually *(png + linebuf + 3*i).
+> You could have declared 
+> guchar *pl = png->linebuf;
+> and in the loop :
+> if (!a){
+> *(pl++) = bg_red;
+> *(pl++) = bg_green;
+> *(pl++) = bg_blue;
+> }
+> 
+
+Liked this option (4) much more than 3.
+
+> The else part is basically the same, if a little more trickier, and you
+> can get rid of the costy for() : I let it to you as an exercise ;-)
+> (hint : row_num*png->rowbytes is ugly)
+
+Well... how is it now? Less uglier?
+
+I still have a doubt though. I currently left alone the outer for:
+for (i = 0; i < png->width; i++) {
+but just to acknowledge when to stop, cause I don't use `i` anywhere
+else. Do you see a better way to detect when png is over with.
+
+> 
+> 5) Last : if(!a) is more complex than if(a) : invert the if/else.
+> 
+> Hope this helps.
+
+Yes! This helps a lot! Thanks a bunch Eric.
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+

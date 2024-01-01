@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> Dillo Web Browser :: 
+
+  Funding Presentation :: Technical Overview
+
+</title>
+<style type="text/css">
+   body {margin: 0}
+   .sidebar .items {background: #f8f8f8}
+   .sidebar h3 {font-size: 1em; margin: 0.4em 0 0.2em 0}
+   h1 {color: #67f; margin-top: 0.25em; margin-bottom: 0.25em}
+   h3 {color: #56f; background: #f0f0f0}
+   .section {background: #f8f8f8; border-color: #e8e8e8; border-style: solid; border-width: 1px; margin-bottom: 0.5em}
+   .section h3 {margin-top: 0; margin-bottom: 0.2em}
+   ul li {list-style-type: square}
+</style>
+</head>
+
+<body text="black" link="blue" vlink="#403090" bgcolor="white"
+      style="line-height: 1.3">
+
+
+<table width="100%" cellspacing="0" cellpadding="0"><tr>
+<td><img src="../db1.png" alt="The Dillo Web Browser">
+<td width="100%">
+ <img src="../db2.png" alt="The Dillo Web Browser" height="124" width="100%">
+</table>
+
+<table border="0" cellpadding="15" cellspacing="5" width="100%">
+  <tr valign="top">
+    <td class="sidebar">
+      <h3>Dillo</h3>
+      <div class="items">
+      <a href="../index.html">Home</a><br>
+      <a href="../screenshots/index.html">Screenshots</a><br>
+      <a href="../download.html">Download</a><br>
+      <a href="../FAQ.html" title="Frequently asked questions">FAQ</a><br>
+      <a href="../Compatibility.html">Compatibility</a><br>
+      <a href="http://hg.dillo.org/dillo/raw-file/default/ChangeLog">
+             Changelog</a><br>
+      <a href="../Plans.html">Current Plans</a><br>
+      <a href="../MList.html">Mailing List</a><br>
+      <a href="../conferences.html">Conferences</a><br>
+      <a href="../donations.html">Donate</a><br>
+      </div>
+      <h3>Users</h3>
+      <div class="items">
+      <a href="../dillo3-help.html">Help</a><br>
+      <a href="../Icons/index.html">Icons</a><br>
+      <a href="../help/bug_meter.html">Bug meter</a><br>
+      <br>
+      </div>
+      <h3>Bug Tracker</h3>
+      <div class="items">
+        <small>[currently broken]</small><br>
+        <!--
+        <a href="/bugtrack/Dbugtrack.html">Bug Track Intro</a><br>
+        <a href="/bugtrack/Dquery.html">View Entries</a><br>
+        <a href="/bugtrack/Dinsert.html">Bug Insertion</a><br>
+        <a href="/bugtrack/Dvolunteer.html">Volunteering</a><br>
+        -->
+      </div>
+      <h3>Developers</h3>
+      <div class="items">
+      <a href="../developer.html">New Developer</a><br>
+      <a href="../documentation.html">Documentation</a>&nbsp;*<br>
+      <a href="../NC_design.html">Naming&amp;Coding</a><br>
+      <a href="../source.html">Source&nbsp;repository</a><br>
+      <a href="../dpi1.html">Dpi1 Spec</a><br>
+      <a href="../CSS.html">CSS Spec</a><br>
+      <a href="../D_authors.html">Authors</a><br>
+      <a href="../authors/jcid-email.html">Security contact</a><br>
+      </div>
+      <h3>Related</h3>
+      <div class="items">
+        <a href="../press.html">Dillo in the Press!</a><br>
+        <a href="../interview.html">Interview</a><br>
+        <a href="../interview.es.html">Entrevista</a>
+         <img src="../chile.png" alt="*"><br>
+        <a href="../Links.html">Links</a><br>
+        <a href="../logos/logos.html">Art</a><br>
+      </div>
+      <p>
+      <a href="../authors/webmaster-email.html">Webmaster</a>
+      <p>
+      <a href="http://www.anybrowser.org/campaign/">
+         <img src="../abblue.gif" width="80" height="15"
+              alt="anybrowser"></a>
+
+  <td valign="top" align="left" width="100%">
+
+
+<table width="100%" bgcolor="#70A0C0">
+
+<tr><td>
+ <table width="100%" bgcolor="#70A0C0">
+  <tr>
+    <td><a href="funding.html">
+     <img src="logo1s.png" title="Top page" alt="Index"></a></td>
+    <td width="90%" align="center">
+     <b><big><big><big>Technical overview</big></big></big></b>
+    </td>
+    <td><small>[Page&nbsp;4&nbsp;of&nbsp;6]</small></td>
+  </tr>
+ </table>
+</td></tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b>Metadescription</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ <b>[Please note that the funding presentation is currently considered
+ historical and is not updated &mdash;corvid]</b>
+ <p>
+ What's Dillo?
+ <ul>
+  <li> Dillo is a web browser project completely written in C. </li>
+  <li> Dillo is small: source is less than 350 KB, and the binary is around
+       <strong> 300 KB! </strong> </li>
+  <li>Dillo aims to be a multi-platform browser alternative that's small,
+      stable, developer-friendly, usable, fast, and extensible. </li>
+  <li>Dillo is mainly based on GTK+ (GNOME is NOT required!)</li>
+  <li>Dillo is a free-SW project in the terms of the GNU general public
+      license. </li>
+  <li>Current  code  uses an improved and extended version of gzilla-0.2.2's
+     html-parser, and almost everything else was rewritten from scratch!.</li>
+  <li>Dillo is <strong>very fast!</strong></li>
+  </ul>
+ <br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b><a name="des"></a>Design</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ Dillo is a browser purely written in C; that helps to make it very fast
+ and produces a smaller binary file than what would be achieved with
+ normal C++ code. The trade off is that inheritance gets more complex
+ cause it must be implemented with C code. That's a bit scary at the
+ very beginning, but is not as bad at it seems.
+ <p>
+ Dillo internals are not of a simple nature. A Web browser is an
+ inherently complex application. Just think of every thing that needs to
+ be coordinated to get the job done. And at the very same time!
+ <p>
+ Dillo's main libraries are gtk+ (gimp tool kit) for widgets and glib for
+ almost everything else (as memory management). So, if you happen to be
+ developing new code, please try to find what glib has to offer you, and
+ use it.
+ <p>
+ Dillo's SW-techniques include threads, callbacks, signal driven IO
+ (input/output) and an engine that takes care of file descriptor activity
+ (including sockets). Ah, there's also a widget abstraction layer that
+ serves as an internal ADT (abstract data type) to gtk+; It's called
+ Dillo widget (Dw_ within function names).
+ <br><br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b><a name="fea"></a>Current features</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ <ul>
+  <li>A very good subset of HTML 4.01 SPEC is supported (no frames yet)
+  <li>URI parsing that's
+      <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a> compliant
+  <li>Cookies support,
+      <a href="http://www.ietf.org/rfc/rfc2965.txt">RFC-2965</a> compliant
+  <li>XHTML 1.0 rendering (same subset as for HTML)
+  <li>Plain text rendering
+  <li>Image formats support: PNG, JPEG and GIF (no animated GIFs)
+  <li>HTTP 1.0 (not fully yet)
+  <li>High portability among Un*x based machines
+  <li>An extraordinary small size (around 40 times less than big browsers)
+  <li>Innovative concurrency handling that allows for a user interface
+      that's always responsive and that lacks busy-clock locks!
+  <li>A simple cognitive model underlying the UI (simple to use for
+      the newbie and expert).
+  <li>An ordered, clean and documented code base that's easy to extend
+      and maintain.
+
+  <li>Extraordinary quick rendering!
+  <li>Streamed rendering of tables (it doesn't require the whole table data
+      to start rendering)
+  <li>Multiple browsing windows can be used at the same time!
+  <li>Start-up time that's near two seconds!
+  <li>Snapy response even on a 75Mhz Pentium with 32 Mb
+  <li>and much more...
+ </ul>
+ <p>
+ Just test it!
+ <br><br>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+<tr>
+ <td>
+ <table width="100%" cellpadding="4" border="0" cellspacing="0">
+  <tr>
+   <td width="100%" bgcolor="#818181">
+    <font color="white"><big><b><a name="doc"></a>Internal documentation</b></big></font>
+   </td>
+  </tr>
+  <tr>
+   <td width="100%" bgcolor="#70A0C0">
+ <br>
+ Besides the descriptions found on the web site, Dillo has several
+other detailed documents about its internal working, that are included
+within the sources distribution.
+ <p>
+ These are in the "/doc" directory within the tarball.
+ <pre>
+ --------------------------------------------------------------------------
+       FILE                    DESCRIPTION                   STATE         
+ --------------------------------------------------------------------------
+   NC_design.txt       Naming&Coding design                 Current
+   Dillo.txt           General overview of the program      Current
+   IO.txt              Extensive introduction               Current
+   Cache.txt           Informative description              Current
+   Images.txt          Image handling and processing        Current
+   HtmlParser.txt      A versatile parser                   Current
+   Dw.txt              The New Dillo Widget (Overview)      Current
+   DwWidget.txt        The base object of Dw                Current
+   DwImage.txt         Dillo Widget image handling          Incomplete
+   DwPage.txt          Dillo Widget page (shortly)          Incomplete
+   DwStyle.txt         Styles of Dillo Widgets              Pending
+   DwTable.txt         Tables in dillo                      Current
+ --------------------------------------------------------------------------
+ [This documents cover dillo's internal working. They're NOT a user manual]
+ --------------------------------------------------------------------------
+  </pre>
+ <hr>
+   </td>
+  </tr>
+ </table>
+ <hr>
+ </td>
+</tr>
+</table>
+
+  </td>
+
+ </tr>
+</table>
+
+
+</body>
+</html>
+

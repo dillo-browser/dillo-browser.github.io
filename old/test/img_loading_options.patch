@@ -1,0 +1,323 @@
+diff -r 9d82957f8d6a src/html.cc
+--- a/src/html.cc	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/html.cc	Sun Sep 06 22:52:31 2009 +0000
+@@ -197,13 +197,23 @@ static void Html_free(void *data)
+ }
+ 
+ /*
+- * Used by the "Load images" page menuitem.
+- */
+-void a_Html_load_images(void *v_html, DilloUrl *pattern)
++ * Used by the "Load image" image menuitem.
++ */
++void a_Html_load_image(void *v_html, const DilloUrl *url)
+ {
+    DilloHtml *html = (DilloHtml*)v_html;
+ 
+-   html->loadImages(pattern);
++   html->loadImages(url, "same url");
++}
++
++/*
++ * Used by the "Autoload images" tools menu item
++ */
++void a_Html_load_images(void *v_html)
++{
++   DilloHtml *html = (DilloHtml*)v_html;
++
++   html->loadImages(html->page_url, prefs.load_images);
+ }
+ 
+ /*
+@@ -662,18 +672,70 @@ bool_t DilloHtml::unloadedImages()
+    return FALSE;
+ }
+ 
++/* TODO: clean up, make understandable :) */
++static bool Html_domain_match(const DilloUrl *page, const DilloUrl *image)
++{
++   const char *page_str = URL_HOST(page),
++              *img_str = URL_HOST(image);
++   uint_t page_strlen = strlen(page_str);
++
++   MSG("Html_domain_match:\n%s\n%s\n", page_str, img_str);
++   if (isalpha(page_str[page_strlen - 1])) {
++      /* For IP addrs, match fully. For hostnames, let's say for now that
++       * if you have two dots, we will ignore what's before the first dot.
++       */
++      char *dot = strchr(page_str, '.');
++
++      if (dot && strchr(dot + 1, '.')) {
++         page_strlen -= dot + 1 - page_str;
++         page_str = dot + 1;
++      }
++      uint_t img_strlen = strlen(img_str);
++
++      if (img_strlen < page_strlen) {
++         MSG("FAIL\n");
++         return false;
++      } else {
++         if (img_strlen > page_strlen &&
++            img_str[img_strlen - page_strlen - 1] == '.') {
++            img_str += img_strlen - page_strlen;
++         }
++      }
++   }
++   bool ret = dStrcasecmp(page_str, img_str) == 0;
++   if (ret)
++      MSG("MATCH\n");
++   else
++      MSG("FAIL\n");
++   return ret;
++
++   /* I guess a dot suffix would foil this, but it's not worth worrying
++    * about for the moment
++    */      
++}
++
+ /*
+  * Load images if they were disabled.
+  */
+-void DilloHtml::loadImages (const DilloUrl *pattern)
++void DilloHtml::loadImages (const DilloUrl *url, const char *strictness)
+ {
+    dReturn_if_fail (bw->nav_expecting == FALSE);
+ 
+    for (int i = 0; i < images->size(); i++) {
+-      if (images->get(i)->image) {
+-         if ((!pattern) || (!a_Url_cmp(images->get(i)->url, pattern))) {
+-            Html_load_image(bw, images->get(i)->url, images->get(i)->image);
+-            a_Image_unref (images->get(i)->image);
++      DilloImage *image;
++      DilloUrl *url2;
++
++      if ((image = images->get(i)->image)) {
++         url2 = images->get(i)->url;
++         if (!dStrcasecmp(strictness, "yes") ||
++             (!dStrcasecmp(strictness, "same url") &&
++              !a_Url_cmp(url, url2)) ||
++             (!dStrcasecmp(strictness, "same host") &&
++              !dStrcasecmp(URL_HOST(url), URL_HOST(url2))) ||
++             (!dStrcasecmp(strictness, "same domain") &&
++              Html_domain_match(url, url2))) { 
++            Html_load_image(bw, url2, image);
++            a_Image_unref (image);
+             images->get(i)->image = NULL;  // web owns it now
+          }
+       }
+@@ -755,8 +817,7 @@ bool DilloHtml::HtmlLinkReceiver::click 
+       // clicked an image that has not already been loaded
+       if (event->button == 1){
+          // load all instances of this image
+-         DilloUrl *pattern = html->images->get(img)->url;
+-         html->loadImages(pattern);
++         html->loadImages(html->images->get(img)->url, "same url");
+          return true;
+       }
+    }
+@@ -1970,6 +2031,18 @@ static void Html_tag_open_address(DilloH
+    HT2TB(html)->addParbreak (9, html->styleEngine->wordStyle ());
+ }
+ 
++static bool Html_autoload_image(const DilloUrl *page_url,
++                                const DilloUrl *image_url)
++{
++   if (dStrcasecmp(prefs.load_images, "yes") == 0)
++      return true;
++   if (dStrcasecmp(prefs.load_images, "same host") == 0)
++      return (dStrcasecmp(URL_HOST(page_url), URL_HOST(image_url)) == 0);
++   if (dStrcasecmp(prefs.load_images, "same domain") == 0)
++      return Html_domain_match(page_url, image_url);
++   return false;
++}
++
+ /*
+  * Read image-associated tag attributes and create new image.
+  */
+@@ -1989,8 +2062,11 @@ DilloImage *a_Html_image_new(DilloHtml *
+ //     (attrbuf = a_Html_get_attr(html, tag, tagsize, "title")))
+ //    style_attrs->x_tooltip = a_Dw_tooltip_new_no_ref(attrbuf);
+ 
++   load_now = Html_autoload_image(html->page_url, url) ||
++              (a_Capi_get_flags_with_redirection(url) & CAPI_IsCached);
++
+    alt_ptr = a_Html_get_attr_wdef(html, tag, tagsize, "alt", NULL);
+-   if ((!alt_ptr || !*alt_ptr) && !prefs.load_images) {
++   if (!load_now && (!alt_ptr || !*alt_ptr)) {
+       dFree(alt_ptr);
+       alt_ptr = dStrdup("[IMG]"); // Place holder for img_off mode
+    }
+@@ -2098,8 +2174,6 @@ DilloImage *a_Html_image_new(DilloHtml *
+    if (HT2TB(html)->getBgColor())
+       Image->bg_color = HT2TB(html)->getBgColor()->getColor();
+ 
+-   load_now = prefs.load_images ||
+-              (a_Capi_get_flags_with_redirection(url) & CAPI_IsCached);
+    Html_add_new_linkimage(html, &url, load_now ? NULL : Image);
+    if (load_now)
+       Html_load_image(html->bw, url, Image);
+diff -r 9d82957f8d6a src/html.hh
+--- a/src/html.hh	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/html.hh	Sun Sep 06 22:52:31 2009 +0000
+@@ -10,7 +10,8 @@ extern "C" {
+ /*
+  * Exported functions
+  */
+-void a_Html_load_images(void *v_html, DilloUrl *pattern);
++void a_Html_load_image(void *v_html, const DilloUrl *url);
++void a_Html_load_images(void *v_html);
+ void a_Html_form_submit(void *v_html, void *v_form);
+ void a_Html_form_reset(void *v_html, void *v_form);
+ void a_Html_form_display_hiddens(void *v_html, void *v_form, bool_t display);
+diff -r 9d82957f8d6a src/html_common.hh
+--- a/src/html_common.hh	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/html_common.hh	Sun Sep 06 22:52:31 2009 +0000
+@@ -209,7 +209,7 @@ public:
+                DilloHtmlEnc enc, const char *charset);
+    DilloHtmlForm *getCurrentForm ();
+    bool_t unloadedImages();
+-   void loadImages (const DilloUrl *pattern);
++   void loadImages (const DilloUrl *url, const char *strictness);
+    void addCssUrl(const DilloUrl *url);
+ };
+ 
+diff -r 9d82957f8d6a src/menu.cc
+--- a/src/menu.cc	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/menu.cc	Sun Sep 06 22:52:31 2009 +0000
+@@ -192,15 +192,15 @@ static void Menu_view_page_bugs_cb(Widge
+ }
+ 
+ /*
+- * Load images on current page that match URL pattern
+- */
+-static void Menu_load_images_cb(Widget*, void *user_data)
++ * Load image on current page that match URL pattern
++ */
++static void Menu_load_image_cb(Widget*, void *user_data)
+ {
+    DilloUrl *page_url = (DilloUrl *) user_data;
+    void *doc = a_Bw_get_url_doc(popup_bw, page_url);
+ 
+    if (doc)
+-      a_Html_load_images(doc, popup_url);
++      a_Html_load_image(doc, popup_url);
+ }
+ 
+ /*
+@@ -473,7 +473,7 @@ void a_Menu_image_popup(BrowserWindow *b
+        i->callback(Menu_open_url_nt_cb);
+        new Divider();
+        i = load_img_menuitem = new Item("Load image");
+-       i->callback(Menu_load_images_cb);
++       i->callback(Menu_load_image_cb);
+        i = new Item("Bookmark this Image");
+        i->callback(Menu_add_bookmark_cb);
+        i = new Item("Copy Image location");
+@@ -674,16 +674,23 @@ static void Menu_embedded_css_cb(Widget 
+ }
+ 
+ /*
+- * Toggle loading of images -- and load them if enabling.
+- */
+-static void Menu_imgload_toggle_cb(Widget *wid)
+-{
+-   if ((prefs.load_images = wid->state() ? 1 : 0)) {
++ * Change setting for loading images -- and load them if enabled.
++ */
++static void Menu_imgload_cb(Widget *wid)
++{
++   char *parent_label = dStrconcat("Autoload images: ", wid->label(), NULL);
++
++   dFree((char *)wid->parent()->label());
++   wid->parent()->label(parent_label);
++
++   dFree(prefs.load_images);
++   prefs.load_images = dStrdup(wid->label());
++
++   if (dStrcasecmp(wid->label(), "no")) {
+       void *doc = a_Bw_get_current_doc(popup_bw);
+ 
+       if (doc) {
+-         DilloUrl *pattern = NULL;
+-         a_Html_load_images(doc, pattern);
++         a_Html_load_images(doc);
+       }
+    }
+ }
+@@ -710,9 +717,21 @@ void a_Menu_tools_popup(BrowserWindow *b
+        it->callback(Menu_embedded_css_cb);
+        it->state(prefs.parse_embedded_css);
+        new Divider();
+-       it = new ToggleItem("Load images");
+-       it->callback(Menu_imgload_toggle_cb);
+-       it->state(prefs.load_images);
++
++       char *label = dStrconcat("Autoload images: ", prefs.load_images, NULL);
++       ItemGroup *ig = new ItemGroup(label);
++       it = new Item("yes");
++       it->callback(Menu_imgload_cb);
++       ig->add(it);
++       it = new Item("same domain");
++       it->callback(Menu_imgload_cb);
++       ig->add(it);
++       it = new Item("same host");
++       it->callback(Menu_imgload_cb);
++       ig->add(it);
++       it = new Item("no");
++       it->callback(Menu_imgload_cb);
++       ig->add(it);
+        pm->type(PopupMenu::POPUP13);
+       pm->end();
+    }
+diff -r 9d82957f8d6a src/prefs.c
+--- a/src/prefs.c	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/prefs.c	Sun Sep 06 22:52:32 2009 +0000
+@@ -22,6 +22,7 @@
+ #define PREFS_NO_PROXY        "localhost 127.0.0.1"
+ #define PREFS_SAVE_DIR        "/tmp/"
+ #define PREFS_HTTP_REFERER    "host"
++#define PREFS_LOAD_IMAGES     "yes"
+ 
+ /*-----------------------------------------------------------------------------
+  * Global Data
+@@ -61,7 +62,7 @@ void a_Prefs_init(void)
+    prefs.http_proxyuser = NULL;
+    prefs.http_referer = dStrdup(PREFS_HTTP_REFERER);
+    prefs.limit_text_width = FALSE;
+-   prefs.load_images=TRUE;
++   prefs.load_images = dStrdup(PREFS_LOAD_IMAGES);
+    prefs.load_stylesheets=TRUE;
+    prefs.middle_click_drags_page = TRUE;
+    prefs.middle_click_opens_new_tab = TRUE;
+@@ -107,6 +108,7 @@ void a_Prefs_freeall(void)
+    a_Url_free(prefs.http_proxy);
+    dFree(prefs.http_proxyuser);
+    dFree(prefs.http_referer);
++   dFree(prefs.load_images);
+    dFree(prefs.no_proxy);
+    dFree(prefs.save_dir);
+    dFree(prefs.search_url);
+diff -r 9d82957f8d6a src/prefs.h
+--- a/src/prefs.h	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/prefs.h	Sun Sep 06 22:52:32 2009 +0000
+@@ -65,7 +65,7 @@ struct _DilloPrefs {
+    bool_t show_search;
+    bool_t show_progress_box;
+    bool_t fullwindow_start;
+-   bool_t load_images;
++   char *load_images;
+    bool_t load_stylesheets;
+    bool_t parse_embedded_css;
+    int32_t buffered_drawing;
+diff -r 9d82957f8d6a src/prefsparser.cc
+--- a/src/prefsparser.cc	Thu Sep 03 18:42:54 2009 +0000
++++ b/src/prefsparser.cc	Sun Sep 06 22:52:32 2009 +0000
+@@ -67,7 +67,7 @@ int PrefsParser::parseOption(char *name,
+       { "http_proxyuser", &prefs.http_proxyuser, PREFS_STRING },
+       { "http_referer", &prefs.http_referer, PREFS_STRING },
+       { "limit_text_width", &prefs.limit_text_width, PREFS_BOOL },
+-      { "load_images", &prefs.load_images, PREFS_BOOL },
++      { "load_images", &prefs.load_images, PREFS_STRING },
+       { "load_stylesheets", &prefs.load_stylesheets, PREFS_BOOL },
+       { "middle_click_drags_page", &prefs.middle_click_drags_page,
+         PREFS_BOOL },

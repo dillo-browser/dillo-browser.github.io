@@ -1,0 +1,907 @@
+
+article.in-column a h1, 
+article.in-column a {
+	font-size: 22px;
+	color: #263034;
+}
+
+article.in-column a:visited h1,
+article.in-column a:visited {
+  color: #839496;
+}
+
+.latest-stories h2,
+article.in-column h2,
+#recommendations .upper-deck {
+	text-transform: uppercase;
+	color: #24af3a;
+	font-size: 11px;
+	margin: 0 0 6px 0;
+}
+
+.latest-stories h2 {
+	line-height: 11px;
+}
+
+article.in-column a.headline-image {
+	display: block;
+}
+
+article.in-column a:hover h1,
+article.in-column a:hover {
+	color: #ff4f00;
+}
+
+p.excerpt,
+#recommendations .lower-deck {
+	line-height: 19px;
+	margin: 5px 0;
+	color: #657b83;
+}
+
+.report p.excerpt {
+	position: relative;
+	z-index: 8;
+}
+
+article.in-column {
+	border-bottom: 1px solid #dddddd;
+	margin-bottom: 15px;
+	position: relative;
+	padding-bottom: 7px;
+}
+
+article.in-column .byline {
+	color: #4f525a;
+	font-size: 11px;
+	margin: 0;
+}
+
+article.in-column .byline span.author,
+article.in-column .byline a {
+	font-weight: bold;
+	color: #4f525a;
+	text-decoration: none;
+	font-size: 11px;
+}
+
+article.in-column .byline a:hover {
+	color: #ff4f00;
+}
+
+article.in-column .archive-listing {
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+article .comments-hotness {
+	position: absolute;
+	bottom: -1px;
+	background: #fff;
+	padding-left: 5px;
+	right: 0;
+}
+
+article.in-column .comments-hotness.radar {background: #f6f6f6;}
+article.main-feature .comments-hotness {
+	background: none;
+	right: 20px;
+}
+
+.pageviews {
+	background: #839496;
+	padding: 0 6px;
+	text-align: center;
+	min-width: 14px;
+	line-height: 16px;
+	height: 16px;
+	font-size: 14px;
+	color: #fff;
+	font-family: "BebasNeue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+.pageviews a,
+.editor-box .pageviews a,
+article.in-column .pageviews a {
+	font-size: 14px;
+  display: block;
+	color: #fff;
+}
+
+nav .comment-count span,
+article .comment-count span {
+	background: #839496;
+	display: block;
+	padding: 0 6px;
+	text-align: center;
+	min-width: 14px;
+	line-height: 16px;
+	height: 16px;
+}
+
+article .comment-count:visited span {color: #fff;}
+
+article.in-column .comment-count,
+article.main-feature .comment-count,
+article .post-meta .comment-count,
+nav .comment-count {
+	font-size: 14px;
+	color: #fff;
+	padding-top: 6px;
+	font-family: "BebasNeue", sans-serif;
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/comment-notch.png) no-repeat 14px top;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+article .comment-count.unread,
+article .comment-count:hover  {background-position: 14px -6px;}
+
+article .comment-count.unread span,
+article .comment-count:hover span {
+	background: #ff4f00;
+	color: #fff;
+}
+
+.archive-report article.in-column {
+	padding: 15px 0 20px;
+	margin: 0;
+}
+
+.archive-brief article.in-column {
+	padding: 15px 0 10px;
+	margin: 0;
+}
+
+body.archive .archive-feature,
+body.archive-view .archive-feature {
+	padding-bottom: 15px;
+	border-bottom: 1px solid #dddddd;
+}
+
+.archive-feature article.main-feature {
+	margin: 15px 0 0;
+}
+
+body.category-features .archive li:first-child article,
+.archive-view li:first-child article {
+	margin-top: 0;
+}
+
+#stories-main h1 {
+	line-height: 22px;
+	font-size: 32px;
+    position: relative;
+    right: -8px;
+	margin-top: -17px;
+	top: 0;
+}
+
+#stories-main h1 span.whole {
+    position: relative;
+    left: -8px;
+	top: -4px;
+	font-size: 22px;
+	z-index: 3;
+}
+
+#stories-main h1 span.firstword {
+	position: relative;
+    background: #fff;
+	line-height: 22px;
+	font-size: 32px;
+	top: 4px;
+	z-index: -1;
+}
+
+#stories-main h1 span.adjust {
+	font-size: 22px;
+	position: relative;
+	top: -4px;
+}
+
+#stories-main h1:first-line {
+    background: #fff;
+}
+
+.main-feature {
+	position: relative;
+	margin-bottom: 15px;
+  background-position: top left;
+  background-repeat: no-repeat;
+	z-index: 1;
+}
+
+body.category-features ol li:first-child .main-feature {
+	margin-top: 0;
+}
+
+.main-feature h1 {
+	color: #fff;
+	font-size: 30px;
+	text-shadow: 0px 0px 5px rgba(0,0,0,1);
+	text-decoration: none;
+	line-height: 34px;
+}
+
+.feature-container:hover h1 {
+	color: #ff4f00;
+}
+
+.main-feature p {
+	color: #fff;
+	margin: 0;
+}
+
+.main-feature p.excerpt {
+	color: #deddd4;
+	font-size: 16px;
+	margin-bottom: 8px;
+	text-shadow: -1px 1px 1px #333;
+	/*white-space: nowrap;*/
+}
+
+.main-feature hr {
+	border: 0;
+	height: 1px;
+	text-align: left;
+	margin-left: 0;
+	background: #3c3c3c;
+	width: 100px;
+}
+
+.feature-container {
+	display: block;
+	height: 190px;
+	padding: 10px 20px 15px;
+	position: relative;
+	z-index: 2;
+}
+
+.feature-sash {
+	position: absolute;
+	line-height: 14px;
+	top: 10px;
+	background-color: #eee;
+	background: rgba(255,255,255,.8);
+	padding: 10px 20px 6px 10px;
+	right: 0;
+	z-index: 3;
+}
+
+.feature-meta {
+	position: absolute;
+	bottom: 15px;
+	width: 100%;
+	padding: 0 20px;
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+	z-index: 3;
+}
+
+.feature-contents {
+	position: absolute;
+	bottom: 30px;
+	padding-right: 20px;
+}
+
+.main-feature p.byline {
+	font-size: 11px;
+}
+
+.main-feature p.byline a {
+	color: #fff;
+	font-weight: bold;
+}
+
+.main-feature p.byline a:hover {
+	color: #ff4f00;
+}
+
+#recent-story {
+	background-color: #ff4f00;
+	background-image: linear-gradient(left bottom, rgb(229,38,0) 0%, rgb(252,71,0) 100%);
+	background-image: -o-linear-gradient(left bottom, rgb(229,38,0) 0%, rgb(252,71,0) 100%);
+	background-image: -moz-linear-gradient(left bottom, rgb(229,38,0) 0%, rgb(252,71,0) 100%);
+	background-image: -webkit-linear-gradient(left bottom, rgb(229,38,0) 0%, rgb(252,71,0) 100%);
+	background-image: -ms-linear-gradient(left bottom, rgb(229,38,0) 0%, rgb(252,71,0) 100%);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		right top,
+		color-stop(0, rgb(229,38,0)),
+		color-stop(1, rgb(252,71,0))
+	);
+	color: #fff;
+	position: absolute;
+	top: -10px;
+	right: 10px;
+	width: 50px;
+	height: 40px;
+	padding-top: 10px;
+	text-align: center;
+	border-radius: 40px;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+	font-family: "BebasNeue", sans-serif;
+	font-size: 16px;
+	text-transform: uppercase;
+	-webkit-font-smoothing: antialiased;
+	line-height: 1em;	
+}
+
+.archive-listing.favicon {
+  display: inline;
+}
+
+.overlay {
+	margin: 0;
+	display: block;
+	position: relative;
+}
+
+.overlay img {
+	display: block;
+}
+
+.overlay:before {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-moz-box-shadow: inset 0 0 40px 0 rgba(0,0,0,0.2);
+	-webkit-box-shadow: inset 0 0 40px 0 rgba(0,0,0,0.2);
+	box-shadow: inset 0 0 40px 0 rgba(0,0,0,0.2);
+}
+
+.ces-overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#radar {
+	background-color: #f6f6f6;
+	padding: 14px 19px;
+	width: 280px;
+	float: left;
+	position: relative;
+	border: 1px solid #dddddd;
+	
+	background: #f6f6f6 url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RkZGRkZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkZGRkZGQiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: #f6f6f6 -moz-linear-gradient(top, rgba(221,221,221,1) 0%, rgba(221,221,221,0) 100%); /* FF3.6+ */
+	background: #f6f6f6 -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(221,221,221,1)), color-stop(100%,rgba(221,221,221,0))); /* Chrome,Safari4+ */
+	background: #f6f6f6 -webkit-linear-gradient(top, rgba(221,221,221,1) 0%,rgba(221,221,221,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: #f6f6f6 -o-linear-gradient(top, rgba(221,221,221,1) 0%,rgba(221,221,221,0) 100%); /* Opera 11.10+ */
+	background: #f6f6f6-ms-linear-gradient(top, rgba(221,221,221,1) 0%,rgba(221,221,221,0) 100%); /* IE10+ */
+	background: #f6f6f6 linear-gradient(top, rgba(221,221,221,1) 0%,rgba(221,221,221,0) 100%); /* W3C */
+
+	background-size: auto 50px;
+	background-repeat: repeat-x;	
+}
+
+#radar h1, 
+#recent-feature h1
+{
+	margin-bottom: 2px;
+	line-height: 22px;
+}
+
+#stories-features img {
+	margin-bottom: 5px;
+}
+
+#stories-features article h2.page-count,
+#article-sidebar h2.page-count {
+	font-size: 15px;
+	color: #ff4f00;
+	margin: 0 0 5px 0;
+}
+
+.subheading a:link,
+.subheading a:visited {
+	color: #657B83;
+}
+
+.subheading a:hover {
+	color: #ff4f00;
+}
+
+aside.sidebar {
+	width: 250px;
+}
+
+aside.sidebar.story-sidebar.multi-story {
+  width: auto;
+}
+
+div.story-sidebar-part {
+  width: 200px;
+  float: left;
+  margin-right: 15px;
+}
+
+div.story-sidebar-part:last-child {
+  margin-right: 0;
+}
+
+aside.sidebar.story-sidebar,
+aside.sidebar.story-sidebar img {
+  width: 200px;
+}
+
+aside.sidebar p:last-child {
+  margin-bottom: 0;
+}
+
+.center-text {
+  text-align: center;
+}
+
+#stories-features > li:last-child {
+	padding-top: 12px;
+}
+
+.social {
+	padding-bottom: 15px;
+	border-bottom: 5px solid #dddddd;
+	margin-bottom: 15px;
+	position: relative;
+}
+
+.social > li > a {
+	float: left;
+	margin-right: 12px;
+	width: 40px;
+	height: 40px;
+	display: block;
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/social-icons.png) no-repeat left top;
+}
+
+.social > .fb > a {background-position: left top}
+.social > .twit > a {background-position: -40px top}
+.social > .gplus > a {background-position: -80px top}
+.social > .email > a {background-position: -120px top}
+.social > .rss > a {background-position: -160px top}
+.social > .pod > a {background-position: -200px top}
+
+.social .last a {margin-right: 0;}
+
+.social-pop {
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/social-arrow.png) no-repeat center bottom;
+	position: absolute;
+	left: 0;
+	bottom: 55px;
+	z-index: 5;
+	padding-bottom: 7px;
+	display: none;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.social-pop h2 {
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/small-social-icons.png) no-repeat left top;
+	border-bottom: 2px solid #dddddd;
+	padding-bottom: 4px;
+	padding-left: 18px;
+	margin-bottom: 15px;
+	line-height: 16px;
+}
+
+.fb .social-pop h2 {background-position: left 0}
+.twit .social-pop h2 {background-position: left -22px}
+.gplus .social-pop h2 {background-position: left -44px}
+.email .social-pop h2 {background-position: left -110px}
+.rss .social-pop h2 {background-position: left -66px}
+.pod .social-pop h2 {background-position: left -88px}
+
+.social-pop ul {
+	color: #263034;
+	font-weight: bold;
+	margin: 0;
+}
+
+.social-pop p {
+	margin: 0 0 15px 0;
+}
+
+.social-pop li {
+	margin: 7px 0;
+}
+
+.social-pop a {
+	color: #ff4f00;
+}
+
+.social-pop form {
+	text-align: right;
+}
+
+.social-pop label {
+	display: none;
+}
+.social-pop input[type="text"] {
+	display: block;
+	width: 252px;
+	margin: 0 0 10px;
+	border: 1px solid #839496;
+	padding: 3px;
+}
+
+.social-pop input[type="submit"] {
+	margin-bottom: 20px;
+}
+
+.social-pop footer {
+	color: #657b83;
+	font-size: 9px;
+	line-height: 12px;
+}
+
+.fb .social-pop {background-position: -280px bottom}
+.twit .social-pop {background-position: -228px bottom}
+.gplus .social-pop {background-position: -175px bottom}
+.email .social-pop {background-position: -124px bottom}
+.rss .social-pop {background-position: -72px bottom}
+.pod .social-pop {background-position: -19px bottom}
+
+.social-pop-content {
+	position: relative;
+	z-index: 4;
+	background: #fff;
+	width: 260px;
+	padding: 15px 20px;
+	border: 1px solid #dcdcdc;
+	border-bottom: 0;
+}
+
+div.story-info {
+	font-size: 11px;
+	margin-bottom: 0px;
+	position: relative;
+}
+
+figure.image {
+	margin: 10px;
+}
+
+#polar-content img {
+	display: block;
+	max-width: 100%;
+  clear: both;
+}
+#polar-content .phoenix-inline-image {
+  margin: 15px;
+  float: left;
+}
+
+figure.image img {
+	display: block;
+	max-width: 100%;
+}
+
+div#article div.top {
+	margin-top: 0;
+}
+
+#article-guts {
+  overflow: hidden;
+}
+
+.article-content .right {
+	float: right;
+  clear: right;
+	margin: 5px 0 20px 20px;
+}
+
+.article-content .center {
+	/*text-align: center; not sure we want this */
+	margin-left: auto;
+	margin-right: auto;
+  clear: both;
+}
+
+article.standalone .full-width.center {
+	margin: 15px auto;
+}
+
+article.standalone .full-width.center:first-child {
+  margin-top: 0;
+}
+
+.article-content .left {
+	float: left;
+  clear: left;
+	margin: 5px 20px 20px 0;
+}
+
+.article-content .game-info {
+	width: 230px;
+	border-top: 10px solid #839496;
+	border-bottom: 1px solid #839496;
+	border-left: 0;
+	border-right: 0;
+	padding: 13px 0 10px;
+	color: #657b83;
+	font-family: 'NoticiaBold', 'Times New Roman', serif;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.article-content .game-info h3 {
+	font-size: 12px;
+	color: #dc322f;
+	margin: 0;
+}
+
+.article-content .game-info p {
+	margin-bottom: 10px;
+}
+
+.article-content .game-info p:last-child {
+	margin-bottom: 0;
+}
+
+.article-content .game-info ul {
+	list-style-type: none;
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+.article-content .game-info strong {
+	color: #2babd5;
+	font-weight: normal;
+	font-size: 14px;
+	vertical-align: middle;
+	font-family: "BebasNeue", sans-serif;
+}
+
+.article-content .game-info a {
+	color: #ff4f00;
+}
+
+.comments-header {
+	font-size: 28px;
+  margin-bottom: 0px;
+}
+
+div.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+figcaption {
+	font-size: 12px;
+	padding: 7px 0;
+	border-bottom: 1px solid #dddddd;
+	color: #4f525a;
+  overflow: hidden;
+}
+
+figcaption .enlarge {
+	padding-left: 17px;
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/zoom-enhance.png) no-repeat left center;
+}
+
+div.caption-credit {
+	font-weight: normal;
+	font-size: .8em;
+	padding-left: 16px;
+	background: url(https://www.dillo.org/~sgeerken/mirror/images/camera.png) no-repeat left top;
+	line-height: 10px;
+	margin-top: 5px;
+}
+
+ul#recommendations {
+	list-style: none;
+	margin: 10px 0;
+	padding: 0;
+  min-height: 530px;
+}
+
+ul#recommendations > li {
+	width: 145px;
+	font-size: 11px;
+	float: left;
+	height: 240px;
+	margin: 0 20px 25px 0;
+}
+
+ul#recommendations .lower-deck {
+	font-size: 14px;
+}
+
+ul#recommendations > li:nth-child(4n + 4) {
+	margin-right: 0;
+}
+
+ul#recommendations > li img {
+	width: 145px;
+	height: 145px;
+	margin-bottom: 5px;
+}
+
+ul#recommendations > li p {
+	margin: 0;
+	font-family: 'NoticiaBold', 'Times New Roman', serif;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 18px;
+}
+
+ul#recommendations > li p i,
+ul#recommendations > li p em {
+	font-family: 'NoticiaBoldItalic', 'NoticiaBold', 'Times New Roman', serif;
+}
+
+ul#recommendations > li p.no-thumb {
+	font-size: 16px;
+	line-height: 18px;
+}
+
+ul#recommendations > li a {
+	text-decoration: none;
+	color: #263034;
+}
+
+ul#recommendations > li a:hover {
+	color: #ff4f00;
+}
+
+#recommendations .upper-deck  {
+	font-weight: bold;
+}
+
+ul.share-buttons.disable {
+  height: 0px;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+article.standalone ul.share-buttons {
+	height: 30px;
+	border: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+article.standalone #article-footer-wrap ul.share-buttons {
+  margin-top: 15px;
+}
+
+article.standalone .post-meta ul.share-buttons {
+  display: inline-block;
+  height: 16px;
+  vertical-align: bottom;
+}
+
+.share-buttons.old {
+  height: 65px;
+}
+
+ul.share-buttons li {
+  display: block;
+  float: left;
+	margin-right: 10px;
+  cursor: pointer;
+}
+
+.post-meta ul.share-buttons li {
+  margin-right: 0px;
+  margin-left: 5px;
+}
+.post-meta ul.share-buttons li:first-child {
+  margin-left: 0px;
+}
+
+ul.share-buttons.old li {
+  margin-right: 20px;
+  opacity: 0.4;
+}
+
+ul.share-buttons.old li.hover,
+ul.share-buttons.old li:hover {
+  opacity: 1;
+}
+
+ul.share-buttons li a {
+	display: block;
+  background: url(https://www.dillo.org/~sgeerken/mirror/images/social-button-sprites-2.png) top left no-repeat;
+  background-position: 0px 0px;
+  background-size: 523px 60px;
+  text-indent: -9999px;
+  overflow: hidden;
+  width: 95px;
+  height: 30px;
+  float: left;
+}
+
+.post-meta ul.share-buttons li a {
+  width: 59px;
+  height: 16px;
+}
+
+ul.share-buttons li.share-facebook:hover a {
+  background-position: 0px -30px;
+}
+ul.share-buttons li.share-facebook a {
+  background-position: 0px 0px;
+}
+.post-meta ul.share-buttons li.share-facebook a {
+  background-position: -400px 0px;
+}
+.post-meta ul.share-buttons li.share-facebook:hover a {
+  background-position: -400px -30px;
+}
+ul.share-buttons li.share-twitter a {
+  background-position: -100px 0px;
+}
+.post-meta ul.share-buttons li.share-twitter a {
+  background-position: -464px 0px;
+}
+ul.share-buttons li.share-twitter:hover a {
+  background-position: -100px -30px;
+}
+.post-meta ul.share-buttons li.share-twitter:hover a {
+  background-position: -464px -30px;
+}
+ul.share-buttons li.share-google a {
+  background-position: -200px 0px;
+}
+ul.share-buttons li.share-google:hover a {
+  background-position: -200px -30px;
+}
+.post-meta ul.share-buttons li.share-google {
+  display: none;
+}
+ul.share-buttons li.share-reddit a {
+  background-position: -300px 0px;
+}
+.post-meta ul.share-buttons li.share-reddit {
+  display: none;
+}
+ul.share-buttons li.share-reddit:hover a {
+  background-position: -300px -30px;
+}
+
+#stories-brief img {
+	float: left;
+	border: 1px solid #93a1a1;
+	margin: 3px 8px 0 0;
+	width: 37px;
+	height: 37px;
+	image-rendering: optimizeQuality;
+}
+
+div.brief-box {
+	padding: 20px;
+	border: 1px solid #ddd;
+	margin-bottom: 15px;
+	border-top: 0;
+	background: #fff url(https://www.dillo.org/~sgeerken/mirror/images/box-notch.png) no-repeat top center;
+}
+
+div.brief-box h2 {
+	margin: 0 0 20px 0;
+}
+
+div.editors-picks h2 {
+	text-align: center;
+	font-family: 'NoticiaBoldItalic', 'NoticiaBold', 'Times New Roman', serif;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 22px;
+	color: #1d74a2;
+}
+
+div.editors-picks h2 i,
+div.editors-picks h2 em {
+	display: block;
+	font-size: 16px;
+	color: #2babd5;
+}

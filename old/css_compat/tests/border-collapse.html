@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Border Collapsing</title>
+
+<style type="text/css" media="all">
+
+.word {background-color: orange}
+
+
+table.separate {
+ border-collapse: separate;
+ margin: 10px;
+ border: 20px solid sienna;
+ padding: 40px;
+}
+table.collapse {
+ border-collapse: collapse;
+ margin: 15px;
+ border: 10px solid teal;
+ padding: 40px;
+}
+table.separate td {
+  margin: 40px;
+  border: 5px solid gray;
+  padding: 20px;
+}
+table.collapse td {
+  margin: 40px;
+  border: 5px solid gray;
+  padding: 20px;
+}
+
+
+table.coll1px {
+ border-collapse: collapse;
+ margin: 4px;
+}
+table.coll1px td {
+  border: 1px solid teal;
+  padding: 5px;
+}
+table.coll2px {
+ border-collapse: collapse;
+ margin: 4px;
+}
+table.coll2px td {
+  border: 2px solid teal;
+  padding: 5px;
+}
+table.coll3px {
+ border-collapse: collapse;
+ margin: 4px;
+}
+table.coll3px td {
+  border: 3px solid teal;
+  padding: 5px;
+}
+table.coll4px {
+ border-collapse: collapse;
+ margin: 4px;
+}
+table.coll4px td {
+  border: 4px solid teal;
+  padding: 5px;
+}
+table.coll10px {
+ border-collapse: collapse;
+ margin: 10px;
+}
+table.coll10px td {
+  border: 10px solid teal;
+  padding: 5px;
+}
+
+
+table.collapse2 {
+ border-collapse: collapse;
+ border: 1px solid sienna;
+ margin-bottom: 2em;
+}
+table.collapse2 td {
+  padding: 0.1em 1em;
+  border: 10px solid #aaa;
+}
+table.collapse2 th {
+  padding: 0.1em 1em;
+  border: 10px solid #aaa;
+}
+
+</style>
+</head>
+
+<body bgcolor="Thistle" _bgcolor="#F0F8FF">
+<big>
+1.- Margin, border and padding test for separate and collapse border models:
+</big>
+<h4>Separate:</h4>
+ <table class="separate" cellpadding=0>
+ <tr><td>Carnivores<td><i class="word">Primates</i>
+ <tr><td>Tiger<td>Sifaka
+ </table>
+<h4>Collapse:</h4>
+ <table class="collapse">
+ <tr><td><i class="word">Carnivores</i><td>Primates
+ <tr><td>Tiger<td>Sifaka
+ </table>
+
+
+<hr border=4>
+<p><big>
+2.- Test for different border widths in collapsing border model:
+</big>
+
+<table class="coll1px">
+<tr><td rowspan="2">1px</td><td>1<td>2<tr><td>3<td>4
+</table>
+
+<table class="coll2px">
+<tr><td rowspan="2">2px</td><td>1<td>2<tr><td>3<td>4
+</table>
+
+<table class="coll3px">
+<tr><td rowspan="2">3px</td><td>1<td>2<tr><td>3<td>4
+</table>
+
+<table class="coll4px">
+<tr><td rowspan="2">4px</td><td>1<td>2<tr><td>3<td>4
+</table>
+
+<table class="coll10px">
+<tr><td rowspan="2">10px</td><td>1<td>2<tr><td>3<td>4
+</table>
+
+
+<hr border=4>
+<p><big>
+3.- A sample wide-border table in both modes:
+</big>
+<h4>Separate:</h4>
+ <table class="collapse2" style="border-collapse: separate;">
+ <tr>
+ <th colspan="2">Carnivores</th>
+ <th>Primates</th>
+ </tr>
+ <tr>
+ <td>Tiger</td>
+ <td>Grey Wolf</td>
+ <td>Indri</td>
+ </tr>
+ <tr>
+ <td rowspan="2">Cheetah</td>
+ <td>Cape hunting dog</td>
+ <td rowspan="2">Sifaka</td>
+ </tr>
+ <tr>
+ <td>Red fox</td>
+ </tr>
+ <tr>
+ <td>Wildcat</td>
+ <td>Fennec</td>
+ <td>Dwarf lemur</td>
+ </tr>
+ </table>
+
+<h4>Collapse:</h4>
+ <table class="collapse2">
+ <tr>
+ <th colspan="2">Carnivores</th>
+ <th>Primates</th>
+ </tr>
+ <tr>
+ <td>Tiger</td>
+ <td>Grey Wolf</td>
+ <td>Indri</td>
+ </tr>
+ <tr>
+ <td rowspan="2">Cheetah</td>
+ <td>Cape hunting dog</td>
+ <td rowspan="2">Sifaka</td>
+ <tr>
+ <td>Red fox</td>
+ </tr>
+ <tr>
+ <td>Wildcat</td>
+ <td>Fennec</td>
+ <td>Dwarf lemur</td>
+ </tr>
+ </table>
+
+<hr border=4>
+<p><big>
+4.- <code>collapse</code> should overrule <code>cellspacing</code>
+</big>
+<h4>These tables should look the same:</h4>
+<br>
+<pre>
+&lt;table style="border-collapse: collapse;"&gt;
+</pre>
+
+<table class="collapse2">
+<tr>
+  <td>First TD of first TR</td>
+  <td>Second TD of first TR</td>
+  <td>Third TD of first TR</td>
+</tr>
+<tr>
+  <td>First TD of second TR</td>
+  <td></td>
+  <td>Third TD of second TR</td>
+</tr>
+</table>
+
+<pre>
+&lt;table style="border-collapse: collapse;" cellspacing="10"&gt;
+</pre>
+
+<table class="collapse2" cellspacing="10">
+<tr>
+  <td>First TD of first TR</td>
+  <td>Second TD of first TR</td>
+  <td>Third TD of first TR</td>
+</tr>
+<tr>
+  <td>First TD of second TR</td>
+  <td></td>
+  <td>Third TD of second TR</td>
+</tr>
+</table>
+
+</body>
+</html>

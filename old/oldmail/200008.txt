@@ -1,0 +1,3527 @@
+Re: [Dillo-dev]bug#77 is anchor-related
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-27 16:32
+
+Eric GAUDET wrote:
+> 
+> Hi all,
+> bug#77 (segfault with http://www.w3.org/TR/html4/) has to do with
+> Dw_page_set_scroller_pos. For an unknown (to me, at least ;-) reason,
+> dw->container is null for one widget, doing a segfault when accessed.
+> This is related to anchors, so I hope Sebastian can fix that easilly ;-)
+
+Funny, I've inserted this bug. ;-)
+
+Dw_page_set_scroller_pos searches the GtkDwScroller that "contains"
+the DwPage. Normally, page->parent is a DwBorder, page->parent->parent
+is NULL (i. e. the DwBorder is a toplevel Dw widget), and
+page->parent->container->widget point to the GtkDwView (a normal Gtk+
+widget, which parent is the GtkDwScroller). page->container is always
+NULL.
+
+When examining the bug, I found that page->parent is NULL (and also
+page->container). The bug seems to lie deeper in Dw, but since Dw is
+planned to be elemenated and relaced by Gtk+, I'd suggest to forget
+it. ;-)
+
+Sebastian 
+
+
+
+[Dillo-dev]bug#77 is anchor-related
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-27 14:07
+
+Hi all,
+bug#77 (segfault with http://www.w3.org/TR/html4/) has to do with
+Dw_page_set_scroller_pos. For an unknown (to me, at least ;-) reason,
+dw->container is null for one widget, doing a segfault when accessed.
+This is related to anchors, so I hope Sebastian can fix that easilly ;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 27-Aug-2000 a 23:01:22
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]support for background images?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-26 14:30
+
+Sean 'Shaleh' Perry wrote:
+> That said, please do visit the html validator link I sent previously. In css
+> supporting browsers, a line of incorrect html is set against a grey background.
+
+At least it is readable in dillo. ;-)
+
+> We have to be able to affect the appearance of a page on a per word basis.
+
+Currently, DwPage can assign attributes to words. I don't think it is
+too difficult to add backgrounds to DwPageAttr. I'll test it soon.
+
+Sebastian 
+
+
+
+[Dillo-dev]bug no insertion : I'm patching lists
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-26 13:18
+
+Hi all,
+the inserting in bug tracking engine doesn't work for me (server
+internal error).
+Be aware I'm partching the lists tags and dw_bullets right now, to make
+attribute type being recognized (both OL and UL), and also to correct
+the bug about numbering reported a few days ago.
+
+I wont address bug#78 this time because it's a P tag problem.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Aug-2000 a 16:29:43
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]support for background images?
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-26 10:00
+
+> I'm currently working on DwPage (table sections will be DwPage's,
+> too). If anyone succeeds in getting an GdkPixmap from a href (e.g. in
+> Html_tag_open_body), I'll set it as the the page's background. (I
+> hope. ;-)
+> 
+
+hmm, seems the dicache and the rest of the image code assumes the goal is to
+place the image on the page. Will have to read thru the entire image code to
+lay this out and understand a proper implementation. Sounds like this can wait
+(-: 
+
+
+
+Re: [Dillo-dev]support for background images?
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-26 09:37
+
+> I'm currently working on DwPage (table sections will be DwPage's,
+> too). If anyone succeeds in getting an GdkPixmap from a href (e.g. in
+> Html_tag_open_body), I'll set it as the the page's background. (I
+> hope. ;-)
+> 
+
+will add this to my list of things todo.
+
+That said, please do visit the html validator link I sent previously. In css
+supporting browsers, a line of incorrect html is set against a grey background.
+We have to be able to affect the appearance of a page on a per word basis. 
+
+
+
+Re: [Dillo-dev]support for background images?
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-26 09:25
+
+Sean 'Shaleh' Perry wrote:
+> 
+> Thought I would toss this out in the mess of ideas lately:
+> 
+> we ought to support background images. style sheets allow you to specify
+> backgrounds for just about everything. So, what would be best is a mechanism
+> for:
+> 
+> load image
+> place image in the background of widget X
+> 
+> X could be Page, table section, etc.
+> 
+> Seems funny that the bug list looks better in ns than in dillo (-:
+
+I'm currently working on DwPage (table sections will be DwPage's,
+too). If anyone succeeds in getting an GdkPixmap from a href (e.g. in
+Html_tag_open_body), I'll set it as the the page's background. (I
+hope. ;-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-26 03:21
+
+Le 25-Aug-2000, on m'a dit : 
+> > ok, what about both, then (anchors and headings) ? Some of them can
+> > be
+> > duplicates (anchor are often used to link to pararaphs titles).
+> > And "Top of page" and "Bottom of page", even if not anchored, would
+> > be
+> > useful too.
+> 
+> It's quite simple, I've begun to implement it (both headings and
+> anchors). But I will not work on it the next time. Is anyone
+> interested in completing it? I'll send him the patch.
+> 
+> Sebastian
+
+I can try. Send me the patch.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 26-Aug-2000 a 12:21:03
+---------------------------------- 
+
+
+
+[Dillo-dev]support for background images?
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-26 00:14
+
+Thought I would toss this out in the mess of ideas lately:
+
+we ought to support background images. style sheets allow you to specify
+backgrounds for just about everything. So, what would be best is a mechanism
+for:
+
+load image
+place image in the background of widget X
+
+X could be Page, table section, etc.
+
+Seems funny that the bug list looks better in ns than in dillo (-: 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-25 18:59
+
+Eric GAUDET wrote:
+> 
+> Le 25-Aug-2000, on m'a dit :
+> > Eric GAUDET wrote:
+> > > Hi,
+> > > I just thought about one (new idea?) feature about anchors : would
+> > > it
+> > > be possible to list them in a menu entry (Named "Chapters"?
+> > > "Index"?
+> > > "Content"?). Doing that, each time a page is loaded, this menu
+> > > entry
+> > > would be updated and the user could conveniently "jump" to anchors
+> > > in
+> > > the page without scrolling.
+> > >
+> > > What do you think ?
+> >
+> > That would be possible. But I think a menu of the anchors in a page
+> > is not very useful. Better would be to list all the <h1>...<h6>.
+> > That could also be possible by adding "pseudo anchors". If you get
+> > a tag which position is interesting, you add a DW_PAGE_CONTENT_ANCHOR
+> > "@id" or so, where id is a unique number (unique in the page).
+> >
+> 
+> ok, what about both, then (anchors and headings) ? Some of them can be
+> duplicates (anchor are often used to link to pararaphs titles).
+> And "Top of page" and "Bottom of page", even if not anchored, would be
+> useful too.
+
+It's quite simple, I've begun to implement it (both headings and
+anchors). But I will not work on it the next time. Is anyone
+interested in completing it? I'll send him the patch.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-25 14:22
+
+Le 25-Aug-2000, on m'a dit : 
+> I didn't actually mean dillo's plugins (I currenty don't know how
+> they work anyway), but some other sort of
+> extend-dillo-without-modifying-the-sources, which could be called
+> modules to avoid confusing. What I thought is: You can think of
+> thousands of useful functions for dillo. When putting them all into
+> dillo, the code gets big although a user might not use all these
+> features. Indeed, such an interface should 1. be designed properly,
+> and 2. not in the near future (currently we have other problems).
+> 
+
+Totally agreed ! (on everything : "thousands useful functions", "module
+interface design", "we have other problems") What I was pointing out is
+such a module interface design could be really tricky to come out with,
+especially since it hasn't been planned of from the begining.
+
+> Sebastian
+> 
+> PS1: I'm currently not interested in working on something like that,
+> it was just an idea. ;-)
+> 
+
+While you're talking about that, I wanted to tell how nice it is to be
+in that mailing list, with people throwing interesting ideas (even if
+not interested in working on them ;-), nice and respectful ambiance (no
+troll here : great !).
+
+> PS2: Counting characters is exotic enough that is reasonable to let
+> the user save the page and start an other program. Trying to connect
+> a webbrowser to all of the world is indeed quite idiotic.
+
+ok, that was a poor example, but who knows ? ;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 25-Aug-2000 a 23:09:58
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-25 13:43
+
+Eric GAUDET wrote:
+> [...]
+> > Another idea: What about a mechanism to let the user ("user" is
+> > anyone who does not changes the sources of dillo ;-) write such
+> > things.
+> > Perhaps plugins? The plugin transmits to dillo what is interesting
+> > for it (e.g. tags "h1", ..., "h6"), and dillo gives a unique id
+> > for referring to the tags to the plugin. When a user clickes on an
+> > item in the plugin's list, the plugin sends a url to dillo.
+> >
+> 
+> That would mean calling _every_ (registered) plugin each time a page
+> is loaded. Seems possible, but that can slow down thing.
+> Registering the tags is interesting because dillo doesn't have to send
+> the whole page, and the plugin doesn't have to parse html. But I'm not
+> sure that's how plugins are supposed to work, though I'm still waiting
+> for complete plugins specs (Jorge ?).
+> I mean : we'll have to change dillo's html parsing for that type of
+> plugins ; what about a plugin wanting to count how many "e" there's in
+> a page ? interesting, but we'll have to change dillo's sources for that.
+> What about a pluggin wanting to scan images before rendered and censor
+> those where there's too much "skin tones" ? interesting, but we'll have
+> to change dillo's sources once again for that.
+> The cleanest way would be to send each page to the pluggin, and wait for
+> the plugin to render the page. The html parser could be a plugin : that
+> way we could have a pdf-plugin, a rtf-plugin ... that would be nice.
+> But that's not what we are doing : we are doing an html browser, and
+> html source is intended to be in the browser, not sent to plugins.
+> The way Jorge defined plugins (that can change) is clean and simple : a
+> plugin call looks like a link ("dpi://myplugin"), some datas are sent
+> (name=value type), the plugin sends back an html page (and possibly ask
+> dillo to update its menus, but there's no protocol for that yet, though
+> I'm working on it). That's it. There's no two-way interaction between
+> dillo and the plugins. There is no possibility for a plugin to ask dillo
+> about its internals, such as page source, history.
+> Albeit your module/plugin idea is interesting, that would mean a big
+> rewrite in dillo's whole html parsing and plugin system (I know,
+> it's not written yet) just to avoid small changes in dillo's menus and
+> anchor (and H1..h6) parsing.
+> In a nutshell, I think it's better and easier to keep these things in
+> dillo, until we define (not soon) a clear mecanisme for external
+> modules, which aren't plugins.
+> 
+> (man, _that's_ a long answer to a not very useful question ;-)
+
+I didn't actually mean dillo's plugins (I currenty don't know how they
+work anyway), but some other sort of
+extend-dillo-without-modifying-the-sources, which could be called
+modules to avoid confusing. What I thought is: You can think of
+thousands of useful functions for dillo. When putting them all into
+dillo, the code gets big although a user might not use all these
+features. Indeed, such an interface should 1. be designed properly,
+and 2. not in the near future (currently we have other problems).
+
+Sebastian
+
+PS1: I'm currently not interested in working on something like that,
+it was just an idea. ;-)
+
+PS2: Counting characters is exotic enough that is reasonable to let
+the user save the page and start an other program. Trying to connect a
+webbrowser to all of the world is indeed quite idiotic. 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-25 11:03
+
+Le 25-Aug-2000, on m'a dit : 
+> Eric GAUDET wrote:
+> > Hi,
+> > I just thought about one (new idea?) feature about anchors : would
+> > it
+> > be possible to list them in a menu entry (Named "Chapters"?
+> > "Index"?
+> > "Content"?). Doing that, each time a page is loaded, this menu
+> > entry
+> > would be updated and the user could conveniently "jump" to anchors
+> > in
+> > the page without scrolling.
+> > 
+> > What do you think ?
+> 
+> That would be possible. But I think a menu of the anchors in a page
+> is not very useful. Better would be to list all the <h1>...<h6>.
+> That could also be possible by adding "pseudo anchors". If you get
+> a tag which position is interesting, you add a DW_PAGE_CONTENT_ANCHOR
+> "@id" or so, where id is a unique number (unique in the page).
+> 
+
+ok, what about both, then (anchors and headings) ? Some of them can be
+duplicates (anchor are often used to link to pararaphs titles).
+And "Top of page" and "Bottom of page", even if not anchored, would be
+useful too.
+
+> Another idea: What about a mechanism to let the user ("user" is
+> anyone who does not changes the sources of dillo ;-) write such
+> things.
+> Perhaps plugins? The plugin transmits to dillo what is interesting
+> for it (e.g. tags "h1", ..., "h6"), and dillo gives a unique id
+> for referring to the tags to the plugin. When a user clickes on an
+> item in the plugin's list, the plugin sends a url to dillo.
+> 
+
+That would mean calling _every_ (registered) plugin each time a page
+is loaded. Seems possible, but that can slow down thing.
+Registering the tags is interesting because dillo doesn't have to send
+the whole page, and the plugin doesn't have to parse html. But I'm not
+sure that's how plugins are supposed to work, though I'm still waiting
+for complete plugins specs (Jorge ?). 
+I mean : we'll have to change dillo's html parsing for that type of
+plugins ; what about a plugin wanting to count how many "e" there's in
+a page ? interesting, but we'll have to change dillo's sources for that.
+What about a pluggin wanting to scan images before rendered and censor
+those where there's too much "skin tones" ? interesting, but we'll have
+to change dillo's sources once again for that.
+The cleanest way would be to send each page to the pluggin, and wait for
+the plugin to render the page. The html parser could be a plugin : that
+way we could have a pdf-plugin, a rtf-plugin ... that would be nice.
+But that's not what we are doing : we are doing an html browser, and
+html source is intended to be in the browser, not sent to plugins.
+The way Jorge defined plugins (that can change) is clean and simple : a 
+plugin call looks like a link ("dpi://myplugin"), some datas are sent
+(name=value type), the plugin sends back an html page (and possibly ask
+dillo to update its menus, but there's no protocol for that yet, though
+I'm working on it). That's it. There's no two-way interaction between
+dillo and the plugins. There is no possibility for a plugin to ask dillo
+about its internals, such as page source, history.
+Albeit your module/plugin idea is interesting, that would mean a big
+rewrite in dillo's whole html parsing and plugin system (I know,
+it's not written yet) just to avoid small changes in dillo's menus and
+anchor (and H1..h6) parsing. 
+In a nutshell, I think it's better and easier to keep these things in
+dillo, until we define (not soon) a clear mecanisme for external
+modules, which aren't plugins.
+
+(man, _that's_ a long answer to a not very useful question ;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 25-Aug-2000 a 19:02:34
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]java in dillo
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-25 09:58
+
+Sean 'Shaleh' Perry wrote:
+> 
+> On 25-Aug-2000 Eric GAUDET wrote:
+> > Hi again,
+> > Anybody working on applets in Dillo ? I wondered if it was possible for
+> > dillo to launch the 'appletviewer' program (from a separate JDK) and
+> > then "swallow" its windows to render the initial html page (just like
+> > wharf, dock or gnome/kde pannel do with dockable applets).
+> >
+> > I don't think I'll see that soon, but that could be fairly doable.
+> >
+> 
+> I doubt this will work. swallowed apps work because of an agreement between
+> the app and the window manager / panel.
+
+Furthermore, communication between applet and browser (class
+AppletContext) will not be possible. Perhaps Kaffe or Japhar can be
+used somehow.
+
+> What we probably need to do is have a
+> widget which is an arbitrary window. Then java, javascript, embedded
+> <objects>, animations, etc can be placed in this widget.
+
+Perhaps look at GtkSocket/GtkPlug. They provide a mechanism to embed
+windows created by other programs.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Anchor : feature wish
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-25 09:58
+
+Eric GAUDET wrote:
+> Hi,
+> I just thought about one (new idea?) feature about anchors : would it
+> be possible to list them in a menu entry (Named "Chapters"? "Index"?
+> "Content"?). Doing that, each time a page is loaded, this menu entry
+> would be updated and the user could conveniently "jump" to anchors in
+> the page without scrolling.
+> 
+> What do you think ?
+
+That would be possible. But I think a menu of the anchors in a page is
+not very useful. Better would be to list all the <h1>...<h6>. That
+could also be possible by adding "pseudo anchors". If you get a tag
+which position is interesting, you add a DW_PAGE_CONTENT_ANCHOR "@id"
+or so, where id is a unique number (unique in the page).
+
+Another idea: What about a mechanism to let the user ("user" is anyone
+who does not changes the sources of dillo ;-) write such things.
+Perhaps plugins? The plugin transmits to dillo what is interesting for
+it (e.g. tags "h1", ..., "h6"), and dillo gives a unique id for
+referring to the tags to the plugin. When a user clickes on an item in
+the plugin's list, the plugin sends a url to dillo.
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]java in dillo
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-25 04:17
+
+On 25-Aug-2000 Eric GAUDET wrote:
+> Hi again,
+> Anybody working on applets in Dillo ? I wondered if it was possible for
+> dillo to launch the 'appletviewer' program (from a separate JDK) and
+> then "swallow" its windows to render the initial html page (just like
+> wharf, dock or gnome/kde pannel do with dockable applets).
+> 
+> I don't think I'll see that soon, but that could be fairly doable.
+> 
+
+I doubt this will work. swallowed apps work because of an agreement between
+the app and the window manager / panel. What we probably need to do is have a
+widget which is an arbitrary window. Then java, javascript, embedded
+<objects>, animations, etc can be placed in this widget. 
+
+
+
+[Dillo-dev]java in dillo
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-25 04:10
+
+Hi again,
+Anybody working on applets in Dillo ? I wondered if it was possible for
+dillo to launch the 'appletviewer' program (from a separate JDK) and
+then "swallow" its windows to render the initial html page (just like
+wharf, dock or gnome/kde pannel do with dockable applets).
+
+I don't think I'll see that soon, but that could be fairly doable.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 25-Aug-2000 a 13:06:05
+---------------------------------- 
+
+
+
+[Dillo-dev]Anchor : feature wish
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-25 04:06
+
+Hi,
+I just thought about one (new idea?) feature about anchors : would it
+be possible to list them in a menu entry (Named "Chapters"? "Index"?
+"Content"?). Doing that, each time a page is loaded, this menu entry
+would be updated and the user could conveniently "jump" to anchors in
+the page without scrolling.
+
+What do you think ?
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 25-Aug-2000 a 12:59:58
+---------------------------------- 
+
+
+
+[Dillo-dev]another fun test site
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-24 20:09
+
+validator.w3.org
+
+This takes a web site and shows how valid its HTML is. Also can include the
+parse tree of the document.
+
+dillo currently fails to lay out the results properly. 
+
+
+
+[Dillo-dev]Dw -> Gtk
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-24 16:34
+
+Hi!
+
+There is a problem (and an idea on its solution) with Gtk+:
+
+A rule of Gtk+ is, that widgets have to deal with any size allocation,
+but some of the Dw widgets depend on a more complicated size
+negotiation, which is currently done by a_Dw_size_nego_x, e. g.:
+
+- DwPage, which should always allocate the size needed to display all
+the text,
+- the not-yet-written table widget, comparable to DwPage, and
+- DwImage's with relative size (?).
+
+I've thought about several ways, the one I prefer is this:
+
+Such widgets do not simply accept the GtkAllocation in
+gtk_xxx_size_allocate, but correct it before storing it in
+widget->allocation. The standard Gtk+ containers do not refer to these
+corrected allocations, but to those they have calculated for there
+children, so you get either unintended spaces or overlapping widgets.
+So, dillo's new containers (e. g. the table) should use these
+"reallocations".
+
+I've tested it by writing a few useless widgets, and it works.
+
+Some alternatives which have also come to my mind:
+
+- Derive all widgets from one base widget GtkDwWidget which has a
+functionality similar to a_Dw_size_nego_x. A container could do some
+thing like this:
+
+if (GTK_IS_DW_WIDGET (child)) {
+/* use the functionality of GtkDwWidget */
+} else {
+/* standard size allocation */
+}
+
+Since Gtk+ does not provide multiple inheritance, there will be the
+problem which base class to use for GtkDwBase. E.g., should images be
+containers? Deriving from and so reusing other Gtk+ widgets will be
+impossible.
+
+- Children resize themselves on a size allocation. This is somehow
+possible (I once wrote something like this), but this will result in a
+horrible overhead.
+
+Comments?
+
+Sebastian 
+
+
+
+[Dillo-dev]still some concerns about HR tag
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-23 13:46
+
+Hi, I just tested the HR "bug-fix" in dillo v0.2.4 : the line's width
+is the page's width all right. But the horizontal page slider is still
+there !!! (you can scroll to see the emptyness in the right)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Aug-2000 a 22:42:31
+"Si la japonaise est la négation la plus aboslue de la femme,
+elle est aussi la négation la plus absolue de la beauté grecque."
+(Louis Martin, l'Anglais est-il un juif ?, 1895)
+---------------------------------- 
+
+
+
+[Dillo-dev]style sheets
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-23 07:02
+
+So, was driving home tonight and an idea hit me.
+
+Style sheets are meant to be cascading (they stack). So, we can implement user
+preferences as local style sheets which come first (highest) or last based on
+settings. The allow_whitebg becomes a simple style sheet line.
+
+Properly implementing font and what not will require some ground work and if I
+am doing that, I may as well look to the future.
+
+Comments? 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-23 06:59
+
+> 
+> And the same thing when going to http://www.mysite.org/ and the browser
+> popups-up a window asking for your login and password. (the http side
+> is the same, basically you have to encode in base64 the string
+> "user:password" and send that in the http request)
+> 
+
+right
+
+Playing with <font> right now and pondering style sheets. Need to set up a
+local http server to play with http auth, cgi, and the like. 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-23 03:35
+
+Le 22-Aug-2000, on m'a dit : 
+> > 
+> > I mean http auth, as in http://user:password@ww.../
+> > 
+> 
+> the URL parser needs to understand this. Then the proper http send
+> mechanism
+> needs to be used. I do not think this would be too hard. Now I
+> have two
+> reasons to read the HTTP spec.
+> 
+
+And the same thing when going to http://www.mysite.org/ and the browser
+popups-up a window asking for your login and password. (the http side
+is the same, basically you have to encode in base64 the string
+"user:password" and send that in the http request)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 23-Aug-2000 a 12:31:30
+---------------------------------- 
+
+
+
+[Dillo-dev]currently working on <font>
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-23 01:39
+
+I have an initial implementation of <font> put together. It currently only
+handles the color attribute, but more to come. My current problem is that when
+the tag is popped, the color is not reset. I am confused, the rest of the font
+like tags (bold, cite) clean up after themselves by simply popping their tag. 
+Will get it when I get a chance. 
+
+
+
+Re: [Dillo-dev]0.2.4 release
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 22:27
+
+Hi, Sean,
+
+Sean 'Shaleh' Perry wrote:
+> 
+> >
+> > 2. The better way: Leave "not-reloading" enabled, but push the url's
+> > on the stack "by hand". See the "else" part of "if (must_load)". I
+> > tried to implement it, bud didn't understand how. I think it is done
+> > in a_Nav_expect_done, but calling it (or a modified version of it)
+> > didn't work. This is an other point worth to improve.
+> >
+> 
+> enclosed is the beginnings of this patch. If I go to foo.html, then follow
+> foo.html#link, then hit back, I get to foo.html. However if I go to
+> foo.html#second from foo.html#link, then hit back I still go to foo.html. Not
+> quite sure how the anchor system works. Maybe you can take the code and go
+> from there.
+
+My changes in the Nav module only consist of a few lines. Most of my
+code is in GtkDwScroller and DwPage. Furthermore, I did not understand
+the navigation mechanism very good, so perhaps someone else should
+work on this problem.
+
+BTW: I sent Jorge some documentation, I think, he should include it
+into the release.
+
+> The patch is longer than it needs to be because I moved Nav_open_url to the end
+> of the file and places a declaration at the top so the other functions know
+> about it. This mimics the layout of the other source modules.
+
+What about including "nav.h" in "nav.c"? That would also let the
+compiler check the function prototypes against there definitions.
+
+> I think there is something wrong with calling a_Foo_bar() in module Foo.
+
+Yes, propably there should be a seperate function, which is called by
+Nav_open_url and a_Nav_expect_done.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]weird bug in anchor code
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 21:24
+
+Jorge Arellano Cid wrote:
+> 
+> Sean,
+> 
+> > http://www.gphoto.org/news.html
+> >
+> > The GNU Public License link points to http://www.gnu.org, but dillo
+> > thinks it points to http://www.gphoto.org.
+> 
+> Fixed! (BUG #79)
+
+I wrote:
+> [...]
+
+Ok, 5 minutes of wasted time. ;-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]weird bug in anchor code
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 21:19
+
+Sean 'Shaleh' Perry wrote:
+> 
+> http://www.gphoto.org/news.html
+> 
+> The GNU Public License link points to http://www.gnu.org, but dillo
+> thinks it points to http://www.gphoto.org.
+
+The html file looks like this:
+
+<a href=
+">
+
+When there are whitespaces after the attribute name, Html_get_attr
+returns an empty string, and so a_Url_resolve_relative returns the
+wrong url.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]weird bug in anchor code
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-22 20:50
+
+Sean,
+
+
+> http://www.gphoto.org/news.html
+> 
+> The GNU Public License link points to http://www.gnu.org, but dillo
+> thinks it points to http://www.gphoto.org.
+
+Fixed! (BUG #79) 
+
+
+
+Re: [Dillo-dev]0.2.4 release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 19:22
+
+Attachments: nav.patch      
+
+> 
+> 2. The better way: Leave "not-reloading" enabled, but push the url's
+> on the stack "by hand". See the "else" part of "if (must_load)". I
+> tried to implement it, bud didn't understand how. I think it is done
+> in a_Nav_expect_done, but calling it (or a modified version of it)
+> didn't work. This is an other point worth to improve.
+> 
+
+enclosed is the beginnings of this patch. If I go to foo.html, then follow
+foo.html#link, then hit back, I get to foo.html. However if I go to
+foo.html#second from foo.html#link, then hit back I still go to foo.html. Not
+quite sure how the anchor system works. Maybe you can take the code and go
+from there.
+
+The patch is longer than it needs to be because I moved Nav_open_url to the end
+of the file and places a declaration at the top so the other functions know
+about it. This mimics the layout of the other source modules.
+
+I think there is something wrong with calling a_Foo_bar() in module Foo. 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 18:10
+
+> 
+> I mean http auth, as in http://user:password@ww.../
+> 
+
+the URL parser needs to understand this. Then the proper http send mechanism
+needs to be used. I do not think this would be too hard. Now I have two
+reasons to read the HTTP spec. 
+
+
+
+Re: [Dillo-dev]the source viewer widget
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 18:08
+
+On 22-Aug-2000 Sebastian Geerken wrote:
+> Sean 'Shaleh' Perry wrote: 
+>> I tried to add horizontal scrollbars to the GtkText widget in
+>> a_Commands_viewsource(). For whatever reason, they are not used. Passing
+>> them
+>> into the constructor of GtkText has no effect. Even with the policy set to
+>> ALWAYS the scrollbar is shown but does not actually function.
+> 
+> I assume you want to enable horizontal scrolling and disable line
+> wrapping?
+> 
+> You can do this by calling gtk_text_set_line_wrap (text, FALSE), but
+> horizontal adjustment isn't working correctly now. This is a bug of
+> Gtk+, and it will propably fixed soon (or perhaps is already), so you
+> should not care about it (or fix this bug in Gtk+ :-).
+> 
+
+well i feel better. I did all the line_wrap, word_wrap calls. 
+
+
+
+RE: [Dillo-dev]0.2.4 release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 18:08
+
+On 22-Aug-2000 Jorge Arellano Cid wrote:
+> 
+> 
+> On Mon, 21 Aug 2000, Sean 'Shaleh' Perry wrote:
+> 
+>> we need a "DNS not found" message in the GUI
+>> 
+>> If the DNS resolver has problems, the user has no feed back on why
+> 
+> Actually there's a message in the status window.
+> Maybe not enough, but not nonexistent.
+> 
+
+yesterday I could not reach gtk.org, lots of IO_Abort messages on a terminal. 
+But the GUI gave no indication. I hit Stop, then tried again and I could not
+tell it was doing anything except for more abort messages on the term. 
+
+
+
+Re: [Dillo-dev]Dw vs. Gtk
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 17:09
+
+Jorge Arellano Cid wrote:
+> If you want to join in this effort, that's all I need to get
+> started.
+
+If it's ok, I'll start with DwPage, because I have some ideas on it
+(I'll post to the list when something gets useful).
+
+(Starting with DwPage doesn't make much sense, since I'll have to
+deactivate the adding of Dw widgets. ;-)
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]0.2.4 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-22 14:36
+
+On Mon, 21 Aug 2000, Sean 'Shaleh' Perry wrote:
+
+> we need a "DNS not found" message in the GUI
+> 
+> If the DNS resolver has problems, the user has no feed back on why
+
+Actually there's a message in the status window.
+Maybe not enough, but not nonexistent.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dw vs. Gtk
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 13:58
+
+Jorge Arellano Cid wrote:
+> [...]
+> > I'm interrested in implementing tables, and the simplest approach is
+> > propably nesting of DwPage's. I have already played around with it
+> > (nothing directly useful, but only to test how it could work), and got
+> > results which are not what I intended, but --- you can see something
+> > ;-)
+> 
+> Yes, but we have Dw widgets in the way (some not instantiable
+> some not nesting well).
+
+No, I meant something different: I extended DilloHtml by a stack for
+DwPage's, so that parts of the same html doc can be written in
+different DwPage's (this is needed for tables). This works mainly, so
+I think it's a useful approach.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]0.2.4 release
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 13:08
+
+Sean 'Shaleh' Perry wrote:
+> The back option after following an anchor takes me to the last page loaded,
+> not
+> the location I was at before I followed the anchor.
+
+There are two different ways to change it:
+
+1. Force reloading in Nav_open_url. (Set a "must_reload = TRUE" before
+"if (must_load)" or so.) Then the page will be reloaded always, so
+*all* url's will be pushed on the navigation stack. (Reloading will be
+quite fast. :-)
+
+2. The better way: Leave "not-reloading" enabled, but push the url's
+on the stack "by hand". See the "else" part of "if (must_load)". I
+tried to implement it, bud didn't understand how. I think it is done
+in a_Nav_expect_done, but calling it (or a modified version of it)
+didn't work. This is an other point worth to improve.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]the source viewer widget
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-22 13:08
+
+Sean 'Shaleh' Perry wrote: 
+> I tried to add horizontal scrollbars to the GtkText widget in
+> a_Commands_viewsource(). For whatever reason, they are not used. Passing
+> them
+> into the constructor of GtkText has no effect. Even with the policy set to
+> ALWAYS the scrollbar is shown but does not actually function.
+
+I assume you want to enable horizontal scrolling and disable line
+wrapping?
+
+You can do this by calling gtk_text_set_line_wrap (text, FALSE), but
+horizontal adjustment isn't working correctly now. This is a bug of
+Gtk+, and it will propably fixed soon (or perhaps is already), so you
+should not care about it (or fix this bug in Gtk+ :-).
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-22 05:54
+
+Le 22-Aug-2000, on m'a dit : 
+> 
+> On 22-Aug-2000 Eric GAUDET wrote:
+> > Le 22-Aug-2000, on m'a dit : 
+> >> animated gif support
+> >> 
+> >> improved font support
+> >> 
+> >> cookies
+> >> 
+> > 
+> > And basic html authetification too.
+> > 
+> 
+> do you mean SSL kinda stuff? http auth? or actual "this is good
+> HTML"?
+> 
+
+I mean http auth, as in http://user:password@ww.../
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 22-Aug-2000 a 14:53:52
+---------------------------------- 
+
+
+
+[Dillo-dev]weird bug in anchor code
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 05:28
+
+http://www.gphoto.org/news.html
+
+The GNU Public License link points to http://www.gnu.org, but dillo
+thinks it points to http://www.gphoto.org. 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 05:13
+
+On 22-Aug-2000 Eric GAUDET wrote:
+> Le 22-Aug-2000, on m'a dit : 
+>> animated gif support
+>> 
+>> improved font support
+>> 
+>> cookies
+>> 
+> 
+> And basic html authetification too.
+> 
+
+do you mean SSL kinda stuff? http auth? or actual "this is good HTML"? 
+
+
+
+RE: [Dillo-dev]other requests
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-22 05:10
+
+Le 22-Aug-2000, on m'a dit : 
+> animated gif support
+> 
+> improved font support
+> 
+> cookies
+> 
+
+And basic html authetification too.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 22-Aug-2000 a 14:07:36
+---------------------------------- 
+
+
+
+[Dillo-dev]other requests
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 04:30
+
+animated gif support
+
+improved font support
+
+cookies 
+
+
+
+Re: [Dillo-dev]GTK 1.3.1
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 04:28
+
+> May I suggest one of the following:
+> 
+> * BUG#27: Client side image maps
+> * BUG#62: Horizontal rules (50% already done)
+> * BUG#60: Png's transparent backgrounds
+> * <DIV> tag?
+> 
+
+div is only truly useful once we support style sheets. Until then it has no
+meaning (it is like event boxes without events otherwise).
+
+Another would be to make dillo properly display numbered lists. Currently too
+many newlines are shown. Compare netscape / mozilla / konqueror / whatever.
+
+Also, if code has:
+
+foo<br>
+<br>
+
+the first br is used, any immediately following are ignored. 
+
+
+
+RE: [Dillo-dev]0.2.4 release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 00:31
+
+On 21-Aug-2000 Jorge Arellano Cid wrote:
+> 
+> Hi!
+> 
+> Dillo-0.2.4 is ready for download!
+> 
+> The guys at sourceforge managed to complicate file releases
+> even more; I hope they change it soon...
+> 
+
+The back option after following an anchor takes me to the last page loaded, not
+the location I was at before I followed the anchor. 
+
+
+
+RE: [Dillo-dev]0.2.4 release
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-22 00:27
+
+On 21-Aug-2000 Jorge Arellano Cid wrote:
+> 
+> Hi!
+> 
+> Dillo-0.2.4 is ready for download!
+> 
+> The guys at sourceforge managed to complicate file releases
+> even more; I hope they change it soon...
+> 
+
+we need a "DNS not found" message in the GUI
+
+If the DNS resolver has problems, the user has no feed back on why 
+
+
+
+[Dillo-dev]0.2.4 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-21 16:51
+
+Hi!
+
+Dillo-0.2.4 is ready for download!
+
+The guys at sourceforge managed to complicate file releases
+even more; I hope they change it soon...
+
+Anyway, the file is there.
+
+Enjoy!
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Dw vs. Gtk
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-21 01:28
+
+Sebastian,
+
+> What is the current state in:
+> 
+> 1. the question "Replace the Dw widgets by Gtk+ widgets or not?", and
+> 2. tables?
+
+Basically what I wrote in 'DilloWidget.txt' (within /doc dir).
+I was expecting some help to start porting back Dw to GTK+
+(unless a better approach was pointed out).
+
+> I'm interrested in implementing tables, and the simplest approach is
+> propably nesting of DwPage's. I have already played around with it
+> (nothing directly useful, but only to test how it could work), and got
+> results which are not what I intended, but --- you can see something
+> ;-)
+
+Yes, but we have Dw widgets in the way (some not instantiable
+some not nesting well).
+
+> There should propably a widget for tables 
+
+Of course!
+
+> [...]
+
+Looks quite similar to DilloWidget.txt!
+
+> So, what is currently planned on this topic?
+
+A question to Peter Mattis for advice on the table widget
+implementation, and to start by porting back Dw to GTK+, and
+finally, to work the table widget.
+
+If you want to join in this effort, that's all I need to get
+started.
+BTW: I wrote the widget documentation with a view to help it
+happen ;-)
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]GTK 1.3.1
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-21 01:17
+
+Jörgen,
+
+> Hi all!
+> 
+> I recently downloaded the devel branch of GTK and tried it with Dillo. I'm 
+> pleased to see that the exposure problems are not there anymore. I could 
+> remove the event boxes from the checkboxes and radio buttons.
+
+!!???
+Funny, I always thought that the problem was with Dw. Even
+more, the event boxes were designed for widgets lacking a window,
+just a the ones we had.
+
+Unless the new GTK+ provides a default window for every widget,
+I'm a little puzzled with this.
+
+> There were no problems porting the code either.
+
+Let's keep the event boxes for now (it will be a long time
+until updating makes 1.3.1 the default GTK+).
+
+> PS. I really need something to code on instead of writing stuff like this 
+> ;-)
+
+May I suggest one of the following:
+
+* BUG#27: Client side image maps
+* BUG#62: Horizontal rules (50% already done)
+* BUG#60: Png's transparent backgrounds
+* <DIV> tag?
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]dillo can't read pngs on gphoto.org
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-21 01:16
+
+Sean,
+
+> So, I was making dillo ignore the text between SCRIPT tags (it puts them in the
+> stash, then ignores the stash)
+
+Good!
+
+> I was looking for test sites. gphoto.org is a
+> good one. It uses roll overs and what not for fancy browsing. While looking
+> around the site I notice that dillo often fails to render the pngs it find
+> there. Anyone mind looking at this and suggesting why?
+
+This is BUG#4. 
+I went to gphoto with 0.2.4 and everything was OK.
+
+Anyway, I'm planning to release 0.2.4 tomorrow in the morning!
+
+Jorge.- 
+
+
+
+[Dillo-dev]the source viewer widget
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-21 00:27
+
+I tried to add horizontal scrollbars to the GtkText widget in
+a_Commands_viewsource(). For whatever reason, they are not used. Passing them
+into the constructor of GtkText has no effect. Even with the policy set to
+ALWAYS the scrollbar is shown but does not actually function. 
+
+
+
+[Dillo-dev]dillo can't read pngs on gphoto.org
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-20 21:45
+
+So, I was making dillo ignore the text between SCRIPT tags (it puts them in the
+stash, then ignores the stash) I was looking for test sites. gphoto.org is a
+good one. It uses roll overs and what not for fancy browsing. While looking
+around the site I notice that dillo often fails to render the pngs it find
+there. Anyone mind looking at this and suggesting why?
+
+On the SCRIPT reading, the stash is a great thing. When we get around to
+adding script support, we just pass the stash to the interpreter. 
+
+
+
+[Dillo-dev]GTK 1.3.1
+
+From: Jörgen Viksell <vsksga@ho...> - 2000-08-19 23:32
+
+Hi all!
+
+I recently downloaded the devel branch of GTK and tried it with Dillo. I'm 
+pleased to see that the exposure problems are not there anymore. I could 
+remove the event boxes from the checkboxes and radio buttons.
+There were no problems porting the code either.
+
+PS. I really need something to code on instead of writing stuff like this 
+;-)
+
+// Jörgen
+________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com 
+
+
+
+Re: [Dillo-dev]Question
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-19 20:22
+
+Okki,
+
+> Hi,
+> 
+> Can we have a CVS (read only ?) acces for the sources ?
+> 
+> Thanx
+
+This is a good idea, and we have the possibility to set it up
+in sourceforge. The problem is with me, not savvy in CVS and too
+busy to be in charge of it. Anyway, if the volunteer arises, no
+problem.
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-19 20:21
+
+Sean,
+
+> >> Alternatively, what do you think about getting rid of the location
+> >> window and Ctrl-L fucing the cursor to the location bar?
+
+Just as Andrew pointed out, the idea is to move the text cursor
+
+> one use most browsers give their location window is a file chooser so it is
+> easy to browse local html directories, like those in library docs. dillo
+> currently has no way to do this and removing the location window would give no
+> obvious place to put this functionality.
+
+There's a way: File | Open File. (Ctrl-O)
+Unfortunately, the shortcut-keys code is somewhat buggy and
+needs a revision.
+
+Anyway, you can type 'file:' in the location bar.
+
+Maybe I'll let everyone test the feature with Ctrl-N (New),
+having the same functionallity of the "NEW" button.
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]I18n
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-19 20:21
+
+Sebastian,
+
+> Jorge Arellano Cid wrote:
+> > Personally, I hate internationalization. (This is just my
+> > personal feel on the subject).
+> > [...]
+> 
+> I, personally, cannot confirm this, my experiences with traductions
+> (into german) are quite good.
+
+Germans are serious people! :-)
+
+> [...]
+> Of course, any other tasks, mainly writing the .po files (the message
+> tables), currently have very low priority.
+
+Let's work the code base for tables. I'll answer your post ASAP
+(basically I also think better to lean on GTK+).
+
+> > I think that if we
+> > manage to provide those "mission critical" ones, a growing
+> > community will provide patches for the others; but if we fail
+> > with the critical ones, the whole project could get stuck and ...
+> 
+> >From this point of view, you are right: after a specific point
+> (assumed it will be reached), productivity somehow grows. (Why is it
+> not possible to use "quasi" as an adverb in english? ;-)
+
+Hmmmm, sometimes they use 'almost', and certainly some of those
+prefer to express it in a ironic way! ;)
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Dw vs. Gtk
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-19 16:26
+
+Le 19-Aug-2000, on m'a dit : 
+> I'm interrested in implementing tables, 
+...
+> It could be implemented as Dw or as Gtk+ widget. The latter would
+> have following effects:
+> 
+> - It would be simpler to write, since I know Gtk+ better that Dw
+> (and there are much more examples :-)
+> 
+....
+> 
+> So, what is currently planned on this topic?
+> 
+> Sebastian
+> 
+
+I guess you're elected to implement tables in dillo : congratulations
+;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 20-Aug-2000 a 01:22:35
+---------------------------------- 
+
+
+
+[Dillo-dev]Dw vs. Gtk
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-19 09:26
+
+What is the current state in:
+
+1. the question "Replace the Dw widgets by Gtk+ widgets or not?", and
+2. tables?
+
+I'm interrested in implementing tables, and the simplest approach is
+propably nesting of DwPage's. I have already played around with it
+(nothing directly useful, but only to test how it could work), and got
+results which are not what I intended, but --- you can see something
+;-)
+
+There should propably a widget for tables (I think it should be
+written from scratch, since the Gtk+ containers do not exactly provide
+the functionality for this problem). It could be implemented as Dw or
+as Gtk+ widget. The latter would have following effects:
+
+- It would be simpler to write, since I know Gtk+ better that Dw (and
+there are much more examples :-)
+
+- Perhaps the table widget should itself contain Gtk+ widgets. So,
+until DwPage gets gtk'd (or not), there is a wrapper widget needed as
+container for DwPage. Currently, only GtkDwView may contain a Dw
+widget, but cannot be used for this case.
+
+- One function of Dw is not provided by Gtk+: changing only one
+dimension (normally the width), which then affects the other. This had
+to be added.
+
+- The well known problems would be eliminated.
+
+So, what is currently planned on this topic?
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]I18n
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-19 09:26
+
+Hi, Jorge!
+
+Jorge Arellano Cid wrote:
+> Personally, I hate internationalization. (This is just my
+> personal feel on the subject).
+> 
+> This mostly because:
+> 
+> - I understand english!
+> 
+> - Living in a spanish-speaking country, had brought several
+> nasty experiences related with it. Bad traductions,
+> missconfigured systems, and impossible to understand spanish
+> books.
+> [...]
+
+I, personally, cannot confirm this, my experiences with traductions
+(into german) are quite good. But I think this is no point. (You are
+free to unset your $LANG variable ;-)
+
+> I can also see several tasks (like this one, download
+> implementation, etc), that can be added easily, my main concerns
+> are not with them but with those that can affect the whole
+> project (as not being able to render tables).
+
+I only meant to prepare dillo, i. e. only include "_" and "_N". I
+personally think, it should always be included from the beginning,
+since it gets quite hard to add it to an existing project. Then use of
+"_" and "_N" is quite simple (assumed you remember it ;-).
+
+Of course, any other tasks, mainly writing the .po files (the message
+tables), currently have very low priority.
+
+> I think that if we
+> manage to provide those "mission critical" ones, a growing
+> community will provide patches for the others; but if we fail
+> with the critical ones, the whole project could get stuck and ...
+
+From this point of view, you are right: after a specific point
+(assumed it will be reached), productivity somehow grows. (Why is it
+not possible to use "quasi" as an adverb in english? ;-)
+
+Sebastian 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-19 00:39
+
+>> 
+>> Alternatively, what do you think about getting rid of the location
+>> window and Ctrl-L fucing the cursor to the location bar?
+> 
+> Cool!
+> 
+> Is it OK with you Sean?
+> 
+
+one use most browsers give their location window is a file chooser so it is
+easy to browse local html directories, like those in library docs. dillo
+currently has no way to do this and removing the location window would give no
+obvious place to put this functionality. 
+
+
+
+[Dillo-dev]Question
+
+From: Okki <okki@wa...> - 2000-08-18 22:46
+
+Hi,
+
+Can we have a CVS (read only ?) acces for the sources ?
+
+Thanx 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Andrew McPherson <andrew@ma...> - 2000-08-17 19:35
+
+On Thu, 17 Aug 2000, Sean 'Shaleh' Perry wrote:
+
+> 
+> On 16-Aug-2000 Jorge Arellano Cid wrote:
+> > 
+> > Eric,
+> > 
+> >> Le 15-Aug-2000, on m'a dit : 
+> >> > > Anyway, we can get rid of the open
+> >> > > location window (because the location bar provides the same
+> >> > > functionality).
+> >> > > Comments?
+> >> > > 
+> >> > 
+> >> > please keep it. This allows me to "Ctrl-L, http://foo, enter" and
+> >> > never move
+> >> > my mouse.
+> >> > 
+> >> 
+> >> Alternatively, what do you think about getting rid of the location
+> >> window and Ctrl-L fucing the cursor to the location bar?
+> > 
+> > Cool!
+> > 
+> > Is it OK with you Sean?
+> > 
+> 
+> Hey, it's your project. I was always told to never move the mouse. How about
+> testing this feature and leaving the other code #if 0'ed out?
+> 
+
+Sorry to jump in on the conversation. I haven't posted anything in a
+while.
+
+I think he means move the text cursor to the location bar, not the mouse
+pointer. Moving the mouse pointer would be a bit strange- it reminds me of
+hitting the "start menu" button on Windows keyboards. Ugh. Moving the text
+cursor would be nice, though, as long as it selected the current location.
+That way I could still do Ctl-L, then type, without having to manually
+delete the existing location.
+
+Just my $.02
+
+-Andrew 
+
+
+
+Re: [Dillo-dev]I18n
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-17 18:58
+
+> 
+> I can also see several tasks (like this one, download
+> implementation, etc), that can be added easily, my main concerns
+> are not with them but with those that can affect the whole
+> project (as not being able to render tables). I think that if we
+> manage to provide those "mission critical" ones, a growing
+> community will provide patches for the others; but if we fail
+> with the critical ones, the whole project could get stuck and ...
+> 
+
+the html renderer should render the page in whatever language it was told the
+page was. More on this as I (we) add <meta> tag and HTML 4.x support.
+
+The part we care about for code is the actual gui -- i.e. menus, buttons, etc. 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-17 18:53
+
+On 16-Aug-2000 Jorge Arellano Cid wrote:
+> 
+> Eric,
+> 
+>> Le 15-Aug-2000, on m'a dit : 
+>> > > Anyway, we can get rid of the open
+>> > > location window (because the location bar provides the same
+>> > > functionality).
+>> > > Comments?
+>> > > 
+>> > 
+>> > please keep it. This allows me to "Ctrl-L, http://foo, enter" and
+>> > never move
+>> > my mouse.
+>> > 
+>> 
+>> Alternatively, what do you think about getting rid of the location
+>> window and Ctrl-L fucing the cursor to the location bar?
+> 
+> Cool!
+> 
+> Is it OK with you Sean?
+> 
+
+Hey, it's your project. I was always told to never move the mouse. How about
+testing this feature and leaving the other code #if 0'ed out? 
+
+
+
+Re: [Dillo-dev]I18n
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-16 17:11
+
+Sebastian,
+
+> Hi!
+> 
+> When dillo is supposed to be used by end users (in the future ;-),
+> perhaps we should start to internationalize it. Soon, because it gets
+> more difficult the more the project advances. From the view of a
+> programmer, gettext is quite simple to use (and can easily be
+> deactivated on systems on which it is not supported).
+> [...]
+> What do you think about this?
+
+Personally, I hate internationalization. (This is just my
+personal feel on the subject).
+
+This mostly because:
+
+- I understand english!
+
+- Living in a spanish-speaking country, had brought several
+nasty experiences related with it. Bad traductions,
+missconfigured systems, and impossible to understand spanish
+books.
+
+...............................................................
+For instance:
+
+'case sensitive' : "sensible al caso". (awful!)
+("hace diferencia entre mayúsculas y
+minúsculas" is the right one)
+
+'Save' : 'Salvar' (to escape danger! instead of 'Grabar')
+
+'Do you want to delete (Y/N)'
+'Desea borrar el archivo (S/N)'
+You got to answer 'Y' to get the job done!
+
+Not to mention the big mess with Hotkeys (not mnemonic anymore)
+
+Translated manpages on missconfigured terminals:
+'había un niño' becomes 'hab<ED>a un ni<F1>o'
+(this is a big problem when you're not root)
+
+Finally, when traductions are larger (in characters) than the
+original sentences, they often render truncated.
+...............................................................
+
+
+I'm not against been understood in other languajes, is just
+that my experiences are bad with it, except when the SW authors
+include their own support (i.e. they provide the translations,
+menu arrangements, new hotkeys and things like that).
+
+I can also see several tasks (like this one, download
+implementation, etc), that can be added easily, my main concerns
+are not with them but with those that can affect the whole
+project (as not being able to render tables). I think that if we
+manage to provide those "mission critical" ones, a growing
+community will provide patches for the others; but if we fail
+with the critical ones, the whole project could get stuck and ...
+
+
+Jorge.-
+
+--
+
+Ps: The guys from Intel (Taiwan) told me that dillo was ported
+to the StrongARM-110 and StrongARM-11x0 boards. 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-16 17:11
+
+Eric,
+
+> Le 15-Aug-2000, on m'a dit : 
+> > > Anyway, we can get rid of the open
+> > > location window (because the location bar provides the same
+> > > functionality).
+> > > Comments?
+> > > 
+> > 
+> > please keep it. This allows me to "Ctrl-L, http://foo, enter" and
+> > never move
+> > my mouse.
+> > 
+> 
+> Alternatively, what do you think about getting rid of the location
+> window and Ctrl-L fucing the cursor to the location bar?
+
+Cool!
+
+Is it OK with you Sean?
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Html Parser
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-16 17:10
+
+Sebastian,
+
+> Is there any reason for a separate function list F_list in html.c. Why
+> are the functions not directly integrated in the Tags list (static
+> TagInfo Tags[NTAGS])?
+
+Once upon a time there was one, but I don't remember it now! ;)
+
+Sean provided me with a patch for that, so consider it done.
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-16 17:10
+
+Sean,
+
+> In previous projects, smaller patches over time were easier to get applied
+> than one giant "I changed everything" patch. But each group is different.
+
+My point is that as each patch modified the former, I had to
+study them all. (And YES, I also prefer small patches).
+
+> [...]
+> > I found a better place that needs a single call to the entity
+> > parsing function. Not implemented yet, but if it works, I'll keep
+> > it.
+> > 
+> 
+> that would be cool, I have not quite understood all that is html.c
+
+Well, it seems I'll keep the old scheme. The entities parsing
+could have been handled in Html_write, but that requires to show
+unsupported tags as words (not bad, but the standar advices to
+ignore them).
+
+> >> loading large images is rather slow, I noticed this on screen
+> >> shot pages
+>
+> > Maybe due to ...
+> 
+> nope, simply going to some guys web page with a 1200x100 screen shot.
+
+I guess you are comparing the time with another browser...
+There's a tricky way to speed up image transfers on slow
+networks: If you get a Content-Length tag from the web server,
+you can use HTTP1.1 to open new connections to start retrieving
+partial chunks of unreceived data...
+
+I remember that sometime ago I started donloading a big image
+with Netscape and after a while, started dillo to do the same;
+dillo finished first and Netscape took a lot more to finish (Not
+only Network traffic, also the specific HTTP-connection can be
+significant sometimes).
+
+> the bug about http://www.hotmail.com seems to be a POST is improperly supported bug. 
+> I will have to set up a cgi and test it more thoroughly.
+
+Not the server expecting a cookie? (unsuported in dillo)
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]I18n
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-15 11:25
+
+Hi!
+
+When dillo is supposed to be used by end users (in the future ;-),
+perhaps we should start to internationalize it. Soon, because it gets
+more difficult the more the project advances. From the view of a
+programmer, gettext is quite simple to use (and can easily be
+deactivated on systems on which it is not supported).
+
+I do not mean to start writing .po files, but simply prepare dillo by
+using the "_" and "_N" macros, and define them as
+
+#define _(s) (s)
+#define _N(s) (s)
+
+somewhere. Then, use of these macros should become part of the coding
+standards. After this, the following tasks could be done later:
+
+- adding calls of setlocale() and textdomain(), and
+- writing .po files.
+
+What do you think about this?
+
+Sebastian. 
+
+
+
+[Dillo-dev]Html Parser
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-15 10:42
+
+Hi!
+
+Is there any reason for a separate function list F_list in html.c. Why
+are the functions not directly integrated in the Tags list (static
+TagInfo Tags[NTAGS])?
+
+Sebastian. 
+
+
+
+[Dillo-dev]Dillo on StrongARM
+
+From: <chester@li...> - 2000-08-15 10:34
+
+Hi all,
+I am glad to let you know that,dillo is port to StrongARM-110 and
+StrongARM-11x0 board.
+And I hope dillo will more strong!!
+
+
+Best regards,
+
+Chester 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-15 09:41
+
+Le 15-Aug-2000, on m'a dit : 
+> > Anyway, we can get rid of the open
+> > location window (because the location bar provides the same
+> > functionality).
+> > Comments?
+> > 
+> 
+> please keep it. This allows me to "Ctrl-L, http://foo, enter" and
+> never move
+> my mouse.
+> 
+
+Alternatively, what do you think about getting rid of the location
+window and Ctrl-L fucing the cursor to the location bar ? 
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Aug-2000 a 18:39:05
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]Misc. answers.
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-15 08:47
+
+> 
+> From the four patches you sent on the same thing, I finally
+> kept the full entities list and used a libc binary search call.
+> There're some interesting points:
+> 
+> - All the isocodes in the list are not supported by current
+> font (Some of them don't render).
+> - Performance is a very relative subject here (commented below)
+> 
+> (more on this subject near the bottom)
+> 
+
+My apologies on the rapid patches. I am used to people who want them early. 
+Plus I get eager (-:
+
+I hope I did not actually send you four identical files, I seem to recall each
+adding onto the last. But yes, I could have held them and sent one big patch.
+
+In previous projects, smaller patches over time were easier to get applied than
+one giant "I changed everything" patch. But each group is different.
+
+>> {Sean}
+>> So, I used dillo some more today. yp.yahoo.com has a submit button whose
+>> text
+>> is: "Start&nbsp;Search". This is not handled by dillo either. So, I went
+>> thru
+>> and added Html_parse_entities() calls in a few more places. Now I need to
+>> handle the memory use associated with this, right now I am leaking small
+>> bits
+>> of memory. Once I get this sorted out I will send a new patch.
+> 
+> I found a better place that needs a single call to the entity
+> parsing function. Not implemented yet, but if it works, I'll keep
+> it.
+> 
+
+that would be cool, I have not quite understood all that is html.c
+
+>> {Sean}
+>> The open location window does not seem to set itself as a transient. 
+>> This causes several window managers to hide the window when it opens. It
+>> should load on top of the browser window. This window too could use some
+>> beautification.
+> 
+> Yes, that semms to be a bug. Anyway, we can get rid of the open
+> location window (because the location bar provides the same
+> functionality).
+> Comments?
+> 
+
+please keep it. This allows me to "Ctrl-L, http://foo, enter" and never move
+my mouse.
+
+>> loading large images is rather slow, I noticed this on screen
+>> shot pages
+> 
+> Mmmmm.... There's no special handling for image connections.
+> Maybe you were downloading another document while fetching the
+> page. This seems weird at the beginning, but it's possible!
+> 
+
+nope, simply going to some guys web page with a 1200x100 screen shot.
+
+>> {Sean}
+>> Also, as I mention on #70, dillo acts like it does POST but doesn't. I am
+>> reading the HTTP spec and looking at a proper implementation of this. If
+>> anyone else is looking at this, let me know.
+> 
+> I read your complaints on GET method too, the bug track engine
+> uses GET and I've used POST without any problems. I'm not saying
+> it's perfect, but can you be more specific please?
+> 
+
+the bug about http://www.hotmail.com seems to be a POST is improperly supported bug. 
+I will have to set up a cgi and test it more thoroughly.
+
+> 
+> Performance is a very relative subject here. Mainly because
+> entities are scarce in the average HTML page (a minimal ratio),
+> and because the Html_parse_entities function, returns without
+> any searching almost all of the time (when the word doesn't have
+> entities). 
+> 
+
+absolutely, however, I do go to sites where there is an entity on every line. 
+
+
+
+[Dillo-dev]Misc. answers.
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-14 22:16
+
+Hi everyone!
+(I've been a bit overworked and also caught by a cold, I hope
+that explains my disappearance ;)
+
+
+Here I'll try to answer queued stuff:
+
+> {Sean}
+> Bug #61: strrchr(parent, '/') returned NULL for . and .., but was assumed ok
+> plus I added some more checking around the .dillo directory at startup.
+
+Integrated (done).
+
+> {Sean}
+> Enclosed is a patch for #68. My solution was to pull the call to
+> Html_parse_entities() out of the else, so it will get called regardless of the
+> current DILLO_HTML_PARSE_MODE. Also, I changed the entities struct to include
+> a len member and simply added the length of every entity to the array.
+> ... by adding the len field the call to
+> strlen() is removed from the for loop. This should help the performance of
+> Html_parse_entities some.
+
+From the four patches you sent on the same thing, I finally
+kept the full entities list and used a libc binary search call.
+There're some interesting points:
+
+- All the isocodes in the list are not supported by current
+font (Some of them don't render).
+- Performance is a very relative subject here (commented below)
+
+(more on this subject near the bottom)
+
+> {Sean}
+> So, I used dillo some more today. yp.yahoo.com has a submit button whose text
+> is: "Start&nbsp;Search". This is not handled by dillo either. So, I went thru
+> and added Html_parse_entities() calls in a few more places. Now I need to
+> handle the memory use associated with this, right now I am leaking small bits
+> of memory. Once I get this sorted out I will send a new patch.
+
+I found a better place that needs a single call to the entity
+parsing function. Not implemented yet, but if it works, I'll keep
+it.
+
+> {Sebastian}
+> I encounterd a bug which sounds very simimar to #69:
+>
+> When I go to "
+> and then, before the page is completely loaded (chances are quite good,
+> since it is rather long), click on a link at the top, dillo starts to
+> load and show the new page, but after a second or so *allways* crashes.
+
+Yes, I'll try to explain that here:
+
+That happens cause the IO engine is not finished yet. When you
+load a page, and start loading another before the former
+finishes, the IO emgine keeps loading and feeding both! (a sure
+way for crashes).
+That happens with the main page, not with images (unless the
+image is the main page). 
+Images within an HTML page have already an aborting mechanism,
+within the image sink, so the browser doesn't crash with these.
+
+A correct solution for this problem is not an easy task (I have
+some ideas, but queued in favor of table support).
+
+> {Sean}
+> Enclosed is a patch that includes the changes to html.c I sent last time along
+> with the additional changes so that entities are checked for in FORM inputs
+> as well. As far as I can tell, all entities are caught now.
+
+I hope the previous solution to work with forms too...
+
+> Also in my patch is a bug fix for Html_parse_entities(). If the html contained
+> a malformed entity, i.e. "&amp", the output would be "mp". This would be a
+> good item to add to test case html files. Another would be "&cpy;", which is
+> copyright with a typo. This flexes the case where it is a valid form of an
+> entity, but not a matching entity.
+
+In the spirit of XHTML, I don't aim to support "malformed" HTML
+pages. Anyway, the bug fix is OK (I mean, unrecognized "entities"
+must be rendered as a word).
+
+
+> {Sean}
+> The open location window does not seem to set itself as a transient. 
+> This causes several window managers to hide the window when it opens. It
+> should load on top of the browser window. This window too could use some
+> beautification.
+
+Yes, that semms to be a bug. Anyway, we can get rid of the open
+location window (because the location bar provides the same
+functionality).
+Comments?
+
+> loading large images is rather slow, I noticed this on screen
+> shot pages
+
+Mmmmm.... There's no special handling for image connections.
+Maybe you were downloading another document while fetching the
+page. This seems weird at the beginning, but it's possible!
+
+As you all may have noticed, dillo doesn't handle downloads
+yet, but if you click on a link that has an unhandled MIME type,
+the download starts, and is not aborted (see explanation above).
+Furthermore, if you wait until it's got, you can put the url in
+the location bar and force dillo to go there (nothing will be
+rendered), and after that, hitting save does the trick!
+
+If not the case, I'm sure someone will appreciate the trick :)
+
+> The number of images gauge often shows "N of M" instead of "N of N", 
+> i.e. "20 of 23". Why are some images not getting loaded?
+
+Another subtle explanation!
+Images are got in general, the problem is that the gauge is not
+updated right (yes, a Bug).
+
+I say in general, because when the image hits a redirection,
+it's not retrieved (not a bug, but lack of implementation).
+
+> {Sean}
+> Also, as I mention on #70, dillo acts like it does POST but doesn't. I am
+> reading the HTTP spec and looking at a proper implementation of this. If
+> anyone else is looking at this, let me know.
+
+I read your complaints on GET method too, the bug track engine
+uses GET and I've used POST without any problems. I'm not saying
+it's perfect, but can you be more specific please?
+
+> {Sean}
+> I re-did the core of Html_parse_entities(). The named entity check is now a
+> binary search. Also added a few checks so that malformed html never makes it
+> in to be checked.
+>
+> My initial tests show the new version is about twice as fast as the old one.
+> [...]
+> 76.92 0.10 0.10 6000 16666.67 16666.67 Html_parse_entities
+> 15.38 0.12 0.02 main
+> 7.69 0.13 0.01 6000 1666.67 1666.67 Html_parse_entities2
+> [...]
+> Because a binary search is now used and I changed the code layout, the entity
+> list no longer needs my previous addition of length values. This patch removes
+> them.
+
+Performance is a very relative subject here. Mainly because
+entities are scarce in the average HTML page (a minimal ratio),
+and because the Html_parse_entities function, returns without
+any searching almost all of the time (when the word doesn't have
+entities). 
+
+Anyway, testing with a page that has a "high entity ratio",
+profiling shows that the time spent in Html_parse_entities is no
+more that 5%, so optimizing the (5%xratio) is not very
+significant. Even more, the older scheme used a linear search,
+but its first items where the most expected entities, so it
+usually performed better than the binary search.
+
+Please don't get me wrong, I was amazed too, so I pushed it
+further and implemented a minimal perfect hash function for the
+whole entities list. Guess what, the MPH function was slightly
+faster than the binary search, but not worth the added complexity
+though. The funny thing is that it was slower than the linear
+search for pages that only used the top five entities of the
+list! 
+
+Knowing that since ISO-LATIN1 was adopted as the standar
+charset for HTML (strongly decreasing the entities use), and
+considering several other facts, I decided to trade off and used
+a libc binary search and with the large entity list.
+
+----
+
+Some final suggestions:
+
+- Please don't rush your patches to me. It's much better to
+hold on for a while, test them thoroughly and finally sending
+them.
+
+- Please don't post things you're not sure off without stating
+clearly your doubts (Just to avoid confussion).
+
+- Please bear in mind that this is a public list and that
+several persons read it. Think carefully what you post and
+be as concise as you can.
+
+
+I want to thank everyone that was kind enough to read this far,
+and also want to thank the whole developing team for the
+excellent work, and in particular, the polite bounds into which
+we all agreed to express ourselves.
+
+
+Sincerely
+Jorge.-
+
+
+Ps: I'm studying Sebastian's code and trying to find a way to
+integrate the scroll-position remind feature into it. 
+
+
+
+Re: [Dillo-dev]meta refresh support, and form POST
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-12 00:33
+
+> 
+> Something like this might work:
+> 
+> gboolean stuff_to_do(gpointer data)
+> {
+> Do the stuff that is to be done...
+> 
+> return FALSE;
+> }
+> 
+> g_timeout_add(milliseconds, stuff_to_do, NULL);
+> 
+
+right, but the problem with a call back is I have to arrange for it to get data
+somehow. Which would me some kind of global data )-:
+
+Will consider the possibilties though. 
+
+
+
+Re: [Dillo-dev]some thoughts
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-12 00:32
+
+On 11-Aug-2000 Sebastian Geerken wrote:
+> Sean 'Shaleh' Perry wrote:
+>> [...]
+>> the view source window has the ok button at the bottom. It makes the
+>> window
+>> look ugly and is generally useless.
+> 
+> What about starting an external text viewer, determined by the user?
+> Dillo could write the content into a temporary file, or pipe it through
+> stdin. The builtin text viewer could be left as standard, but should not
+> be improved.
+> 
+
+nah, that is over kill. If the close button is removed, the window looks just
+like netscape's -- just without syntax highlighting. 
+
+
+
+Re: [Dillo-dev]meta refresh support, and form POST
+
+From: Jörgen Viksell <vsksga@ho...> - 2000-08-11 19:55
+
+>Implementation question: the format is content="2;URL= 
+>where
+>the '2' is the number of seconds before loading the page. How should I get
+>this pause without freezing the browser? My current code ignores the
+>delay completely.
+
+Something like this might work:
+
+gboolean stuff_to_do(gpointer data)
+{
+Do the stuff that is to be done...
+
+return FALSE;
+}
+
+g_timeout_add(milliseconds, stuff_to_do, NULL);
+
+// Jörgen
+
+
+
+________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com 
+
+
+
+Re: [Dillo-dev]some thoughts
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-11 10:04
+
+Sean 'Shaleh' Perry wrote:
+> [...]
+> the view source window has the ok button at the bottom. It makes the
+> window
+> look ugly and is generally useless.
+
+What about starting an external text viewer, determined by the user?
+Dillo could write the content into a temporary file, or pipe it through
+stdin. The builtin text viewer could be left as standard, but should not
+be improved.
+
+Sebastian. 
+
+
+
+[Dillo-dev]meta refresh support, and form POST
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-11 08:46
+
+I am working on meta refresh support. This causes dillo to crash just like the
+previously mentioned "click a link before the text is finished rendering" bug. 
+So, looks like I get to kill two birds with one stone (-:
+
+Implementation question: the format is content="2;URL= where
+the '2' is the number of seconds before loading the page. How should I get
+this pause without freezing the browser? My current code ignores the 
+delay completely.
+
+Also, as I mention on #70, dillo acts like it does POST but doesn't. I am
+reading the HTTP spec and looking at a proper implementation of this. If
+anyone else is looking at this, let me know.
+
+I have mailed Jorge several patches this week for improved entity support and
+some minor speed improvements to html.c in general.
+
+See you all in a week (-: I will be reading mail sporadically. 
+
+
+
+[Dillo-dev]some thoughts
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-10 23:56
+
+Been using dillo off and on for most of this week. My list of little gripes so
+far:
+
+the view source window has the ok button at the bottom. It makes the window
+look ugly and is generally useless.
+
+The open location window does not seem to set itself as a transient. This
+causes several window managers to hide the window when it opens. It should
+load on top of the browser window. This window too could use some
+beautification.
+
+loading large images is rather slow, I noticed this on screen shot pages
+
+the number of images gauge often shows "N of M" instead of "N of N", i.e. "20
+of 23". Why are some images not getting loaded? 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-09 00:31
+
+Sebastian,
+
+> > [...]
+> > It should work in a reasonable way!
+> > I mean, in a clear, unambiguous, and practical way.
+> > (And finally we can always count on the always-reloading
+> > scheme; dillo is very fast doing that).
+> 
+> Yes, this is true. By testing I found that even long pages are reloaded
+> in a reasonable time.
+> 
+> Nevertheless, "not-reloading" is a nice feature,
+
+Of course it is.
+
+> but still not fully
+> complete, and I will stop writing on it in the next time (meanwhile I am
+> sucked of this whole problem :-). 
+
+I've been there...
+
+> It will be deactivated it in the
+> patch, but I think it should be left as an option for future extensions.
+> 
+> Shall I remove and put it in a separate patch, or leave it in the code,
+> but deactivate (#if 0 ... #endif) it?
+
+#if 0, it (I want to study the code anyway)
+
+
+> PS: Is it possible to include .php pages or so into the html test suite?
+> I used it to create some extreme situations, e. g. slowing down reading
+> by including "<?php sleep(10); ?>".
+
+If that's to de done, I'd prefer it to have its own tarball.
+Not everyone has a php-configured web server running. I like the
+idea though.
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]Bug #69
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-08 20:06
+
+On 08-Aug-2000 Sebastian Geerken wrote:
+> Hi!
+> 
+> I encounterd a bug which sounds very simimar to #69:
+> 
+> When I go to "
+> and then, before the page is completely loaded (chances are quite good,
+> since it is rather long), click on a link at the top, dillo starts to
+> load and show the new page, but after a second or so *allways* crashes.
+> 
+
+I can confirm this. Most pages load so fast in dillo that this is hard to test
+(-: But try this:
+
+go to a search engine page, search and as soon as a link appears click it. 
+Just keep clicking links as fast as they appear (who cares where they go). I
+found about three or so in dillo dies. Most likely the result of lack of
+function return value checking. 
+
+
+
+[Dillo-dev]Bug #69
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-08 15:47
+
+Hi!
+
+I encounterd a bug which sounds very simimar to #69:
+
+When I go to "
+and then, before the page is completely loaded (chances are quite good,
+since it is rather long), click on a link at the top, dillo starts to
+load and show the new page, but after a second or so *allways* crashes.
+
+(You will get the wrong page because of bug #65, but after fixing the
+bug, it remains the same.)
+
+If you wait, until the page has been loaded completely, all works.
+
+I hope this will helpful.
+
+Sebastian. 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-08 12:58
+
+Hi, Jorge!
+
+Jorge Arellano Cid wrote:
+> > > Maybe, if the timeout function validates itself, the problem can
+> > > be addressed in a simpler way. I mean, let the timeout function
+> > > start, poll until it finds the #anchor, then set its AnchorFound
+> > > flag and to continue correcting the value until:
+> > >
+> > > - #anchor is not found anymore or
+> > > - user scrolls the page (either with keyboard or with mouse)
+> > > When one of those happens, it removes itself.
+> >
+> > Changing of anchor positions depends of other things (e. g. images), so
+> > this is not the point.
+> 
+> I meant that it'd be clearer to let the timeout function remove
+> itself, than to push a removal function into another function
+> (an attempt to avoid coupling).
+
+Yes, this has been done from the beginning (except only two cases:
+Dw_gtk_scroller_destroy, and before a new timeout function is started).
+
+> > An other point: A new behavior, which I have implemented, is, that the
+> > page is *not* reloaded (even from cache) in some cases. Currently: if
+> > old and new url are the same *and* there is no #anchor. In this case the
+> > url is pushed, the scroller jumps to the anchor, but nothing is done
+> > else.
+> 
+> Interesting; careful considerations must be done though...
+> 
+> > As I have seen, the HTML spec does not say anything about this, so how
+> > should it work at the end?
+> 
+> It should work in a reasonable way!
+> I mean, in a clear, unambiguous, and practical way.
+> (And finally we can always count on the always-reloading
+> scheme; dillo is very fast doing that).
+
+Yes, this is true. By testing I found that even long pages are reloaded
+in a reasonable time.
+
+Nevertheless, "not-reloading" is a nice feature, but still not fully
+complete, and I will stop writing on it in the next time (meanwhile I am
+sucked of this whole problem :-). It will be deactivated it in the
+patch, but I think it should be left as an option for future extensions.
+
+Shall I remove and put it in a separate patch, or leave it in the code,
+but deactivate (#if 0 ... #endif) it?
+
+Sebastian.
+
+PS: Is it possible to include .php pages or so into the html test suite?
+I used it to create some extreme situations, e. g. slowing down reading
+by including "<?php sleep(10); ?>". 
+
+
+
+RE: [Dillo-dev]bug #68
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-07 23:53
+
+On 07-Aug-2000 Jorge Arellano Cid wrote:
+> 
+> Sean,
+> 
+> First of all, I want to welcome you to the project and to thank
+> your first patch contributions (just integrated the first one;
+> look at the bug-track).
+> 
+
+thanks, it is nice to have a free browser again (-: Hope to have all of #68
+done in the next few days.
+
+> 
+> Ps: Please don't send patches to the mailing list, send them
+> directly to me (or privately upon request).
+> 
+
+will do. 
+
+
+
+RE: [Dillo-dev]bug #68
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-07 23:19
+
+Sean,
+
+First of all, I want to welcome you to the project and to thank
+your first patch contributions (just integrated the first one;
+look at the bug-track).
+
+> The functions without header comments (/* ? */), do we desire them to be
+> commented?
+
+Yes! (It'd be great if we ever get the full source commented).
+
+
+Jorge.-
+
+Ps: Please don't send patches to the mailing list, send them
+directly to me (or privately upon request). 
+
+
+
+Re: [Dillo-dev]Re: Plugins (was: Misc. answers)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-07 23:19
+
+Eric,
+
+> What's good in using http rather than a raw html page? I'm afraid http would
+> need much more code (libs) to do for a very small benefit (I can't even name
+> one :-/).
+
+Take it easy, all you'll need to do is to output the HTML page
+with a HTTP content header:
+
+·························
+Content-Type: text/html
+
+<HTML>
+...
+</HTML>
+·························
+
+You may also add a "Content-Length" field, but that's not a
+requirement (this is exactly the same way we use to handle local
+files).
+
+> ... or are we talking about the same thing ? ;-)
+
+Yes.
+(No MIME, no libs, no complicated stuff, just a minimal HTTP
+header).
+
+
+Jorge.- 
+
+
+
+RE: [Dillo-dev]bug #68
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-06 23:45
+
+On 06-Aug-2000 Sean 'Shaleh' Perry wrote:
+> Enclosed is a patch for #68. My solution was to pull the call to
+> Html_parse_entities() out of the else, so it will get called regardless of
+> the current DILLO_HTML_PARSE_MODE.
+
+So, I used dillo some more today. yp.yahoo.com has a submit button whose text
+is: "Start&nbsp;Search". This is not handled by dillo either. So, I went thru
+and added Html_parse_entities() calls in a few more places. Now I need to
+handle the memory use associated with this, right now I am leaking small bits
+of memory. Once I get this sorted out I will send a new patch.
+
+The functions without header comments (/* ? */), do we desire them to be
+commented? 
+
+
+
+[Dillo-dev]Gif segfault : not dillo's bug
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-06 14:42
+
+Hi all,
+I've been testing dillo's image rendering for a while, and I noticed a segfault
+with some gif (mostly banners, only animated ?). It's not dillo's fault, it's a
+libungif fault (v4.1.0) : every imlib-dependant program segfaults. Version
+4.1.0b1 corrects this bug, unfortunatly no package of this version is available
+: you'll have to get the tarball from libungif site, compile and install it
+yourself. Doing that, you'll break packages dependancies (imlib, ...), but
+compilation and replacement is very easy.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 06-Aug-2000 a 23:35:52
+---------------------------------- 
+
+
+
+[Dillo-dev]Re: est suite (was: Misc. answers)
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-06 10:27
+
+Le 05-Aug-2000, on m'a dit : 
+> 
+> ---- [Test Suite] ----
+> 
+> > > The main point of it is to have a set of pages to test backward
+> > > rendering capabilities (not breaking what was working in former
+> > > versions of dillo), and to have a record of simple things that
+> > > are not working yet, but that we're close to add.
+> > > 
+> > 
+> > That would be a collection of existing pages you and other developers have
+> > done before. (see above)
+> 
+> And some other interesting stuff added later.
+> 
+> > > Just assemble a small testing suite and you'll eventually
+> > > receive contributions (I have some!).
+> > 
+> > Do you want me to assemble the pages, then send you the assemblage for
+> > publishing ? I can do that.
+> 
+> Perfect.
+> 
+
+Ok, everybody send me your pages at the address below, in a tgz, if possible
+with a short description of what each page is supposed to test. I'll put them
+together.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 06-Aug-2000 a 11:56:07
+---------------------------------- 
+
+
+
+[Dillo-dev]Re: Plugins (was: Misc. answers)
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-06 10:27
+
+Le 05-Aug-2000, on m'a dit : 
+> ---- [Plugins] ----
+> 
+> > > The only difference is that information from the browser is
+> > > passed to the plugin using its stdin, not the command line, and
+> > > encoded as if the recepting program was a CGI.
+> >
+> > What do you mean with this CGI-thing : do you want the program to use HTTP
+> > as transport, not stdout?
+> 
+> The plugin-program outputs to its stdout in HTTP format.
+> 
+
+Herrr ... by http format, you mean a subset of it : some infos of the header
+(content, cache). Not the full mime-encoding stuff, I hope.
+
+> > AFAIK CGIs prints to stdout for the web server.
+> 
+> Right.
+> 
+
+an html page, plain text, no header, no http. The first bytes sent are "<html".
+
+What's good in using http rather than a raw html page ? I'm afraid http would
+need much more code (libs) to do for a very small benefit (I can't even name
+one :-/).
+
+... or are we talking about the same thing ? ;-)
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 06-Aug-2000 a 12:07:10
+---------------------------------- 
+
+
+
+[Dillo-dev]bug #68
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-06 09:17
+
+Attachments: dillo2.patch      
+
+Enclosed is a patch for #68. My solution was to pull the call to
+Html_parse_entities() out of the else, so it will get called regardless of the
+current DILLO_HTML_PARSE_MODE. Also, I changed the entities struct to include
+a len member and simply added the length of every entity to the array. 
+Since we know what the string is, it is silly to perform the computation. 
+This entire array could be dynamically generated from a list of entities,
+assuming the list ever changes. By adding the len field the call to
+strlen() is removed from the for loop. This should help the performance of
+Html_parse_entities some.
+
+The two patches (this one and the last one) are independent of each other. 
+
+
+
+[Dillo-dev]Bug #61 patch, plus extras
+
+From: Sean 'Shaleh' Perry <shaleh@vi...> - 2000-08-06 08:37
+
+Attachments: dillo.patch      
+
+It is soooo great to see a new browser. Anyway, here is a little contribution
+to the cause:
+
+Bug #61: strrchr(parent, '/') returned NULL for . and .., but was assumed ok
+plus I added some more checking around the .dillo directory at startup.
+
+To fully clean up #61, the path shown should not be: /path/to/directory/./. To
+solve this I have to understand where the URL is getting sent from and where
+the string displayed is shown.
+
+BTW, anyone have some emacs magic so I can edit the code with emacs? I used vi
+for this so I could follow the coding standards. 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-05 16:46
+
+Sebastian,
+
+> Since I had problems to understand how several modules are connected, I
+> tried to minimize communication between Html/Dw and GtkDwScroller by
+> using flags and timeout functions. This is a workaround, but it will
+> work ;-). I will comment and document my patch as good as it is needed
+> by someone else, who wants to implement it more elegant, after he has
+> understood the whole code better than I.
+
+Excellent, keep up the good work!
+
+> [...]
+> What does not work correct: Go to a (large) page, scroll down and resize
+> the window. Since the recalculation of the position is quite simple, you
+> often get to a different position. But this has nothing to do with my
+> patch. (A bug? Other browsers have this problem, too.)
+
+Yes, that's a different problem.
+I think better to solve the #anchor problem well, before we
+attempt to address this new one.
+Remember that we still have to support remembering the
+scrolling position of previously browsed pages (maybe just saving
+the vertical adjustment value in the navigation stack).
+[This problem will be affected by window resizes too.]
+
+> > Maybe, if the timeout function validates itself, the problem can
+> > be addressed in a simpler way. I mean, let the timeout function
+> > start, poll until it finds the #anchor, then set its AnchorFound
+> > flag and to continue correcting the value until:
+> > 
+> > - #anchor is not found anymore or
+> > - user scrolls the page (either with keyboard or with mouse)
+> > When one of those happens, it removes itself.
+> 
+> Changing of anchor positions depends of other things (e. g. images), so
+> this is not the point.
+
+I meant that it'd be clearer to let the timeout function remove
+itself, than to push a removal function into another function
+(an attempt to avoid coupling).
+
+> An other point: A new behavior, which I have implemented, is, that the
+> page is *not* reloaded (even from cache) in some cases. Currently: if
+> old and new url are the same *and* there is no #anchor. In this case the
+> url is pushed, the scroller jumps to the anchor, but nothing is done
+> else.
+
+Interesting; careful considerations must be done though...
+
+> As I have seen, the HTML spec does not say anything about this, so how
+> should it work at the end?
+
+It should work in a reasonable way!
+I mean, in a clear, unambiguous, and practical way.
+(And finally we can always count on the always-reloading
+scheme; dillo is very fast doing that).
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Misc. answers
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-05 16:46
+
+Hi there!
+
+Here are some answers that were queued in my "todo:" list:
+
+
+---- [Test Suite] ----
+
+> > The main point of it is to have a set of pages to test backward
+> > rendering capabilities (not breaking what was working in former
+> > versions of dillo), and to have a record of simple things that
+> > are not working yet, but that we're close to add.
+> > 
+> 
+> That would be a collection of existing pages you and other developers have done
+> before. (see above)
+
+And some other interesting stuff added later.
+
+> ...
+> So, what you want basically is problem-exposing pages.
+
+Not only that.
+
+> > Just assemble a small testing suite and you'll eventually
+> > receive contributions (I have some!).
+> 
+> Do you want me to assemble the pages, then send you the assemblage for
+> publishing ? I can do that.
+
+Perfect.
+
+
+---- [PNG Code] ----
+
+> > Finally, Geoff Lane (author of PNG support), told me it was
+> > alpha code.
+> >
+>
+> Does he still support the code, or is it up to us ? 
+
+Geoff is not supporting it, so I guess it's up to Luca ;-)
+
+> I did all my testings with a png image _in_ an html page : if you don't have
+> the bug when loading the page, you'll never have it when clicking reload. You
+> have to quit dillo and reload the page.
+> 
+> That strange : does dillo have a different caching behavior when the the
+> "page" is an image? (it seems dillo re-decoding the image then)
+
+Good point!
+Actually the caching scheme is only one, but cache querying is
+different. When an IMG tag is found in a HTML page, the dicache
+is asked for the image (decompressed image cache), and when it's
+a bare URL, a_Cache_open_url is requested to do the job
+(bypassing the dicache).
+
+The dicache code is expecting a full rewrite (I wrote that
+before, but don't remember where nor to whom).
+
+Hope that helps.
+
+
+
+---- [Plugins] ----
+
+> > The only difference is that information from the browser is
+> > passed to the plugin using its stdin, not the command line, and
+> > encoded as if the recepting program was a CGI.
+>
+> What do you mean with this CGI-thing : do you want the program to use HTTP as
+> transport, not stdout?
+
+The plugin-program outputs to its stdout in HTTP format.
+
+> AFAIK CGIs prints to stdout for the web server.
+
+Right.
+
+> Will CGI environment variables be passed to the program ? (REMOTE_HOST and
+> stuff) I don't see that useful.
+
+No, we'll forget about environment vars.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]New release!
+
+From: Jorge Arellano Cid <jcid@ca...> - 2000-08-04 21:39
+
+Hi there,
+
+A lot of work and effort has been put in this release. I hope
+you all enjoy the difference.
+Most notably there's new extensive documentation about dillo widget 
+(Dw), and IO.txt has been polished.
+
+I'll qoute a bit from IO.txt here:
+
+" Data transfer between threads inside the browser is handled by
+pipes, shared memory is little used. This almost obviates the
+need for explicit synchronization, which is one of the main areas
+of complexity and bugs in concurrent programs. Dillo handles its
+threads in a way that its developers can think of it as running
+on a single thread of control. This is accomplished by making the
+DNS engine call-backs happen within the main thread, and by
+isolating file loading with pipes."
+
+
+
+Severals bugs and leaks were fixed, and stability also improved!
+
+Download and enjoy!
+
+Jorge.-
+-- 
+
+
+
+RE: [Dillo-dev]Re: Eric
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-02 04:50
+
+Le 01-Aug-2000, on m'a dit : 
+> > then the program "bm" prints a html page in stdout (and can do something
+> > else, like writing a file on the disk), which page dillo will render.
+...
+> 
+> Basically, that's the idea.
+> 
+> The only difference is that information from the browser is
+> passed to the plugin using its stdin, not the command line, and
+> encoded as if the recepting program was a CGI.
+> 
+> 
+
+What do you mean with this CGI-thing : do you want the program to use HTTP as
+transport, not stdout ? AFAIK CGIs prints to stdout for the web server.
+Will CGI environment variables be passed to the program ? (REMOTE_HOST and
+stuff) I don't see that useful.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 02-Aug-2000 a 13:41:55
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]Bug #4, #62, #63
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-02 03:15
+
+Le 01-Aug-2000, on m'a dit : 
+> Il mar, 01 ago 2000, hai scritto:
+> 
+> > When I read libpng docs (example.c), it has directions on
+> > decoding several images at the same time, so it seems that the
+> > library can handle that.
+> > On the other hand, I can't reproduce the bug with a single
+> > image.
+> 
+> I can. I open a png image then click on reload button several timesand I got
+> a white image.
+> 
+
+I did all my testings with a png image _in_ an html page : if you don't have
+the bug when loading the page, you'll never have it when clicking reload. You
+have to quit dillo and reload the page.
+
+That's strange : does dillo have a different caching behavior when the the
+"page" is an image ? (it seems dillo's re-decoding the image then)
+
+> > An interesting fact is that sometimes PNGs render not
+> > completely white, but with colors bleached away! (One more hint
+> > towards thinking the bug is PNG specific).
+> 
+> Me too!
+> 
+
+I'll try again with image only.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 02-Aug-2000 a 12:08:52
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]Bug #4, #62, #63
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-02 03:11
+
+Le 01-Aug-2000, on m'a dit : 
+> 
+> Eric,
+> 
+> > > Bug #4 (images as white square): I can reproduce it only with PNG. Gif
+> > > and jpeg works just fine. Maybe a png specific problem ?!?
+> > 
+> > I noticed the bug is much more frequent when there is several images: I
+> > wonder if my libpng is compiled reentrant.
+> 
+> When I read libpng docs (example.c), it has directions on
+> decoding several images at the same time, so it seems that the
+> library can handle that.
+> On the other hand, I can't reproduce the bug with a single
+> image.
+> 
+
+I've done all my testings using a page with a single png image. It happens. 
+It is true that it happens less with only one image (maybe 1 out of 20) than
+with several images (my test page with 17 png has 2 to 5 white images each
+time), but it happens. I noticed it happens less with the 17-images page when I
+print a lot of debug informations during decoding, thus slowing down the
+process, that's why I was thinking of a reentrance bug. I'm not sure now
+
+> An interesting fact is that sometimes PNGs render not
+> completely white, but with colors bleached away! (One more hint
+> towards thinking the bug is PNG specific).
+> 
+
+I'm using 64x32 one-color images, and sometimes (rarely) I have one or two
+lines of randomly colored pixels.
+
+> Finally, Geoff Lane (author of PNG support), told me it was
+> alpha code.
+> 
+
+Does he still support the code, or is it up to us ?
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Aug-2000 a 22:46:29
+---------------------------------- 
+
+
+
+Re: [Dillo-dev]Html test suite
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-02 03:11
+
+Le 01-Aug-2000, on m'a dit : 
+> 
+> The main point of it is to have a set of pages to test backward
+> rendering capabilities (not breaking what was working in former
+> versions of dillo), and to have a record of simple things that
+> are not working yet, but that we're close to add.
+> 
+
+That would be a collection of existing pages you and other developers have done
+before. (see above)
+
+> For instance, a page that reproduces the white square rendering
+> bug, would be useful,
+
+I have a page doing that. Anybody interested ?
+
+> The other fact to take into account, is not to devote much time
+> on assembling an HTML test suite, just find a page that shows
+> some problems and add it to our test list; if you can reduce its
+> size, that'd be good.
+> 
+
+So, what you want basically is problem-exposing pages.
+
+> Just assemble a small testing suite and you'll eventually
+> receive contributions (I have some!).
+> 
+> Ps: If you want my test examples, drop me a note.
+> 
+
+Do you want me to assemble the pages, then send you the assemblage for
+publishing ? I can do that.
+
+I'll begin with "should-work-to-be-a-good-browser" pages : some basic text
+formating and character rendering : everything dillo can do now (as for
+v0.2.2), plus everything (I feel) should work on any decent browser.
+
+If anybody needs pages to test a specific problem and is not in the mood doing
+doing them by himself, just send me an email I'prepare a few pages for the next
+day.
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Aug-2000 a 23:32:24
+---------------------------------- 
+
+
+
+RE: bookmarks [Dillo-dev]Re: Eric
+
+From: Eric GAUDET <egaudet@in...> - 2000-08-02 03:11
+
+Le 01-Aug-2000, on m'a dit : 
+> 
+> Eric,
+> 
+> > You said that before and I love this idea. I'd like to see a practical
+> > example of plugin, even alpha stage, before I decide I can do it right.
+> 
+> OK, I'll try to provide you with that.
+> (Most probably a patch over dillo-0.2.3).
+> 
+...
+> The only difference is that information from the browser is
+> passed to the plugin using its stdin, not the command line, and
+> encoded as if the recepting program was a CGI.
+> 
+
+Understood. I'm interested, then. 
+
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Le 01-Aug-2000 a 22:55:20
+---------------------------------- 
+
+
+
+RE: [Dillo-dev]Bug #4, #62, #63
+
+From: Luca Rota <drake@it...> - 2000-08-01 23:14
+
+Il mar, 01 ago 2000, hai scritto:
+
+> When I read libpng docs (example.c), it has directions on
+> decoding several images at the same time, so it seems that the
+> library can handle that.
+> On the other hand, I can't reproduce the bug with a single
+> image.
+
+I can. I open a png image then click on reload button several timesand I got a
+white image.
+
+> An interesting fact is that sometimes PNGs render not
+> completely white, but with colors bleached away! (One more hint
+> towards thinking the bug is PNG specific).
+
+Me too!
+
+Ciao,
+Luca 
+
+
+
+Re: [Dillo-dev]Bug #10 (Anchors): questions
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-01 15:08
+
+Hi, Jorge!
+
+First a few notes:
+
+Anchors basicly work. There are a few details and tests to do, but I do
+not think I will get severe problems. So the patch will propably be
+finished in a few days.
+
+Since I had problems to understand how several modules are connected, I
+tried to minimize communication between Html/Dw and GtkDwScroller by
+using flags and timeout functions. This is a workaround, but it will
+work ;-). I will comment and document my patch as good as it is needed
+by someone else, who wants to implement it more elegant, after he has
+understood the whole code better than I.
+
+Jorge Arellano Cid wrote:
+> If the "scroller" and "view" code was right, maybe I'd suggest
+> you to try a patch based on "changed" and "value changed"
+> signals, but that code is a mess!
+
+I've tried to catch "changed" signals, but it didn't work reliable. The
+timeout function works well, and is always removed at some point (there
+is no "timeout function leak"). The only problem is, that it continues
+running a while without use (and so taking a not measurable amount of
+CPU time ;-), but this is only a question of design, not of runtime
+behaviour.
+
+> [...]
+> I see several things here:
+> 
+> - The timeout function should not override user scrolling
+> (i.e. if the user scrolls the page with the mouse).
+
+I already planned this. When, e. g, the user scrolls the page, before
+the requested anchor has been read *anyway* (e. g. when transmission is
+very slow, and meanwhile he is interrested in the informations at the
+top of the page), he should not be confused by a sudden jump to an other
+position (I think so). I have added a line to Dw_gtk_view_v_scroll, and
+it works.
+
+> - Html_close can't be trusted to happen.
+
+Ok, I don't use it. (It does not work either in many cases.)
+
+> - Image reception can't be trusted.
+
+I didn't use it.
+
+> - It would be nice to have a #anchor display function that
+> doesn't get fooled with page resizes (as we're trying).
+
+That works. Precisely, following works:
+
+1. Go to an url "foo#bar" where foo is very long and "#bar" at the very
+bottom, then *immediately* resize the window (before the <a name="bar">
+is read).
+
+2. Go to a page, wait until it is loaded, resize the window, and jump to
+an anchor in the same page.
+
+3. Go to an url "foo#bar", wait until it is visible (e. g. transmission
+is over), and resize the window. (This is not really intended, but a
+side effect, since the timeout function is still running.)
+
+What does not work correct: Go to a (large) page, scroll down and resize
+the window. Since the recalculation of the position is quite simple, you
+often get to a different position. But this has nothing to do with my
+patch. (A bug? Other browsers have this problem, too.)
+
+> Maybe, if the timeout function validates itself, the problem can
+> be addressed in a simpler way. I mean, let the timeout function
+> start, poll until it finds the #anchor, then set its AnchorFound
+> flag and to continue correcting the value until:
+> 
+> - #anchor is not found anymore or
+
+Changing of anchor positions depends of other things (e. g. images), so
+this is not the point.
+
+> - user scrolls the page (either with keyboard or with mouse)
+
+See above.
+
+> When one of those happens, it removes itself.
+
+An other point: A new behavior, which I have implemented, is, that the
+page is *not* reloaded (even from cache) in some cases. Currently: if
+old and new url are the same *and* there is no #anchor. In this case the
+url is pushed, the scroller jumps to the anchor, but nothing is done
+else.
+
+As I have seen, the HTML spec does not say anything about this, so how
+should it work at the end?
+
+Sebastian. 
+
+
+
+[Dillo-dev]Gtk containers
+
+From: Sebastian Geerken <S.Geerken@pi...> - 2000-08-01 15:08
+
+Jorge Arellano Cid wrote:
+[about docs]
+> I think it's a matter cause it doesn't work as expected. Some
+> parts are missing, some other are incomplete, and some have
+> workaround tweaks.
+> For instance, when Jörgen fixed the checkboxes, his code was
+> right, but it didn't work because button widgets were not
+> receiving the expose events.
+
+Perhaps a hint: The container implementations of GtkDwScroller and
+GtkDwView look a bit incomplete. If you look e. g. at the source of
+GtkBox, you find that there are 6 specific functions defined by
+GtkContainer (like abstract virtual methods in C++), which are put into
+the class structure: gtk_box_add, gtk_box_remove, gtk_box_forall,
+gtk_box_child_type, gtk_box_set_child_arg and gtk_box_get_child_arg. So,
+perhaps, Jörgen's code works, when GtkDwView is implemented in the
+correct way. 
+
+
+
+RE: [Dillo-dev]Bug #4, #62, #63
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-01 13:39
+
+Eric,
+
+> > Bug #4 (images as white square): I can reproduce it only with PNG. Gif and
+> > jpeg works just fine. Maybe a png specific problem ?!?
+> 
+> I noticed the bug is much more frequent when there is several images: I wonder
+> if my libpng is compiled reentrant.
+
+When I read libpng docs (example.c), it has directions on
+decoding several images at the same time, so it seems that the
+library can handle that.
+On the other hand, I can't reproduce the bug with a single
+image.
+
+An interesting fact is that sometimes PNGs render not
+completely white, but with colors bleached away! (One more hint
+towards thinking the bug is PNG specific).
+
+Finally, Geoff Lane (author of PNG support), told me it was
+alpha code.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #4, #62, #63
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-01 13:39
+
+Seth,
+
+> > > Bug #63 (Segfault when you click enter in location field)
+> 
+> I found that bug running on an older slack install, when I tried to reproduce
+> it on a newer mandrake install everything seemed fine.
+
+Thanks for the explanation.
+
+Jorge.-
+
+Ps: Older than SLK-3.6? 
+
+
+
+RE: [Dillo-dev]Re: Eric
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-01 13:39
+
+Eric,
+
+> > - Implementing the bookmarks as an external plugin. The idea of
+> > doing it keeps rolling in my mind. Basically a dpi:/ (dillo
+> > plugin) URL can be defined, and when accessing dpi:/bm (bookmark)
+> > an external program can be launched on a thread to 'cat' the
+> > bookmarks file (this is very much like current file handling).
+> > The point with this scheme is that the plugin can be extended
+> > to achieve more functionality (add, move, remove bookmark, make
+> > category, etc). All implemented in a CGI fashioned way.
+> > With that example, other people can start thinking of other
+> > plugins, like a man page processor, or info file processor, a
+> > dillorc options interface, etc.
+> > 
+> 
+> You said that before and I love this idea. I'd like to see a practical example
+> of plugin, even alpha stage, before I decide I can do it right.
+
+OK, I'll try to provide you with that.
+(Most probably a patch over dillo-0.2.3).
+
+> What I understand, is there's a program called bm in ~/.dillo/plugin/ or
+> /usr/local/lib/dillo/ (or is it /usr/local/share/dillo/ ?), that take its
+> arguments on the command line (ie : when calling the URL
+> "dpi:/bm?subdirectoy=News&fontsize=16", dillo is opening a read only pipe with
+> the command line "bm subdirectory=News fontsize=16"), then the program "bm"
+> prints a html page in stdout (and can do something else, like writing a file
+> on the disk), which page dillo will render.
+> Is that what you have in mind ? If not, can you describe precisely the calling
+> mecanism, as well as the data retrieving.
+
+Basically, that's the idea.
+
+The only difference is that information from the browser is
+passed to the plugin using its stdin, not the command line, and
+encoded as if the recepting program was a CGI.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Bug #4, #62, #63
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-01 13:39
+
+Luca,
+
+> Bug #4 (images as white square): I can reproduce it only with PNG. Gif and
+> jpeg works just fine. Maybe a png specific problem ?!?
+
+Could be...
+When I made the entry, a long time ago, it seemed to happen at
+random images in ESR's page (not only PNGs there). But when I
+checked it yesterday, the blank images were only PNGs.
+
+> Bug #62 (<hr> tag's width problem): Dw_hruler_size_nego_y() (file dw_hrule.c)
+> is commented. But that code seem ok! It works! Why is commented?
+
+Because I haven't finished it yet ;)
+Dillo 0.2.3 will have it uncommented.
+
+> Bug #63 (Segfault when you click enter in location field): 
+> I can't reproduce it.
+
+After reading Seth's post, I decided to remove the entry.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Html test suite
+
+From: Jorge Arellano Cid <jcid@ne...> - 2000-08-01 13:39
+
+Eric,
+
+> I've done some pages to begin with : basic html structure, colors. I'm
+> currently finishing the characters page. 
+> But I'm not sure what's urgent to do next.
+
+I understand.
+
+> What html specs do you want me to build test pages for (high and medium
+> priority) ? Do you want first (only ?) well-formated documents, or do you need
+> faulty documents too (missing, misplaced or incorrect tags)
+
+The main point of it is to have a set of pages to test backward
+rendering capabilities (not breaking what was working in former
+versions of dillo), and to have a record of simple things that
+are not working yet, but that we're close to add.
+
+For instance, a page that reproduces the white square rendering
+bug, would be useful, but a table rendering suit makes no sense
+at this stage.
+
+The other fact to take into account, is not to devote much time
+on assembling an HTML test suite, just find a page that shows
+some problems and add it to our test list; if you can reduce its
+size, that'd be good.
+
+Just assemble a small testing suite and you'll eventually
+receive contributions (I have some!).
+
+
+> PS: Do we aim for html 3 or html 4 compliance ?
+
+Neither one!
+We strive for a "usable" HTML web browser.
+(Kind of a vague answer, but true)
+
+
+
+Jorge.-
+
+
+Ps: If you want my test examples, drop me a note. 
+
+

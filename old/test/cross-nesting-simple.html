@@ -1,0 +1,24 @@
+Cross nesting between A, BUTTON, SELECT and TEXTAREA is forbidden:<br>
+<dl>
+<dt>A:
+ <dd> A A<a><a></a>
+ <dd> A BUTTON<a><button value="OK" name="sop"></button></a>
+ <dd> A SELECT<a><select></select></a>
+ <dd> A TEXTAREA<a><textarea rows=1 cols=1></textarea></a>
+<dt>BUTTON:
+ <dd> BUTTON A<button><a></button>
+ <dd> BUTTON BUTTON<button><button value="OK" name="sop"></button></button>
+ <dd> BUTTON SELECT<button><select></button>>
+ <dd> BUTTON TEXTAREA<button><textarea rows=1 cols=1></textarea></button>
+<dt>SELECT:
+ <dd> SELECT A<select><a></select>
+ <dd> SELECT BUTTON<select><button value="OK" name="sop"></button></select>
+ <dd> SELECT SELECT<select><select></select>>
+ <dd> SELECT TEXTAREA<select><textarea rows=1 cols=1></textarea></select>
+<dt>TEXTAREA:
+ <dd> TEXTAREA A<textarea><a></a></textarea>
+ <dd> TEXTAREA BUTTON<textarea><button value="OK"></button></textarea>
+ <dd> TEXTAREA SELECT<textarea><select></select></textarea>>
+ <dd> TEXTAREA TEXTAREA<textarea><textarea rows=1 cols=1></textarea></textarea>
+
+</dl>

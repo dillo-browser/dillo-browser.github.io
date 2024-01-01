@@ -1,0 +1,554 @@
+diff -r f5a186303478 src/cache.c
+--- a/src/cache.c	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/cache.c	Sat Sep 12 01:56:25 2009 +0000
+@@ -937,7 +937,7 @@ static int Cache_redirect(CacheEntry_t *
+          NewUrl = a_Url_new(URL_STR_(entry->Location), URL_STR_(entry->Url));
+          if (entry->Flags & CA_TempRedirect)
+             a_Url_set_flags(NewUrl, URL_FLAGS(NewUrl) | URL_E2EQuery);
+-         a_Nav_push(bw, NewUrl);
++         a_Nav_push(bw, NewUrl, entry->Url);
+          a_Url_free(NewUrl);
+       } else {
+          /* Sub entity redirection (most probably an image) */
+diff -r f5a186303478 src/capi.c
+--- a/src/capi.c	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/capi.c	Sat Sep 12 01:56:25 2009 +0000
+@@ -15,6 +15,7 @@
+  * to get the requests served. Kind of a broker.
+  */
+ 
++#include <ctype.h>    /* isalpha */
+ #include <string.h>
+ 
+ #include "msg.h"
+@@ -311,6 +312,86 @@ static char *Capi_dpi_build_cmd(DilloWeb
+ }
+ 
+ /*
++ * When dillo wants to open an URL, this can be either due to user action
++ * (e.g., typing in an URL, clicking a link), or automatic (HTTP header
++ * indicates redirection, META HTML tag with refresh attribute and 0 delay,
++ * and images and stylesheets on an HTML page when autoloading is enabled).
++ *
++ * For a user request, the action will be permitted.
++ * For an automatic request, permission to load depends on the filter set
++ * by the user.
++ */ 
++static bool_t Capi_filters_allow(const DilloUrl *wanted,
++                                 const DilloUrl *requester)
++{
++   bool_t ret;
++
++   if (requester == NULL) {
++      /* request made by user */
++      ret = TRUE;
++   } else {
++      switch (prefs.filter_auto_requests) {
++         case PREFS_FILTER_SAME_HOST:
++            ret = dStrcasecmp(URL_HOST(wanted), URL_HOST(requester)) == 0;
++            break;
++         case PREFS_FILTER_SAME_DOMAIN:
++         {
++            const char *req_host = URL_HOST(requester),
++                       *want_host = URL_HOST(wanted);
++            uint_t req_hostlen = strlen(req_host);
++ 
++            MSG("Capi_filters_allow:\n%s\n%s\n", req_host, want_host);
++            if (req_hostlen > 0 && !isalpha(req_host[req_hostlen - 1])) {
++               /* for IP addrs, match fully */
++               ret = dStrcasecmp(req_host, want_host) == 0;
++            } else {
++               /* For hostnames, let's say for now that if you have two dots,
++                * we'll ignore everything through the first dot, e.g.,
++                * 'www.dillo.org' => 'dillo.org'
++                *
++                * TODO: it sounds like requiring a third dot would be best for
++                * ai,au,bd,bh,ck,eg,et,fk,il,in,kh,kr,mk,mt,na,np,nz,pg,pk,qa,
++                * sa,sb,sg,sv,ua,ug,uk,uy,vn,za,zw, name
++                */
++               uint_t want_hostlen;
++               char *dot = strchr(req_host, '.');
++ 
++               if (dot && strchr(dot + 1, '.')) {
++                  req_hostlen -= dot + 1 - req_host;
++                  req_host = dot + 1;
++               }
++               want_hostlen = strlen(want_host);
++ 
++               if (want_hostlen < req_hostlen) {
++                  ret = FALSE;
++               } else {
++                  if (want_hostlen > req_hostlen &&
++                     want_host[want_hostlen - req_hostlen - 1] == '.') {
++                     /* If the longer, leading portion of the host ends with
++                      * a dot, trim it off, e.g., 'hg.dillo.org' => 'dillo.org'
++                      * but 'hgdillo.org' would be unchanged.
++                      */
++                     want_host += want_hostlen - req_hostlen;
++                  }
++                  ret = dStrcasecmp(req_host, want_host) == 0;
++               }
++            }
++            if (ret)
++               MSG("ALLOW\n");
++            else
++               MSG("BLOCK\n");
++            break;
++         }
++         case PREFS_FILTER_ALLOW_ALL:
++         default:
++            ret = TRUE;
++            break;
++      }
++   }
++   return ret;
++}
++
++/*
+  * Most used function for requesting a URL.
+  * TODO: clean up the ad-hoc bindings with an API that allows dynamic
+  *       addition of new plugins.
+@@ -325,6 +406,9 @@ int a_Capi_open_url(DilloWeb *web, CA_Ca
+    capi_conn_t *conn = NULL;
+    const char *scheme = URL_SCHEME(web->url);
+    int safe = 0, ret = 0, use_cache = 0;
++
++   dReturn_val_if_fail((a_Capi_get_flags(web->url) & CAPI_IsCached) ||
++                       Capi_filters_allow(web->url, web->requester), 0);
+ 
+    /* reload test */
+    reload = (!(a_Capi_get_flags(web->url) & CAPI_IsCached) ||
+diff -r f5a186303478 src/dillo.cc
+--- a/src/dillo.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/dillo.cc	Sat Sep 12 01:56:25 2009 +0000
+@@ -330,7 +330,7 @@ int main(int argc, char **argv)
+ 
+    if (idx == argc) {
+       /* No URLs/files on cmdline. Send startup screen */
+-      a_Nav_push(bw, prefs.start_page);
++      a_Nav_push(bw, prefs.start_page, NULL);
+    } else {
+       for (int i = idx; i < argc; i++) {
+          DilloUrl *start_url = makeStartUrl(argv[i], local);
+@@ -344,7 +344,7 @@ int main(int argc, char **argv)
+                a_UIcmd_open_url_nw(bw, start_url);
+             }
+          } else {
+-            a_Nav_push(bw, start_url);
++            a_Nav_push(bw, start_url, NULL);
+          }
+          a_Url_free(start_url);
+       }
+diff -r f5a186303478 src/form.cc
+--- a/src/form.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/form.cc	Sat Sep 12 01:56:25 2009 +0000
+@@ -949,7 +949,7 @@ void DilloHtmlForm::submit(DilloHtmlInpu
+             a_Nav_push_nw(html->bw, url);
+          }
+       } else {
+-         a_Nav_push(html->bw, url);
++         a_Nav_push(html->bw, url, NULL);
+       }
+       a_Url_free(url);
+    }
+diff -r f5a186303478 src/html.cc
+--- a/src/html.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/html.cc	Sat Sep 12 01:56:26 2009 +0000
+@@ -104,8 +104,8 @@ static const char *Html_get_attr2(DilloH
+                                   const char *attrname,
+                                   int tag_parsing_flags);
+ static int Html_write_raw(DilloHtml *html, char *buf, int bufsize, int Eof);
+-static void Html_load_image(BrowserWindow *bw, DilloUrl *url,
+-                            DilloImage *image);
++static bool Html_load_image(BrowserWindow *bw, DilloUrl *url,
++                            const DilloUrl *requester, DilloImage *image);
+ static void Html_callback(int Op, CacheClient_t *Client);
+ static void Html_tag_cleanup_at_close(DilloHtml *html, int TagIdx);
+ 
+@@ -669,12 +669,21 @@ void DilloHtml::loadImages (const DilloU
+ {
+    dReturn_if_fail (bw->nav_expecting == FALSE);
+ 
++   /* If the user asked for a specific URL, the user (NULL) is the requester,
++    * but if the user just asked for all URLs, use the page URL as the
++    * requester. If the possible patterns become more complex, it might be
++    * good to have the caller supply the requester instead.
++    */
++   const DilloUrl *requester = pattern ? NULL : this->page_url;
++
+    for (int i = 0; i < images->size(); i++) {
+       if (images->get(i)->image) {
+          if ((!pattern) || (!a_Url_cmp(images->get(i)->url, pattern))) {
+-            Html_load_image(bw, images->get(i)->url, images->get(i)->image);
+-            a_Image_unref (images->get(i)->image);
+-            images->get(i)->image = NULL;  // web owns it now
++            if (Html_load_image(bw, images->get(i)->url, requester,
++                                images->get(i)->image)) {
++               a_Image_unref (images->get(i)->image);
++               images->get(i)->image = NULL;  // web owns it now
++            }
+          }
+       }
+    }
+@@ -2100,9 +2109,10 @@ DilloImage *a_Html_image_new(DilloHtml *
+ 
+    load_now = prefs.load_images ||
+               (a_Capi_get_flags_with_redirection(url) & CAPI_IsCached);
+-   Html_add_new_linkimage(html, &url, load_now ? NULL : Image);
++   bool loading = false;
+    if (load_now)
+-      Html_load_image(html->bw, url, Image);
++      loading = Html_load_image(html->bw, url, html->page_url, Image);
++   Html_add_new_linkimage(html, &url, loading ? NULL : Image);
+ 
+    dFree(width_ptr);
+    dFree(height_ptr);
+@@ -2113,13 +2123,13 @@ DilloImage *a_Html_image_new(DilloHtml *
+ /*
+  * Tell cache to retrieve image
+  */
+-static void Html_load_image(BrowserWindow *bw, DilloUrl *url,
+-                            DilloImage *Image)
++static bool Html_load_image(BrowserWindow *bw, DilloUrl *url,
++                            const DilloUrl *requester, DilloImage *Image)
+ {
+    DilloWeb *Web;
+    int ClientKey;
+    /* Fill a Web structure for the cache query */
+-   Web = a_Web_new(url);
++   Web = a_Web_new(url, requester);
+    Web->bw = bw;
+    Web->Image = Image;
+    a_Image_ref(Image);
+@@ -2129,6 +2139,7 @@ static void Html_load_image(BrowserWindo
+       a_Bw_add_client(bw, ClientKey, 0);
+       a_Bw_add_url(bw, url);
+    }
++   return ClientKey != 0;
+ }
+ 
+ /*
+@@ -2943,7 +2954,7 @@ void a_Html_load_stylesheet(DilloHtml *h
+    } else {
+       /* Fill a Web structure for the cache query */
+       int ClientKey;
+-      DilloWeb *Web = a_Web_new(url);
++      DilloWeb *Web = a_Web_new(url, html->page_url);
+       Web->bw = html->bw;
+       if ((ClientKey = a_Capi_open_url(Web, Html_css_load_callback, NULL))) {
+          ++html->bw->NumPendingStyleSheets;
+diff -r f5a186303478 src/nav.c
+--- a/src/nav.c	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/nav.c	Sat Sep 12 01:56:26 2009 +0000
+@@ -191,7 +191,8 @@ static void Nav_stack_clean(BrowserWindo
+  * This function requests the page's root-URL; images and related stuff
+  * are fetched directly by the HTML module.
+  */
+-static void Nav_open_url(BrowserWindow *bw, const DilloUrl *url, int offset)
++static void Nav_open_url(BrowserWindow *bw, const DilloUrl *url,
++                         const DilloUrl *requester, int offset)
+ {
+    DilloUrl *old_url;
+    bool_t MustLoad, ForceReload, Repush, IgnoreScroll;
+@@ -232,7 +233,7 @@ static void Nav_open_url(BrowserWindow *
+ 
+       // a_Menu_pagemarks_new(bw);
+ 
+-      Web = a_Web_new(url);
++      Web = a_Web_new(url, requester);
+       Web->bw = bw;
+       Web->flags |= WEB_RootUrl;
+       if ((ClientKey = a_Capi_open_url(Web, NULL, NULL)) != 0) {
+@@ -341,7 +342,8 @@ void a_Nav_expect_done(BrowserWindow *bw
+  * - Set bw to expect the URL data
+  * - Ask the cache to feed back the requested URL (via Nav_open_url)
+  */
+-void a_Nav_push(BrowserWindow *bw, const DilloUrl *url)
++void a_Nav_push(BrowserWindow *bw, const DilloUrl *url,
++                                   const DilloUrl *requester)
+ {
+    dReturn_if_fail (bw != NULL);
+ 
+@@ -353,7 +355,7 @@ void a_Nav_push(BrowserWindow *bw, const
+    a_Nav_cancel_expect(bw);
+    bw->nav_expect_url = a_Url_dup(url);
+    bw->nav_expecting = TRUE;
+-   Nav_open_url(bw, url, 0);
++   Nav_open_url(bw, url, requester, 0);
+ }
+ 
+ /*
+@@ -370,7 +372,7 @@ static void Nav_repush(BrowserWindow *bw
+       a_Url_set_flags(url, URL_FLAGS(url) | URL_ReloadFromCache);
+       bw->nav_expect_url = a_Url_dup(url);
+       bw->nav_expecting = TRUE;
+-      Nav_open_url(bw, url, 0);
++      Nav_open_url(bw, url, NULL, 0);
+       a_Url_free(url);
+    }
+ }
+@@ -407,7 +409,7 @@ static void Nav_redirection0_callback(vo
+ 
+    if (bw->meta_refresh_status == 2) {
+       Nav_stack_move_ptr(bw, -1);
+-      a_Nav_push(bw, bw->meta_refresh_url);
++      a_Nav_push(bw, bw->meta_refresh_url,a_History_get_url(NAV_TOP_UIDX(bw)));
+    }
+    a_Url_free(bw->meta_refresh_url);
+    bw->meta_refresh_url = NULL;
+@@ -441,9 +443,11 @@ void a_Nav_push_nw(BrowserWindow *bw, co
+ 
+    a_UIcmd_get_wh(bw, &w, &h);
+    newbw = a_UIcmd_browser_window_new(w, h, 0, bw);
+-   a_Nav_push(newbw, url);
+-}
+-
++   a_Nav_push(newbw, url, NULL);
++}
++
++#if 0
++we can remove this
+ /*
+  * Wraps a_Nav_push to match 'DwPage->link' function type
+  */
+@@ -451,7 +455,7 @@ void a_Nav_vpush(void *vbw, const DilloU
+ {
+    a_Nav_push(vbw, url);
+ }
+-
++#endif
+ /*
+  * Send the browser back to previous page
+  */
+@@ -462,7 +466,7 @@ void a_Nav_back(BrowserWindow *bw)
+    a_Nav_cancel_expect(bw);
+    if (--idx >= 0){
+       a_UIcmd_set_msg(bw, "");
+-      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), -1);
++      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), NULL, -1);
+    }
+ }
+ 
+@@ -476,7 +480,7 @@ void a_Nav_forw(BrowserWindow *bw)
+    a_Nav_cancel_expect(bw);
+    if (++idx < a_Nav_stack_size(bw)) {
+       a_UIcmd_set_msg(bw, "");
+-      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), +1);
++      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), NULL, +1);
+    }
+ }
+ 
+@@ -485,7 +489,7 @@ void a_Nav_forw(BrowserWindow *bw)
+  */
+ void a_Nav_home(BrowserWindow *bw)
+ {
+-   a_Nav_push(bw, prefs.home);
++   a_Nav_push(bw, prefs.home, NULL);
+ }
+ 
+ /*
+@@ -506,7 +510,7 @@ static void Nav_reload(BrowserWindow *bw
+       a_Url_set_flags(ReqURL, URL_FLAGS(ReqURL) & ~URL_SpamSafe);
+       bw->nav_expect_url = ReqURL;
+       bw->nav_expecting = TRUE;
+-      Nav_open_url(bw, ReqURL, 0);
++      Nav_open_url(bw, ReqURL, NULL, 0);
+    }
+ }
+ 
+@@ -548,7 +552,7 @@ void a_Nav_jump(BrowserWindow *bw, int o
+       a_Nav_push_nw(bw, a_History_get_url(NAV_UIDX(bw,idx)));
+    } else {
+       a_Nav_cancel_expect(bw);
+-      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), offset);
++      Nav_open_url(bw, a_History_get_url(NAV_UIDX(bw,idx)), NULL, offset);
+       a_UIcmd_set_buttons_sens(bw);
+    }
+ }
+@@ -585,7 +589,7 @@ void a_Nav_save_url(BrowserWindow *bw,
+ void a_Nav_save_url(BrowserWindow *bw,
+                     const DilloUrl *url, const char *filename)
+ {
+-   DilloWeb *Web = a_Web_new(url);
++   DilloWeb *Web = a_Web_new(url, NULL);
+    Web->bw = bw;
+    Web->filename = dStrdup(filename);
+    Web->flags |= WEB_Download;
+diff -r f5a186303478 src/nav.h
+--- a/src/nav.h	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/nav.h	Sat Sep 12 01:56:26 2009 +0000
+@@ -14,7 +14,8 @@ extern "C" {
+ #endif /* __cplusplus */
+ 
+ void a_Nav_redirection0(BrowserWindow *bw, const DilloUrl *new_url);
+-void a_Nav_push(BrowserWindow *bw, const DilloUrl *url);
++void a_Nav_push(BrowserWindow *bw, const DilloUrl *url,
++                const DilloUrl *requester);
+ void a_Nav_push_nw(BrowserWindow *bw, const DilloUrl *url);
+ void a_Nav_vpush(void *vbw, const DilloUrl *url);
+ void a_Nav_repush(BrowserWindow *bw);
+diff -r f5a186303478 src/prefs.c
+--- a/src/prefs.c	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/prefs.c	Sat Sep 12 01:56:26 2009 +0000
+@@ -38,6 +38,7 @@ void a_Prefs_init(void)
+    prefs.buffered_drawing = 1;
+    prefs.contrast_visited_color = TRUE;
+    prefs.enterpress_forces_submit = FALSE;
++   prefs.filter_auto_requests = PREFS_FILTER_ALLOW_ALL;
+    prefs.focus_new_tab = TRUE;
+    prefs.font_cursive = dStrdup(PREFS_FONT_CURSIVE);
+    prefs.font_factor = 1.0;
+diff -r f5a186303478 src/prefs.h
+--- a/src/prefs.h	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/prefs.h	Sat Sep 12 01:56:26 2009 +0000
+@@ -25,6 +25,10 @@ extern "C" {
+ 
+ /* Panel sizes */
+ enum { P_tiny = 0, P_small, P_medium, P_large };
++
++enum {PREFS_FILTER_ALLOW_ALL,
++      PREFS_FILTER_SAME_HOST,
++      PREFS_FILTER_SAME_DOMAIN};
+ 
+ typedef struct _DilloPrefs DilloPrefs;
+ 
+@@ -68,6 +72,7 @@ struct _DilloPrefs {
+    bool_t load_images;
+    bool_t load_stylesheets;
+    bool_t parse_embedded_css;
++   int filter_auto_requests;
+    int32_t buffered_drawing;
+    char *font_serif;
+    char *font_sans_serif;
+diff -r f5a186303478 src/prefsparser.cc
+--- a/src/prefsparser.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/prefsparser.cc	Sat Sep 12 01:56:26 2009 +0000
+@@ -26,6 +26,7 @@ typedef enum {
+    PREFS_INT32,
+    PREFS_DOUBLE,
+    PREFS_GEOMETRY,
++   PREFS_FILTER,
+    PREFS_PANEL_SIZE
+ } PrefType_t;
+ 
+@@ -50,6 +51,7 @@ int PrefsParser::parseOption(char *name,
+       { "contrast_visited_color", &prefs.contrast_visited_color, PREFS_BOOL },
+       { "enterpress_forces_submit", &prefs.enterpress_forces_submit, 
+         PREFS_BOOL },
++      { "filter_auto_requests", &prefs.filter_auto_requests, PREFS_FILTER },
+       { "focus_new_tab", &prefs.focus_new_tab, PREFS_BOOL },
+       { "font_cursive", &prefs.font_cursive, PREFS_STRING },
+       { "font_factor", &prefs.font_factor, PREFS_DOUBLE },
+@@ -135,6 +137,17 @@ int PrefsParser::parseOption(char *name,
+       a_Misc_parse_geometry(value, &prefs.xpos, &prefs.ypos,
+                             &prefs.width, &prefs.height);
+       break;
++   case PREFS_FILTER:
++      if (!dStrcasecmp(value, "same_host"))
++         prefs.filter_auto_requests = PREFS_FILTER_SAME_HOST;
++      else if (!dStrcasecmp(value, "same_domain"))
++         prefs.filter_auto_requests = PREFS_FILTER_SAME_DOMAIN;
++      else {
++         if (dStrcasecmp(value, "allow_all"))
++            MSG_WARN("prefs: unrecognized value for filter_auto_requests\n");
++         prefs.filter_auto_requests = PREFS_FILTER_ALLOW_ALL;
++      }
++      break;
+    case PREFS_PANEL_SIZE:
+       if (!dStrcasecmp(value, "tiny"))
+          prefs.panel_size = P_tiny;
+diff -r f5a186303478 src/uicmd.cc
+--- a/src/uicmd.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/uicmd.cc	Sat Sep 12 01:56:26 2009 +0000
+@@ -597,7 +597,7 @@ void a_UIcmd_open_urlstr(void *vbw, cons
+       dFree(new_urlstr);
+ 
+       if (url) {
+-         a_Nav_push(bw, url);
++         a_Nav_push(bw, url, NULL);
+          a_Url_free(url);
+       }
+    }
+@@ -611,7 +611,7 @@ void a_UIcmd_open_urlstr(void *vbw, cons
+  */
+ void a_UIcmd_open_url(BrowserWindow *bw, const DilloUrl *url)
+ {
+-   a_Nav_push(bw, url);
++   a_Nav_push(bw, url, NULL);
+ }
+ 
+ /*
+@@ -629,7 +629,7 @@ void a_UIcmd_open_url_nt(void *vbw, cons
+ {
+    BrowserWindow *new_bw = UIcmd_tab_new(vbw);
+    if (url)
+-      a_Nav_push(new_bw, url);
++      a_Nav_push(new_bw, url, NULL);
+    if (focus) {
+       BW2UI(new_bw)->tabs()->selected_child(BW2UI(new_bw));
+       BW2UI(new_bw)->tabs()->selected_child()->take_focus();
+@@ -816,7 +816,7 @@ void a_UIcmd_open_file(void *vbw)
+ 
+    if (name) {
+       url = a_Url_new(name, "file:");
+-      a_Nav_push((BrowserWindow*)vbw, url);
++      a_Nav_push((BrowserWindow*)vbw, url, NULL);
+       a_Url_free(url);
+       dFree(name);
+    }
+@@ -907,7 +907,7 @@ void a_UIcmd_book(void *vbw)
+ void a_UIcmd_book(void *vbw)
+ {
+    DilloUrl *url = a_Url_new("dpi:/bm/", NULL);
+-   a_Nav_push((BrowserWindow*)vbw, url);
++   a_Nav_push((BrowserWindow*)vbw, url, NULL);
+    a_Url_free(url);
+ }
+ 
+diff -r f5a186303478 src/web.cc
+--- a/src/web.cc	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/web.cc	Sat Sep 12 01:56:26 2009 +0000
+@@ -103,12 +103,13 @@ int a_Web_dispatch_by_type (const char *
+ /*
+  * Allocate and set safe values for a DilloWeb structure
+  */
+-DilloWeb* a_Web_new(const DilloUrl *url)
++DilloWeb* a_Web_new(const DilloUrl *url, const DilloUrl *requester)
+ {
+    DilloWeb *web= dNew(DilloWeb, 1);
+ 
+    _MSG(" a_Web_new: ValidWebs ==> %d\n", dList_length(ValidWebs));
+    web->url = a_Url_dup(url);
++   web->requester = a_Url_dup(requester);
+    web->bw = NULL;
+    web->flags = 0;
+    web->Image = NULL;
+@@ -136,6 +137,7 @@ void a_Web_free(DilloWeb *web)
+ {
+    if (!web) return;
+    a_Url_free(web->url);
++   a_Url_free(web->requester);
+    a_Image_unref(web->Image);
+    dFree(web->filename);
+    dList_remove(ValidWebs, (void *)web);
+diff -r f5a186303478 src/web.hh
+--- a/src/web.hh	Fri Sep 11 01:56:58 2009 +0000
++++ b/src/web.hh	Sat Sep 12 01:56:26 2009 +0000
+@@ -22,6 +22,8 @@ typedef struct _DilloWeb DilloWeb;
+ 
+ struct _DilloWeb {
+   DilloUrl *url;              /* Requested URL */
++  DilloUrl *requester;        /* URL that caused this request, or
++                               * NULL if user-initiated. */
+   BrowserWindow *bw;          /* The requesting browser window [reference] */
+   int flags;                  /* Additional info */
+ 
+@@ -34,7 +36,7 @@ struct _DilloWeb {
+ };
+ 
+ void a_Web_init(void);
+-DilloWeb* a_Web_new (const DilloUrl* url);
++DilloWeb* a_Web_new (const DilloUrl* url, const DilloUrl *requester);
+ int a_Web_valid(DilloWeb *web);
+ void a_Web_free (DilloWeb*);
+ int a_Web_dispatch_by_type (const char *Type, DilloWeb *web,

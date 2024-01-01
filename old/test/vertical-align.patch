@@ -1,0 +1,435 @@
+diff -r e21306fce501 dw/textblock.cc
+--- a/dw/textblock.cc	Sun Dec 20 19:02:02 2009 +0000
++++ b/dw/textblock.cc	Tue Dec 22 00:59:00 2009 +0000
+@@ -329,6 +329,48 @@
+    //DBG_MSG_END (widget);
+ }
+ 
++/*
++ * Determine the Y offset for a word of the given style and dimensions
++ * in the line.
++ */
++int Textblock::wordYOffsetLine(Line *line, int ascent, int descent,
++                               core::style::Style *style)
++{
++   int y = 0;
++
++   if (style->valign == core::style::VALIGN_TOP) {
++      MSG("valign top\n");
++   } else if (style->valign == core::style::VALIGN_TEXT_TOP) {
++      y = line->ascent - style->font->ascent;
++      MSG("valign text-top\n");
++   } else if (style->valign == core::style::VALIGN_MIDDLE) {
++      /* It is supposed to be centered at xHeight/2, i.e., something more
++       * like the "center of mass" than the midpoint of the Line.
++       */
++      y =  line->ascent - (style->font->ascent - style->font->descent +
++            (ascent + descent)) / 2;
++      MSG("valign middle\n");
++   } else {
++      y = line->ascent - ascent;
++
++      if (style->valign == core::style::VALIGN_BASELINE) {
++      } else if (style->valign == core::style::VALIGN_BOTTOM) {
++         y += line->descent - descent;
++         MSG("valign bottom\n");
++      } else if (style->valign == core::style::VALIGN_TEXT_BOTTOM) {
++         y += style->font->descent - descent;
++         MSG("valign text-bottom\n");
++      } else if (style->valign == core::style::VALIGN_SUPER) {
++         y -= style->font->ascent / 2;
++         MSG("valign super\n");
++      } else if (style->valign == core::style::VALIGN_SUB) {
++         y += style->font->ascent / 3;
++         MSG("valign sub\n");
++      }
++   }
++   return y;
++}
++
+ 
+ void Textblock::sizeAllocateImpl (core::Allocation *allocation)
+ {
+@@ -359,17 +401,10 @@
+          case core::Content::WIDGET:
+             /** \todo Justification within the line is done here. */
+             childAllocation.x = xCursor + allocation->x;
+-            /* align=top:
+-               childAllocation.y = line->top + allocation->y;
+-            */
+-
+-            /* align=bottom (base line) */
+-            /* Commented lines break the n2 and n3 test cases at
+-             * http://www.dillo.org/test/img/ */
+-            childAllocation.y =
+-               lineYOffsetCanvasAllocation (line, allocation)
+-               + (line->ascent - word->size.ascent);
+-               // - word->content.widget->getStyle()->margin.top;
++            childAllocation.y = lineYOffsetCanvasAllocation(line, allocation) +
++                                wordYOffsetLine(line, word->size.ascent,
++                                                word->size.descent,
++                                                word->style);
+             childAllocation.width = word->size.width;
+             childAllocation.ascent = word->size.ascent;
+                // + word->content.widget->getStyle()->margin.top;
+@@ -861,6 +896,90 @@
+ }
+ 
+ /*
++ * Update the line's ascent and descent to accommodate the word.
++ */
++void Textblock::calcLineAscentDescent(const Word *word, Line *line,
++                                      int lineIndex)
++{
++   int wordAscent;
++   int wordDescent;
++
++   switch (word->style->valign) {
++      case core::style::VALIGN_BASELINE:
++         wordAscent = word->size.ascent;
++         wordDescent = word->size.descent;
++         break;
++      case core::style::VALIGN_SUPER:
++         wordAscent = word->size.ascent + word->style->font->ascent / 2;
++         wordDescent = word->size.descent;
++         break;
++      case core::style::VALIGN_SUB:
++         wordAscent = word->size.ascent;
++         wordDescent = word->size.descent + word->style->font->ascent / 3;
++         break;
++      case core::style::VALIGN_TOP:
++      case core::style::VALIGN_BOTTOM:
++      {
++         /* \todo This needs to be more sophisticated, since a word later in
++          * the line could provide more room, but for now let's stretch out the
++          * line if we need more room.
++          */
++         int extra = word->size.ascent + word->size.descent -
++                     (line->ascent + line->descent);
++
++         wordAscent = line->ascent;
++         wordDescent = line->descent;
++
++         if (extra > 0) {
++            int extraDescent = extra * word->size.descent /
++                               (word->size.ascent + word->size.descent);
++            wordDescent += extraDescent;
++            wordAscent += extra - extraDescent;
++         }
++         break;
++      }
++      case core::style::VALIGN_MIDDLE:
++         wordAscent = (word->style->font->ascent - word->style->font->descent +
++                       word->size.ascent + word->size.descent) / 2;
++         wordDescent = word->size.ascent + word->size.descent - wordAscent;
++         break;
++      case core::style::VALIGN_TEXT_TOP:
++         wordAscent = word->style->font->ascent;
++         wordDescent = word->size.ascent + word->size.descent - wordAscent;
++         break;
++      case core::style::VALIGN_TEXT_BOTTOM:
++         wordDescent = word->style->font->descent;
++         wordAscent = word->size.ascent + word->size.descent - wordDescent;
++         break;
++      default:
++         misc::assertNotReached ();
++   }
++   line->ascent = misc::max (line->ascent, wordAscent);
++   line->descent = misc::max (line->descent, wordDescent);
++
++   if (word->content.type == core::Content::WIDGET) {
++      line->marginDescent =
++         misc::max (line->marginDescent,
++                    wordDescent +
++                    word->content.widget->getStyle()->margin.bottom);
++
++      /* If the widget is not in the first line of the paragraph, its top
++       * margin may make the line higher.
++       */
++      if (lineIndex > 0) {
++         /* Here, we know already what the break and the bottom margin
++          * contributed to the space before this line.
++          */
++         line->ascent =
++            misc::max (line->ascent,
++                       wordAscent
++                       + word->content.widget->getStyle()->margin.top);
++      }
++   } else
++      line->marginDescent = misc::max (line->marginDescent, line->descent);
++}
++
++/*
+  * This method is called in two cases: (i) when a word is added (by
+  * Dw_page_add_word), and (ii) when a page has to be (partially)
+  * rewrapped. It does word wrap, and adds new lines, if necessary.
+@@ -948,41 +1067,7 @@
+    }
+ 
+    lastLine->lastWord = wordIndex;
+-   lastLine->ascent = misc::max (lastLine->ascent, (int) word->size.ascent);
+-   lastLine->descent = misc::max (lastLine->descent, (int) word->size.descent);
+-
+-   //DBG_OBJ_ARRSET_NUM (page, "lines.%d.ascent", page->num_lines - 1,
+-   //                    lastLine->ascent);
+-   //DBG_OBJ_ARRSET_NUM (page, "lines.%d.descent", page->num_lines - 1,
+-   //                    lastLine->descent);
+-
+-   if (word->content.type == core::Content::WIDGET) {
+-      lastLine->marginDescent =
+-         misc::max (lastLine->marginDescent,
+-                    word->size.descent +
+-                    word->content.widget->getStyle()->margin.bottom);
+-
+-      //DBG_OBJ_ARRSET_NUM (page, "lines.%d.descent", page->num_lines - 1,
+-      //                    lastLine->descent);
+-
+-      /* If the widget is not in the first line of the paragraph, its top
+-       * margin may make the line higher.
+-       */
+-      if (lines->size () > 1) {
+-         /* Here, we know already what the break and the bottom margin
+-          * contributed to the space before this line.
+-          */
+-         lastLine->ascent =
+-            misc::max (lastLine->ascent,
+-                       word->size.ascent
+-                       + word->content.widget->getStyle()->margin.top);
+-
+-         //DBG_OBJ_ARRSET_NUM (page, "lines.%d.ascent", page->num_lines - 1,
+-         //                    lastLine->ascent);
+-      }
+-   } else
+-      lastLine->marginDescent =
+-         misc::max (lastLine->marginDescent, lastLine->descent);
++   calcLineAscentDescent(word, lastLine, lines->size() - 1);
+ 
+    getWordExtremes (word, &wordExtremes);
+    lastSpace = (wordIndex > 0) ? words->getRef(wordIndex - 1)->origSpace : 0;
+@@ -1216,23 +1301,23 @@
+  */
+ void Textblock::decorateText(core::View *view, core::style::Style *style,
+                              core::style::Color::Shading shading,
+-                             int x, int yBase, int width)
++                             int x, int y, int width)
+ {
+-   int y;
++   int y2;
+ 
+-   if (style->textDecoration & core::style::TEXT_DECORATION_UNDERLINE) {
+-      y = yBase + 1;
+-      view->drawLine (style->color, shading, x, y, x + width - 1, y);
+-   }
+    if (style->textDecoration & core::style::TEXT_DECORATION_OVERLINE) {
+-      y = yBase - style->font->ascent + 1;
+-      view->drawLine (style->color, shading, x, y, x + width - 1, y);
++      y2 = y + 1;
++      view->drawLine (style->color, shading, x, y2, x + width - 1, y2);
+    }
+    if (style->textDecoration & core::style::TEXT_DECORATION_LINE_THROUGH) {
+       int height = 1 + style->font->xHeight / 10;
+ 
+-      y = yBase + (style->font->descent - style->font->ascent) / 2;
+-      view->drawRectangle (style->color, shading, true, x, y, width, height);
++      y2 = y + (style->font->ascent + style->font->descent) / 2;
++      view->drawRectangle (style->color, shading, true, x, y2, width, height);
++   }
++   if (style->textDecoration & core::style::TEXT_DECORATION_UNDERLINE) {
++      y2 = y + style->font->ascent + 1;
++      view->drawLine (style->color, shading, x, y2, x + width - 1, y2);
+    }
+ }
+ 
+@@ -1240,34 +1325,27 @@
+  * Draw a word of text.
+  */
+ void Textblock::drawText(int wordIndex, core::View *view,core::Rectangle *area,
+-                         int xWidget, int yWidgetBase)
++                         int xWidget, int yWidget)
+ {
+    Word *word = words->getRef(wordIndex);
+    int xWorld = allocation.x + xWidget;
+    core::style::Style *style = word->style;
+-   int yWorldBase;
+-
+-   /* Adjust the text baseline if the word is <SUP>-ed or <SUB>-ed. */
+-   if (style->valign == core::style::VALIGN_SUB)
+-      yWidgetBase += style->font->ascent / 3;
+-   else if (style->valign == core::style::VALIGN_SUPER) {
+-      yWidgetBase -= style->font->ascent / 2;
+-   }
+-   yWorldBase = yWidgetBase + allocation.y;
++   int yWorld = yWidget + allocation.y;
+ 
+    /* Draw background (color, image), when given. */
+    if (style->hasBackground ())
+       drawBox (
+-         view, style, area, xWidget, yWidgetBase - style->font->ascent,
++         view, style, area, xWidget, yWidget,
+          word->size.width, style->font->ascent + style->font->descent, false);
+ 
+    view->drawText (style->font, style->color,
+-                   core::style::Color::SHADING_NORMAL, xWorld, yWorldBase,
+-                   word->content.text, strlen (word->content.text));
++                   core::style::Color::SHADING_NORMAL, xWorld,
++                   yWorld + style->font->ascent, word->content.text,
++                   strlen (word->content.text));
+ 
+    if (style->textDecoration)
+       decorateText(view, style, core::style::Color::SHADING_NORMAL, xWorld,
+-                   yWorldBase, word->size.width);
++                   yWorld, word->size.width);
+ 
+    for (int layer = 0; layer < core::HIGHLIGHT_NUM_LAYERS; layer++) {
+       if (hlStart[layer].index <= wordIndex &&
+@@ -1303,18 +1381,18 @@
+             /* Draw background for highlighted text. */
+             view->drawRectangle (
+                wordBgColor, core::style::Color::SHADING_INVERSE, true, xStart,
+-               yWorldBase - style->font->ascent, width,
+-               style->font->ascent + style->font->descent);
++               yWorld, width, style->font->ascent + style->font->descent);
+ 
+             /* Highlight the text. */
+             view->drawText (style->font, style->color,
+                             core::style::Color::SHADING_INVERSE, xStart,
+-                            yWorldBase, word->content.text + firstCharIdx,
++                            yWorld + style->font->ascent,
++                            word->content.text + firstCharIdx,
+                             lastCharIdx - firstCharIdx);
+ 
+             if (style->textDecoration)
+                decorateText(view, style, core::style::Color::SHADING_INVERSE,
+-                            xStart, yWorldBase, width);
++                            xStart, yWorld, width);
+          }
+       }
+    }
+@@ -1324,22 +1402,14 @@
+  * Draw a space.
+  */
+ void Textblock::drawSpace(int wordIndex, core::View *view,
+-                          core::Rectangle *area, int xWidget, int yWidgetBase)
++                          core::Rectangle *area, int xWidget, int yWidget)
+ {
+    Word *word = words->getRef(wordIndex);
+    int xWorld = allocation.x + xWidget;
+-   int yWorldBase;
++   int yWorld = allocation.y + yWidget;
+    core::style::Style *style = word->spaceStyle;
+    bool highlight = false;
+ 
+-   /* Adjust the space baseline if it is <SUP>-ed or <SUB>-ed */
+-   if (style->valign == core::style::VALIGN_SUB)
+-      yWidgetBase += style->font->ascent / 3;
+-   else if (style->valign == core::style::VALIGN_SUPER) {
+-      yWidgetBase -= style->font->ascent / 2;
+-   }
+-   yWorldBase = allocation.y + yWidgetBase;
+-
+    for (int layer = 0; layer < core::HIGHLIGHT_NUM_LAYERS; layer++) {
+       if (hlStart[layer].index <= wordIndex &&
+           hlEnd[layer].index > wordIndex) {
+@@ -1355,13 +1425,13 @@
+ 
+       view->drawRectangle (
+          spaceBgColor, core::style::Color::SHADING_INVERSE, true, xWorld,
+-         yWorldBase - style->font->ascent, word->effSpace,
++         yWorld, word->effSpace,
+          style->font->ascent + style->font->descent);
+    } else {
+       /* Draw space background (color, image), when given. */
+       if (style->hasBackground ())
+          drawBox (
+-            view, style, area, xWidget, yWidgetBase - style->font->ascent,
++            view, style, area, xWidget, yWidget,
+             word->effSpace, style->font->ascent + style->font->descent, false);
+    }
+    if (style->textDecoration) {
+@@ -1369,7 +1439,7 @@
+          core::style::Color::SHADING_INVERSE :
+          core::style::Color::SHADING_NORMAL;
+ 
+-      decorateText(view, style, shading, xWorld, yWorldBase, word->effSpace);
++      decorateText(view, style, shading, xWorld, yWorld, word->effSpace);
+    }
+ }
+ 
+@@ -1382,7 +1452,7 @@
+ void Textblock::drawLine (Line *line, core::View *view, core::Rectangle *area)
+ {
+    int xWidget = lineXOffsetWidget(line);
+-   int yWidgetBase = lineYOffsetWidget (line) + line->ascent;
++   int yWidget = lineYOffsetWidget (line);
+ 
+    /* Here's an idea on how to optimize this routine to minimize the number
+     * of drawing calls:
+@@ -1400,6 +1470,7 @@
+       if (xWidget + word->size.width + word->effSpace >= area->x) {
+          if (word->content.type == core::Content::TEXT ||
+              word->content.type == core::Content::WIDGET) {
++            int yOffset;
+ 
+             if (word->size.width > 0) {
+                if (word->content.type == core::Content::WIDGET) {
+@@ -1409,14 +1480,20 @@
+                   if (child->intersects (area, &childArea))
+                      child->draw (view, &childArea);
+                } else {
+-                  drawText(wordIndex, view, area, xWidget, yWidgetBase);
++                  yOffset = wordYOffsetLine(line, word->style->font->ascent,
++                                            word->style->font->descent,
++                                            word->style);
++                  drawText(wordIndex, view, area, xWidget, yWidget + yOffset);
+                }
+             }
+             if (word->effSpace > 0 && wordIndex < line->lastWord &&
+                 words->getRef(wordIndex + 1)->content.type !=
+                                                         core::Content::BREAK) {
++               yOffset = wordYOffsetLine(line, word->spaceStyle->font->ascent,
++                                         word->spaceStyle->font->descent,
++                                         word->spaceStyle);
+                drawSpace(wordIndex, view, area, xWidget + word->size.width,
+-                         yWidgetBase);
++                         yWidget + yOffset);
+             }
+ 
+          }
+@@ -1582,17 +1659,8 @@
+    size->width = layout->textWidth (style->font, text, len);
+    size->ascent = style->font->ascent;
+    size->descent = style->font->descent;
+-
+-   /* In case of a sub or super script we increase the word's height and
+-    * potentially the line's height.
+-    */
+-   if (style->valign == core::style::VALIGN_SUB)
+-      size->descent += (size->ascent / 3);
+-   else if (style->valign == core::style::VALIGN_SUPER)
+-      size->ascent += (size->ascent / 2);
+ }
+ 
+-
+ /**
+  * Add a word to the page structure. Stashes the argument pointer in
+  * the page data structure so that it will be deallocated on destroy.
+diff -r e21306fce501 dw/textblock.hh
+--- a/dw/textblock.hh	Sun Dec 20 19:02:02 2009 +0000
++++ b/dw/textblock.hh	Tue Dec 22 00:59:00 2009 +0000
+@@ -260,6 +260,7 @@
+    void markChange (int ref);
+    void justifyLine (Line *line, int availWidth);
+    void addLine (int wordInd, bool newPar);
++   void calcLineAscentDescent (const Word *word, Line *line, int lineIndex);
+    void calcWidgetSize (core::Widget *widget, core::Requisition *size);
+    void rewrap ();
+    void decorateText(core::View *view, core::style::Style *style,
+@@ -339,6 +340,8 @@
+    {
+       return lineYOffsetCanvas (lines->getRef (lineIndex));
+    }
++   int wordYOffsetLine(Line *line, int ascent, int descent,
++                       core::style::Style *style);
+ 
+    bool sendSelectionEvent (core::SelectionState::EventType eventType,
+                             core::MousePositionEvent *event);

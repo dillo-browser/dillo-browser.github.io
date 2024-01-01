@@ -1,0 +1,2926 @@
+Re: [Dillo-dev]word wrapping / page width
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-31 14:07
+
+On Tue, Aug 28, 2001 at 05:42:50PM -0400, Jorge Arellano Cid wrote:
+> > I thought of a workaround, which ignores the NOWRAP in this
+> > case, in Html_tag_open_table_cell:
+> > [...]
+> 
+> When this message was posted, the HTML parsing policy wasn't
+> yet stated in the "Project Notes". As now it is there, let's
+> apply, and live happily ever after!
+
+Done.
+
+Sebastian 
+
+
+
+[Dillo-dev]Attribute parsing
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-30 21:07
+
+Hi there!
+
+
+There's a very interesting topic around attribute parsing in
+HTML (as SGML). I want to tie three comments I have that stem
+from the same root:
+
+I) Sebastian wrote:
+
+Most of you will remember the discussion on how to parse the HREF
+attribute of the <a> tag. This is a similar problem: in
+
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/
+
+you'll find something like
+
+<table width="100&#37;">
+
+Dillo reads this as "100" (pixels) and complains about the garbage at
+the end. I'm not an SGML expert, so I thought to post this to the
+list. Have attributes to be be parsed generally, or is this page
+invalid?
+
+II) Bruno wrote (about BUG#190):
+
+I went to http://validator.w3.org, and it lists 2 Html 4.01
+specs, "Strict" and "Traditional"
+
+I fed a page with newlines in an anchor-string into the
+Validator, and it Validates OK for "Traditional". I admit it does
+not for "Strict"
+
+In fact i did this before i even started coding, because if i
+knew it was "wrong" html i wouldn't have bothered.
+
+Now, i went to
+http://www.w3.org/TR/1999/REC-html401-19991224/types.html
+
+|| The document type definition specifies the syntax of HTML
+|| element content and attribute values using SGML tokens (e.g.,
+|| PCDATA, CDATA, NAME, ID, etc.).
+|| See [ISO8879] for their full definitions. The following is
+|| a summary of key information:
+||
+|| CDATA is a sequence of characters from the document character
+|| set and may include character entities. User agents should
+|| interpret attribute values as follows:
+|| * Replace character entities with characters,
+|| * Ignore line feeds,
+|| * Replace each carriage return or tab with a single space
+
+Notice the: "Ignore line feeds"
+
+Although further down it says:
+For some HTML 4 attributes with CDATA attribute values, the
+specification imposes further constraints on the set of legal
+values for the attribute that may not be expressed by the DTD.
+
+III) Eric sent me an emergency-patch for BUG#197
+
+That bug is NOT related with the cache but with an URL that's
+more than 1024 bytes long.
+
+
+
+
+As currently dillo has fixed limits for attribute values (a
+violation to the standards), and as we are parsing entities only
+in a few places, and as patching current code only adds more
+passes over the same code, the clean solution is to reimplement
+attribute parsing, eliminating the length constraint, and using
+the same function for parsing entities and hexadecimal character
+references, all in the same pass!
+
+The meat of it starts with the Html_get_attr() function. I
+thought that implementing it with a static GString, and returning
+its 'str' contents as 'const gchar *' should do the trick. And
+that way the allocation/deallocation overhead is avoided, and it
+gets easier to make the whole parsing in a single pass.
+
+Note that the calling function may g_strdup the returned
+string when necessary.
+
+That way, we could have something like:
+
+const gchar *Html_get_attr(...)
+{
+
+}
+
+
+This is the gross idea and further refinement is required, but
+considering that the html parsing module is well isolated from
+the rest of dillo, this task is of an intermediate complexity
+degree, and fits perfect for some guys I'll not dare to mention!
+
+Seriously, I'd certainly appreciate some of our developers to
+work on this task; maybe the perfect team is a couple with a main
+developer and a dillo-html-parsing versed consultant.
+
+
+
+Thanks a lot
+Jorge.- 
+
+
+
+Re: [Dillo-dev]About bug #194
+
+From: Bruno Widmann <bwidmann@ut...> - 2001-08-29 08:26
+
+On Tue, Aug 28, 2001 at 10:33:59PM -0300, Livio Baldini Soares wrote:
+> Hi all,
+> 
+> In a couple of minutes, I've made an awful fix. With my patch,
+> a_Url_str_resolve_relative() correctly parses this kind of
+> scheme-absent URL. But I see on the bug-track that this is being
+> worked on. I just want to send this patch to bwidmann@ut...
+> (Bruno, right?), as a basis for his work if he is having any
+> trouble. Also, feel free to ask me anything about URL's in Dillo.
+> 
+> The patch is at:
+> http://www.linux.ime.usp.br/~livio/dillo/url.double.slash.diff
+>
+
+I sent a email to Jorge last week asking him if he wanted a patch 
+for it, but as he said here on this list ATM he has so much
+email to work through so he hasn't reply'd to me yet.
+I also made a patch for it, although it took me a bit
+longer than a few minutes :)
+http://62.178.100.215:8080/~bwidmann/host_path.patch
+(Need to use port 8080 since my ISP seems to filter 80)
+
+I think your patch reads better. Can you take over and send it
+to Jorge so that anoying bug gets fixed?
+
+best wishes,
+Bruno 
+
+
+
+Re: [Dillo-dev]Yesterday commit
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-29 01:53
+
+Hi Jorge!
+
+Jorge Arellano Cid writes:
+> 
+> Hi there!
+
+(...)
+
+> No new features. Comments from those of you testing this new
+> version are very welcomed.
+
+The changes seem to be performing very well! Ever since Dillo
+started supporting tables, I've been using it as my main
+browser. Seldomly I use Netscape for frame viewing... therefore I've
+been testing Dillo a lot. Well, generally the pages I go to don't use
+flash, javascript, etc, so I have no complaints.
+
+Dillo is more stable than ever. I can browse, sometimes for hours
+straight without getting a Seg Fault (right now, for example, it's
+been running for 6 hours.. mainly doing google searches, and reading
+Linux Kernel documentation).
+
+bets regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]About bug #194
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-29 01:34
+
+Hi all,
+
+I was looking at slashdot this weekend, and saw that they used a
+"diferent" URL scheme inside hrefs... they simply leave out the
+scheme, i.e., something like: <a href="//dillo.s...net/">, which looked
+totally bogus at first. But looking through the URI RFC (#2396), I
+think it's ok to leave out the scheme, and hence the URL must be
+interpreted as a relative URL. In this case, therefore, the scheme is
+inheritated from the base URL.
+
+In a couple of minutes, I've made an awful fix. With my patch,
+a_Url_str_resolve_relative() correctly parses this kind of
+scheme-absent URL. But I see on the bug-track that this is being
+worked on. I just want to send this patch to bwidmann@ut...
+(Bruno, right?), as a basis for his work if he is having any
+trouble. Also, feel free to ask me anything about URL's in Dillo.
+
+The patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/url.double.slash.diff
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]word wrapping / page width
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-28 21:47
+
+Hi everybody!
+
+> On Wed, Aug 01, 2001 at 06:14:20PM +0200, Sebastian Geerken wrote:
+> > On Wed, Aug 01, 2001 at 05:34:28PM +0200, Ulrich Schwarz wrote:
+> > > Hi,
+> > >
+> > > since a month or so, the cvs version (including the latest 0.6 release) of
+> > > dillo doesn't wrap the text on http://futurezone.orf.at but instead
+> > > extends the page width to the longest text paragraph of that page so
+> > > that no word wrapping is done and each text paragraph is displayed in
+> > > a single (extremely long) text line.
+> > >
+> > > Is this due to buggy html code on that page or due to a suboptimal
+> > > page width calculation of dillo?
+> >
+> > I've looked at the page, and found
+> >
+> > <TD WIDTH="380" ROWSPAN="2" NOWRAP>
+> >
+> > [...]
+>
+> As far as I've understood, this is not quite conforming to the
+> specifications, but I haven't found anything about word-wrap, only
+> about clipping. However, since IMHO, this HTML code does not make any
+> sense,
+
+Yes, I doesn't make sense...
+
+> I thought of a workaround, which ignores the NOWRAP in this
+> case, in Html_tag_open_table_cell:
+>
+> /* text style */
+> old_style = html->stack[html->stack_top].style;
+> style_attrs = *old_style;
+> - if (Html_get_attr(tag, tagsize, "nowrap", attrbuf, sizeof(attrbuf)))
+> + if (Html_get_attr(tag, tagsize, "nowrap", attrbuf, sizeof(attrbuf)) &&
+> + !Html_get_attr(tag, tagsize, "width", attrbuf, sizeof(attrbuf)))
+> style_attrs.nowrap = TRUE;
+> else
+> style_attrs.nowrap = FALSE;
+>
+> Intended as a subject of further discussions.
+
+
+When this message was posted, the HTML parsing policy wasn't
+yet stated in the "Project Notes". As now it is there, let's
+apply, and live happily ever after!
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]Yesterday commit
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-28 19:27
+
+Hi there!
+
+I'm very happy to have finally finished the massive changes I
+was working with; the diff file was 2000 lines long!
+
+The main point of it was stability, completion and extension.
+No new features. Comments from those of you testing this new
+version are very welcomed.
+
+Now is time to restart answering a pile of emails, to review
+and integrate the patches I have in the queue, and to start
+moving a couple of ideas that sprung out while working my last
+commit.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Problems with swedish (international?) characters as entities in forms buttons, lists
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-08-28 14:38
+
+I got problems with swedish (international?) characters in buttons and in lists. The characters for example &auml; shows up properly in the usual text on a page, but no when they are to be added in the dropdownlist in a form or as a button in a submit form.
+I experimented a little and dillo parses the entities correctly, the string puts out nicely in the xterm window, but gtk doesn't seem to like it when it is to add the component(button for example).
+Maybe this has something to do with the gtk_set_locale thing?
+
+http://www.blocket.se is good to test this on. It shows up pretty quickly in the dropdowns.
+It is reported as bug #199.
+
+//Hugo 
+
+
+
+Re: [Dillo-dev]Gtk+ 2.0 Port
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-22 14:02
+
+On Tue, Aug 21, 2001 at 02:27:50PM +0200, xavier ordoquy wrote:
+> [...]
+> On the other hand, I would really appreciate the help of the guys that
+> worked on the widgets.
+
+I guess that most problems will occur with Dw (dw_*.[ch]), so send
+questions, etc. to me, I'll try to answer fast.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]bug tracking engine suggestion
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-21 21:43
+
+Henry,
+
+> The bug-tracking engine in dillo.so....net offers choices of platforms
+> like ``Linux'', ``Alpha'', and ``PPC''. These should be expanded to
+> Linux/i386, Linux/Alpha, Tru64Unix/Alpha, AIX/PPC, etc.
+
+When I first gave the option I thought it could help more, but
+experience has shown it haven't been too useful...
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Currently working on:
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-21 21:43
+
+Hi there!
+
+------
+Status
+------
+
+After some days of silence (and full work), I made some space
+to let you know what I've been working in.
+
+Considering that plugins, https, cookies and authentication
+are very close to implement, and noting that they all depend on
+the Cache/IO layer, I'm trying to fix, extend and finish several
+things there.
+
+Dillo-0.6.0 uses a lot of workarounds to achieve a certain
+stability degree, but it leaves inconsistent states, doesn't
+finish some tasks, and is incomplete.
+
+When the above mentioned features are provided, people will
+start trying to perform more serious tasks with dillo, ant it's
+not ready for that yet, so I'm trying to stabilize those layers.
+
+Currently I have a truck-load of changes to test and merge...
+
+
+------------------------
+Dillo records in the Web
+------------------------
+
+A fast survey for 'dillo browser' on google shows a lot of
+places that "advertise" our project. Unfortunately those records
+are not up to date, and the versions listed are ancient!
+
+Is sad to read that dillo doesn't support tables, that current
+version is 0.2.1 and thing like that.
+
+From time to time I get emails from people willing to help,
+that don't know how to code. THIS is a great chance to
+colaborate, by getting to those sites and providing their
+maintainers with the necessary data for updating their records.
+
+
+--------------------
+Project notes update
+--------------------
+
+Now it states dillo's HTML parsing policy (worth reading).
+
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Gtk+ 2.0 Port
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-21 21:43
+
+Xavier,
+
+>
+> I got the first results with dillo and gtk+2.0 but there's still work
+> todo.
+> At this point, I can't advance further because I don't have CVS access.
+
+I don't know much of what the port involves; please let me know
+briefly what the main tasks are, and what you shall need. It
+seems I erroneously thought that anonymous access was enough.
+
+> On the other hand, I would really appreciate the help of the guys that
+> worked on the widgets.
+
+Mainly Sebastian and me.
+
+I hope to have the time to answer, cannot guarantee anything
+though, the cache and CCC stuff is consuming all of my time...
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Gtk+ 2.0 Port
+
+From: xavier ordoquy <xordoquy@au...> - 2001-08-21 12:24
+
+Hi,
+
+I got the first results with dillo and gtk+2.0 but there's still work
+todo.
+At this point, I can't advance further because I don't have CVS access.
+On the other hand, I would really appreciate the help of the guys that
+worked on the widgets.
+
+Regards
+
+--
+Xavier Ordoquy, Aurora-linux
+If NT is the answer, you didn't understand the question.
+Complexity has nothing to do with intelligence. Simplicity does.
+(Larry Bossidy, CEO, Allied Signal) 
+
+
+
+Re: [Dillo-dev]Gtk+ 2.0 Port
+
+From: xavier ordoquy <xordoquy@au...> - 2001-08-20 09:43
+
+On 10 Aug 2001 10:23:57 -0400, Jorge Arellano Cid wrote:
+> Inexisting, but willing to! :-)
+> 
+> If GTK+-2.0 is the one that will use unicode (UTF-8), then it
+> is definitively an step forward. If this is the case, or if the
+> port will be equally required for the later, go ahead!
+
+I've started moving dillo slowly to gtk+2, but working without CVS
+isn't great.
+Is it possible to get a branch from say dillo 6.0 for the port ?
+My sourceforge account is mcarkan.
+
+Regards
+
+--
+Xavier Ordoquy, Aurora-linux
+If NT is the answer, you didn't understand the question.
+Complexity has nothing to do with intelligence. Simplicity does.
+(Larry Bossidy, CEO, Allied Signal) 
+
+
+
+[Dillo-dev]bug tracking engine suggestion
+
+From: Henry House <hajhouse@ho...> - 2001-08-19 22:52
+
+Attachments: Message as HTML      
+
+The bug-tracking engine in dillo.so....net offers choices of platforms
+like ``Linux'', ``Alpha'', and ``PPC''. These should be expanded to
+Linux/i386, Linux/Alpha, Tru64Unix/Alpha, AIX/PPC, etc.
+
+--=20
+Henry House
+OpenPGP key available from http://romana.hajhouse.org/hajhouse.asc 
+
+
+
+[Dillo-dev][patch] Fix for segfault when ~/.dillo is not accessable
+
+From: Amit Vainsencher <amitv@su...> - 2001-08-19 08:16
+
+Attachments: bookmark-noperm-segfault.patch      
+
+This is a simple patch to fix a segfault in dillo when it cannot access ~/.dillo for some reason or another.
+To reproduce: chmod 0 ~/.dillo; dillo;
+
+Dillo kicks major ass, good work guys.
+
+Amit 
+
+
+
+Re: [Dillo-dev]Tiny memory leak with DilloImages (and HRuler proposal)
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-16 16:40
+
+On Mon, Aug 13, 2001 at 12:04:20AM -0300, Livio Baldini Soares wrote:
+> [...]
+> About the HRulers in Dillo, they have been bugging a bit. It seems
+> that they don't create some space around them, and therefore renders
+> some pages in a "tight" manner. Take for instance the Dillo home page
+> (dillo.s...net), the main links are placed within <hr>'s but look too
+> tightly pakced together. Does anyone know what the specs say about
+> <hr>'s?
+
+Yes: "The amount of vertical space inserted between a rule and the
+content that surrounds it depends on the user agent."
+
+
+> Because, I think, normally browsers insert some space before
+> and after the <hr>'s, and that's why nobody does this explicitly.
+> Switching the a_Dw_page_linebreak() with a_Dw_page_parbreak() in the
+> Html_tag_open_hr() code makes the <hr>'s nicer for me.. some thing
+> like:
+> 
+> [patch]
+
+Applied. There is BTW currently still more space between a <hr> and a
+<p> (9 pixels), which IMHO makes sense.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Fwd: dillo patch for Fugly Fonts
+
+From: Viksell <jorgen.viksell@te...> - 2001-08-16 03:30
+
+Den 15 Aug 2001 12:56:53 +0200 skrev Hugo Hallqvist:
+> On Tue, 14 Aug 2001 18:41:28 -0700
+>=20
+> I also get boxes in a few places. Mostly inside <pre> tags. For example o=
+ne before each line in the changelog on dillo's homepage.
+> Is this too a font-based problem?
+
+I'm currently fixing this inside of <PRE> tags. It has to do with
+passing newlines and tabs into the DwPage. They can't be rendered
+correctly and shows up as boxes.
+
+> It didn't show up when using my old Mandrake-distribution, but has begun =
+to show up with my newly installed debian. It also shows up in sylpheed a g=
+tk-based mail-client.
+
+I think I got these errors when I upgrade to XFree86 4.1 on Debian.
+
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Fwd: dillo patch for Fugly Fonts
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-08-15 10:49
+
+On Tue, 14 Aug 2001 18:41:28 -0700
+
+I also get boxes in a few places. Mostly inside <pre> tags. For example one before each line in the changelog on dillo's homepage.
+Is this too a font-based problem?
+
+It didn't show up when using my old Mandrake-distribution, but has begun to show up with my newly installed debian. It also shows up in sylpheed a gtk-based mail-client.
+
+Suggestions, anyone?
+
+/Hugo
+
+Aaron Lehmann <aaronl@vi...> wrote:
+
+> Karsten had told me that without this patch he gets boxes instead of
+> propper text.
+> 
+> ----- Forwarded message from "Karsten M. Self" <kmself@ix.netcom.com> -----
+> 
+> From: "Karsten M. Self" <kmself@ix.netcom.com>
+> Date: Tue, 14 Aug 2001 18:29:11 -0700
+> To: Aaron Lehmann <aaronl@vi...>
+> Subject: dillo patch for Fugly Fonts
+> User-Agent: Mutt/1.3.17i
+> 
+> This is bad coding style -- it's a kluge, not a fix.
+> 
+> The problem is that search sequence for fonts is arbitrary, and ISO10646
+> fonts can appear before ISO8859 fonts. Gtk doesn't handle ISO10646
+> fonts properly, hence the resolution problems.
+> 
+> The fix I've applied is to hardcode the font encoding into the font
+> search string in dw_style.c. 
+
+
+
+[Dillo-dev]Fwd: dillo patch for Fugly Fonts
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-08-15 01:41
+
+Attachments: dillo-kms.patch      
+
+Karsten had told me that without this patch he gets boxes instead of
+propper text.
+
+----- Forwarded message from "Karsten M. Self" <kmself@ix.netcom.com> -----
+
+From: "Karsten M. Self" <kmself@ix.netcom.com>
+Date: Tue, 14 Aug 2001 18:29:11 -0700
+To: Aaron Lehmann <aaronl@vi...>
+Subject: dillo patch for Fugly Fonts
+User-Agent: Mutt/1.3.17i
+
+This is bad coding style -- it's a kluge, not a fix.
+
+The problem is that search sequence for fonts is arbitrary, and ISO10646
+fonts can appear before ISO8859 fonts. Gtk doesn't handle ISO10646
+fonts properly, hence the resolution problems.
+
+The fix I've applied is to hardcode the font encoding into the font
+search string in dw_style.c.
+
+Naturally, this is non-portable coding.
+
+I'll leave implementation to you, options might include taking encoding
+data from build options, the environment, or getting a fix into Gtk.
+
+Patch is from 0.6.0.
+
+To apply patch, save to parent of source, cd to source directory, and:
+
+$ patch -p1 < ../dillo-kms.patch
+
+Cheers.
+
+--=20
+Karsten M. Self <kmself@ix.netcom.com> http://kmself.home.netcom.c=
+om/
+What part of "Gestalt" don't you understand? There is no K5 ca=
+bal
+http://gestalt-system.so....net/ http://www.kuro5hin.=
+org
+Free Dmitry! Boycott Adobe! Repeal the DMCA! http://www.freesklyarov.=
+org
+Geek for Hire http://kmself.home.netcom.com/resume.h=
+tml
+
+diff -X ignore -Naur dillo-0.6.0/src/dw_style.c dillo-0.6.0-kms/src/dw_styl=
+e.c
+--- dillo-0.6.0/src/dw_style.c Sun Jul 29 08:40:12 2001
++++ dillo-0.6.0-kms/src/dw_style.c Tue Aug 14 17:29:04 2001
+@@ -247,7 +247,7 @@
+char fontname[256], *ItalicChar;
+=20
+ItalicChar =3D prefs.use_oblique ? "o" : "i";
+- sprintf (fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*",
++ sprintf (fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
+font->name,
+font->bold ? "bold" : "medium",
+font->italic ? ItalicChar : "r",
+@@ -255,7 +255,7 @@
+font->font =3D gdk_font_load(fontname);
+=20
+if (font->font =3D=3D NULL && font->italic) {
+- sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-*-*",
++ sprintf(fontname, "-*-%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
+font->name,
+font->bold ? "bold" : "medium",
+(*ItalicChar =3D=3D 'o') ? "i" : "o",
+@@ -268,7 +268,7 @@
+/* Can't load the font - substitute the default instead. */
+font->font =3D=20
+gdk_font_load
+- ("-adobe-helvetica-medium-r-normal--*-100-*-*-*-*-*-*");
++ ("-adobe-helvetica-medium-r-normal--*-100-*-*-*-*-iso8859-1");
+}
+=20
+if (font->font =3D=3D NULL) {
+
+
+
+
+----- End forwarded message -----
+
+--=20
+#define m(i)(x[i]^s[i+84])<< /* I do not condone improper use of this code =
+*/
+unsigned char x[5],y,s[2048];main(n){for(read(0,x,5);read(0,s,n=3D2048);wri=
+te(1,s
+,n))if(s[y=3Ds[13]%8+20]/16%4=3D=3D1){int i=3Dm(1)17^256+m(0)8,k=3Dm(2)0,j=
+=3Dm(4)17^m(3)9^k
+*2-k%8^8,a=3D0,c=3D26;for(s[y]-=3D16;--c;j*=3D2)a=3Da*2^i&1,i=3Di/2^j&1<<24=
+;for(j=3D127;++j<n
+;c=3Dc>y)c+=3Dy=3Di^i/8^i>>4^i>>12,i=3Di>>8^y<<17,a^=3Da>>14,y=3Da^a*8^a<<6=
+,a=3Da>>8^y<<9,k=3Ds
+[j],k=3D"7Wo~'G_\216"[k&7]+2^"cr3sfw6v;*k+>/n."[k>>4]*2^k*257/8,s[j]=3Dk^(k=
+&k*2&34)
+*6^c+~y;}}//Please join us in civil disobedience and distribute DeCSS(or ef=
+dtt!) 
+
+
+
+[Dillo-dev]Bookmarks
+
+From: DraX <drax@wh...> - 2001-08-14 22:13
+
+Am i missing something or is their no add bookmark button, i see the
+functions to do it, but no button to do it...
+
+I'm planning to implement a simple bookmark manager and want to get the
+bookmark system working well before i do so. I'm also considering writing
+compatability for Netscape bookmark files. 
+
+
+
+Re: [Dillo-dev]table rendering etc. on the ipaq
+
+From: Bruno Widmann <bwidmann@ut...> - 2001-08-14 09:26
+
+On Tue, Aug 14, 2001 at 02:55:47AM +0300, Sam J. Engstrom wrote:
+> 
+> As some of you have noticed, I've been providing arm binaries of dillo 
+> for use on the ipaq. They can be found along with notes and source at 
+> http://www.hut.fi/~sengstro/ipaq.html . Dillo is widely used on linux 
+> ipaqs because there aren't really that many good alternatives. It's 
+> advantages over konqueror/embedded have been speed, size and the fact 
+> that it has relentlessly mangled pages to fit the screen.
+> 
+> However, with recent table rendering most pages require dubious sideways 
+> scrolling. That's why I propose there should be an option (preferably 
+> selectable on the currently viewed page) to disable table rendering and 
+> fit everything except wide pictures to the window width.
+
+There is a USE_TABLES #define in html.c. I just experimented exchanging
+it with a preferences variable (prefs.render_tables), and it seems to work
+fine. I can change dillo back to old behaivor by editing dillorc. But there 
+is currently no way of changing it on the fly, although
+i would be willing to add a "Settings" menu to dillo where you could 
+change preferences on the fly.
+
+This would change it for all open windows, and i guess that's no a good
+idea. Is there a way to change it for each open window seperatly? 
+
+
+
+[Dillo-dev]table rendering etc. on the ipaq
+
+From: Sam J. Engstrom <sam@ne...> - 2001-08-13 23:56
+
+As some of you have noticed, I've been providing arm binaries of dillo 
+for use on the ipaq. They can be found along with notes and source at 
+http://www.hut.fi/~sengstro/ipaq.html . Dillo is widely used on linux 
+ipaqs because there aren't really that many good alternatives. It's 
+advantages over konqueror/embedded have been speed, size and the fact 
+that it has relentlessly mangled pages to fit the screen.
+
+However, with recent table rendering most pages require dubious sideways 
+scrolling. That's why I propose there should be an option (preferably 
+selectable on the currently viewed page) to disable table rendering and 
+fit everything except wide pictures to the window width. As you can't 
+select text or anything, panning the page by dragging from unlinked 
+areas could also be helpful.
+
+I once wrote a script to translate html pages to wml (for wap phones), 
+and found that it was often usable enough to provide a list of links to 
+different frames from the frameset. This could be a short term solution 
+before actually implementing frame support and it could remain as a 
+useful (at least on the ipaq) option.
+
+I personally would also find support for basic authentication useful 
+because of my intranet, but I assume it's not a very high priority.
+
+The changes I've actually done for the ipaq version:
+- removed the home, save, url clear and progress buttons/boxes from the 
+toolbar to get it to fit on the screen
+- bound mouse button 1 to the popup menu when not on links
+These could maybe be configurable options as well.
+
+I regret my time is consumed by other work and can't pursue these 
+improvements myself.
+
+-- 
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+Re: [Dillo-dev] Off-topic (was:What can I do?)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-13 17:20
+
+Eric,
+
+> BTW, the Changelogs is refering to GPF fixes. Let's call them "segfaults" or
+> segmentation faults: GPF hurts my feelings ;-)
+
+Ouch! (Read as Homer :)
+
+You're absolutely right! I made the changes (will commit later though).
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]word wrapping / page width
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-13 17:01
+
+On Wed, Aug 01, 2001 at 06:14:20PM +0200, Sebastian Geerken wrote:
+> On Wed, Aug 01, 2001 at 05:34:28PM +0200, Ulrich Schwarz wrote:
+> > Hi,
+> > 
+> > since a month or so, the cvs version (including the latest 0.6 release) of
+> > dillo doesn't wrap the text on http://futurezone.orf.at but instead
+> > extends the page width to the longest text paragraph of that page so
+> > that no word wrapping is done and each text paragraph is displayed in
+> > a single (extremely long) text line.
+> > 
+> > Is this due to buggy html code on that page or due to a suboptimal
+> > page width calculation of dillo?
+> 
+> I've looked at the page, and found
+> 
+> <TD WIDTH="380" ROWSPAN="2" NOWRAP>
+> 
+> nearly directly before the text. I'm not quite sure about the
+> specification (or if it is even clear in this case), but at least,
+> this is quite ambiguous. Dillo's current behavior is to use WIDTH
+> attributes only as hints; if the cell is wider (in this case due to
+> the NOWRAP argument), it is (more or less) ignored,
+
+As far as I've understood, this is not quite conforming to the
+specifications, but I haven't found anything about word-wrap, only
+about clipping. However, since IMHO, this HTML code does not make any
+sense, I thought of a workaround, which ignores the NOWRAP in this
+case, in Html_tag_open_table_cell:
+
+/* text style */
+old_style = html->stack[html->stack_top].style;
+style_attrs = *old_style;
+- if (Html_get_attr(tag, tagsize, "nowrap", attrbuf, sizeof(attrbuf)))
++ if (Html_get_attr(tag, tagsize, "nowrap", attrbuf, sizeof(attrbuf)) &&
++ !Html_get_attr(tag, tagsize, "width", attrbuf, sizeof(attrbuf)))
+style_attrs.nowrap = TRUE;
+else
+style_attrs.nowrap = FALSE;
+
+Intended as a subject of further discussions.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Entry point of HTML before the renderer
+
+From: DraX <drax@wh...> - 2001-08-13 16:27
+
+Table support is why I installed dillo instead of laughing at it in
+futility :) Like i have for every other version.
+
+Once you have table support, you're on the way to becoming a functional
+and useful browser.
+
+
+On Mon, 13 Aug 2001, Sebastian Geerken wrote:
+
+> On Sat, Aug 11, 2001 at 09:14:28PM -0700, Eric GAUDET wrote:
+> > [...]
+> > Form elements can be trickier, but the need for them is higher. For test pages:
+> > http://www.rti-zone.org/dillo/Html.testsuite/form.html (see submit button
+> > with image and button), should not be that hard to implement.
+> > http://maps.yahoo.com (search for a city, and you're supposed to see an image
+> > server-side map in an submit button), this one is hard.
+> 
+> I planned some changes to make Gtk-Dw-Gtk-Dw-... embedding simpler,
+> something like
+> 
+> GtkDwViewport
+> `- DwPage
+> `- DwEmbedGtk
+> `- GtkButton
+> `- GtkEmbedGtkSimple
+> `- DwPage
+> 
+> GtkEmbedGtkSimple is then a widget with the same purpose of
+> GtkDwViewport, but without scrolling. I've thought of an interface
+> between the toplevel Dw widget and the Gtk widget embedding it,
+> implemented by GtkDwViewport, GtkEmbedGtkSimple, and perhaps some
+> other widgets, e.g. for the reuse of Dw within a graphical plugin.
+> 
+> Of course, a simple solution could be to omit the GtkButton, and
+> handle the DwPage like a huge link. You can also set an outset border
+> around it, look at Html_open_img for details how to do this.
+> 
+> > You can also try to torture dillo with all sort of tables and see if they are
+> > rendered correctly, and if not submit a patch to Sebastian.
+> 
+> They get less and less ;-)
+> 
+> Sebastian
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Entry point of HTML before the renderer
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-13 16:23
+
+On Sat, Aug 11, 2001 at 09:14:28PM -0700, Eric GAUDET wrote:
+> [...]
+> Form elements can be trickier, but the need for them is higher. For test pages:
+> http://www.rti-zone.org/dillo/Html.testsuite/form.html (see submit button
+> with image and button), should not be that hard to implement.
+> http://maps.yahoo.com (search for a city, and you're supposed to see an image
+> server-side map in an submit button), this one is hard.
+
+I planned some changes to make Gtk-Dw-Gtk-Dw-... embedding simpler,
+something like
+
+GtkDwViewport
+`- DwPage
+`- DwEmbedGtk
+`- GtkButton
+`- GtkEmbedGtkSimple
+`- DwPage
+
+GtkEmbedGtkSimple is then a widget with the same purpose of
+GtkDwViewport, but without scrolling. I've thought of an interface
+between the toplevel Dw widget and the Gtk widget embedding it,
+implemented by GtkDwViewport, GtkEmbedGtkSimple, and perhaps some
+other widgets, e.g. for the reuse of Dw within a graphical plugin.
+
+Of course, a simple solution could be to omit the GtkButton, and
+handle the DwPage like a huge link. You can also set an outset border
+around it, look at Html_open_img for details how to do this.
+
+> You can also try to torture dillo with all sort of tables and see if they are
+> rendered correctly, and if not submit a patch to Sebastian.
+
+They get less and less ;-)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev] Off-topic (was:What can I do?)
+
+From: Eric GAUDET <egaudet@in...> - 2001-08-13 15:57
+
+-- En reponse de "Re: [Dillo-dev]What can I do?" de Jorge Arellano Cid, le
+13-Aug-2001 :
+>> _________________________________________________________________
+>> Get your FREE download of MSN Explorer at http://explorer.msn.com/intl.asp
+> 
+> ?!!! :-o
+> 
+> I'll pretend I haven't even noticed that! ;-)
+> 
+
+BTW, the Changelogs is refering to GPF fixes. Let's call them "segfaults" or
+segmentation faults: GPF hurts my feelings ;-)
+
+> 
+> Regards (Urbi et orbi)
+> Jorge.-
+> 
+> 
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 13-Aug-2001 a 08:55:34
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]GLib-ERROR in Dw_image_scale()
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-13 15:51
+
+On Sun, Aug 12, 2001 at 04:52:20AM -0300, Livio Baldini Soares wrote:
+> I'm trying to get to the root of an GLib-ERROR (while allocating) in
+> Dw_image_scale(). The problem arises when either h or w become
+> negative (because Dw_style_box_diff_{width,heith} is greater than
+> allocation.{width,ascent+descent}). This will cause a call to g_malloc
+> with a negative value. Since malloc's expect an unsgined value, the
+> negative value translate to a _very_ big allocation.
+> 
+> I noticed this while browsing, and since it has become consistent on
+> a certain page I took the minimal case out of the page. The original
+> page was: http://www.livrariacultura.com.br/ but since it changes with
+> frequency, I copied it to:
+> 
+> http://www.linux.ime.usp.br/~livio/dillo/test-crash/
+> (the offending image is at):
+> http://www.linux.ime.usp.br/~livio/dillo/test-crash/imagem/capas1/590425.jpg
+> 
+> It's kind of awkward how allocation.ascent+allocation.descent==0...
+> I tried to track down the *_size_allocate_request's but I still can't
+> fully understand what's missing :(
+> 
+> Sebastian, do you know what's up? This following patch, prevents the
+> glib error, but doesn't do the right thing :-(
+
+That's indeed a bug lying a bit deeper. When a widget represents a
+HTML element (e.g. DwImage / <IMG>), the allocation of a widget is the
+whole element space, including margin, border, and padding, not only
+the content. What WIDTH and HEIGHT stand for is not very clear in
+
+http://www.w3.org/TR/html401/struct/objects.html#h-13.7.1
+
+but the CSS spec is more precise, as in
+
+http://www.w3.org/TR/CSS2/visudet.html#propdef-width
+
+width and height specify the _content_ size. This was actually handled
+wrong before by Dw, and is fixed now. (At least halfway, there will be
+some changes, and, I hope, simplifications on this topic.)
+
+> Maybe even when this is fixed, a check for negative values here,
+> might be a good idea....
+
+Yes. I've inserted a modified version.
+
+Sebastian
+
+PS: Jorge, needless to say that this also fixes the bug in the page
+you sent me. 
+
+
+
+Re: [Dillo-dev]bug #91 still causing problems
+
+From: DraX <drax@wh...> - 2001-08-13 15:24
+
+I actully fear it's NOT bug#91 and i was just thinking out of place:
+
+I go to any site with only 1 dillo window and while that site is closing
+use my window managers close button, dillo offers a segmentation fault. 
+
+
+
+Re: [Dillo-dev]BIG cache (was: Entry point of HTML before the renderer)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-13 13:05
+
+Hi,
+
+> > This might be a nice feature, a "clear cache" switch which will flush the
+> > cache, for one reason or another.
+>
+> You've touched an issue which I was going to address later on. But
+> here we go! It's been a little while since I've been using Dillo as
+> my main browser, and what I notice is that after a few hours of
+> browsing, Dillo has so much stuff in the cache, it uses as much memory
+> as Netscape at startup (which is a _lot_ :) Right now, for example,
+> Dillo is consuming around 15 Mb. If I start a new Dillo, it consumes
+> around 5 Mb (a little less). So more than 10Mb is being gobbled up by
+> the cache. What I do is exit Dillo and restart it again...
+
+I can't help but feeling quite happy when I read about this;
+long time developers will remember the times when it wasn't an
+issue (at all) because of lack of stability!
+
+> I think that this "clear cache", is a pretty good beginning for
+> resolving this issue... but a better way to do this (maybe later on
+> after discussing this better) is to let the user define the amount of
+> memory he wants Dillo to use _for cache_ (it's too hard and not
+> worthwhile to maintain global memory usage, just cache memory usage is
+> enough, IMHO). I imagine this would only have an affect on cache and
+> dicache modules, and nowhere else in Dillo.
+>
+> Jorge, do you have any thoughts on this?
+
+Sure.
+
+First, beware that current code doesn't have any memory
+management for the cache. Improving it by implementing a memory
+boundary would be an important addition; it requires some
+experience and a significant effort though.
+
+The main contributor to memory usage is the dicache. It holds
+the RGB decodings of the original formats (sometimes near to 3:1
+ratio). Flushing it doesn't lose any images, because they're also
+stored in the original format. It just adds decoding time to the
+next pass.
+
+Easy solution:
+
+* Add an 'use_dicache' item to dillorc (YES/NO), and flush the
+dicache when images are not being displayed (beware of multiple
+browser windows).
+
+Intermediate solution:
+
+* Add a memory boundary for the dicache, and flush it
+accordingly.
+
+Long term solution:
+
+* Add a memory boundary to the cache, and manage it with a
+frequency heuristic (for instance).
+Add a memory boundary to the dicache too.
+Don't cache downloads.
+
+Example dillorc:
+
+cache_size=4Mb
+use_dicache=YES
+dicache_size=5Mb
+
+
+
+Anyone? ;)
+Jorge.- 
+
+
+
+Re: [Dillo-dev]bug #91 still causing problems
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-13 13:05
+
+On Sun, 12 Aug 2001, DraX wrote:
+
+> I just tested to see if bug #91 was really fixed like the ChangeLog says
+> and got a segmentation fault and a core dump.
+>
+> I just went to slashdot :)
+
+Sorry, but I can't reproduce it here.
+Does it happen when closing with the window manager, or with
+Ctrl-W, or both?
+What does dillo report?
+Does it happen only with slashdot or with any page?
+What do you do afterwards?
+
+Is anyone else experiencing similar problems?
+
+> > [Off topic]
+>
+> OpenBSD 2.9, AMD k6 233, 64mb ram
+> and my laptop:
+> OpenBSD 2.9, IBM Thinkpad 760XD
+
+Thanks a lot, I'll add that info.
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]What can I do?
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-13 13:05
+
+Ben,
+
+> I wish to help this project in anyway I can. I'm a new C programmer and I'm
+> just learning the GTK toolkit, and I think that this project will help me
+> learn it.
+> I wish to give back to the Open Source community that has given
+> me so much.
+
+Thanks a lot for you helping will, but I'm afraid that dillo
+is not simple even for the experienced C programmer...
+
+[Generic answer]
+
+Anyway, if you can add a vertical scroller to the pagemarks (or
+the same hack of selection boxes), that'd be a good start. Making
+the focus "tend" to the main page is certainly a need.
+
+Most recent emails in the list have several suggestions too;
+read them!
+
+One of the most appreciated things for a developer is a GOOD
+bug report (that's what the Bug-Track is for). If it becomes a
+complain list, is useless, but a careful bug report is a bless;
+and precisely now, we're short of quality entries...
+
+Finally (I assume you read the home page), if you have
+additional skills (as SGML, HTTP, sockets, rpc, threads, ...)
+it'd be good to know in order to suggest a more specific task.
+
+
+Jorge.-
+
+
+> Thanks,
+> Ben Jones
+>
+> _________________________________________________________________
+> Get your FREE download of MSN Explorer at http://explorer.msn.com/intl.asp
+
+?!!! :-o
+
+I'll pretend I haven't even noticed that! ;-)
+
+
+Regards (Urbi et orbi)
+Jorge.- 
+
+
+
+[Dillo-dev]What can I do?
+
+From: Ben Jones <appricle@ho...> - 2001-08-13 04:56
+
+I wish to help this project in anyway I can. I'm a new C programmer and I'm 
+just learning the GTK toolkit, and I think that this project will help me 
+learn it. I wish to give back to the Open Source community that has given 
+me so much.
+
+
+Thanks,
+Ben Jones
+
+_________________________________________________________________
+Get your FREE download of MSN Explorer at http://explorer.msn.com/intl.asp 
+
+
+
+[Dillo-dev]Tiny memory leak with DilloImages (and HRuler proposal)
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-13 03:04
+
+Hello!
+
+Jorge, I've been chasing, what seems to be, a tiny (rare) memory
+leak in the Html_tag_open_img(). It allocates a DilloImage (with
+a_Image_new()). I believe this gets freed with the a_Dicache_close()
+or on abort with a_Dicache_callback(). I was trying local browsing and
+I think this might be causing some leakage, when the image is _not_
+found. If the image is not found, it doens't get an dicache entry,
+right? So this DilloImage is never freed... If my reasoning is
+somewhat correct, than this should free those DilloImages:
+
+----------
+diff -pru dillo.my/src/html.c dillo.test/src/html.c
+--- dillo.my/src/html.c Sun Aug 12 05:21:58 2001
++++ dillo.test/src/html.c Sun Aug 12 22:56:55 2001
+@@ -1563,6 +1563,8 @@ static void Html_tag_open_img(DilloHtml 
+a_Interface_add_client(html->bw, ClientKey, 0);
+a_Interface_add_url(html->bw, url, WEB_Image);
+}
++ else
++ a_Image_close(Image);
+a_Url_free(url);
+}
+
+-----------
+
+Or some other, more generic, mechanism...
+
+About the HRulers in Dillo, they have been bugging a bit. It seems
+that they don't create some space around them, and therefore renders
+some pages in a "tight" manner. Take for instance the Dillo home page
+(dillo.s...net), the main links are placed within <hr>'s but look too
+tightly pakced together. Does anyone know what the specs say about
+<hr>'s? Because, I think, normally browsers insert some space before
+and after the <hr>'s, and that's why nobody does this explicitly.
+Switching the a_Dw_page_linebreak() with a_Dw_page_parbreak() in the
+Html_tag_open_hr() code makes the <hr>'s nicer for me.. some thing
+like:
+
+--------------------
+diff -pru dillo.my/src/html.c dillo.test/src/html.c
+--- dillo.my/src/html.c Sun Aug 12 05:21:58 2001
++++ dillo.test/src/html.c Sun Aug 12 22:56:55 2001
+@@ -1952,11 +1954,11 @@ static void Html_tag_open_hr(DilloHtml *
+if (Html_get_attr(tag, tagsize, ßize", size_str, sizeof(size_str)))
+size_ptr = size_str;
+
+- a_Dw_page_linebreak (DW_PAGE (html->dw));
++ a_Dw_page_parbreak (DW_PAGE (html->dw), 5);
+hruler = a_Dw_hruler_new (shade);
+Html_add_widget(html, hruler, width_ptr, size_ptr,
+html->stack[html->stack_top].style);
+- a_Dw_page_linebreak (DW_PAGE (html->dw));
++ a_Dw_page_parbreak (DW_PAGE (html->dw), 5);
+}
+
+/*
+----------------------
+
+That's all for now! Best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]bug #91 still causing problems
+
+From: DraX <drax@wh...> - 2001-08-12 23:56
+
+I just went to slashdot :)
+
+OpenBSD 2.9, AMD k6 233, 64mb ram
+and my laptop:
+OpenBSD 2.9, IBM Thinkpad 760XD
+
+On Sun, 12 Aug 2001, Jorge Arellano Cid wrote:
+
+> 
+> Hi,
+> 
+> > I just tested to see if bug #91 was really fixed like the ChangeLog says
+> > and got a segmentation fault and a core dump.
+> >
+> > I'm running cvs from less then an hour ago.
+> 
+> On what URL?
+> 
+> [Off topic]
+> Livio told me you got dillo running on OpenBSD, please send me
+> the specs of your machine, OS version, so I can update the
+> compatibility info.
+> 
+> 
+> Jorge.-
+> 
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]bug #91 still causing problems
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-12 22:45
+
+Hi,
+
+> I just tested to see if bug #91 was really fixed like the ChangeLog says
+> and got a segmentation fault and a core dump.
+>
+> I'm running cvs from less then an hour ago.
+
+On what URL?
+
+[Off topic]
+Livio told me you got dillo running on OpenBSD, please send me
+the specs of your machine, OS version, so I can update the
+compatibility info.
+
+
+Jorge.- 
+
+
+
+[Dillo-dev]bug #91 still causing problems
+
+From: DraX <drax@wh...> - 2001-08-12 22:28
+
+I just tested to see if bug #91 was really fixed like the ChangeLog says
+and got a segmentation fault and a core dump.
+
+I'm running cvs from less then an hour ago. 
+
+
+
+Re: [Dillo-dev]segfault on particular page
+
+From: Henry House <hajhouse@ho...> - 2001-08-12 08:11
+
+Attachments: Message as HTML      
+
+On Thu, Aug 09, 2001 at 03:21:58PM -0300, Livio Baldini Soares wrote:
+[...]
+> Yeah, this is a cache related problem. It appears that the remote
+> server is returning that a the `Content-Length` of an image is 0 (I
+> think it's an advertisement GIF). And Cache_parse_header wasn't
+> expecting a 0 lengthed object.
+>=20
+> This following patch "fixes" this situation (by simply checking for
+> 0 values). And I also replaced the `atol()` to `strtol()`. Sorry
+
+The patch works like charm --- thanks! The new table layout engine works
+really well on this page too :-).
+
+--=20
+Henry House
+OpenPGP key available from http://romana.hajhouse.org/hajhouse.asc 
+
+
+
+[Dillo-dev]GLib-ERROR in Dw_image_scale()
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-12 07:52
+
+Hello!
+
+I'm trying to get to the root of an GLib-ERROR (while allocating) in
+Dw_image_scale(). The problem arises when either h or w become
+negative (because Dw_style_box_diff_{width,heith} is greater than
+allocation.{width,ascent+descent}). This will cause a call to g_malloc
+with a negative value. Since malloc's expect an unsgined value, the
+negative value translate to a _very_ big allocation.
+
+I noticed this while browsing, and since it has become consistent on
+a certain page I took the minimal case out of the page. The original
+page was: http://www.livrariacultura.com.br/ but since it changes with
+frequency, I copied it to:
+
+http://www.linux.ime.usp.br/~livio/dillo/test-crash/
+(the offending image is at):
+http://www.linux.ime.usp.br/~livio/dillo/test-crash/imagem/capas1/590425.jpg
+
+It's kind of awkward how allocation.ascent+allocation.descent==0...
+I tried to track down the *_size_allocate_request's but I still can't
+fully understand what's missing :(
+
+Sebastian, do you know what's up? This following patch, prevents the
+glib error, but doesn't do the right thing :-(
+
+Maybe even when this is fixed, a check for negative values here,
+might be a good idea....
+
+******
+diff -pru dillo/src/dw_image.c dillo.download/src/dw_image.c
+--- dillo/src/dw_image.c Sun Jul 29 01:51:13 2001
++++ dillo.download/src/dw_image.c Sun Aug 12 04:39:29 2001
+@@ -544,9 +544,12 @@ static void Dw_image_scale (DwImage *ima
+}
+
+widget = DW_WIDGET (image);
+- w = widget->allocation.width - Dw_style_box_diff_width (widget->style);
+- h = widget->allocation.ascent + widget->allocation.descent -
+- Dw_style_box_diff_height (widget->style);
++ if ((w = widget->allocation.width - 
++ Dw_style_box_diff_width (widget->style)) < 0)
++ w = widget->allocation.width;
++ if ((h = widget->allocation.ascent + widget->allocation.descent -
++ Dw_style_box_diff_height (widget->style)) < 0)
++ h = widget->allocation.ascent + widget->allocation.descent;
+
+/* Zero size? Ignore. */
+if (w * h == 0)
+*******
+
+best regards,
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]BIG cache (was: Entry point of HTML before the renderer)
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-12 06:50
+
+Hya Alex,
+
+DraX writes:
+
+> I just patched with the big-small patch. It seems to pass the html
+> suite quite well, and renders why sites that use it mininally well
+> also. I'm also using the case sensitivity patch, sense it's my bug
+> *grin*
+
+Oh, nice. I'm glad to hear... maybe I'll send it to Jorge, after
+looking at it again and convincing myself it'll work. :)
+
+> This might be a nice feature, a "clear cache" switch which will flush the
+> cache, for one reason or another.
+
+You've touched an issue which I was going to address later on. But
+here we go! It's been a little while since I've been using Dillo as
+my main browser, and what I notice is that after a few hours of
+browsing, Dillo has so much stuff in the cache, it uses as much memory
+as Netscape at startup (which is a _lot_ :) Right now, for example,
+Dillo is consuming around 15 Mb. If I start a new Dillo, it consumes
+around 5 Mb (a little less). So more than 10Mb is being gobbled up by
+the cache. What I do is exit Dillo and restart it again...
+
+I think that this "clear cache", is a pretty good beginning for
+resolving this issue... but a better way to do this (maybe later on
+after discussing this better) is to let the user define the amount of
+memory he wants Dillo to use _for cache_ (it's too hard and not
+worthwhile to maintain global memory usage, just cache memory usage is
+enough, IMHO). I imagine this would only have an affect on cache and
+dicache modules, and nowhere else in Dillo.
+
+Jorge, do you have any thoughts on this? 
+
+I was thinking of implementing the cache item list as FIFO (simple
+to implement, but not so good results), or maybe use a LRU algorithm
+(harder to code, but might result in better performance for the user,
+cause the pages are, depending on the user, frequently "revisited"),
+to dispose "old" stuff in the cache. So everytime you get a new
+request which is not cached, and the cache has hit the max memory
+(defined by user), then we throw away the "oldest" cache entry to make
+room for the new stuff. Of course, this wouldn't have to be a _strict_
+limit, just something to aim for.
+
+Well, just throwing some ideas... 
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Entry point of HTML before the renderer
+
+From: DraX <drax@wh...> - 2001-08-12 06:12
+
+I just patched with the big-small patch. It seems to pass the html suite
+quite well, and renders why sites that use it mininally well also. I'm
+also using the case sensitivity patch, sense it's my bug *grin* 
+
+This might be a nice feature, a "clear cache" switch which will flush the
+cache, for one reason or another. 
+
+
+
+Re: [Dillo-dev]Entry point of HTML before the renderer
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-12 05:32
+
+Hello Alex and Eric :-)
+
+DraX writes:
+> On Sat, 11 Aug 2001, Eric GAUDET wrote:
+> > -- En reponse de "RE: [Dillo-dev]Entry point of HTML before the renderer" de
+> > DraX, le 12-Aug-2001 :
+> > > Hmm, see i thought the gzip thing would be easy, which is why i picked it.
+> > > 
+> > > Do you have any suggestions for an "Easier" task?
+> > > 
+
+(...)
+
+> > Unfortunatly (!), almost all tags are now supported, except <big> and <small>,
+> > and some form elements involving images. 
+> > 
+> I might try to add big and small, as i use them *grin*
+
+Well, I have an _old_ implementation of them here if you want to
+take a look at it. I never released them at the time, 'cause I thought
+somebody had a already working patch for that. They seem to work
+pretty well with Eric's font-styles.html test page. But feel free to
+modify them if you like, or start a brand new implementation. Oh, and
+I cheated, and build both the small and big tags in one "general"
+function. 
+
+The patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/big_small_font.diff
+
+I keep a list of my not-yet-inserted-in-Dillo-patches at:
+http://www.linux.ime.usp.br/~livio/dillo/
+
+These aren't in Dillo yet, because they are still too
+crappy^h^h^h^h^h^hexperimental or Jorge hasn't had time to look at
+them.. (or both ;-)
+
+> > One thing I wanted to have for a long time is a popup menu over an image
+> > with the options "view image", "save image", "copy image location", and why not
+> > a "copy image" to paste it into gimp.
+
+Me too, me too! :) And if you do try to this, make a "Refresh Image"
+option.. sometimes the whole isn't downloaded, and I would like to
+refresh that image so it downloads completely, and since at the moment
+refreshing the current page won't refresh the images in the dicache
+(and I'm not really sure that it should.. should it?), this function
+would come in very handy.
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]Entry point of HTML before the renderer
+
+From: DraX <drax@wh...> - 2001-08-12 04:28
+
+On Sat, 11 Aug 2001, Eric GAUDET wrote:
+
+> -- En reponse de "RE: [Dillo-dev]Entry point of HTML before the renderer" de
+> DraX, le 12-Aug-2001 :
+> > Hmm, see i thought the gzip thing would be easy, which is why i picked it.
+> > 
+> > Do you have any suggestions for an "Easier" task?
+> > 
+> 
+> I found that adding new html tags and attributes support be the easiest
+> (especially if you don't know much about gtk), and the io/cache side to be the
+> hardest.
+> 
+> Unfortunatly (!), almost all tags are now supported, except <big> and <small>,
+> and some form elements involving images. 
+> 
+I might try to add big and small, as i use them *grin*
+
+> The big and small is quite easy to do, but not much used in tables, so we never
+> felt the need to implemented them so far. For a test page:
+> http://www.rti-zone.org/dillo/Html.testsuite/font_styles.html
+> 
+> Form elements can be trickier, but the need for them is higher. For test pages:
+> http://www.rti-zone.org/dillo/Html.testsuite/form.html (see submit button
+> with image and button), should not be that hard to implement.
+> http://maps.yahoo.com (search for a city, and you're supposed to see an image
+> server-side map in an submit button), this one is hard.
+> 
+I might try that if i feel more confident later.
+
+> You can also try to torture dillo with all sort of tables and see if they are
+> rendered correctly, and if not submit a patch to Sebastian.
+> 
+> One thing I wanted to have for a long time is a popup menu over an image
+> with the options "view image", "save image", "copy image location", and why not
+> a "copy image" to paste it into gimp.
+> 
+That i can probabbly do, i know a bit of GTK from odd projects here and
+there so it shouldn't be that hard to pull off, atleast copy image
+location.
+
+> But if you really want to try and implement the gziped pages, go ahead!
+> 
+> As you can see, there's plenty to do!
+> 
+> Best,
+> ------------------------------------
+> Eric GAUDET <egaudet@in...>
+> Le 11-Aug-2001 a 20:41:16
+> "In theory, there's no difference between 
+> theory and practice; in practice, there is."
+> ------------------------------------
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> http://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+RE: [Dillo-dev]Entry point of HTML before the renderer
+
+From: Eric GAUDET <egaudet@in...> - 2001-08-12 04:14
+
+-- En reponse de "RE: [Dillo-dev]Entry point of HTML before the renderer" de
+DraX, le 12-Aug-2001 :
+> Hmm, see i thought the gzip thing would be easy, which is why i picked it.
+> 
+> Do you have any suggestions for an "Easier" task?
+> 
+
+I found that adding new html tags and attributes support be the easiest
+(especially if you don't know much about gtk), and the io/cache side to be the
+hardest.
+
+Unfortunatly (!), almost all tags are now supported, except <big> and <small>,
+and some form elements involving images. 
+
+The big and small is quite easy to do, but not much used in tables, so we never
+felt the need to implemented them so far. For a test page:
+http://www.rti-zone.org/dillo/Html.testsuite/font_styles.html
+
+Form elements can be trickier, but the need for them is higher. For test pages:
+http://www.rti-zone.org/dillo/Html.testsuite/form.html (see submit button
+with image and button), should not be that hard to implement.
+http://maps.yahoo.com (search for a city, and you're supposed to see an image
+server-side map in an submit button), this one is hard.
+
+You can also try to torture dillo with all sort of tables and see if they are
+rendered correctly, and if not submit a patch to Sebastian.
+
+One thing I wanted to have for a long time is a popup menu over an image
+with the options "view image", "save image", "copy image location", and why not
+a "copy image" to paste it into gimp.
+
+But if you really want to try and implement the gziped pages, go ahead!
+
+As you can see, there's plenty to do!
+
+Best,
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 11-Aug-2001 a 20:41:16
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+RE: [Dillo-dev]Entry point of HTML before the renderer
+
+From: DraX <drax@wh...> - 2001-08-12 03:33
+
+Hmm, see i thought the gzip thing would be easy, which is why i picked it.
+
+Do you have any suggestions for an "Easier" task? 
+
+
+
+RE: [Dillo-dev]Entry point of HTML before the renderer
+
+From: Eric GAUDET <egaudet@in...> - 2001-08-12 03:20
+
+-- En reponse de "[Dillo-dev]Entry point of HTML before the renderer" de DraX,
+le 12-Aug-2001 :
+> I'm pushing my limited C skills to the max and trying to write a patch to
+> support gzipped html files using zlib. On to my question, in what file
+> does the html file actully get downloaded before it enters the renderer?
+> 
+
+First of all, you have to read _all_ the documentation you can find in dillo
+sources and on the web site.
+Then, a good start for this problem could be to have a look at how the dicache
+is called and how it handles the images, and do something similar with gzipped
+pages.
+
+However, this is not an easy task, and if your C skills are that limited, you
+might want to train first by volunteering for something simpler.
+
+Anyway, good luck with your coding. And if your stuck with a problem, don't
+be shy and ask for help on the list, with or without publishing the half-cooked
+patch you're working on.
+
+> Thanks in advance, Alex
+> 
+
+Best,
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 11-Aug-2001 a 20:13:21
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]Entry point of HTML before the renderer
+
+From: DraX <drax@wh...> - 2001-08-12 02:32
+
+I'm pushing my limited C skills to the max and trying to write a patch to
+support gzipped html files using zlib. On to my question, in what file
+does the html file actully get downloaded before it enters the renderer?
+
+Thanks in advance, Alex 
+
+
+
+[Dillo-dev]what a great browser!
+
+From: John Utz <john@ut...> - 2001-08-11 05:43
+
+i just installed 0.6 and i think it is great! thankyoufor all of your hard
+work!
+
+johnu
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]E-mail flood
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-10 14:42
+
+Hi there!
+
+
+Someday it was to happen, and it did. I have an email pile
+that's near a hundred; this is too much to handle properly, so I
+apologize for all the foreseable delays, and worst, for those
+that may remain unanswered.
+
+I started processing it prioritizing the queue. It will be
+slow, but it works.
+
+Please note that this is good news. Bad news would be to sit in
+waiting for someone to get interested.
+
+In the mean time, please try to be very concise in your emails,
+and try to design them so a short answer keeps you going on
+(whenever that's possible).
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Gtk+ 2.0 Port
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-10 14:40
+
+Xavier,
+
+> Hi,
+>
+> I am interested in porting dillo to gtk+ 2.0.
+> What's the status of this task ?
+
+Inexisting, but willing to! :-)
+
+If GTK+-2.0 is the one that will use unicode (UTF-8), then it
+is definitively an step forward. If this is the case, or if the
+port will be equally required for the later, go ahead!
+
+
+Thanks
+Jorge.- 
+
+
+
+Re: [Dillo-dev]I'm back (kind-of)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-10 14:40
+
+Eric,
+
+> - a friend of mine succesfully tested dillo on his SGI O2 running IRIX (after
+> compiling the gtk and the libpng, because the provided package was too old):
+> Jorge, you might want to add that to the plateforms repported to work :-)
+
+Done!
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Re: [PATCH] Add history buttons to back and forward
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-10 14:40
+
+Hi,
+
+On 8 Aug 2001, Olaf Dietsche wrote:
+
+> [History/navigation]
+>
+> So, I see this as two, maybe three, different items:
+> - keeping (global) history information
+> - keeping (local) navigation information
+> - and the user interface to this: history/navigation buttons
+>
+> The second one is already available. I started the third one with my
+> history button patch; which leaves the first item to be done.
+
+Navigation is already provided, global history should be
+accessible with the rightmost mouse button over BACK or FORWARD.
+
+> > I was expecting the final patch from Eric when this one came
+> > in, but AFAIK Eric's is on a busy agenda these days so I think
+> > he'll gladly hand his work to any volunteer. Please email him
+> > before.
+>
+> Does this means, there is already work done for the global history
+> list?
+
+Please ask Eric.
+
+> > As the opportunity arises, I'll advice again not to do silent
+> > patching, that's what the bug-track is for. Fortunately this time
+> > it was an easy one...
+>
+> When I search for "history", I don't find any entry. So, where is the
+> place, I should look for this kind of information?
+
+Right there!
+
+...but there's no entry. That's the problem! :)
+
+(CVS also holds a tag for every commit, and dillo's ChangeLog
+file, within CVS, is also a good place, but the main
+information resource is the BugTrack).
+
+
+Jorge.- 
+
+
+
+Re: [Dillo-dev]segfault on particular page
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-09 18:22
+
+Hi Henry!
+
+Henry House writes:
+> Dillo 0.6.0 crashes when viewing the following page:
+> 
+> Nav_open_url: Url=>http://www.linuxdevices.com/articles/AT8574944925.html<
+
+> [segfault]
+
+Yeah, this is a cache related problem. It appears that the remote
+server is returning that a the `Content-Length` of an image is 0 (I
+think it's an advertisement GIF). And Cache_parse_header wasn't
+expecting a 0 lengthed object.
+
+This following patch "fixes" this situation (by simply checking for
+0 values). And I also replaced the `atol()` to `strtol()`. Sorry
+Jorge, but `atol()` makes me sick :( I have lost hours and hours of
+debugging my programs, only to find that atol is kind of buggy. I
+prefer strtol() a lot more! And I suggest that the all atoi()'s from
+html.c be changed to strtol()'s too. Jorge, if you want I can make a
+patch changing them! Just ask! (And please do! ;-)
+
+Well, the patch is at:
+
+http://www.linux.ime.usp.br/~livio/dillo/cache_bug.diff
+
+best regards to all!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]Color Patch
+
+From: Scott Cooper <scott@ig...> - 2001-08-09 03:17
+
+hey everyone
+
+here's a patch that started out small and got a little bigger but it should be cool in this email.
+
+there is this segfault bug in Colors.c (dillo 0.6.0):
+
+} else if (g_strncasecmp (subtag, "0x", 2) == 0) {
+cp = strchr (subtag, 'x');
+ret_color = strtol(++cp, NULL, 16);
+} else {
+
+a color with a capital X ("0Xff0000", say) bombs it since the strcasecmp lets it through but the strchr returns NULL.
+
+i noticed it only cos i ripped the color table into one of my own projects, but it exposed another issue:
+
+in html, the color "#ff" should be red, but dillo does a strtol on hex colors and hence returns blue. to be correct, any hex color should be padded to the right with zeros to 6 chars. so "#ff7" should be parsed to 0xff7000, not 0xff7.
+
+the patch below is only long 'cos it's more verbose than a strol and lets whitespace on either end of the hex string. you could just use the shift, but i like it loose...a cost of a few more lines of code lets a poorly written web page render ok.
+
+i had a quick scan of the bug list and i couldn't find a reference to this...i don't know if it's that significant since most people use "#ff0000" when writing colours, but it could be responsible for some crazy crashes that don't have any obvious cause.
+
+and anyway, my favourite feature of dillo is its stability so every hole should be plugged.
+
+(this is my first patch, so fingers crossed...)
+
+Scott
+
+scott@indecision:~/src/dillo-0.6.0$ diff ./src/colors.c ./src/colors-new.c
+3a4
+> #include <ctype.h>
+196a198,245
+> * Parse a color in hex
+> * 
+> * Skip leading spaces,
+> * Scan all hex chars, abort on non-hex chars
+> * 
+> * Return Value:
+> * default_color on error, otherwise the right color number.
+> */
+> static gint32 a_Color_parse_hex (char *s, gint32 default_color)
+> {
+> int n;
+> gint32 ret_color;
+> 
+> for (; *s && isspace(*s); s++) {
+> }
+> 
+> for (n = 0, ret_color = 0; n < 6 && *s; n++, s++) {
+> if (*s >= '0' && *s <= '9') {
+> ret_color = (ret_color << 4) + (*s - '0');
+> }
+> else if (*s >= 'a' && *s <= 'f') {
+> ret_color = (ret_color << 4) + (*s - 'a' + 10);
+> }
+> else if (*s >= 'A' && *s <= 'F') {
+> ret_color = (ret_color << 4) + (*s - 'A' + 10);
+> }
+> else if (isspace(*s)) {
+> break;
+> }
+> else {
+> return default_color;
+> }
+> }
+> 
+> if (*s && !isspace(*s)) {
+> /* there are more than 6 chars */
+> return default_color;
+> }
+> 
+> if (n < 6) {
+> /* "0xFF" -> 0xff0000 */
+> ret_color <<= (6 - n) << 2;
+> }
+> 
+> return ret_color;
+> }
+> 
+> /*
+206c255
+< char *cp, *tail;
+---
+> char *cp;
+210c259
+< ret_color = -1;
+---
+> cp = subtag;
+212,232c261,263
+< if ((cp = strchr(subtag, '#')) != NULL) {
+< cp++;
+< ret_color = strtol(cp, NULL, 16);
+< } else if (g_strncasecmp (subtag, "0x", 2) == 0) {
+< cp = strchr (subtag, 'x');
+< ret_color = strtol(++cp, NULL, 16);
+< } else {
+< /* Binary search */
+< low = 0;
+< high = NCOLORS; /* Number of colors */
+< while (low <= high) {
+< mid = (low + high) / 2;
+< if ((ret = g_strcasecmp(subtag, color_keyword[mid].key)) < 0)
+< high = mid - 1;
+< else if (ret > 0)
+< low = mid + 1;
+< else {
+< ret_color = color_keyword[mid].val;
+< break;
+< }
+< }
+---
+> /* skip leading spaces */
+> while (isspace(*cp)) {
+> cp++;
+235,239c266,267
+< if (ret_color == -1 && strlen(subtag) == 6) {
+< DEBUG_HTML_MSG("hexadecimal color codes MUST start with '#'.\n");
+< ret_color = strtol(subtag, &tail, 16);
+< if (ret_color == 0 && tail == subtag)
+< ret_color = -1;
+---
+> if (*cp == '#') {
+> ret_color = a_Color_parse_hex(cp + 1, default_color);
+241,242c269,294
+< if (ret_color < 0 || ret_color > 0xffffff)
+< ret_color = default_color;
+---
+> else if (*cp == '0') {
+> if (cp[1] == 'x' || cp[1] == 'X') {
+> ret_color = a_Color_parse_hex(cp + 2, default_color);
+> }
+> else {
+> ret_color = a_Color_parse_hex(cp, default_color);
+> }
+> }
+> else if (*cp >= '1' && *cp <= '9') {
+> ret_color = a_Color_parse_hex(cp, default_color);
+> }
+> else {
+> /* Binary search */
+> low = 0;
+> high = NCOLORS; /* Number of colors */
+> while (low <= high) {
+> mid = (low + high) / 2;
+> if ((ret = g_strcasecmp(cp, color_keyword[mid].key)) < 0)
+> high = mid - 1;
+> else if (ret > 0)
+> low = mid + 1;
+> else {
+> ret_color = color_keyword[mid].val;
+> break;
+> }
+> }
+243a296,300
+> if (low > high) {
+> ret_color = a_Color_parse_hex(cp, default_color);
+> }
+> }
+> 
+
+
+
+Re: [Dillo-dev]Attribute Parsing
+
+From: Sam Dennis <sam@ma...> - 2001-08-08 21:15
+
+On Tue, Aug 07, 2001 at 06:43:41PM +0200, Sebastian Geerken wrote:
+> Hi.
+> 
+> Most of you will remember the discussion on how to parse the HREF
+> attribute of the <a> tag. This is a similar problem: in
+> 
+> http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/
+> 
+> you'll find something like
+> 
+> <table width="100&#37;">
+> 
+> Dillo reads this as "100" (pixels) and complains about the garbage at
+> the end. I'm not an SGML expert, so I thought to post this to the
+> list. Have attributes to be be parsed generally, or is this page
+> invalid?
+> 
+> Sebastian
+
+The page is right, we're wrong. I think I suggested that attributes be parsed
+inside all tags at the time, but I may be mistaken.
+
+Anyway, this is definitely what the specifications say. 
+
+
+
+[Dillo-dev]I'm back (kind-of)
+
+From: Eric GAUDET <egaudet@in...> - 2001-08-08 18:21
+
+Hi all,
+I've been very quiet lately, but I'm still around and still willing to work on
+dillo. That means the bug-track entries I've been voluntreering for are still
+on my list and I'll hopefully find some time soon to finish them all. But you
+know what it is: new job, new country, ... a baby ... I've been quite busy ;-)
+
+Anyway, here's what I wanted to say:
+
+- Sebastian: awesome job you did with the tables !!! If you want to send me your
+html test pages, I'll add them to the test suite right away.
+I also wanted to remind everyone that you can send me the pages you built, or
+you found, that are relevant for testing dillo, so I can integrate them in the
+testing suite. This is especially true if you do a bug repport that asks to
+"build such a page": build the damn page so everyone can test it!
+
+- a friend of mine succesfully tested dillo on his SGI O2 running IRIX (after
+compiling the gtk and the libpng, because the provided package was too old):
+Jorge, you might want to add that to the plateforms repported to work :-)
+
+Best,
+----------------------------------
+Eric GAUDET <egaudet@in...>
+Date: 08-Aug-2001 Time: 11:03:20
+Constants other than 0 and 1 are
+referred to as "magic numbers". 
+---------------------------------- 
+
+
+
+[Dillo-dev]Re: [PATCH] Add history buttons to back and forward
+
+From: Olaf Dietsche <olaf.dietsche@gm...> - 2001-08-08 15:32
+
+Hi Jorge,
+
+Jorge Arellano Cid <jcid@ne...> writes:
+
+> Some time ago I received a very similar patch from Eric. We
+> started a long thread discussion about the issue, and finally
+> agreed it into a design. I'll comment, cut&paste and join the
+> relevant parts in the hope it becomes clear from there.
+
+Well, maybe. I try to restate, as I understand it. What you're talking
+about, is keeping (global) history information per se; I just added
+history (navigation in your parlance) _buttons_ and used the history
+(navigation) information available.
+
+So, I see this as two, maybe three, different items:
+- keeping (global) history information
+- keeping (local) navigation information
+- and the user interface to this: history/navigation buttons
+
+The second one is already available. I started the third one with my
+history button patch; which leaves the first item to be done.
+
+> I was expecting the final patch from Eric when this one came
+> in, but AFAIK Eric's is on a busy agenda these days so I think
+> he'll gladly hand his work to any volunteer. Please email him
+> before.
+
+Does this means, there is already work done for the global history
+list? If this is the case, the easiest would be, to integrate it into
+CVS and extend the history buttons.
+
+> As the opportunity arises, I'll advice again not to do silent
+> patching, that's what the bug-track is for. Fortunately this time
+> it was an easy one...
+
+When I search for "history", I don't find any entry. So, where is the
+place, I should look for this kind of information?
+
+> PD2: On the other hand, simple questions are easy to answer, so
+> don't be shy!
+
+I suppose, sending patches qualifies as not being shy :-).
+
+Regards, Olaf. 
+
+
+
+[Dillo-dev]segfault on particular page
+
+From: Henry House <hajhouse@ho...> - 2001-08-08 05:15
+
+Attachments: Message as HTML      
+
+Dillo 0.6.0 crashes when viewing the following page:
+
+Nav_open_url: Url=3D>http://www.linuxdevices.com/articles/AT8574944925.html<
+Dns_server: http://www.linuxdevices.com is 800b2da3
+Dns_server: ads.zdnet.com is cdb57072
+Dns_server: gserv.zdnet.com is cdb5704a
+[segfault]
+
+I am using libc5 version 2.2.3.
+
+--=20
+Henry House
+OpenPGP key available from http://romana.hajhouse.org/hajhouse.asc 
+
+
+
+[Dillo-dev]Internationalization & Localization
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-08 01:42
+
+Hi,
+
+
+There's an updated [project notes] with the current position on
+i18n & l10n. There's also a new link to a japanese support patch.
+
+hope this helps.
+Jorge.- 
+
+
+
+Re: [Dillo-dev][PATCH] Add history buttons to back and forward
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-07 23:56
+
+Olaf, Eric, Sebastian, et all!
+
+
+On 6 Aug 2001, Olaf Dietsche wrote:
+
+> Hi,
+>
+> first of all, thanks for starting this great project.
+> Here is a patch on top of cvs, which adds history buttons to the
+> toolbar.
+
+
+Some time ago I received a very similar patch from Eric. We
+started a long thread discussion about the issue, and finally
+agreed it into a design. I'll comment, cut&paste and join the
+relevant parts in the hope it becomes clear from there.
+
+I was expecting the final patch from Eric when this one came
+in, but AFAIK Eric's is on a busy agenda these days so I think
+he'll gladly hand his work to any volunteer. Please email him
+before.
+
+As the opportunity arises, I'll advice again not to do silent
+patching, that's what the bug-track is for. Fortunately this time
+it was an easy one...
+
+----------------------------------------------------------------
+SPECS (add some salt to this collage :):
+
+>>
+The way to trigger the FWD and BCK history is with the
+rightmost mouse button (just as with our context sensitive menus)
+
+>>
+I've been thinking of it, and testing, and found that it'd be
+excellent not to lose the whole history information. I mean,
+since we're using the navigation stack, if I go to a page near
+the beginning and click on a _new_ link of it, the rest of the
+navigation stack will be lost (forward history). So, maybe
+keeping an stack-independent ordered-list (ideally an ordered
+hash) of every single visited-root-URL can do the trick, and
+we'll never have to worry again about loosing stack info. That
+way, we could have access to any previously visited URL without
+worrying about the stack.
+
+A skim through the code shows Nav_open_url as a good place for
+inserting the new URL into the hash...
+
+>>
+
+> I'm not sure I'm following you: you mean the "history" list
+> should not be the navigation stack, but an independant list of
+> all the visited url?
+
+Yes!
+(ideally an ordered hash in where to append new URLs)
+
+> This list
+> should show when the back button is pushed with the 3rd
+> mousebutton, right ?
+> What about the forward button, then ?
+
+If we keep the list ordered, the relative position of current
+URL can be found within it. That position defines what is back
+and what is forward!
+
+Note that the navigation stack remains untouched.
+
+> Don't you want a "about:history" instead ?
+
+I had been thinking of that before your patch!, but after
+playing a while with your scheme, I liked it more!
+
+>>
+
+> Ok. It's not very clear for me how we can manage to keep an
+> "order" in pages
+> being visited, backward and forward and clicking on new links:
+> nothing linear here, obviously.
+
+URLs are appended to the list as they get visited. i.e. every
+new URL is appended. If you go back, let's say to the midddle of
+the "history", and click on a new link, it is equally appended to
+the END of the list, thus defining a list that's ordered by
+order-of-visit. On the other hand, if you follow already visited
+links, they're NOT appended because they're already in the list.
+
+(And as with the navigation stack, only RootUrls count).
+
+
+> [some other ideas were discussed]
+> [a few more]
+> [and finally...]
+
+
+It's interesting indeed, but I'd prefer to first implement the
+simple scheme I described above, play with it, get a feel of it,
+and then decide whether to improve it or not and how.
+
+
+> Ok, last question: what if I open a new window on a link ? Do I
+> keep the "forward history" (1 big history for all windows), or
+> do I keep only the back history (history per window, spawned
+> when opening a link in a new window) ?
+
+1 big history for all windows!
+
+That way, the user can always count on back and forward history
+to help him find where a lost visited-site has gone. And normal
+back and forward will aid him with the latest sites.
+
+I'll be looking forward to see it working!
+
+
+-----------------------------------------------------------------
+
+
+Cheers
+Jorge.-
+
+
+
+PD: As you may notice, there's a lot of work going behind the
+scenes, so please allow some time to our busy developers in
+answering your emails.
+
+PD2: On the other hand, simple questions are easy to answer, so
+don't be shy! 
+
+
+
+[Dillo-dev]Attribute Parsing
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-07 16:45
+
+Hi.
+
+Most of you will remember the discussion on how to parse the HREF
+attribute of the <a> tag. This is a similar problem: in
+
+http://cvs.so....net/cgi-bin/viewcvs.cgi/dillo/
+
+you'll find something like
+
+<table width="100&#37;">
+
+Dillo reads this as "100" (pixels) and complains about the garbage at
+the end. I'm not an SGML expert, so I thought to post this to the
+list. Have attributes to be be parsed generally, or is this page
+invalid?
+
+Sebastian 
+
+
+
+Re: [Dillo-dev][PATCH] Add history buttons to back and forward
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-07 13:47
+
+Attachments: history2.diff      
+
+On Mon, Aug 06, 2001 at 09:14:00PM +0200, Olaf Dietsche wrote:
+> Hi,
+> 
+> first of all, thanks for starting this great project.
+> Here is a patch on top of cvs, which adds history buttons to the
+> toolbar.
+> 
+> Does anybody know, how I can set the width of these buttons? They are
+> as wide as every other button and I would like to make them smaller.
+
+One way is to add them as widgets, as in the patch I've appended. To
+be applied after Olaf's patch.
+
+Sebastian 
+
+
+
+[Dillo-dev][PATCH] Add history buttons to back and forward
+
+From: Olaf Dietsche <olaf.dillo@ex...> - 2001-08-06 19:14
+
+Attachments: Message as HTML      dillo-history.patch      
+
+
+
+
+
+Re: [Dillo-dev]Memory Leakage
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-06 02:29
+
+Hello Aaron!
+
+Aaron Lehmann writes:
+> As I browse the web with dillo, the memory usage consistantly goes up.
+> Is it caching every page that it sees, or is there a memory leak? Can
+> the amount of memory cache to use be controlled? I've only run it up
+> to 5.55MB, but I assume it will keep growing.
+
+The problem your seeing is that dillo _does_ cache every page (and
+image) you download. That's probably why your feeling that it leaks. A
+while ago, we've made efforts to get rid of the leaks in dillo. Even
+though I think it leaks very little memory, it still leaks a bit (you
+can experiment and keep doing Back and Forward between two pages
+various times, and keep looking at dillo's memory usage).
+
+But the problem your talking about is sort of registered as bug
+#159 at
+http://dillo.so....net/cgi-bin/bugtrack/Dillo_query.cgi?what=all&Submit=Find+It!
+
+And about hard disk cache, I think it's pretty much covered in
+`CACHE PHILOSOPHY` in dillo/doc/Cache.txt
+
+
+best regards!
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]Find Text
+
+From: Eric GAUDET <egaudet@in...> - 2001-08-06 01:57
+
+-- En reponse de "Re: [Dillo-dev]Find Text" de Aaron Lehmann, le 06-Aug-2001 :
+> On Tue, Jul 24, 2001 at 10:48:11AM -0400, Jorge Arellano Cid wrote:
+>> I've started implementing "find text".
+> 
+> The Find Text that's in CVS does a perfect job of finding text. The
+> only problem is that it doesn't show it to the user by highlighting
+> it! I assume you know about this. I can't wait until it does highlight
+> the text, because once that happens it will be easier to allow the
+> user to select text for copying.
+> 
+> Are you looking for assistance with this feature?
+> 
+
+I'd be interested in a simple way to highlight text: I've implemented the select
+and copy mecanism (see bug-track), but I don't have time to do the highlighting
+selection. If you can provide a patch that highlight the text found, make sure
+it can be reused and send it to me.
+
+Best,
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 05-Aug-2001 a 18:52:58
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]Memory Leakage
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-08-06 01:43
+
+As I browse the web with dillo, the memory usage consistantly goes up.
+Is it caching every page that it sees, or is there a memory leak? Can
+the amount of memory cache to use be controlled? I've only run it up
+to 5.55MB, but I assume it will keep growing. 
+
+
+
+Re: [Dillo-dev]Find Text
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-08-06 01:36
+
+On Tue, Jul 24, 2001 at 10:48:11AM -0400, Jorge Arellano Cid wrote:
+> I've started implementing "find text".
+
+The Find Text that's in CVS does a perfect job of finding text. The
+only problem is that it doesn't show it to the user by highlighting
+it! I assume you know about this. I can't wait until it does highlight
+the text, because once that happens it will be easier to allow the
+user to select text for copying.
+
+Are you looking for assistance with this feature? 
+
+
+
+[Dillo-dev]Assorted dillo issues
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-08-06 01:32
+
+1) I went to "view bookmarks", then bookmarked something, then looked at my
+bookmark page again through "view bookmarks". I needed to reload to
+get the new bookmark. This shouldn't be hard to fix.
+
+2) Some pages like http://www.shared-source.com have a <?xml version="1.0"?>.
+It appears in the body under dillo. What does the XHTML spec say about
+this? 
+
+
+
+Re: [Dillo-dev]0.6.0 release
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-03 14:55
+
+Hi Raphael!
+
+Mondesir, Raphael writes:
+> Hi All,
+> 
+> Dillo truly is a great product.
+
+I think so too! :-)
+
+> One thing that I noticed when using Dillo 0.6.0 is that the FTP download
+> function does not seem to be working. Is this intentional or are there plans
+> to incorporate this into the program?
+
+Well, it's intentional _and_ there are plans to incorporate this
+into Dillo. This has been a long TODO feature that has been delayed
+specially because of this was intended to be included as a Dillo
+Plugin. Ask Jorge about this if you're interested in helping out.
+First take a look at:
+http://dillo.so....net/Notes.txt [Plugins section]
+
+And most importantly:
+http://dillo.so....net/dpi1.txt
+
+good luck!
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]0.6.0 release
+
+From: Mondesir, Raphael <raphael.mondesir@tf...> - 2001-08-03 14:19
+
+Hi All,
+
+Dillo truly is a great product.
+
+One thing that I noticed when using Dillo 0.6.0 is that the FTP download
+function does not seem to be working. Is this intentional or are there plans
+to incorporate this into the program?
+
+Thanks,
+Raphael
+
+-----Original Message-----
+From: Sam Dennis [mailto:sam@ma...]
+Sent: Thursday, August 02, 2001 9:42 PM
+To: dillo-dev@li...
+Subject: Re: [Dillo-dev]0.6.0 release
+
+
+On Wed, Aug 01, 2001 at 04:14:08AM -0300, Livio Baldini Soares wrote:
+> Hi!
+> 
+> Jorge Arellano Cid writes:
+> 
+> (...)
+> > 
+> > dillo-0.6.0 has just been released!!!!
+> 
+> Wow! Great stuff! This thing just gets better and better. I
+> specially like the new tables... I've rolled around the Internet and
+> found that the tables are working alright. There are still some
+> glitches here and there (see the background in happypenguin.org, and
+> the missing gray border that should surround the main page in
+> http://www.so....net), but there are very usable!
+> 
+> Any chance of getting frames done too? :)
+
+I am working on this, honestly. The code's just not quite ready yet :)
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+http://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+[Dillo-dev]Gtk+ 2.0 Port
+
+From: xavier ordoquy <xordoquy@au...> - 2001-08-03 10:06
+
+Hi,
+
+I am interested in porting dillo to gtk+ 2.0.
+What's the status of this task ?
+
+Regards.
+
+--
+Xavier Ordoquy, Aurora-linux
+If NT is the answer, you didn't understand the question.
+Complexity has nothing to do with intelligence. Simplicity does.
+(Larry Bossidy, CEO, Allied Signal) 
+
+
+
+Re: [Dillo-dev]0.6.0 release
+
+From: Sam Dennis <sam@ma...> - 2001-08-03 01:32
+
+On Wed, Aug 01, 2001 at 04:14:08AM -0300, Livio Baldini Soares wrote:
+> Hi!
+> 
+> Jorge Arellano Cid writes:
+> 
+> (...)
+> > 
+> > dillo-0.6.0 has just been released!!!!
+> 
+> Wow! Great stuff! This thing just gets better and better. I
+> specially like the new tables... I've rolled around the Internet and
+> found that the tables are working alright. There are still some
+> glitches here and there (see the background in happypenguin.org, and
+> the missing gray border that should surround the main page in
+> http://www.so....net), but there are very usable!
+> 
+> Any chance of getting frames done too? :)
+
+I am working on this, honestly. The code's just not quite ready yet :) 
+
+
+
+Re: [Dillo-dev]0.6.0 release
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-01 16:39
+
+On Wed, Aug 01, 2001 at 04:14:08AM -0300, Livio Baldini Soares wrote:
+> Hi!
+> 
+> Jorge Arellano Cid writes:
+> 
+> (...)
+> > 
+> > dillo-0.6.0 has just been released!!!!
+> 
+> Wow! Great stuff! This thing just gets better and better. I
+> specially like the new tables... I've rolled around the Internet and
+> found that the tables are working alright. There are still some
+> glitches here and there (see the background in happypenguin.org, and
+> the missing gray border that should surround the main page in
+> http://www.so....net), but there are very usable!
+
+happypenguin.org contains somewhere "<tr bgcolor=...>", this should be
+simple to implement, and is already registered in the bug-track. (I
+must admit that I had not noticed it in the spec, and thought that it
+is a non-standard extension ;-)
+
+http://www.so....net uses background *images* for this effect, I have
+had some ideas how to implement this, and will sent them later to the
+list.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]word wrapping / page width
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-08-01 16:16
+
+On Wed, Aug 01, 2001 at 05:34:28PM +0200, Ulrich Schwarz wrote:
+> Hi,
+> 
+> since a month or so, the cvs version (including the latest 0.6 release) of
+> dillo doesn't wrap the text on http://futurezone.orf.at but instead
+> extends the page width to the longest text paragraph of that page so
+> that no word wrapping is done and each text paragraph is displayed in
+> a single (extremely long) text line.
+> 
+> Is this due to buggy html code on that page or due to a suboptimal
+> page width calculation of dillo?
+
+I've looked at the page, and found
+
+<TD WIDTH="380" ROWSPAN="2" NOWRAP>
+
+nearly directly before the text. I'm not quite sure about the
+specification (or if it is even clear in this case), but at least,
+this is quite ambiguous. Dillo's current behavior is to use WIDTH
+attributes only as hints; if the cell is wider (in this case due to
+the NOWRAP argument), it is (more or less) ignored,
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]Delayed release
+
+From: Ulrich Schwarz <uschwarz@gm...> - 2001-08-01 15:40
+
+Hi,
+
+On Sat, Jul 14, 2001 at 09:15:51AM -0400, Jorge Arellano Cid wrote:
+
+> Has anyone reproduced BUG#166?
+
+It has turned out that this bug on my system was not caused
+by dillo but by KDE installing a broken ~/.gtkrc ("Apply fonts and
+colors to non-KDE apps" in KControl)
+
+So long.
+Ulrich 
+
+
+
+[Dillo-dev]word wrapping / page width
+
+From: Ulrich Schwarz <uschwarz@gm...> - 2001-08-01 15:40
+
+Hi,
+
+since a month or so, the cvs version (including the latest 0.6 release) of
+dillo doesn't wrap the text on http://futurezone.orf.at but instead
+extends the page width to the longest text paragraph of that page so
+that no word wrapping is done and each text paragraph is displayed in
+a single (extremely long) text line.
+
+Is this due to buggy html code on that page or due to a suboptimal
+page width calculation of dillo?
+
+
+So long.
+Ulrich 
+
+
+
+Re: [Dillo-dev]0.6.0 release
+
+From: xavier ordoquy <xordoquy@au...> - 2001-08-01 10:16
+
+On 01 Aug 2001 04:14:08 -0300, Livio Baldini Soares wrote:
+> Wow! Great stuff! This thing just gets better and better. I
+> specially like the new tables... I've rolled around the Internet and
+> found that the tables are working alright. There are still some
+> glitches here and there (see the background in happypenguin.org, and
+> the missing gray border that should surround the main page in
+> http://www.so....net), but there are very usable!
+> 
+> Any chance of getting frames done too? :)
+>
+I had here my greetings to the dillo team.
+This just rocks and shows that it is possible to have a nice
+browser times lighter than what the others provides.
+Good luck and keep on going with the same quality.
+Dillo will just be THE browser to use around :)
+
+--
+Xavier Ordoquy, Aurora-linux
+If NT is the answer, you didn't understand the question.
+Complexity has nothing to do with intelligence. Simplicity does.
+(Larry Bossidy, CEO, Allied Signal) 
+
+
+
+[Dillo-dev][PATCH] Recording current scrolling position
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-01 08:35
+
+Hi guys!
+
+Browsing around with Dillo, something started to irritate me.. the
+fact that the `Back` and `Forward` buttons always place you at the
+_top_ of the page, instead of the location you scrolled to when last
+visiting that URL.
+
+And since Jorge and I had planned the scrolling_position in the
+DilloUrl exactly for this, I thought I give it a try...
+
+The patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/save_scrolling_position.diff
+
+It basically does 3 things:
+
+[1] Add a a_Dw_gtk_scrolled_window_get_scrolling_position() method in
+the dw_scrolled_window.[ch] module. I thought this was better than
+having to access the vadjustment fields for the value explicitly.
+
+[2] Saves the current scrolling position of the current viewed page
+(using the method explained above). I had to triplicate the code in
+Nav_url_open(), a_Nav_back() and a_Nav_forw(), because in the last 2
+cases it is difficult to determine which is the `old_url`, and would
+require some ugly special-case code (I might be wrong, but I couldn't
+come up with a better/cleaner solution).
+
+[3] Loads the current scrolling position of the chosen URL if
+available (this is done in web.c). Why is this checked before the
+anchor? Well because if you go to a anchored URL, but move the
+position of the page, you don't want the page to go to the anchor
+anymore, but prefer the page's last position. In the case that the
+user hasn't changed the page position (therefore matching the anchor),
+we then avoid a seek of the anchor inside the page, and avoid having
+to calculate the adjustment... it has been already calculated, and
+should be the value of url->scrolling_position.
+
+The patch is small and im my opinion improves navigation in Dillo.
+If there are no comments and/or critics, Jorge feel free to apply the
+patch!
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]0.6.0 release
+
+From: Livio Baldini Soares <livio@li...> - 2001-08-01 07:14
+
+Hi!
+
+Jorge Arellano Cid writes:
+
+(...)
+> 
+> dillo-0.6.0 has just been released!!!!
+
+Wow! Great stuff! This thing just gets better and better. I
+specially like the new tables... I've rolled around the Internet and
+found that the tables are working alright. There are still some
+glitches here and there (see the background in happypenguin.org, and
+the missing gray border that should surround the main page in
+http://www.so....net), but there are very usable!
+
+Any chance of getting frames done too? :)
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]0.6.0 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-08-01 01:07
+
+Ladies and gentleman:
+
+...
+
+The wait is over...
+
+
+dillo-0.6.0 has just been released!!!!
+
+
+
+Jorge.- 
+

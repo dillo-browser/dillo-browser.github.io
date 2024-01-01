@@ -1,0 +1,4676 @@
+[Dillo-dev]dillo-0.6.6 success
+
+From: Bjoern Weber <foxbow@we...> - 2002-05-31 07:39
+
+Heyas,
+
+and again an information that nobody really needs =)
+dillo-0.6.6 compiled instantly on my QNX6.1 host. I'm
+looking to see if I can create a PPC version as well and
+wonder if anyone would be interested in a .qpk that 
+installs dillo together with all needed libs...
+
+Ah, one issue remains, configure thinks that QNX
+needs the -pthread flag, that's not the case. The compiler
+complains about an unknown option but everything runs
+fine.
+
+Wish me luck on my NetBSD/Sparc =)
+
+Bjoern 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-05-31 01:31
+
+On Thu, May 30, 2002 at 09:27:48PM +0100, Freya wrote:
+> gtk 2.0 for a much more practical reason tho. It seems like there is a
+> lot of great code and patches around based on the current code base and
+> it would seem like it would be more sensible to apply all this code to
+> the current codebase and get a new version out fairly quickly than to
+> delay things for gtk2. This would also give a lot longer for gtk 2 to
+> find it's way out there and for people to be able to see how it goes and
+> learn from that. I assume that nobody is suggesting gtk2 for the next
+> version anyway tho.
+
+
+There's a standard answer to this sort of problem: branch the code. I
+agree that gtk2.0 is probably the ay to go in the future (all the linux
+ipaq developers have started having this conversation, as well) but it
+will be some time. If someone wantsto start that work, I think it should
+probably be in a fork or branch.
+
+Ross 
+
+
+
+[Dillo-dev][PATCH] Font Faces
+
+From: Livio Baldini Soares <livio@im...> - 2002-05-31 00:34
+
+Hello Sebastian!
+
+Sebastian Geerken writes:
+> On Tue, Apr 30, 2002 at 05:49:26PM -0500, Chris Hawks wrote:
+> > Just a question for a new (and very impressed) user...
+> > 
+> > 
+> > Why is the font face code commented out in html.c (about line 1720). I
+> > un-commented it and it seems to work correctly...
+> 
+> I fear that was me who did this. I planned to add an "force_my_faces"
+> option immediately to overide this, that should be done before
+> uncommenting the code.
+
+Ahhh, I think this is a very interesting option.
+
+Sorry if I'm stepping on your toes Sebastian ;-), but here is a
+patch which adds force_my_fonts option to dillorc:
+
+http://www.ime.usp.br/~livio/dillo/patches/force_my_font_pref.diff
+
+Personally I leave force_my_fonts=NO, to visualiaze the original's
+HTML font intention, but to Dillo consistent with what it is today,
+the default option is YES. (This means you'll no difference unless you
+explicitly change your "dillorc").
+
+Any comments? 
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Greyscale .jpg's
+
+From: Freya <Freya@he...> - 2002-05-30 20:55
+
+Something I've been wondering for some time is whether it would be
+possible to render .jpg's with a greyscale palette? I was originally
+wondering this because I thought my nasty old laptop was only capable of
+16 colours, turns out it can do 256! This is very nice as I can really
+see what photos look like! :) However, if you render a photo in 16
+greyscales then you can still very much see the photo, really quite well
+in fact, and if I could use 256 greyscales (which my laptop does yay!)
+then photos would just look like black and white photos with no
+artifacts as such at all! (If you've seen a jpg in 256 colours, you can
+see that there is only 256 colours it still looks wrong. It looks good,
+but just that little bit not there!)
+
+My display is only mono anyway I should explain, or you might wonder! ;)
+
+Anyway, just how impossible would this be?
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]dillo-0.6.6 release
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-30 20:50
+
+Surprise!
+
+
+I just packed out dillo-0.6.6, it's there ready for download.
+Tomorrow I'll make the announcements urbi et orbi.
+
+Go get it!
+
+
+Cheers
+Jorge.-
+
+
+PS: Ah, for those new to this list, please read the mailing list
+etiquette before posting (unfortunately it's obvious some
+haven't). 
+
+
+
+[Dillo-dev]GTK+2.0
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-30 20:50
+
+Hi there,
+
+Brief explanation before this becomes a debate:
+
+GTK+2.0 is very important to dillo because of the reasons
+explained in the "Project Notes". The hard part of the porting
+task is the core, not on the UI. I fully agree with Andreas on
+waiting until it is available in the big distros, and with
+Sebastian on making it at once.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Daniel Fairhead <ralphtheraccoon@uk...> - 2002-05-30 20:47
+
+> But why would you want to port it to gtk2?
+> What advantage does that bring?
+
+a) AntiAliased text. I know a lot of people will object, raise all the "argh blurry text" arguments
+but I dont care. Besides, you can turn it off. I also know about gtkxft, but it was buggy when I tried
+it, and many other people have said the same.
+
+b) Characterset GTK fixes.
+
+c) A working fast browser in GTK2 (and so GNOME2) which might possibly bring it to a larger viewage.
+
+d) I dont know, but I think GTK2 is easy to port (if not crossplatform directly) to other display systems
+(such as Wind*ws, OSX) and also to the framebuffer system, which could be useful for an embedded
+enviroment which may not have an X server. I dont know if dillo already does this though.
+
+e) Finding bugs in (non GTK) code which didn't get noticed due to GTK being friendlier than it perhaps
+should
+
+f) The developpers who port it get some experience at porting GTK apps, and writing GTK2 code.
+
+g) For those who have this itch, it is scratched.
+
+h) To prove it can be done.
+
+i) Fun (for those who enjoy such things).
+
+Theres a few reasons. 
+
+MadProf 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Freya <Freya@ga...> - 2002-05-30 20:41
+
+On Thu, 30 May 2002 18:22:13 +0200 (MET DST)
+Lawrence Mayer dsg <Lawrence.Mayer@ds...> wrote:
+
+> On Thu, 30 May 2002, Freya wrote:
+> 
+> > But why would you want to port it to gtk2?
+> > What advantage does that bring?
+> 
+> According to http://developer.gnome.org/dotplan/schedule/
+> Gnome 2.0 Desktop Final (which uses GTK+-2.0) is scheduled for release
+> on June 21.
+> 
+> How many Linux distros released after June 21 will keep obsolete,
+> unsupported GTK+-1.2 around? And for how long?
+
+No idea, but it must be said that my debian testing doesn't even have
+the new dillo yet and that's been out ages now! My guess is gtk 1.2 will
+be around for ages too, I think my distro still includes libc5?
+
+> So if Dillo doesn't port over to GTK+-2.0, how will it survive?
+
+Well that answers the first of my two questions, but to be honest I was
+more wondering about the second question, I kind of added the first
+question without thinking about it because I thought there was something
+that people really wanted that was in gtk 2, and they were excited about
+it! :) Maybe a silly assumption on my part. Anyway there surely is an
+advantage to gtk2, I mean this isn't microsoft world where the advantage
+is all for microsoft IYSWIM ;)
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Freya <Freya@he...> - 2002-05-30 20:40
+
+> > > 
+> > > Lawrence.Mayer@ds... writes:
+> > > > If Dillo needs GTK+-1.2, are there any plans to make a GTK+-2.0
+> > > > version? If so, any idea when it might become available?
+> 
+> 
+> > Availibility on distributions is indeed a problem, since this
+> > affects how easily dillo can be installed.
+> 
+> 
+> Just one thought on that one : dillo is popular on low end machines.
+> If I would have to go through a major pain to upgrade gtk just
+> to get dillo running I would think twice. Now, I don't know how
+> much more resource hungry gtk2 compared to gtk1.2 is. But either
+> way, an upgrade on a low end machine may be painful.
+
+This would affect me of course running in 8mb! lol! 
+I think I could upgrade fairly easily to gtk 2 as soon as it made it's
+way to debian testing, although I suspect that will be a long time from
+now going on past things. The resource hungryness is obviously a big
+issue tho, although I heard some rumblings that people found gtk2 wasn't
+that bad but none of these people were working with low end machines. 
+I think it would be kind of crazy for the next release of dillo to be
+gtk 2.0 for a much more practical reason tho. It seems like there is a
+lot of great code and patches around based on the current code base and
+it would seem like it would be more sensible to apply all this code to
+the current codebase and get a new version out fairly quickly than to
+delay things for gtk2. This would also give a lot longer for gtk 2 to
+find it's way out there and for people to be able to see how it goes and
+learn from that. I assume that nobody is suggesting gtk2 for the next
+version anyway tho.
+
+Quite curious about it and still kind of mystified as to what the whole
+gtk 2 thing is all about! :)
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]Having trouble compiling dillo...
+
+From: Freya <Freya@he...> - 2002-05-30 20:20
+
+Attachments: config.log      
+
+...I should point out that I'm sure this is because I don't have a clue
+what I'm doing! But Perhaps someone with some more experience can help
+me here!
+
+I think the problem I am having is that either I need to download the
+source or header files or something for working with gtk (anyone suggest
+the debian packages I need) or that some pointers or symbolic links or
+something need to be set up so that configure and make know where to
+find everything. I have attached my config.log to give and idea of what
+is going on. It seems to think that I won't be needing .jpg support!
+lol!
+
+I've tried doing a make as well but that just fails completely.
+Also if I do a make install, will this overwrite my existing dillo?
+I'd rather just install a debian package yet but as far as I know it's
+still the old version in testing and I want to know if I can compile
+things as I need to compile something else and that isn't playing at
+all!
+
+Can you run an old and new dillo side by side?
+
+Lots of questions! :)
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Pekka Lampila <medar@ka...> - 2002-05-30 16:41
+
+Hi.
+
+On Thu, 30 May 2002 10:42:44 -0400
+Andreas Schweitzer <andy@ph...> wrote:
+> Just one thought on that one : dillo is popular on low end machines.
+> If I would have to go through a major pain to upgrade gtk just
+> to get dillo running I would think twice. Now, I don't know how
+> much more resource hungry gtk2 compared to gtk1.2 is. But either
+> way, an upgrade on a low end machine may be painful.
+
+I don't know how much gtk based software there is for low end machines,
+but most of gtk software has been or are currently being ported to 2.0.
+So we may soon come to point where the question is whether to keep
+gtk1.2 around just for Dillo...
+
+Don't have any facts about gtk2.0's resource hungryness, but just
+because it has bigger version number doesn't mean it's worse in that
+respect. I quess it can be even faster than gtk1.2 in many ways. 
+
+> Also, I think it hurts a project to always use the latest
+> cool, on-the-edge libraries out there because hardly any
+> distro has the latest, on-the-edge versions included. When
+> I see a project, think it's cool, and start reading in the
+> requirements that I need lib-o-so-cool lib-o-so-new I start
+> thinking if it is really worth it.
+
+gtk1.3 (the development branch) was cool, new, on-the-edge library, but
+2.0 is stable successor for 1.2, fixing many bugs and adding some needed
+features. (Characterset handling being perhaps the most important for
+Dillo.)
+
+> Of course, dillo is the coolest thing ever ;-) and theoretically
+> only for developers (although there are probably far more end users
+> than anticipated at this point), therefore, you can expect more flexibility
+> from its audience.
+
+Agreed :)
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Lawrence Mayer dsg <Lawrence.Mayer@ds...> - 2002-05-30 16:26
+
+On Thu, 30 May 2002, Freya wrote:
+
+> But why would you want to port it to gtk2?
+> What advantage does that bring?
+
+According to http://developer.gnome.org/dotplan/schedule/
+Gnome 2.0 Desktop Final (which uses GTK+-2.0) is scheduled for release on
+June 21.
+
+How many Linux distros released after June 21 will keep obsolete,
+unsupported GTK+-1.2 around? And for how long?
+
+So if Dillo doesn't port over to GTK+-2.0, how will it survive?
+
+Friendly Greetings,
+Lawrence 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-30 14:42
+
+Hi
+
+On Wed, May 29, 2002 at 04:50:56PM +0200, Sebastian Geerken wrote:
+> On Thu, May 23, 2002 at 08:27:59AM -0300, Livio Baldini Soares wrote:
+> > Hello Lawrence!
+> > 
+> > Lawrence.Mayer@ds... writes:
+> > > If Dillo needs GTK+-1.2, are there any plans to make a GTK+-2.0 version? If
+> > > so, any idea when it might become available?
+
+
+> Availibility on distributions is indeed a problem, since this affects
+> how easily dillo can be installed.
+
+
+Just one thought on that one : dillo is popular on low end machines.
+If I would have to go through a major pain to upgrade gtk just
+to get dillo running I would think twice. Now, I don't know how
+much more resource hungry gtk2 compared to gtk1.2 is. But either
+way, an upgrade on a low end machine may be painful.
+
+Also, I think it hurts a project to always use the latest
+cool, on-the-edge libraries out there because hardly any
+distro has the latest, on-the-edge versions included. When
+I see a project, think it's cool, and start reading in the
+requirements that I need lib-o-so-cool lib-o-so-new I start
+thinking if it is really worth it.
+
+Of course, dillo is the coolest thing ever ;-) and theoretically
+only for developers (although there are probably far more end users
+than anticipated at this point), therefore, you can expect more flexibility
+from its audience.
+
+Just my 2 cents.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Freya <Freya@he...> - 2002-05-30 12:44
+
+But why would you want to port it to gtk2?
+What advantage does that bring?
+
+love
+
+Freya
+
+On Wed, 29 May 2002 23:49:16 +0200 (MET DST)
+Lawrence Mayer dsg <Lawrence.Mayer@ds...> wrote:
+
+> Hi Sebastian!
+> 
+> On Wed, 29 May 2002, Sebastian Geerken wrote:
+> 
+> > I read the porting guidelines (somewhere at gtk.org)
+> 
+> The GNOME 2.0 porting guide
+> http://developer.gnome.org/dotplan/porting/
+> "has some more detailed discussion of porting from GTK+-1.2 to -2.0.
+> See the sections on GLib and GTK+."
+> 
+> Here are some additional resources:
+> 
+> The GTK+-2 Reference Manual is at
+> http://developer.gnome.org/doc/API/2.0/gtk/index.html
+> 
+> Of particular note is the section "Changes from 1.2 to 2.0"
+> http://developer.gnome.org/doc/API/2.0/gtk/gtk-changes-2-0.html
+> 
+> The mailing list
+> http://mail.gnome.org/archives/gtk-app-devel-list
+> "is oriented toward developing applications with GTK+. This has been a
+> lower traffic list which is good for asking simple GTK+ questions."
+> 
+> The original release annoncement for GTK+-2.0.0 is at
+> http://mail.gnome.org/archives/gtk-app-devel-list/2002-March/msg00091.html
+> 
+> The release annoncement for GTK+-2.0.3 (current stable version) is at
+> http://mail.gnome.org/archives/gtk-app-devel-list/2002-May/msg00276.html
+> 
+> Also worthy of note: http://www.gtk.org/download/
+> "Many applications still require GTK+-1.2, the last stable version of
+> GTK+. You can have the runtime and development environments for both
+> GTK+-2.0 and GTK+-1.2 installed simultaneously on your computer."
+> 
+> 
+> > Availibility on distributions is indeed a problem, since this
+> > affects how easily dillo can be installed. Perhaps others may give
+> > information on when Gtk+ 2 may be available.
+> 
+> GTK+-2.0 and its libraries GLib-2.0, Pango, and ATK are all available
+> as:
+> 
+> Source from ftp://ftp.gtk.org/pub/gtk/v2.0/
+> 
+> RedHat-7.2 binaries from
+> ftp://ftp.gtk.org/pub/gtk/v2.0/binary/RedHat-7.2/
+> 
+> FreeBSD binaries from
+> ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/x11-toolkits/
+> or from many mirror sites.
+> 
+> 
+> I think it's exciting that we have serious discussion regarding
+> porting Dillo to GTK+-2.0. I hope the above resources prove useful.
+> 
+> Friendly Greetings,
+> Lawrence
+> 
+> 
+> 
+> _______________________________________________________________
+> 
+> Don't miss the 2002 Sprint PCS Application Developer's Conference
+> August 25-28 in Las Vegas -- http://devcon.sprintpcs.com/adp/index.cfm
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Gombok Arthur <gombok@so...> - 2002-05-30 10:18
+
+"Justin (Gus) Hurwitz" wrote:
+
+> OK- I fixed my problems, mainly by (unfortunately) doing
+> Bad Things(TM). I got the ord this afternoon that it's very 
+> unlikely that we can get the server fixed. so I went ahead 
+> and got things working by breaking dillo.
+
+What a big bullshit (sorry, really). Convince the server-admin to validate the generated html contect (either w3c or wdg).
+
+(Spending so much time implementing buhgs)
+
+> And again, great job with the browser!
+
+I agree
+
+--Gombok 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Justin (Gus) Hurwitz <ghurwitz@dy...> - 2002-05-29 22:15
+
+OK- I fixed my problems, mainly by (unfortunately) doing Bad Things(TM). I
+got the ord this afternoon that it's very unlikely that we can get the
+server fixed. so I went ahead and got things working by breaking dillo.
+Description follows for edification, not incorporation. I'm working on an
+embedded app here, so I only need the browser to work for this web-based
+application- breaking other stuff is unfortunately the way I must go.
+
+1. I modified Html_parse_entity() to kludge around missing semi-colons:
+
+eoe = (toksize) ? memchr(token, ';', toksize) : strchr(token, ';');
+if (eoe) {
+if (token[1] == '#') {
+/* Numeric token */
+base = (token[2] == 'x' || token[2] == 'X') ? 16 : 10;
+isocode = strtol(token + 2 + (base==16), NULL, base);
+return (isocode > 0 && isocode <= 255) ? isocode : -1;
+} else {
+/* Search for named entity */
+name = g_strndup(token + 1, eoe - token - 1);
+i = Html_entity_search(name);
+g_free(name);
+return (i != -1) ? Entities[i].isocode : -1;
+}
++ } else {
++ /* This shouldn't be here- we're dealing with non-compliant HTML */
++ /* But, we'll search anyhow */
++ int len=1;
++ gchar *tokpos=token+2;
++
++ while(isalnum(tokpos[0])) {
++ tokpos++; len++;
++ }
++ name = g_strndup(token + 1, len);
++ i = Html_entity_search(name);
++ g_free(name);
++ return (i != -1) ? Entities[i].isocode : -1;
+}
+return -1;
+}
+
+This gets &nbsp working.
+
+2. Getting that odd image to load (the one that lies about its content
+type and is generated by php) was another matter entirely- I started by
+modifying Cache_parse_header() to always detect the content type from the
+data:
+
+io->IOVec.iov_base = (char *)entry->Data + entry->ValidSize;
+io->IOVec.iov_len = entry->BuffSize;
+io->Flags &= ~IOFlag_FreeIOVec;
+}
+
+/* Get Content-Type */
+- if ( (Type = Cache_parse_field(header, "Content-Type")) == NULL ) {
+- DEBUG_HTTP_MSG("Server didn't send Content-Type in header.\n");
+- Type = Cache_get_type_from_data(entry->Data, entry->ValidSize);
+- }
+- entry->Type = Type;
+-
++ Type = Cache_get_type_from_data(entry->Data, entry->ValidSize);
++ entry->Type = Type;
++ if(strstr(Type, "image")) entry->Flags &= ~(CA_Redirect);
+}
+
+/*
+* Consume bytes until the whole header is got (up to a "\r\n\r\n" sequence)
+* (Also strip '\r' chars from header)
+*/
+
+
+The astute reader will notice rather quickly that I'm also forcing the
+CA_Redirect bit low. It turns out that the php that generates the image
+and sends the wrong content type also sends the image as a 302, which is a
+redirect code (redirects to /logout.php). The entire site uses a lot of
+302's to load pages, but ignoring it for images seems to work. (Andreas-
+that's why just forcing the content-type autodetect didn't work).
+
+
+
+Those two sets of changes make everything work as I need it to. I report
+them mainly so others can see what need be done to support this broken
+code (in the event that others, too, must support similar broken code),
+and to let those who helped know.
+
+And again, great job with the browser!
+
+--Gus
+
+--
+Justin (Gus) Hurwitz
+ghurwitz@dy... 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Lawrence Mayer dsg <Lawrence.Mayer@ds...> - 2002-05-29 21:53
+
+Hi Sebastian!
+
+On Wed, 29 May 2002, Sebastian Geerken wrote:
+
+> I read the porting guidelines (somewhere at gtk.org)
+
+The GNOME 2.0 porting guide
+http://developer.gnome.org/dotplan/porting/
+"has some more detailed discussion of porting from GTK+-1.2 to -2.0. See
+the sections on GLib and GTK+."
+
+Here are some additional resources:
+
+The GTK+-2 Reference Manual is at
+http://developer.gnome.org/doc/API/2.0/gtk/index.html
+
+Of particular note is the section "Changes from 1.2 to 2.0"
+http://developer.gnome.org/doc/API/2.0/gtk/gtk-changes-2-0.html
+
+The mailing list
+http://mail.gnome.org/archives/gtk-app-devel-list
+"is oriented toward developing applications with GTK+. This has been a
+lower traffic list which is good for asking simple GTK+ questions."
+
+The original release annoncement for GTK+-2.0.0 is at
+http://mail.gnome.org/archives/gtk-app-devel-list/2002-March/msg00091.html
+
+The release annoncement for GTK+-2.0.3 (current stable version) is at
+http://mail.gnome.org/archives/gtk-app-devel-list/2002-May/msg00276.html
+
+Also worthy of note: http://www.gtk.org/download/
+"Many applications still require GTK+-1.2, the last stable version of
+GTK+. You can have the runtime and development environments for both
+GTK+-2.0 and GTK+-1.2 installed simultaneously on your computer."
+
+
+> Availibility on distributions is indeed a problem, since this affects
+> how easily dillo can be installed. Perhaps others may give information
+> on when Gtk+ 2 may be available.
+
+GTK+-2.0 and its libraries GLib-2.0, Pango, and ATK are all available as:
+
+Source from ftp://ftp.gtk.org/pub/gtk/v2.0/
+
+RedHat-7.2 binaries from
+ftp://ftp.gtk.org/pub/gtk/v2.0/binary/RedHat-7.2/
+
+FreeBSD binaries from
+ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/x11-toolkits/
+or from many mirror sites.
+
+
+I think it's exciting that we have serious discussion regarding porting
+Dillo to GTK+-2.0. I hope the above resources prove useful.
+
+Friendly Greetings,
+Lawrence 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Paul Chamberlain <tif@ti...> - 2002-05-29 21:11
+
+Justin (Gus) Hurwitz wrote:
+> Your responses to the list definitely help, esp. pointing out that the
+> server is sending a content type of text/html. I'm seeing if I can get
+> that fixed.
+
+There may be a way in the apache conf to say that this
+one URL is always image/png.
+
+> Or perhaps we should never believe the
+> content type and always try to autodetect from the data (it is a fairly
+> quick routine)?
+
+This sounds like a discussion that might have taken place
+right before outlook got the bug that allows many virii
+to infect Windows boxen. "It says it's a wav so let's
+go ahead and play it (wav's are safe)... Oh, look it's
+not a wav afterall, it's an exe, let's magically do the
+right thing and execute it."
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Pekka Lampila <medar@ka...> - 2002-05-29 20:17
+
+On Wed, 29 May 2002 11:08:35 -0500 (EST)
+"Justin (Gus) Hurwitz" <ghurwitz@dy...> wrote:
+> 
+> Of course, this won't help my situation, since the server is lying about
+> the content type. Perhaps it makes sense to also run the auto-detect
+> routine if loading the data fails? Or perhaps we should never believe the
+> content type and always try to autodetect from the data (it is a fairly
+> quick routine)?
+
+That violates HTTP standard[1]. And of course it can make perfect sense
+to have text document that starts with "<HTML>" or something similiar.
+
+Local files are of course different matter. But I can't think many
+situations where detection from file extension isn't enough. Why have
+jpg files without jpg extension?
+
+[1] RFC 2616 (HTTP 1.1):
+Any HTTP/1.1 message containing an entity-body SHOULD include a
+Content-Type header field defining the media type of that body. If
+and only if the media type is not given by a Content-Type field, the
+recipient MAY attempt to guess the media type via inspection of its
+content and/or the name extension(s) of the URI used to identify the
+resource. If the media type remains unknown, the recipient SHOULD
+treat it as type "application/octet-stream".
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Justin (Gus) Hurwitz <ghurwitz@dy...> - 2002-05-29 18:24
+
+Your responses to the list definitely help, esp. pointing out that the
+server is sending a content type of text/html. I'm seeing if I can get
+that fixed.
+
+But, I've come across another interesting aspect of this problem. I load
+the image in netscape and save it as chasis.png. I then load it in dillo
+and all is well. But, I then save it as chasis.php and try to load it. I
+get text. And then, if I save it as chasis.gif I get nothing. Apparently
+dillo gives priority to the filename extention in determining content
+type? And when in doubt it assumes text/html (IO/file.c:250)? Why not hook
+into the Cache_get_type_from_data() (or abstract it) and run that if/when
+File_content_type() falls through.
+
+Of course, this won't help my situation, since the server is lying about
+the content type. Perhaps it makes sense to also run the auto-detect
+routine if loading the data fails? Or perhaps we should never believe the
+content type and always try to autodetect from the data (it is a fairly
+quick routine)? I am philosophically against compensating for broken
+servers on the client side, and so don't like these ideas. But, if
+detecting the content type from the data can be made comparably as fast as
+from the file extention or even the server's content-type field, then it
+might make good sense.
+
+--Gus
+
+On Wed, 29 May 2002, Andreas Schweitzer wrote:
+
+> Hi
+>
+> On Tue, May 28, 2002 at 05:20:56PM -0500, Justin (Gus) Hurwitz wrote:
+> > On Wed, 29 May 2002, Nipo wrote:
+> >
+> > > Hurwitz Justin W. eut le bonnheur d'ecrire:
+> > >
+> > > The script which generates the image ( chassis.php ) does not issue any
+> > > Content/type header. So dillo can not be sure data is image and that is
+> > > only because Netscape is very tolerant that the image is displayed.
+> > > Try to make netscape open the image url directly and you'll get raw data!
+> >
+> > But dillo does have a parse routine that tries to identify unknown data
+> > types- and it looks like it should work just fine. But, when I try to load
+> > the page, that routine is never encountered. If the image type can be
+> > detected by dillo (and there already exists efficient support for the
+> > detection) why doesn't/can't dillo do the detection?
+>
+> (I only posted my answers to the list, not to you - if you are
+> subscribed this is not a problem :-) ... if not I briefly repeat )
+> Because the server says the image is text/html and dillo trusts that.
+> I plaid around with the routines.
+>
+> > I might be able to get minor (ie, very minor, like changing &nbsp to
+> > $nbsp;) changes made on the server side. But I cannot think of a way to
+> > simply fix this problem on the server side without trying to convince
+> > another company to completely re-engineer their product :) If getting
+>
+> Well, if the software sends an image and claims this image is text/html
+> then this is most certainly a bug. And a bug report should be filed with
+> the software maker :-) ....
+>
+> Cheers,
+> Andreas
+>
+> --
+> Department of Physics & Astronomy and Center for Simulational Physics
+> University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+> Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+> USA http://dilbert.physast.uga.edu/~andy/
+>
+
+--
+Justin (Gus) Hurwitz 
+
+
+
+Re: [Dillo-dev]Faces
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-05-29 15:02
+
+On Tue, Apr 30, 2002 at 05:49:26PM -0500, Chris Hawks wrote:
+> Just a question for a new (and very impressed) user...
+> 
+> 
+> Why is the font face code commented out in html.c (about line 1720). I
+> un-commented it and it seems to work correctly...
+
+I fear that was me who did this. I planned to add an "force_my_faces"
+option immediately to overide this, that should be done before
+uncommenting the code.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Sebastian Geerken <sgeerken@st...> - 2002-05-29 14:51
+
+On Thu, May 23, 2002 at 08:27:59AM -0300, Livio Baldini Soares wrote:
+> Hello Lawrence!
+> 
+> Lawrence.Mayer@ds... writes:
+> > If Dillo needs GTK+-1.2, are there any plans to make a GTK+-2.0 version? If
+> > so, any idea when it might become available?
+> 
+> There have been a few individual tries to port Dillo do GTK+-2.0, as
+> as far as I know, none of which have succeed completely. I think the
+> main Dillo developers are not currently very motivated to do this
+> port, at least while GTK+-2.0 isn't available on most mainstream
+> stable distributions.
+
+I haven't taken any look on Gtk+ 2 until now, mostly due to the lack
+of time. I read the porting guidelines (somewhere at gtk.org), and
+what I remember is that porting should be simple, problems may only
+arise in the usage of GtkObject (which is now GObject, and a part of
+glib), and text rendering (which is now done by Pango). Well, That's
+both what the Dw module heavily depends on!
+
+Availibility on distributions is indeed a problem, since this affects
+how easily dillo can be installed. Perhaps others may give information
+on when Gtk+ 2 may be available. (There is also the possibility of
+keeping dillo for a while runnable with both versions, using ugly
+#ifdef's, double test runs, new options for the configure script
+etc. -- but I think the port should be done once, without transitional
+time.)
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: madis <madis@cy...> - 2002-05-29 09:53
+
+On Tue, 28 May 2002, Justin (Gus) Hurwitz wrote:
+
+> But dillo does have a parse routine that tries to identify unknown data
+> types- and it looks like it should work just fine. But, when I try to load
+> the page, that routine is never encountered. If the image type can be
+> detected by dillo (and there already exists efficient support for the
+> detection) why doesn't/can't dillo do the detection?
+> 
+Dillo belives the content-type and does not know how to display text/html 
+images. The detection routine is invoked only when Content-Type header is 
+missing (Cache_get_type_from_data invoked from end of Cache_parse_header).
+It is not very reliable also, because it works only, if this last read 
+from TCP socket, which delivered HTTP header end also delivered enough 
+HTTP body data for content type autodetection (because TCP stack tries to
+concatenate short packets before sending, it is usually not a problem).
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Justin (Gus) Hurwitz <ghurwitz@dy...> - 2002-05-29 00:36
+
+On Wed, 29 May 2002, Nipo wrote:
+
+> Hurwitz Justin W. eut le bonnheur d'ecrire:
+>
+> >In Netscape there is a big PNG picture at the top-center of the page. It
+> >is generated by chasis.php. Dillo does not display it. This makes me very
+> >sad. More importantly, it prevents me from being able to "look inside"
+> >the chasis (if you click on the image in Netscape, you'll see what I
+> >mean- pretty cool, eh? ;)
+>
+> The script which generates the image ( chassis.php ) does not issue any
+> Content/type header. So dillo can not be sure data is image and that is
+> only because Netscape is very tolerant that the image is displayed.
+> Try to make netscape open the image url directly and you'll get raw data!
+
+But dillo does have a parse routine that tries to identify unknown data
+types- and it looks like it should work just fine. But, when I try to load
+the page, that routine is never encountered. If the image type can be
+detected by dillo (and there already exists efficient support for the
+detection) why doesn't/can't dillo do the detection?
+
+I might be able to get minor (ie, very minor, like changing &nbsp to
+$nbsp;) changes made on the server side. But I cannot think of a way to
+simply fix this problem on the server side without trying to convince
+another company to completely re-engineer their product :) If getting
+dillo to play nice with the bullies (which I understand and agree with
+being a not-the-right solution) is out of the question, can you think of
+any workable, simple server side solution?
+
+> >The second problem, which I'm sure is a common one, is that &nbsp tags
+> >are displayed- which makes pages look a bit wrong :) But that's of minor
+> >importance.
+>
+> That is also due to netscape (and many other browsers ) 's tolerance!
+> There must be a semicolon [;] after the tag.
+> Just like &amp; &lt; ... and all other &(...); tags
+
+Indeed, you are quite right! I'll see if I can get that fixed on the
+server side (fingers crossed on that, though I am doubtful).
+
+
+Thanks!
+--Gus
+
+> --
+>
+> Nipo
+> 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-28 23:52
+
+On Wed, May 29, 2002 at 01:11:19AM +0200, Nipo wrote:
+> Oops, I forgot the list..
+> 
+> Hurwitz Justin W. eut le bonnheur d'ecrire:
+> 
+> >In Netscape there is a big PNG picture at the top-center of the page. It 
+> >is generated by chasis.php. Dillo does not display it. This makes me very
+> >sad. More importantly, it prevents me from being able to "look inside"
+> >the chasis (if you click on the image in Netscape, you'll see what I
+> >mean- pretty cool, eh? ;)
+> 
+> The script which generates the image ( chassis.php ) does not issue any
+> Content/type header.
+
+Well, actually it does. But the wrong one ! (text/html)
+I tried to force dillo to detect the mime type by itself.
+Still nothing. However, I'd suggest to first fix the server/script
+to send the correct mime type.
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-28 23:11
+
+On Tue, May 28, 2002 at 03:47:59PM -0700, Eric Gaudet wrote:
+> > -----Original Message-----
+> > From: dillo-dev-admin@li...
+> > [mailto:dillo-dev-admin@li...]On Behalf Of Hurwitz
+> > Justin W.
+> > Sent: Tuesday, May 28, 2002 3:30 PM
+> > To: dillo-dev@li...
+> > Subject: [Dillo-dev]The PNG that would not load
+> 
+> I think it's because dillo doesn't support Image Buttons in forms yet (same
+
+As far as I looked into it, it is not an image in a form. Making a tiny file
+like
+
+<html>
+<body>
+<img src=">
+</body>
+</html>
+
+does not display the image in dillo either. It does work in netscape.
+Saving the png in netscape and then displaying that very file in
+dillo does work, however.
+From this I'd conclude it must be in the communication between dillo
+and the server. Note also, that dillo never actually finishes the
+loading of the image (the image count is always missing one).
+It could be that the server does not send the mime type and dillo
+does still not recoginzie it (despite my fixes a few weeks back ;-) ...)
+Netscape does report it as unknown MIME type ! I may look into this.
+
+CHeers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+Re: [Dillo-dev]The PNG that would not load
+
+From: Nipo <nipo@ss...> - 2002-05-28 23:07
+
+Oops, I forgot the list..
+
+Hurwitz Justin W. eut le bonnheur d'ecrire:
+
+>In Netscape there is a big PNG picture at the top-center of the page. It 
+>is generated by chasis.php. Dillo does not display it. This makes me very
+>sad. More importantly, it prevents me from being able to "look inside"
+>the chasis (if you click on the image in Netscape, you'll see what I
+>mean- pretty cool, eh? ;)
+
+The script which generates the image ( chassis.php ) does not issue any
+Content/type header. So dillo can not be sure data is image and that is
+only because Netscape is very tolerant that the image is displayed.
+Try to make netscape open the image url directly and you'll get raw data!
+
+>The second problem, which I'm sure is a common one, is that &nbsp tags
+>are displayed- which makes pages look a bit wrong :) But that's of minor 
+>importance.
+
+That is also due to netscape (and many other browsers ) 's tolerance!
+There must be a semicolon [;] after the tag.
+Just like &amp; &lt; ... and all other &(...); tags
+
+-- 
+
+Nipo 
+
+
+
+RE: [Dillo-dev]The PNG that would not load
+
+From: Eric Gaudet <ericg@ta...> - 2002-05-28 22:46
+
+> -----Original Message-----
+> From: dillo-dev-admin@li...
+> [mailto:dillo-dev-admin@li...]On Behalf Of Hurwitz
+> Justin W.
+> Sent: Tuesday, May 28, 2002 3:30 PM
+> To: dillo-dev@li...
+> Subject: [Dillo-dev]The PNG that would not load
+> 
+> 
+> First off, to those who make dillo possible- great work with 
+> it! I've been 
+> wonderfully impressed. It's a bloody shame more programers aren't as 
+> intentional with how they program as you all are. Your work 
+> should help to remind us all that programming is an art.
+> 
+
+Don't forget Jorge's outstanding leadership qualities: I've been trying to
+participate to many open source projects and abandoned most of them because
+of the people being unreliable. It's really Jorge that makes Dillo that
+successfull.
+
+> Now, on to my problem. I'm working on an embedded tool to 
+> monitor our RLX 
+> based clusters (www.rlxtechnologies.com). RLX has a web based 
+> management/monitoring solution (Control Tower 2) that works 
+> great. I'm 
+> running dillo on an iPAQ as part of our monitoring tool. It 
+> works great. 
+> Bu there are two problems- one aesthetic, and one functional. The 
+> functional one it the more important:
+> 
+> Load the following URL in both Netscape and dillo:
+> http://rack1.rlxtechnologies.com/cm/chassview.php?ShowChassisI
+> D=1&p=0|1|2
+> 
+> In Netscape there is a big PNG picture at the top-center of 
+> the page. It 
+> is generated by chasis.php. Dillo does not display it. This 
+> makes me very 
+> sad. More importantly, it prevents me from being able to 
+> "look inside" the 
+> chasis (if you click on the image in Netscape, you'll see 
+> what I mean- 
+> pretty cool, eh? ;)
+> 
+> I've begun looking into why this image does not display in dillo, and
+> think I might be making some (very slow) progress. Due to 
+> time constraints
+> (and possible ailment- I fear I will be spending the next few 
+> days sick in
+> bed, sigh), I doubt I'll be able to properly fix this 
+> problem, if I can
+> fix it at all. If anyone has ideas where to start, or what's 
+> wrong, I'd
+> love to hear them- saving me a few dead-ends would be a great help. Of
+> course, if anyone has an immediate patch, I'll gladly let 
+> them take the
+> glory for fixing this problem, too :)
+> 
+
+I think it's because dillo doesn't support Image Buttons in forms yet (same
+problem in maps.yahoo.com). There is a bugtrack entry for that. If you don't
+feel like implemnting this feature, you could use an image map (server side)
+in your page instead.
+
+> The second problem, which I'm sure is a common one, is that 
+> &nbsp tags are 
+> displayed- which makes pages look a bit wrong :) But that's of minor 
+> importance.
+> 
+
+IMHO the correct syntax for entities is like this: &nbsp;
+Dillo is actually right when displaying &nbsp if the semicolon is missing.
+
+> Many thanks for any help offered.
+> 
+> --Gus
+> 
+> 
+> 
+> _______________________________________________________________
+> 
+> Don't miss the 2002 Sprint PCS Application Developer's Conference
+> August 25-28 in Las Vegas -- http://devcon.sprintpcs.com/adp/index.cfm
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+[Dillo-dev]The PNG that would not load
+
+From: Hurwitz Justin W. <hurwitz@la...> - 2002-05-28 22:29
+
+First off, to those who make dillo possible- great work with it! I've been 
+wonderfully impressed. It's a bloody shame more programers aren't as 
+intentional with how they program as you all are. Your work should help to 
+remind us all that programming is an art.
+
+Now, on to my problem. I'm working on an embedded tool to monitor our RLX 
+based clusters (www.rlxtechnologies.com). RLX has a web based 
+management/monitoring solution (Control Tower 2) that works great. I'm 
+running dillo on an iPAQ as part of our monitoring tool. It works great. 
+Bu there are two problems- one aesthetic, and one functional. The 
+functional one it the more important:
+
+Load the following URL in both Netscape and dillo:
+http://rack1.rlxtechnologies.com/cm/chassview.php?ShowChassisID=1&p=0|1|2
+
+In Netscape there is a big PNG picture at the top-center of the page. It 
+is generated by chasis.php. Dillo does not display it. This makes me very 
+sad. More importantly, it prevents me from being able to "look inside" the 
+chasis (if you click on the image in Netscape, you'll see what I mean- 
+pretty cool, eh? ;)
+
+I've begun looking into why this image does not display in dillo, and
+think I might be making some (very slow) progress. Due to time constraints
+(and possible ailment- I fear I will be spending the next few days sick in
+bed, sigh), I doubt I'll be able to properly fix this problem, if I can
+fix it at all. If anyone has ideas where to start, or what's wrong, I'd
+love to hear them- saving me a few dead-ends would be a great help. Of
+course, if anyone has an immediate patch, I'll gladly let them take the
+glory for fixing this problem, too :)
+
+The second problem, which I'm sure is a common one, is that &nbsp tags are 
+displayed- which makes pages look a bit wrong :) But that's of minor 
+importance.
+
+Many thanks for any help offered.
+
+--Gus 
+
+
+
+Re: [Dillo-dev]Fix for standard file locking in cookies.c
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2002-05-28 17:24
+
+On Mon, May 27, 2002 at 05:08:27PM -0400, Jorge Arellano Cid wrote:
+> Yes, it is already on CVS, so please test it (specially on non
+> Linux platforms).
+> 
+> - Build the latest CVS :)
+> - Close every open dillo.
+> - Start dillo (it should not disable cookies)
+> - Start another dillo (NOT a new window), it should
+> disable cookies.
+> - Report success!
+
+Success on FreeBSD 4.6-RC.
+
+Regards,
+Johannes 
+
+
+
+Re: Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Paul Chamberlain <tif@ti...> - 2002-05-28 16:04
+
+Ross J. Reedstrom wrote:
+> On Tue, May 28, 2002 at 07:55:52AM -0500, Paul Chamberlain wrote:
+> > From: Jorge Arellano Cid <jcid@em...>
+> > > The idea of having an image_factor in dillorc (as [well as]
+> > > font_factor) seems also a good one.
+> > How difficult would it be to make these run-time options?
+> ... that's a small matter of user interface, not a design problem:
+> if you change the prefs.font_factor value on a running image (with gdb,
+> for example) and reload the page, everything 'just works'.
+
+Excellent, that's exacty what I was after.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-05-28 15:14
+
+On Tue, May 28, 2002 at 07:55:52AM -0500, Paul Chamberlain wrote:
+> From: Jorge Arellano Cid <jcid@em...>
+> > The idea of having an image_factor in dillorc (as [well as]
+> > font_factor) seems also a good one.
+> 
+> How difficult would it be to make these run-time options?
+> 
+> I'll admit that it seems out of balance to have this feature
+> when we lack other more basics, but I've come to like the
+> scaling features in other browsers and wondered if it would
+> be helpful to think about this now.
+
+Depends on what you mean by 'run-time': font_factor (and the
+image_factor I'm looking at implementing) are preferences, set in the
+dillorc. Currently, there is no mechanism to alter them in a running
+image, only by editting dillorc and restarting, but as far as I can
+tell, that's a small matter of user interface, not a design problem:
+if you change the prefs.font_factor value on a running image (with gdb,
+for example) and reload the page, everything 'just works'.
+
+Ross 
+
+
+
+Re: Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Paul Chamberlain <tif@ti...> - 2002-05-28 12:56
+
+From: Jorge Arellano Cid <jcid@em...>
+> The idea of having an image_factor in dillorc (as [well as]
+> font_factor) seems also a good one.
+
+How difficult would it be to make these run-time options?
+
+I'll admit that it seems out of balance to have this feature
+when we lack other more basics, but I've come to like the
+scaling features in other browsers and wondered if it would
+be helpful to think about this now.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]Little bugfix
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-28 01:36
+
+Hi,
+
+On Mon, 27 May 2002, Andreas Schweitzer wrote:
+
+>
+> Speaking of bugfixes : the OpenBSD folks have more cleanups in
+>
+> http://www.openbsd.org/cgi-bin/cvsweb/ports/www/dillo/patches/
+>
+> The files
+> patch-src_IO_http_c
+
+That was already fixed.
+
+> patch-src_dns_c
+
+I don't understand that patch...
+
+> patch-src_dw_style_c
+
+Was almost fully done.
+At least there was a (gpointer) cast to change to GINT_TO_POINTER().
+
+Done!
+
+
+Greets
+Jorge.- 
+
+
+
+Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-05-28 00:50
+
+Attachments: percent-images.diff      
+
+On Thu, May 23, 2002 at 08:59:06AM -0300, Livio Baldini Soares wrote:
+> 
+> > BTW, I noticed that percentage sizes on images does not seem to be
+> > supported. HTML 4.01 certainly defines the width and height attributes
+> > generically, saying that percentages are supported for images.
+> > 
+> > http://www.w3.org/TR/html401/struct/objects.html#adef-width-IMG
+> 
+> Hum, this I haven't noticed... if you like, please add support for
+> this! :-)
+> 
+
+Fixed this, at least, while tracing what's happening with image
+sizing. Looks like a cut-n-paste-o: There was a stanza about width,
+then one about height, except it was still testing the type of width,
+rather than height. Patch attached. (What's the patch etiquette for
+dillo, BTW? Small patches to the list, big ones behind a URL, or what?)
+
+Ross 
+
+
+
+Re: [Dillo-dev]Little bugfix
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-27 21:57
+
+Hi,
+
+On Mon, 27 May 2002, Grigory Bakunov wrote:
+
+> When i make a rpm for dillo i see little bug in Makefile.am (in doc directory)
+> In short words - not all of docs refered in Makefile.am so
+> 'make dist' doesn't work.
+> Patch attached.
+
+Done!
+
+Cheers
+Jorge.-
+
+
+PS: Please test the latest CVS. 0.6.6 bug-fix release is very close! 
+
+
+
+Re: [Dillo-dev]Fix for standard file locking in cookies.c
+
+From: Livio Baldini Soares <livio@im...> - 2002-05-27 21:30
+
+Hi Jorge!
+
+Jorge Arellano Cid writes:
+> 
+> Hi there,
+> 
+
+[...]
+
+> Yes, it is already on CVS, so please test it (specially on non
+> Linux platforms).
+> 
+> How?
+> 
+> - Build the latest CVS :)
+> - Close every open dillo.
+> - Start dillo (it should not disable cookies)
+> - Start another dillo (NOT a new window), it should
+> disable cookies.
+> - Report success!
+
+Success on:
+
+- SunOS jaca 5.7 Generic_106541-04 sun4u sparc
+(the previous CVS code did not work here)
+
+- Linux pipoca 2.4.17-rmap12a #1 Mon Feb 4 11:01:06 BRST 2002 i686 unknown
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: Gombok Arthur <gombok@so...> - 2002-05-27 21:18
+
+Pekka Lampila <medar@ka...> wrote:
+
+> Gombok Arthur <gombok@so...> wrote:
+> > Does anyone except Jonathan got this running?
+> 
+> Works fine for me. Thanks Jonathan. :)
+
+Me too. Thanks a lot.
+
+> ~$ autoconf --version
+> Autoconf version 2.13
+> ~$ automake --version
+> automake (GNU automake) 1.4-p4
+
+Using autoconv 2.52 and automake 1.5
+but needed to update openssl
+
+> My system is i386, Debian unstable.
+
+mine is a whole mess (and unstable too)
+
+> Though I haven't heard from Jorge for a long time, and CVS has been
+> very quiet. Does anybody know what's up?
+
+Sorry no 
+
+> BTW. Has anyone consired making SSL patch using GNUTLS[1]. That would
+> avoid all the grief with OpenSSL's licensing.
+
+How about compiling openssl with no-rc5 and no-ideo?
+Does that still allow https:hombanking (etc...)
+BTW how can i check which ciphers are used?
+
+> It may not (yet) have as long feature list as OpenSSL has, but I think
+> it has all that Dillo needs. And of course, when more projects use
+> GNUTLS it will gain more support and develop faster.
+> [1] http://www.gnu.org/software/gnutls/
+
+Isn't that the point to enable a switchable modular protocol (plugin)
+interface (file: http: https: ftp: res: help: man: ...)
+
+Maybe its possible to render man pages (with links like tkman) or build a simple and fast html-based help-system (using namazu for fulltext-searches and other tools for keyword lookup and predefined topic-pages)
+
+The bad thing about patches is that they require a special base version
+to patch against. 
+
+Greetings
+Gombok 
+
+
+
+Re: [Dillo-dev]Fix for standard file locking in cookies.c
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-27 21:12
+
+Hi there,
+
+On Mon, 27 May 2002, Andreas Schweitzer wrote:
+
+> Hi everybody,
+> a tiny fix for cookies.c. The flock call is not POSIX compliant,
+> but lockf is XPG4.2 compliant. Hence the patch.
+> (My AIX box complaint when compiling the latest CVS version).
+
+Uh!, well, file locks hold a long record of incompatibilities
+and problems... After digging the man page, and Linux kernel docs
+I only hope this one does better! ;-)
+
+Yes, it is already on CVS, so please test it (specially on non
+Linux platforms).
+
+How?
+
+- Build the latest CVS :)
+- Close every open dillo.
+- Start dillo (it should not disable cookies)
+- Start another dillo (NOT a new window), it should
+disable cookies.
+- Report success!
+
+
+That's all folks
+Jorge.- 
+
+
+
+[Dillo-dev]Fix for standard file locking in cookies.c
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-27 18:20
+
+Attachments: cookies.diff      
+
+Hi everybody,
+a tiny fix for cookies.c. The flock call is not POSIX compliant,
+but lockf is XPG4.2 compliant. Hence the patch.
+(My AIX box complaint when compiling the latest CVS version).
+
+Cheers
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Little bugfix
+
+From: Grigory Bakunov <black@as...> - 2002-05-27 17:50
+
+Attachments: dillo-0.6.5-makefile.patch      
+
+When i make a rpm for dillo i see little bug in Makefile.am (in doc directory)
+In short words - not all of docs refered in Makefile.am so
+'make dist' doesn't work.
+Patch attached.
+
+........................................................................
+IRC: irc.openproject.net #asplinux Grigory Bakunov 
+EMAIL: black@as... ASPLinux Support Team
+ICQ: 51369901 http://www.asplinux.ru
+-----BEGIN GEEK CODE BLOCK-----
+GCS/MU d-(--) s:- a- C+++>++$ UBLAVSX+++$ P+ L++++$ E++$ W++ N+>- o? K?
+w-- O- M V-(--) PS+ PE+ !Y PGP+>++++ t+ 5++ X+++ R+++ tv+>-- b+++ ?DI D+
+G++ e>++$ h- r++ y+ z++(+++)
+------END GEEK CODE BLOCK------ 
+
+
+
+[Dillo-dev]Another dillo localization patches
+
+From: Grigory Bakunov <black@as...> - 2002-05-27 17:48
+
+Hello all!
+
+I only need to say what i make little page for my patch what
+help to some users with nonlatin1 codepages
+
+http://bobuk.ipost.ru/packages/dillo/index.html
+
+Any comments and ideas wellcome.
+And especialy about my terrible english. :)
+
+Thanks guys. i love this browser and with perseverance wait while
+Dillo can be compiled with GTK2.
+
+........................................................................
+IRC: irc.openproject.net #asplinux Grigory Bakunov 
+EMAIL: black@as... ASPLinux Support Team
+ICQ: 51369901 http://www.asplinux.ru
+-----BEGIN GEEK CODE BLOCK-----
+GCS/MU d-(--) s:- a- C+++>++$ UBLAVSX+++$ P+ L++++$ E++$ W++ N+>- o? K?
+w-- O- M V-(--) PS+ PE+ !Y PGP+>++++ t+ 5++ X+++ R+++ tv+>-- b+++ ?DI D+
+G++ e>++$ h- r++ y+ z++(+++)
+------END GEEK CODE BLOCK------ 
+
+
+
+Re: [Dillo-dev]Re: have you considered upgrading your SSL patch to
+
+From: Geoff Lane <zzassgl@tw...> - 2002-05-27 10:17
+
+> I thought, that it would be nice to make ssl a dpi1 plugin which 
+> handles https: urls. This way extra bloat could be avoided from dillo (SSL 
+> is not a very small thing).
+
+cURL does support SSL so it may be something worth investigating.
+
+People paranoid about security will worry about the unencrypted data path
+between the plugin and dillo. But there's nothing to stop that being
+encrypted using some single key scheme (which after all is what SSL uses
+once the initial key exchange is performed.)
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+Journeys begin with a single step, and a decision to take it. 
+
+
+
+Re: [Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: madis <madis.janson@ma...> - 2002-05-27 09:58
+
+On Sat, 25 May 2002, Pekka Lampila wrote:
+
+> BTW. Has anyone consired making SSL patch using GNUTLS[1]. That would
+> avoid all the grief with OpenSSL's licensing.
+> 
+> It may not (yet) have as long feature list as OpenSSL has, but I think
+> it has all that Dillo needs. And of course, when more projects use
+> GNUTLS it will gain more support and develop faster.
+> 
+> [1] http://www.gnu.org/software/gnutls/
+>
+
+I thought, that it would be nice to make ssl a dpi1 plugin which 
+handles https: urls. This way extra bloat could be avoided from dillo (SSL 
+is not a very small thing).
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Query about DNS Search
+
+From: Ralph Slooten <ralph@de...> - 2002-05-26 20:13
+
+Sorry for the typo in the Subject ;-) 
+
+On Sun, 26 May 2002, Ralph Slooten wrote:
+
+> Hi there all
+> 
+> It just occured to me, but it looks like when one types in a wrong URL, 
+> and presses enter, followed directly by the correct URL (also followed by 
+> enter), Dillo will first try look to the wrong site, before progressing to 
+> the second site given. Sometimes I have to shut down Dillo and restart it 
+> as this goes quicker.
+> 
+> The first URL could be an existing site which does exist but is very slow 
+> to get a connection with, and the second something like freshmeat.net, 
+> which goes like lightning here.
+> 
+> Is there some way to get Dillo to "drop" what it's busy with and continue 
+> with the latest request? Maybe an idea for future development? ... that is 
+> unless I'm mistaken ;-)
+> 
+> Greetings
+> Ralph
+> 
+> 
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev]Query about DNS Serach
+
+From: Ralph Slooten <ralph@de...> - 2002-05-26 20:02
+
+Hi there all
+
+It just occured to me, but it looks like when one types in a wrong URL, 
+and presses enter, followed directly by the correct URL (also followed by 
+enter), Dillo will first try look to the wrong site, before progressing to 
+the second site given. Sometimes I have to shut down Dillo and restart it 
+as this goes quicker.
+
+The first URL could be an existing site which does exist but is very slow 
+to get a connection with, and the second something like freshmeat.net, 
+which goes like lightning here.
+
+Is there some way to get Dillo to "drop" what it's busy with and continue 
+with the latest request? Maybe an idea for future development? ... that is 
+unless I'm mistaken ;-)
+
+Greetings
+Ralph
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev] Segfault on image maps (bug 277)
+
+From: Imran Hasnain <iah21@he...> - 2002-05-26 00:33
+
+Anyone help me out? This bug appears to have surfaced again on my new CVS
+build. URLs typed in are fine - as are Favourites. On mouseover dillo
+displays
+
+'http://dillo.so....net/?36848,-1073746304' etc as before so I assume
+this is the same bug?
+
+Running on Darwin 6.0, Xfree 4.2.0. Dillo 0.6.4 is fine, but both 0.6.5 and
+the current CVS code don't work. :-(
+
+Thanks,
+
+Imran
+
+_______________________________________________
+Dillo-dev mailing list
+Dillo-dev@li...
+https://lists.so....net/lists/listinfo/dillo-dev 
+
+
+
+Re: [Dillo-dev]gethostbyname
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-25 20:15
+
+Madis,
+
+
+> I read dns.c and found, that gethostbyname is used with pthreads.
+> Is it safe to do so (i thought that gethostbyname is not thread-safe due
+> to static buffers usage)?
+
+AFAIR (it was along time ago when I implemented it), the
+information I had was that libc5 was not reentrant and that
+glibc2 had no problems with MT; that's why the dns code has
+define statements that either enable the libc5 version or glibc2.
+Even more, it can be set to use a single server only.
+
+The final scheme didn't show a single fault when stress-tested
+with over a hundred of simultaneous requests on 4 channels.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]splint / lint
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-25 20:15
+
+Klaus,
+
+
+> Would it be useful to make dillo "lint clean" ? To detect memory leaks and
+> bogus pointers automatically.
+
+Sure!
+
+It's not a religious matter tough! ;)
+
+If lint can point to some weak portions of code, and those are
+fixed, great! If it points to some others that are OK, there's no
+need to "fix" them.
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-25 20:14
+
+Ross,
+
+> [...]
+> One feature I've seen in other small-screen browsers that is surprisingly
+> effective in making sites fit is auto-scaling of images by 1:2. "Well,"
+> he says to himself "here's my chance to contribute". So, I pulled
+> the CVS feed, and rebuilt it, and played with it a little (oh,
+> shiny! cookies!) and perused the code for where and how images are
+> built. Hmm, I seem to be lost in a series of nested structs, many with
+> members with names like 'width', 'height', 'ascent', and 'descent'. After
+> poking around a bit, it seems to me that these structures get built,
+> then filled in later via signals and callbacks.
+>
+> Any suggestions on where to dig, and any 'gotchas'? I'm thinking i'll
+> probably need a new boolean in the Dwimage struct, halfsize, or some
+> such, so I can scale all the various sizes properly.
+
+If I were you, I'd start tweaking Html_tag_open_img to send
+custom width and height values, and thus make the inner layers
+think it was a size specified in the HTML page.
+
+The idea of having an image_factor in dillorc (as font_factor)
+seems also a good one.
+
+The third step is to try to find the place where this "fix"
+should go, with a view to make it fit well in the overall design
+and make it a feature. At least, what I suggest here is easy to
+develop!
+
+> BTW, I noticed that percentage sizes on images does not seem to be
+> supported. HTML 4.01 certainly defines the width and height attributes
+> generically, saying that percentages are supported for images.
+>
+> http://www.w3.org/TR/html401/struct/objects.html#adef-width-IMG
+
+Thanks for the tip, worth a bug track entry.
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: Pekka Lampila <medar@ka...> - 2002-05-25 14:41
+
+On Sat, 25 May 2002 13:47:58 +0000 (GMT)
+toor the halberdier <cndlizard@ha...> wrote:
+> On Sat, 25 May 2002, Pekka Lampila wrote:
+> > BTW. Has anyone consired making SSL patch using GNUTLS[1]. That would
+> > avoid all the grief with OpenSSL's licensing.
+> >
+> > It may not (yet) have as long feature list as OpenSSL has, but I think
+> > it has all that Dillo needs. And of course, when more projects use
+> > GNUTLS it will gain more support and develop faster.
+> >
+> > [1] http://www.gnu.org/software/gnutls/
+>
+> ok i am a bit slow but what greif is there whith a BSD type licence ...
+> forgive me for not being up on copyright law (it's just too dull) ;)
+> thax
+
+OpenSSL's license is BSD with an advertising clause. GPL doesn't allow
+additional restrictions and that's what advertising clause is.
+
+So if Dillo were to use OpenSSL it either needs to change license or add
+explicit permission to link against OpenSSL. Plus any other libraries
+Dillo links against must also be compatible with OpenSSL's license.
+
+And of course IANAL. You should search debian-legal archives and google
+for more information.
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+Re: [Dillo-dev]Progress halted?
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-05-25 13:26
+
+Hi,
+
+on Thu, 23 May 2002 07:33:02 +0200 (CEST)
+Ralph Slooten <ralph@de...> wrote:
+
+> [...] but it appeard that the CVS from Dillo 
+> had not been updated from May 4. Does this mean that progress has stopped 
+> for the time being?
+
+AFAIK, Jorge is working on the funding of Dillo. There's a link in Dillo's home
+page. So Dillo development is not halted, only delayed a bit. It will continue.
+
+Cheers
+
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: Pekka Lampila <medar@ka...> - 2002-05-25 13:05
+
+On Sat, 25 May 2002 14:23:19 +0100 (Wild Europe Standard Time)
+Gombok Arthur <gombok@so...> wrote:
+
+> Does anyone except Jonathan got this running? automake needs depcomp
+> (which is missing), configure complains about missing (too old and missing
+> -run command), make breaks in IO on ar (no https.o missing)
+> manually compiling says warning: implizit declaration of function: SSL_get_*fd
+> ..
+> After updating missing und depcomp by automake versions all went fine until
+> linking (undefined reference to SSL_get_*fd in https.c)
+
+Works fine for me. Thanks Jonathan. :)
+
+~$ autoconf --version
+Autoconf version 2.13
+~$ automake --version
+automake (GNU automake) 1.4-p4
+
+My system is i386, Debian unstable.
+
+> Does all these patches (expires,fzip,plugin...) find a way into the regular
+> dillo versions?
+
+Very propably, when they have been proven to be good quality and tested
+enough.
+
+Though I haven't heard from Jorge for a long time, and CVS has been very
+quiet. Does anybody know what's up?
+
+
+BTW. Has anyone consired making SSL patch using GNUTLS[1]. That would
+avoid all the grief with OpenSSL's licensing.
+
+It may not (yet) have as long feature list as OpenSSL has, but I think
+it has all that Dillo needs. And of course, when more projects use
+GNUTLS it will gain more support and develop faster.
+
+[1] http://www.gnu.org/software/gnutls/
+
+-- 
+Pekka Lampila *
+medar@ka... * If pro is the opposite of con,
+http://kirjasto.org/medar * what is the opposite of progress? 
+
+
+
+[Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: Gombok Arthur <gombok@so...> - 2002-05-25 12:27
+
+>> when i tried it with 0.6.4 to do my online banking, i wasnt successful 
+>> because i needed cookies.
+
+>I've posted the patch to
+>http://members.verizon.net/~vze2mqqv/dillo-ssl.0.6.5.diff .
+>$ patch -p1 <dillo-ssl.0.6.5.diff
+>$ autoconf
+>$ automake
+>$ configure --enable-ssl
+>$ make
+>$ sudo make install
+
+Does anyone except Jonathan got this running? automake needs depcomp
+(which is missing), configure complains about missing (too old and missing
+-run command), make breaks in IO on ar (no https.o missing)
+manually compiling says warning: implizit declaration of function: SSL_get_*fd
+..
+After updating missing und depcomp by automake versions all went fine until
+linking (undefined reference to SSL_get_*fd in https.c)
+
+Does all these patches (expires,fzip,plugin...) find a way into the regular
+dillo versions?
+
+Greetings
+-ga 
+
+
+
+Re: [Dillo-dev]experimental dillo patches
+
+From: Ralph Slooten <ralph@de...> - 2002-05-25 12:20
+
+Hi there Geoff,
+
+Firstly I would like to say that I tried your patch last night (Ad-Block) 
+and it works great ;-) It's so much faster than going through a 
+banner-blocking proxy. 
+
+On Fri, 24 May 2002, Geoff Lane wrote:
+
+> 
+> While working my way through the dillo sources trying to work out what is
+> going on I've written some experimental code to see if I understand what I
+> see. This has resulted in four patches: support for gzip'ed HTML, an advert
+> buster, expires and pragma header support and an external generic plugin.
+> 
+> This is ALL highly experimental code and you use it at your own risk.
+
+Yeah, got it.. it was sure worth the test, and I do hope the developers of 
+Dillo will consider using your code, or a similiar concept in their code.
+
+The other 2 patches I haven't gotten to yet, but just wanted to give a good 
+review on the one. It's not that straighforward though (yet) with the 
+"rules", but I managed to get it all working, and now I seem to have a much 
+cleaner page =)
+
+> (Anyone else noticed that dillo is getting a lot of good reviews in the
+> Linux news groups lately?)
+
+I have read indeed a few articles on it, and seems all very positive. I 
+just haven't noticed any updates with the CVS in the last month or so. I 
+don't know if development has halted or whatever, but it was making great 
+progress.
+
+Greetings
+Ralph 
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev]It works great on RH6.0!
+
+From: Leandro Gil <leagil@ho...> - 2002-05-24 13:03
+
+Attachments: Message as HTML      
+
+I wanted to thank you all for your help, and congratulate you on a =
+job well done.
+This browser is a little gem.
+RedHat 6.0 allowed me to compile Dillo, no update was necesary.
+I'll see if I can learn to use RPM well enough to make an .rpm =
+binary out of my compilation, because I couldn't find an up to date one =
+on the web.
+=20 
+
+
+
+[Dillo-dev]experimental dillo patches
+
+From: Geoff Lane <zzassgl@tw...> - 2002-05-24 12:58
+
+While working my way through the dillo sources trying to work out what is
+going on I've written some experimental code to see if I understand what I
+see. This has resulted in four patches: support for gzip'ed HTML, an advert
+buster, expires and pragma header support and an external generic plugin.
+
+This is ALL highly experimental code and you use it at your own risk.
+
+The external generic plugin does NOT implement dpi1.v4.txt and never will. 
+It's just an experiment. The sample plugin.sh script does nothing but report
+the request URL but can easily be extended to do some real functions.
+
+The patches were all developed seperately and have not been tested against
+each other. Large amounts of debugging information is issued from the
+patches.
+
+The patches can be downloaded from http://twirl.mcc.ac.uk/dillo/
+
+If anybody wants to grab the gzip'ed HTML and advert buster patches and
+develop them into reliable code for inclusion in Dillo please do. There are
+some suggestions for further work on the relevant web pages.
+
+As I said above, experimental code complete with bugs (some of which are
+documented in the source) so take care...
+
+(Anyone else noticed that dillo is getting a lot of good reviews in the
+Linux news groups lately?)
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+I'm an absolute, off-the-wall fanatical moderate. 
+
+
+
+Re: [Dillo-dev]Compiling dillo. What do I need?
+
+From: Freya <Freya@ga...> - 2002-05-23 12:21
+
+> > I intend switch
+> > to woody Debian
+> > when I can get my
+> > hands on it.
+> 
+> Smart move, good for you! ;-)
+
+I was thinking that debian would be great in this situation where you
+aren't sure of the dependencies, but of course it's really suited to
+people with fast internet connections who can just apt-get everything
+off the internet. I originally went round someone elses house who helped
+me set it all up and had a cable modem connection. If you don't have to
+pay for the connection time, by the minute I mean, then Debian is in a
+lot of ways the best and easiest distro to use and the one most sutied
+to installing on small machines as you don't have to shovel lots of
+stuff you don't need onto your hard disk.
+
+One tip if you do get hold of Debian, avoid the dselect program, debian
+tries to make you use it ( a really nasty disk shoveling program that is
+horribly difficult to use) but you don't have to, you can just exit and
+ignore it and apt-get everything. I found you can even do this with a
+cd-rom using the apt-cd command, but the apt-cd command is not in the
+base system :( so you have to either get it from the internet with
+apt-get, which throws things slightly askew, or what would be best,
+would be to find a way to get at the apt package of the cd-rom without
+using dselect. (I didn't work out how to do this and just used my modem
+to get the apt package)
+
+On the other hand running debian means I don't have the latest version
+of dillo as it isn't in testing yet. :( Even worse, being on this list
+is making me want the next unreleased version already! It sounds like
+there are lots of people here with all kinds of goodies hidden up their
+sleeves! ;)
+
+love
+
+Freya 
+
+
+
+Re: [Dillo-dev]new pref: auto-scaling images
+
+From: Livio Baldini Soares <livio@im...> - 2002-05-23 11:59
+
+Hello Ross!
+
+Ross J. Reedstrom writes:
+> Hey dillo developers - 
+> Love the browser - I use it on my lipaq (linux/ipaq) for both browsing w/
+> wireless at work, and as a general eBook reader w/ HTML format books. I
+> _really_ love the 'wrap to viewport' pref: it makes a lot of sites
+> readable that would otherwise require a lot of scrolling around.
+
+Thanks, man! We really like to hear how people like Dillo! ;-) I,
+myself, constantly use Dillo as my main desktop browser. I feel really
+amazed how my desktop browser is flexible enough to behave well on a
+handheld.
+
+> One feature I've seen in other small-screen browsers that is surprisingly
+> effective in making sites fit is auto-scaling of images by 1:2. "Well,"
+> he says to himself "here's my chance to contribute". So, I pulled
+> the CVS feed, and rebuilt it, and played with it a little (oh,
+> shiny! cookies!) and perused the code for where and how images are
+> built. Hmm, I seem to be lost in a series of nested structs, many with
+> members with names like 'width', 'height', 'ascent', and 'descent'. After
+> poking around a bit, it seems to me that these structures get built,
+> then filled in later via signals and callbacks.
+
+Yeah, at first Dillo is kind of tricky because of the asynchronous
+handling of events (which is one of the reasons it is fast). But after
+a while you start getting the hang of it!
+
+> Any suggestions on where to dig, and any 'gotchas'? I'm thinking i'll
+> probably need a new boolean in the Dwimage struct, halfsize, or some
+> such, so I can scale all the various sizes properly.
+
+Yeah, that seems about right to me. You should be mainly looking at
+dw_image.c (and possibly image.c). I haven't tried this, so this can
+be wrong, but try starting with a_Image_set_parms() and scale the
+width and height. This will "trick" the DwImage module into thinking
+that the HTML author is resizing the image, so it may be possible to
+avoid introduing changes to DwImage.
+
+In theory, this should work smoothly (in theory! ;-). I currently
+have _no_ time to contribute to Dillo do to real life commitments, but
+if you have any doubts and comments you can send them here to the list
+or to me. I'm not sure, but I think Sebastian has a plan to rework
+Dillo's image internals to make it easier to do correct background
+support (using RGBA, instead of normal RGB), and some other things,
+but I don't know how it is coming out.
+
+> BTW, I noticed that percentage sizes on images does not seem to be
+> supported. HTML 4.01 certainly defines the width and height attributes
+> generically, saying that percentages are supported for images.
+> 
+> http://www.w3.org/TR/html401/struct/objects.html#adef-width-IMG
+
+Hum, this I haven't noticed... if you like, please add support for
+this! :-)
+
+best regards and good luck.
+
+-- 
+Livio <livio@im...> 
+
+
+
+Re: [Dillo-dev]Compiling dillo. What do I need?
+
+From: Livio Baldini Soares <livio@im...> - 2002-05-23 11:39
+
+Hi Leandro!
+
+Leandro Gil writes:
+>
+> I'm trying to turn a 486DX4 100MHz with 16MB RAM into a Linux box. I would
+> like to know what version of GCC, libraries and GTK+ do I need to compile and
+> use Dillo. If possible, I would like to use one of the distributions in my
+> possesion: Redhat 5.1, Redhat 6.0 and Redhat 7.2
+
+If I remember correctly, you'll need:
+
+libglib1.2 (runtime and development package)
+libgtk1.2 (runtime and development package)
+libjpeg62 (runtime and development package)
+libpng2 (runtime and development package)
+
+That's about all (I think). If you get a precompiled binary (there
+are some RPMs rolling around the internet), you'll only need the
+runtime stuff.
+
+> I'm sorry if this seems a bit off-topic, but downloading more than 20MB from
+> the net can be an expensive endeavor where I live, and recently I've become
+> aware of the customized GCC versions Redhat uses. 
+
+Well, I've tried Dillo with various GCCs and OSs, and I never got
+any problems there. My guess is that you'll only notice RedHat's
+customized GCC with a few programs which use some low-level compiler
+specific stuff (like the Linux kernel).
+
+> I intend switch to woody
+> Debian when I can get my hands on it.
+
+Smart move, good for you! ;-)
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Re: have you considered upgrading your SSL patch to 0.6.5?
+
+From: Jonathan P Springer <jonathan.springer@ve...> - 2002-05-23 11:30
+
+I've posted the patch to
+http://members.verizon.net/~vze2mqqv/dillo-ssl.0.6.5.diff .
+
+This is not a patch for the faint of heart!
+
+To apply, download to the root of your dillo 0.6.5 directory and
+
+$ patch -p1 <dillo-ssl.0.6.5.diff
+$ autoconf
+$ automake
+$ configure --enable-ssl
+$ make
+$ sudo make install
+
+Regards,
+-js
+
+On Fri, May 17, 2002 at 12:03:00PM -0500, John Utz wrote:
+> Can anybody point me at it? has anybody tried it with 0.6.5?
+> 
+> when i tried it with 0.6.4 to do my online banking, i wasnt successful 
+> because i needed cookies.
+> 
+> now, that i have cookies that work correctly after applying joergen's ? 
+> path fixing patch to cookies, i have attempted to apply your 0.6.4 patch 
+> and it fails alot.
+> 
+> > find . -name \*.rej -exec ls -l {} \;
+> -rw-r--r-- 1 spaz wheel 26186 May 17 09:54 ./src/IO/IO.c.rej
+> -rw-r--r-- 1 spaz wheel 2706 May 17 09:54 ./src/IO/Url.c.rej
+> -rw-r--r-- 1 spaz wheel 3555 May 17 09:55 ./src/IO/about.c.rej
+> -rw-r--r-- 1 spaz wheel 21574 May 17 09:55 ./src/IO/file.c.rej
+> -rw-r--r-- 1 spaz wheel 22410 May 17 09:55 ./src/IO/http.c.rej
+> -rw-r--r-- 1 spaz wheel 15030 May 17 09:55 ./src/cache.c.rej
+> -rw-r--r-- 1 spaz wheel 1666 May 17 10:00 ./src/dillo.c.rej
+> -rw-r--r-- 1 spaz wheel 583 May 17 09:53 ./configure.in.rej
+> -rw-r--r-- 1 spaz wheel 202 May 17 09:55 ./Makefile.am.rej
+> > 
+> 
+> i recognize that i am asking for a favor, and if you arent interested in
+> doing it ( i noted on the 0.6.4 patch mail that you offered to fix it for
+> the next release) plz let me know.
+> 
+> tnx!
+> 
+> johnu
+> 
+> -- 
+> 
+> John L. Utz III
+> john@ut...
+> 
+> Idiocy is the Impulse Function in the Convolution of Life
+> 
+
+-- 
+-Jonathan P Springer <jonathan.springer@ve...>
+------------------------------------------------------------------------------
+"A standard is an arbitrary solution to a recurring problem." - Joe Hazen 
+
+
+
+Re: [Dillo-dev]GTK+-2.0 ?
+
+From: Livio Baldini Soares <livio@im...> - 2002-05-23 11:28
+
+Hello Lawrence!
+
+Lawrence.Mayer@ds... writes:
+> Hi,
+> 
+> Can Dillo-0.6.5 compile and run with GTK+-2.0, or does it need GTK+-1.2 ?
+
+Currently Dillo works only with GTK+-1.2.
+
+> If Dillo needs GTK+-1.2, are there any plans to make a GTK+-2.0 version? If
+> so, any idea when it might become available?
+
+There have been a few individual tries to port Dillo do GTK+-2.0, as
+as far as I know, none of which have succeed completely. I think the
+main Dillo developers are not currently very motivated to do this
+port, at least while GTK+-2.0 isn't available on most mainstream
+stable distributions.
+
+This doesn't mean (of course!) that other developers (like you! ;-)
+shouldn't try the port if they like, and send in their results.
+
+So, sorry, we have no near future prediction to when this port will
+be ready. 
+
+best regards!
+
+-- 
+Livio <livio@im...> 
+
+
+
+[Dillo-dev]Progress halted?
+
+From: Ralph Slooten <ralph@de...> - 2002-05-23 05:33
+
+Hi there all,
+
+Sorry if this is a dumb quaetion, but it appeard that the CVS from Dillo 
+had not been updated from May 4. Does this mean that progress has stopped 
+for the time being?
+
+Greetings
+Ralph
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev]Sorry
+
+From: Freya <Freya@he...> - 2002-05-22 21:17
+
+Sorry I sent those mails twice, I didn't think they would make it through, and didn't hit the cancel button in time. I wonder why I only ever remember after I have just hit the send button. *sigh*
+
+Anyway apologies to everyone and especially to those on low bandwidth connections. I really do sympathise as I was at 9600 baud till recently!
+
+love
+
+Freya
+
+P.S. Arrrrgh nearly did it again! :) 
+
+
+
+[Dillo-dev]Dillo and sylpheed
+
+From: Freya <Freya@he...> - 2002-05-22 21:14
+
+I meant to also say in my last posting that I couldn't see the details for the user mailing list anywhere, perhaps it hasn't been set up yet as these early versions are for developers.
+
+Anyway I wondered if you had seen this:
+
+http://melvin.hadasht.free.fr/home/dillo/sylpheed/
+
+Looks preety amazing, there was a whole thread on the sylpheed list recently from someone saying they should put a whole webbrowser into slypheed *sigh* Suffice to say a lot of people weren't keen on the idea, but this is a great way of doing that without all the nastyness and code bloat. 
+
+I really think the dillo side of this code should be intergrated into the next version of dillo because it could just have soooooo many uses! :)
+
+Perhaps you already know about it, it was the first I heard of it tho, after I started ranting about how great dillo was on the sylpheed list!
+
+Anyway I thik you should all take a peek! :)
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]Dillo and sylpheed
+
+From: Freya <Freya@ga...> - 2002-05-22 21:13
+
+I meant to also say in my last posting that I couldn't see the details for the user mailing list anywhere, perhaps it hasn't been set up yet as these early versions are for developers.
+
+Anyway I wondered if you had seen this:
+
+http://melvin.hadasht.free.fr/home/dillo/sylpheed/
+
+Looks preety amazing, there was a whole thread on the sylpheed list recently from someone saying they should put a whole webbrowser into slypheed *sigh* Suffice to say a lot of people weren't keen on the idea, but this is a great way of doing that without all the nastyness and code bloat. 
+
+I really think the dillo side of this code should be intergrated into the next version of dillo because it could just have soooooo many uses! :)
+
+Perhaps you already know about it, it was the first I heard of it tho, after I started ranting about how great dillo was on the sylpheed list!
+
+Anyway I thik you should all take a peek! :)
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]Dillo in 8mb
+
+From: Freya <Freya@he...> - 2002-05-22 21:07
+
+Hiya!
+I've managed to get my 8mb laptop that I rescued from a skip (currently held together with pollyfilla and pink nail varnish) to run X-windows and I've been really impressed at how well it all works, having been warned loads of times in the past that the minimum spec for running x-windows is 16mb of ram. It really struggles with some things, but dillo is not one of them. Dillo is still faster than opera even on my p200 mmx which sadly I'm having to use as a router at the moment (yes I know it's kind of the wrong way round but I need usb ports for the adsl modem :( ) anyway Dillo takes about half the time to start of opera on the P200, so it's not really fast (the computer is a 486-25) but it does work and it's great!
+
+BTW dillo on the P200 started instantly, but you probably knew that already! ;)
+
+I've also managed to get Sylpheed working on my 486 which shocked me, this really does take an age to start, probably about as long as opera on the P200, in fact I'm being unfair to say that dillo starts in half the time of opera on the P200, it actually starts quite quickly, which sylpheed doesn't but then the thing is that once Sylpheed has started it just works, the hard disk sits there silently and I type away or get my mail, it all works fine, I guess waiting for Sylpheed is only like having to wait for gnome to boot up (erm on the p200 of course *giggle*). ;) 
+
+Anyway I just thought I would drop a line and say how useful dillo is! There is no other browser that will run on this computer except links. Well there is but they aren't worth running because dillo is so infinitely better! :) I am really missing being able to get at yahoo mail and stuff but at least I can see most sites. Speaking of yahoo mail, I knew it used javascript for the passwords because opera goes on about it, but I thought I would have a look at the source and see if I could find a way to bypass the login javascript. I imagined a couple of lines that read stuff from the form. Wow was I wrong! A whole version of md5 written in javascript! eeeeeek! Has to be seen to be believed!
+
+I keep trying to tell people about Dillo but they just don't seem to believe me, or understand, I say that I'm running a browser on my 8mb laptop and it's great and they helpfully ask if I have tried links. "Yes of course I am running links, but this is a proper graphical broswer and it's really fast..." (actually the new version of links sounds preety incredible with javascript and even some support for X11 and graphics, it will be interesting when it is properly available!) Anyway I try and talk people into running it but they just won't believe me because they have never heard of dillo. Oh well their loss! One day they will hear of dillo again and again I am sure, but it is kind of depressing that there is this sort of herd mentality, that they will only try it if they have heard about it from lots of people. 
+
+Actually even more depressing is the software that people go on about, things like xcdroast and xine that seem really, really awful to me. I found dillo and sylpheed for myself by accident and I am really happy with them.
+
+I notice on the webpage it says that dillo works really well with iceWM. Strangely enough that is what I am running but a lot of people seem to think I should run blackbox or fluxbox. I'm not really keen on their user interfaces, partly because I like maximised full screen windows (which is the only way in 640x480 anyway!) but also because I like the task bar at the bottom of the screen. I could try using fspanel but I get a little worried about it all. Icewm may use a bit more resources but it adds so much to the experience for me that it is worth it! The only thing that really worries me is that someone told me just recently that IceWM leaks memory! This would be really bad on an 8mb computer! lol! I don't suppose any of you know how much truth there is in all that?
+
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]Dillo in 8mb
+
+From: Freya <Freya@ga...> - 2002-05-22 21:06
+
+Hiya!
+I've managed to get my 8mb laptop that I rescued from a skip (currently held together with pollyfilla and pink nail varnish) to run X-windows and I've been really impressed at how well it all works, having been warned loads of times in the past that the minimum spec for running x-windows is 16mb of ram. It really struggles with some things, but dillo is not one of them. Dillo is still faster than opera even on my p200 mmx which sadly I'm having to use as a router at the moment (yes I know it's kind of the wrong way round but I need usb ports for the adsl modem :( ) anyway Dillo takes about half the time to start of opera on the P200, so it's not really fast (the computer is a 486-25) but it does work and it's great!
+
+BTW dillo on the P200 started instantly, but you probably knew that already! ;)
+
+I've also managed to get Sylpheed working on my 486 which shocked me, this really does take an age to start, probably about as long as opera on the P200, in fact I'm being unfair to say that dillo starts in half the time of opera on the P200, it actually starts quite quickly, which sylpheed doesn't but then the thing is that once Sylpheed has started it just works, the hard disk sits there silently and I type away or get my mail, it all works fine, I guess waiting for Sylpheed is only like having to wait for gnome to boot up (erm on the p200 of course *giggle*). ;) 
+
+Anyway I just thought I would drop a line and say how useful dillo is! There is no other browser that will run on this computer except links. Well there is but they aren't worth running because dillo is so infinitely better! :) I am really missing being able to get at yahoo mail and stuff but at least I can see most sites. Speaking of yahoo mail, I knew it used javascript for the passwords because opera goes on about it, but I thought I would have a look at the source and see if I could find a way to bypass the login javascript. I imagined a couple of lines that read stuff from the form. Wow was I wrong! A whole version of md5 written in javascript! eeeeeek! Has to be seen to be believed!
+
+I keep trying to tell people about Dillo but they just don't seem to believe me, or understand, I say that I'm running a browser on my 8mb laptop and it's great and they helpfully ask if I have tried links. "Yes of course I am running links, but this is a proper graphical broswer and it's really fast..." (actually the new version of links sounds preety incredible with javascript and even some support for X11 and graphics, it will be interesting when it is properly available!) Anyway I try and talk people into running it but they just won't believe me because they have never heard of dillo. Oh well their loss! One day they will hear of dillo again and again I am sure, but it is kind of depressing that there is this sort of herd mentality, that they will only try it if they have heard about it from lots of people. 
+
+Actually even more depressing is the software that people go on about, things like xcdroast and xine that seem really, really awful to me. I found dillo and sylpheed for myself by accident and I am really happy with them.
+
+I notice on the webpage it says that dillo works really well with iceWM. Strangely enough that is what I am running but a lot of people seem to think I should run blackbox or fluxbox. I'm not really keen on their user interfaces, partly because I like maximised full screen windows (which is the only way in 640x480 anyway!) but also because I like the task bar at the bottom of the screen. I could try using fspanel but I get a little worried about it all. Icewm may use a bit more resources but it adds so much to the experience for me that it is worth it! The only thing that really worries me is that someone told me just recently that IceWM leaks memory! This would be really bad on an 8mb computer! lol! I don't suppose any of you know how much truth there is in all that?
+
+
+love
+
+Freya 
+
+
+
+[Dillo-dev]Compiling dillo. What do I need?
+
+From: Leandro Gil <leagil@ho...> - 2002-05-21 23:50
+
+Attachments: Message as HTML      
+
+I'm trying to turn a 486DX4 100MHz with 16MB RAM into a Linux box. I =
+would like to know what version of GCC, libraries and GTK+ do I need to =
+compile and use Dillo. If possible, I would like to use one of the =
+distributions in my possesion: Redhat 5.1, Redhat 6.0 and Redhat 7.2
+I'm sorry if this seems a bit off-topic, but downloading more than =
+20MB from the net can be an expensive endeavor where I live, and =
+recently I've become aware of the customized GCC versions Redhat uses. I =
+intend switch to woody Debian when I can get my hands on it.
+Thanks in advance. 
+
+
+
+[Dillo-dev]new pref: auto-scaling images
+
+From: Ross J. Reedstrom <reedstrm@ri...> - 2002-05-21 18:32
+
+Hey dillo developers - 
+Love the browser - I use it on my lipaq (linux/ipaq) for both browsing w/
+wireless at work, and as a general eBook reader w/ HTML format books. I
+_really_ love the 'wrap to viewport' pref: it makes a lot of sites
+readable that would otherwise require a lot of scrolling around.
+
+One feature I've seen in other small-screen browsers that is surprisingly
+effective in making sites fit is auto-scaling of images by 1:2. "Well,"
+he says to himself "here's my chance to contribute". So, I pulled
+the CVS feed, and rebuilt it, and played with it a little (oh,
+shiny! cookies!) and perused the code for where and how images are
+built. Hmm, I seem to be lost in a series of nested structs, many with
+members with names like 'width', 'height', 'ascent', and 'descent'. After
+poking around a bit, it seems to me that these structures get built,
+then filled in later via signals and callbacks.
+
+Any suggestions on where to dig, and any 'gotchas'? I'm thinking i'll
+probably need a new boolean in the Dwimage struct, halfsize, or some
+such, so I can scale all the various sizes properly.
+
+BTW, I noticed that percentage sizes on images does not seem to be
+supported. HTML 4.01 certainly defines the width and height attributes
+generically, saying that percentages are supported for images.
+
+http://www.w3.org/TR/html401/struct/objects.html#adef-width-IMG
+
+Ross
+-- 
+Ross Reedstrom, Ph.D. reedstrm@ri...
+Executive Director phone: 713-348-6166
+Gulf Coast Consortium for Bioinformatics fax: 713-348-6182
+Rice University MS-39
+Houston, TX 77005 
+
+
+
+[Dillo-dev]HTTP-Authentification / User Agent / "Clear Cache"-Button
+
+From: Alex Kloss <alex@St...> - 2002-05-21 13:35
+
+Hi, dillo developers!
+
+First, I wanted to say that your browser is really great! Not only being
+fast as hell but too only rendering sane HTML. Only a few necessary
+options are missing.
+
+I don't want to ask about that plugin/ftp stuff. I know that this is
+current development, so keep up the good work in your time.
+
+It only lacks a few features I could use.
+
+1. HTTP/Authentification as in RFC 1945, 10.11/10.16):
+There are several ways to do this. I'd prefer the option to have an
+input widget (within or out of the main window?) opened on the
+"WWW-Authenticate"-challenge asking for username and password, sending
+the reply to the Host.
+This widget could be implemented as plugin or into the browser itself.
+I'd like you to have the choice which way to go there.
+This feature can be especially useful when using the CUPS printer
+driver's web interface (http://localhost:631).
+
+2. The User-Agent in the HTTP/GET request could be changeable in the
+dillorc config file or otherwise. Momentarily, a request looks like:
+
+GET / HTTP/1.0
+Host: localhost
+User-Agent: Dillo/0.6.5
+
+Some pages that asks for MSIE/Netscape/Mozilla or similar could be
+tricked with a changeable user agent. As an option, you could send yet a
+bit less information about your system, too (since dillo seems to be
+at home only on BSD/*nix style systems).
+
+3. Some button or else for "clear cache" can come in handy when you're
+browsing more sites than the cache could put in your ram/swap. ATM, you
+have to quit and restart dillo to keep on browsing. In other situations,
+this can be a fast way to hide the locations you've visited to other
+users when you want to show them something.
+
+Have fun coding!
+
+Alex 
+
+
+
+[Dillo-dev]GTK+-2.0 ?
+
+From: <Lawrence.Mayer@ds...> - 2002-05-18 19:23
+
+Hi,
+
+Can Dillo-0.6.5 compile and run with GTK+-2.0, or does it need GTK+-1.2 ?
+
+If Dillo needs GTK+-1.2, are there any plans to make a GTK+-2.0 version? If
+so, any idea when it might become available?
+
+Lawrence Mayer <lawmay@ki.se>
+Ume=E5, Sweden 
+
+
+
+[Dillo-dev]have you considered upgrading your SSL patch to 0.6.5?
+
+From: John Utz <john@ut...> - 2002-05-17 17:03
+
+Can anybody point me at it? has anybody tried it with 0.6.5?
+
+when i tried it with 0.6.4 to do my online banking, i wasnt successful 
+because i needed cookies.
+
+now, that i have cookies that work correctly after applying joergen's ? 
+path fixing patch to cookies, i have attempted to apply your 0.6.4 patch 
+and it fails alot.
+
+> find . -name \*.rej -exec ls -l {} \;
+-rw-r--r-- 1 spaz wheel 26186 May 17 09:54 ./src/IO/IO.c.rej
+-rw-r--r-- 1 spaz wheel 2706 May 17 09:54 ./src/IO/Url.c.rej
+-rw-r--r-- 1 spaz wheel 3555 May 17 09:55 ./src/IO/about.c.rej
+-rw-r--r-- 1 spaz wheel 21574 May 17 09:55 ./src/IO/file.c.rej
+-rw-r--r-- 1 spaz wheel 22410 May 17 09:55 ./src/IO/http.c.rej
+-rw-r--r-- 1 spaz wheel 15030 May 17 09:55 ./src/cache.c.rej
+-rw-r--r-- 1 spaz wheel 1666 May 17 10:00 ./src/dillo.c.rej
+-rw-r--r-- 1 spaz wheel 583 May 17 09:53 ./configure.in.rej
+-rw-r--r-- 1 spaz wheel 202 May 17 09:55 ./Makefile.am.rej
+> 
+
+i recognize that i am asking for a favor, and if you arent interested in
+doing it ( i noted on the 0.6.4 patch mail that you offered to fix it for
+the next release) plz let me know.
+
+tnx!
+
+johnu
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Meta-refresh patch?
+
+From: madis <madis.janson@ma...> - 2002-05-16 22:30
+
+i've 'ported' one old Jorgen Viksell's meta refresh patch to dillo-0.6.5 
+(or dillo-0.6.6-pre, these two are not very different yet). this works 
+like 'real' meta refresh - waits and loads specified url. refresh loops 
+are not checked (but it thinks that timeout 0 is 300 ms). it is currently 
+together with other modifications i have made to dillo source, which i 
+use, but if there is interest i can extract the meta refresh code into 
+separate patch.
+
+the mixed diff thing is avaible here: 
+http://www.zone.ee/myzz/dillo/dillo-0.6.5-mzz.diff
+(meta refresh modifications are in html.h and html.c)
+
+and comments about it here:
+http://www.zone.ee/myzz/dillo/dillo-0.6.5-mzz.txt
+
+On Mon, 13 May 2002, Andreas Schweitzer wrote:
+
+> On Mon, May 13, 2002 at 12:14:33PM -0500, Patrick Glennon wrote:
+> > Can someone hook me up or point me to either the person who wrote, or
+> > possibly the patch itself for support for Meta-refresh? Ideally, i'd
+> > like to find the person....
+> 
+> Try
+> http://projects.gnome.hu/dillo/
+> 
+> I'm posting this to the list because I was staring at this patch
+> for a while a few weeks back. And I was thinking, maybe dillo could
+> at least insert a link for the refresh URL, like "The web page
+> designer wants you to go to ....". Maybe only for empty pages.
+> But I didn't start code.
+> 
+> Cheers,
+> Andreas
+> 
+> 
+
+-- 
+mzz 
+
+
+
+[Dillo-dev]bug 335, Cookies_create_timestamp
+
+From: madis <madis.janson@ma...> - 2002-05-16 21:57
+
+Attachments: patch-dillo-cookies_timestamp      
+
+patch for fixing this bug
+
+-- 
+mzz 
+
+
+
+[Dillo-dev]Re: validating HTML
+
+From: <s.geerken@pi...> - 2002-05-15 15:36
+
+Attachments: createdtd.pl      
+
+Gombok Arthur wrote:
+> does anyone knows how to validate HTML, (or generated HTML)
+> for *real* browser compatibility? 
+> 
+> it's easy to validate HTML3 HTML32 HTML4 pages, using sgml-tools
+> (like nsgmls from James Clark) with the published DTD's from W3C. 
+> 
+> when writing HTML using a plain Editor (like SciTe) it would
+> be very comfortable to be able to check for compatibility with
+> several browsers (like IE5 IE55 Mozilla Dillo Lynx...). 
+> 
+> so there has to be a spec. (catalog and dtd) to use with nsgmls.
+> i've thought that this is really trivial and would have been done 
+> by all browser manufacturers, but obviously i can only validate
+> by loading the page. this wont list useles tags and attributes... 
+> 
+> can anyone help?
+
+I don't think that browser specific specs make any sense (and, of course,
+elements will degrade gracefully in dillo), but if someone really wants
+to work on this, he may enhance the attached script, which scans the source
+code. Note that many problems are hidden by this dtd, e.g. the limited
+frame support. 
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]validating HTML
+
+From: Melvin Hadasht <melvin.hadasht@fr...> - 2002-05-14 21:03
+
+Hi,
+
+on Tue, 14 May 2002 16:15:21 +0100 (Wild Europe Standard Time)
+Gombok Arthur <gombok@so...> wrote:
+
+> No, that's not what i want to do. 
+> I would like to quick offline validate HTML-Pages if they have any tags
+> Dillo would ignore. (And of course i wanna do this on windows too)
+> I would like to check if proprietary ie tags are ~well formed~...
+> I would like to check which constructs will need a workaround if using
+> this browser ore any other
+
+Maybe this can help you a bit:
+
+http://www.willcam.com/cmat/html/crossref.html
+
+it lists the existing tags and what browser/hmtl version supports them.
+
+(Netscape and IE. It's maybe old, too).
+
+Cheers
+
+-- 
+Melvin Hadasht 
+
+
+
+Re: [Dillo-dev]validating HTML
+
+From: Gombok Arthur <gombok@so...> - 2002-05-14 14:19
+
+Gombok Arthur wrote:
+>> does anyone knows how to validate HTML, (or generated HTML)
+>> for *real* browser compatibility?
+>> 
+<snip />
+>> 
+>> so there has to be a spec. (catalog and dtd) to use with nsgmls.
+>> i've thought that this is really trivial and would have been done 
+>> by all browser manufacturers, 
+>
+>You wish:)
+
+Yes i do!
+
+>Unfortunately, browser combatibility is very rarely well defined. There's
+>a slight chance that Mozilla has an actual definition, as they're heavily
+>XML based, but other than that, it's all in the implementation. The best
+>choice IMO is to validate with the W3C DTDs and blame the browsers when
+>they fail to display it correctly.
+
+No, that's not what i want to do. 
+I would like to quick offline validate HTML-Pages if they have any tags
+Dillo would ignore. (And of course i wanna do this on windows too)
+I would like to check if proprietary ie tags are ~well formed~...
+I would like to check which constructs will need a workaround if using
+this browser ore any other
+
+>-Lars
+
+Thx for your response,
+Gombok 
+
+
+
+[Dillo-dev]Splash screen
+
+From: Courtney Grimland <cgrimland@ya...> - 2002-05-14 03:59
+
+Is it currently possible to not bring up the splash screen and go directly to my homepage when opening dillo?
+
+Is there a reason that this is not an option?
+
+-- 
+Brought to you by the letters G, N, and U.
+And now, a word from our sponsor... 
+
+
+
+[Dillo-dev]alt title text
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-05-13 19:41
+
+I've fotgotten, how does one access the title text, or indeed fire an on 
+mouseover event using a touch screen?
+
+thanks
+
+jonathan 
+
+
+
+Re: [Dillo-dev]validating HTML
+
+From: Lars Clausen <lrclause@cs...> - 2002-05-13 17:44
+
+On Mon, 13 May 2002, Gombok Arthur wrote:
+> Hi,
+>=20
+> does anyone knows how to validate HTML, (or generated HTML)
+> for *real* browser compatibility?
+>=20
+> it's easy to validate HTML3 HTML32 HTML4 pages, using sgml-tools
+> (like nsgmls from James Clark) with the published DTD's from W3C.
+>=20
+> when writing HTML using a plain Editor (like SciTe) it would
+> be very comfortable to be able to check for compatibility with
+> several browsers (like IE5 IE55 Mozilla Dillo Lynx...).
+>=20
+> so there has to be a spec. (catalog and dtd) to use with nsgmls.
+> i've thought that this is really trivial and would have been done=20
+> by all browser manufacturers,=20
+
+You wish:)
+
+> but obviously i can only validate
+> by loading the page. this wont list useles tags and attributes...
+
+Unfortunately, browser combatibility is very rarely well defined. There's
+a slight chance that Mozilla has an actual definition, as they're heavily
+XML based, but other than that, it's all in the implementation. The best
+choice IMO is to validate with the W3C DTDs and blame the browsers when
+they fail to display it correctly.
+
+-Lars
+
+--=20
+Lars Clausen (http://shasta.cs.uiuc.edu/~lrclause)| H=E5rdgrim of Numenor
+"I do not agree with a word that you say, but I |------------------------=
+----
+will defend to the death your right to say it." | Where are we going, and
+--Evelyn Beatrice Hall paraphrasing Voltaire | what's with the handbas=
+ket? 
+
+
+
+Re: [Dillo-dev]Meta-refresh patch?
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-13 17:26
+
+On Mon, May 13, 2002 at 12:14:33PM -0500, Patrick Glennon wrote:
+> Can someone hook me up or point me to either the person who wrote, or
+> possibly the patch itself for support for Meta-refresh? Ideally, i'd
+> like to find the person....
+
+Try
+http://projects.gnome.hu/dillo/
+
+I'm posting this to the list because I was staring at this patch
+for a while a few weeks back. And I was thinking, maybe dillo could
+at least insert a link for the refresh URL, like "The web page
+designer wants you to go to ....". Maybe only for empty pages.
+But I didn't start code.
+
+Cheers,
+Andreas
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Meta-refresh patch?
+
+From: Patrick Glennon <pglennon@me...> - 2002-05-13 17:17
+
+Attachments: Message as HTML      
+
+Can someone hook me up or point me to either the person who wrote, or
+possibly the patch itself for support for Meta-refresh? Ideally, i'd
+like to find the person....
+
+Cheers,
+Patrick 
+
+
+
+Re: [Dillo-dev]validating HTML
+
+From: Ralph Slooten <ralph@de...> - 2002-05-13 14:55
+
+Yes, http://validator.w3.org/
+
+On Mon, 13 May 2002, Gombok Arthur wrote:
+
+> Hi,
+> 
+> does anyone knows how to validate HTML, (or generated HTML)
+> for *real* browser compatibility?
+> 
+> it's easy to validate HTML3 HTML32 HTML4 pages, using sgml-tools
+> (like nsgmls from James Clark) with the published DTD's from W3C.
+> 
+> when writing HTML using a plain Editor (like SciTe) it would
+> be very comfortable to be able to check for compatibility with
+> several browsers (like IE5 IE55 Mozilla Dillo Lynx...).
+> 
+> so there has to be a spec. (catalog and dtd) to use with nsgmls.
+> i've thought that this is really trivial and would have been done 
+> by all browser manufacturers, but obviously i can only validate
+> by loading the page. this wont list useles tags and attributes...
+> 
+> can anyone help?
+> 
+> thx
+> 
+> 
+> 
+> _______________________________________________________________
+> 
+> Have big pipes? SourceForge.net is looking for download mirrors. We supply
+> the hardware. You get the recognition. Email Us: bandwidth@so...
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+Homepage: http://tuxpower.f2g.net/ 
+
+
+
+[Dillo-dev]validating HTML
+
+From: Gombok Arthur <gombok@so...> - 2002-05-13 13:41
+
+Hi,
+
+does anyone knows how to validate HTML, (or generated HTML)
+for *real* browser compatibility?
+
+it's easy to validate HTML3 HTML32 HTML4 pages, using sgml-tools
+(like nsgmls from James Clark) with the published DTD's from W3C.
+
+when writing HTML using a plain Editor (like SciTe) it would
+be very comfortable to be able to check for compatibility with
+several browsers (like IE5 IE55 Mozilla Dillo Lynx...).
+
+so there has to be a spec. (catalog and dtd) to use with nsgmls.
+i've thought that this is really trivial and would have been done 
+by all browser manufacturers, but obviously i can only validate
+by loading the page. this wont list useles tags and attributes...
+
+can anyone help?
+
+thx 
+
+
+
+[Dillo-dev]Compatibility addition
+
+From: Brian Dushaw <dushaw@ap...> - 2002-05-12 00:08
+
+Noting that the Dillo website asks for input on machines that
+run Dillo, I write to note that Dillo works on Psions that run 
+linux (http://linux-7110.so....net/) Specifically:
+
+Machine: Psion 5MX/5MXPro
+CPU: 32bit ARM 710T (37MHz)
+OS: Debian ARM linux
+
+(The Debian *deb packages do not yet have 0.6.5 for ARM, so we
+use 0.6.4 for now)
+
+Thanks for the fine browser!
+B.D.
+
+(I presume this is the right place to post this...) 
+
+
+
+Re: [Dillo-dev]keyboard shortcuts
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-05-09 05:54
+
+Thanks for that, as the keyboard is yet to work, I'll get back some time 
+soon.
+
+jonathan 
+
+
+
+Re: [Dillo-dev]keyboard shortcuts
+
+From: Imad <magius@pu...> - 2002-05-09 02:51
+
+On Wed, 8 May 2002, jonathan chetwynd wrote:
+
+> Does dillo allow keyboard access as well as pen/mouse?
+> if so is there a help file around eg
+>
+> backspace revisit previous page
+> ctrl-s save
+> ctrl-o open uri
+> ctrl-r refresh page
+> ...... .....
+>
+> or somesuch....
+
+Yes. There are a number of built-in shortcuts, and you can define more
+either in-session (as with most GTK+ apps) or by editing "menu.c"
+before compiling.
+
+
+-- 
+Best,
+Imad Hussain
++========== GBAfan Editor in Chief == http://www.gbafan.net ==========+
++===== OpenBSD. Functional. Secure. Free. http://www.openbsd.org =====+ 
+
+
+
+[Dillo-dev]keyboard shortcuts
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-05-08 20:24
+
+Does dillo allow keyboard access as well as pen/mouse?
+if so is there a help file around eg
+
+backspace revisit previous page 
+ctrl-s save
+ctrl-o open uri
+ctrl-r refresh page
+...... .....
+
+or somesuch....
+
+
+hope to have a keyboard working on the ipaq soon
+
+thanks
+jonathan 
+
+
+
+[Dillo-dev]splint / lint
+
+From: Klaus <Klaus.Bruessel@ep...> - 2002-05-08 10:00
+
+Would it be useful to make dillo "lint clean" ? To detect memory leaks and 
+bogus pointers automatically.
+Klaus 
+
+
+
+[Dillo-dev]gethostbyname
+
+From: madis <madis.janson@ma...> - 2002-05-07 19:01
+
+I read dns.c and found, that gethostbyname is used with pthreads.
+Is it safe to do so (i thought that gethostbyname is not thread-safe due 
+to static buffers usage)?
+
+-- 
+mzz 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 -- Compiling under Slackware 8.0
+
+From: Gil Andre <gandre@ar...> - 2002-05-06 09:31
+
+Stephen/Andreas:
+
+(First of all, thanks a lot for answering my message!)
+
+On Sat, 4 May 2002 15:36:41 +1200, Stephen wrote:
+> I'm running dillo on Slackware 8 - the best solution I've found is to
+> add /opt/gnome/bin to your PATH - this will let you run other gnome
+> apps from the command prompt too :)
+
+Well, here is where the plot thickens... =)
+
+This is the output of a "PATH" command:
+
+bash-2.05$ echo $PATH
+/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:/usr/games:.:/opt/gnome/bin:/usr/openwin/bin
+
+This is confirmed when I type, for instance:
+
+bash-2.05$ which gnumeric
+/opt/gnome/bin/gnumeric
+
+bash-2.05$ which gtk-config
+/opt/gnome/bin/gtk-config
+
+So far, so good... But how come I get error messages during the
+compilation of Dillo if the system path is OK?
+
+Anyway, I'll try setting up GTK_CONFIG like Andreas pointed out
+and I'll get back to you.
+
+Thanks again!
+
+-- 
+
+Gil Andre gandre@ar...
+Technical Writer
+Arkeia Corp. http://www.arkeia.com 
+
+
+
+[Dillo-dev]RE: Does dillo support proxy settings?
+
+From: Jason Kang <poh_sing@ho...> - 2002-05-05 09:44
+
+<html><div style='background-color:'><DIV>Hi,</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>My network is within a proxy firewall and I need to supply a proxy server and user name and password before I can access the Internet? Does dillo have support for this? </DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Tks,</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Jason</DIV></div><br clear=all><hr>Send and receive Hotmail on your mobile device: <a href='http://g.msn.com/1HM104901/39'>Click Here</a><br></html> 
+
+
+
+[Dillo-dev]Fwd: Re: small dillo patch
+
+From: Andreas Schweitzer <andy@ph...> - 2002-05-03 15:13
+
+Hi everybody,
+
+After bugging the *BSD folks about the new version
+I got a small patch back :-) I think this patch
+makes sense. Oh - and the calls to uname are standard.
+
+Cheers,
+Andreas
+
+
+----- Forwarded message from Hostmaster BSWS <hostmaster@bs...> -----
+
+Date: Thu, 2 May 2002 16:50:33 +0200
+From: Hostmaster BSWS <hostmaster@bs...>
+To: Couderc Damien <couderc@op...>,
+Andreas Schweitzer <andy@ph...>
+Subject: Re: small dillo patch
+In-Reply-To: <20020502144646.56450329.couderc@op...>; from couderc@op... on Thu, May 02, 2002 at 02:46:46PM +0200
+X-PGP-Key: http://misc.bsws.de/hb/pubkey.asc
+
+Hi Damien, Hi Andreas,
+
+On Thu, May 02, 2002 at 02:46:46PM +0200, Couderc Damien wrote:
+> > thought dillo should include OS info in the UserAgent like every
+> > other Browser does... ;-)
+> [SNIP]
+> > I have no clue wether this stuff is portable, if it is the dillo
+> > programmers should include it IMHO.
+
+[...]
+
+> Well your idea is good, but i think you should submit this upstream to
+> the authors of dillo.
+
+[...]
+
+> I propose you to contact Andreas Schweitzer <andy@ph...> who
+> is an OpenBSD user and an active coder for dillo. Just say that i've
+> recommended you and see with him what he can do for you in the dillo
+> project to include OS info.
+
+so here's the patch. Tested on OpenBSD/sparc only. I have no clue wether
+this is portable.
+I might add that I am quite pleased by dillo ;-)
+
+Greetz
+
+Henning
+
+--- dillo-0.6.4/src/IO/http.c Thu Jan 24 15:00:04 2002
++++ dillo-patched/src/IO/http.c Mon Apr 22 13:28:59 2002
+@@ -23,6 +23,9 @@
+#include <sys/wait.h>
+#include <sys/socket.h> /* for lots of socket stuff */
+#include <netinet/in.h> /* for ntohl and stuff */
++#include <sys/param.h>
++#include <sys/utsname.h>
++#include <sys/sysctl.h>
+
+#include "Url.h"
+#include "IO.h"
+@@ -125,6 +128,7 @@
+GString *s_port = g_string_new(""),
+*query = g_string_new(""),
+*full_path = g_string_new("");
++ struct utsname u;
+
+/* Sending the default port in the query may cause a 302-answer. --Jcid */
+if (URL_PORT(url) && URL_PORT(url) != DILLO_URL_HTTP_PORT)
+@@ -143,18 +147,20 @@
+URL_QUERY(url) ? URL_QUERY(url) : "",
+(URL_PATH(url) || URL_QUERY(url)) ? "" : "/");
+}
++ 
++ uname(&u);
+
+if ( URL_FLAGS(url) & URL_Post ){
+g_string_sprintfa(
+query,
+"POST %s HTTP/1.0\r\n"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: Dillo/%s; %s/%s %s\r\n"
+"Content-type: application/x-www-form-urlencoded\r\n"
+"Content-length: %ld\r\n"
+"\r\n"
+"%s",
+- full_path->str, URL_HOST(url), s_port->str, VERSION,
++ full_path->str, URL_HOST(url), s_port->str, VERSION, u.sysname, u.machine, u.release,
+(glong)strlen(URL_DATA(url)), URL_DATA(url));
+
+} else {
+@@ -163,12 +169,12 @@
+"GET %s HTTP/1.0\r\n"
+"%s"
+"Host: %s%s\r\n"
+- "User-Agent: Dillo/%s\r\n"
++ "User-Agent: Dillo/%s; %s/%s %s\r\n"
+"\r\n",
+full_path->str,
+(URL_FLAGS(url) & URL_E2EReload) ?
+"Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+- URL_HOST(url), s_port->str, VERSION);
++ URL_HOST(url), s_port->str, VERSION, u.sysname, u.machine, u.release);
+}
+
+str = query->str;
+
+
+-- 
+| Henning Brauer | PGP-Key: http://misc.bsws.de/hb/pubkey.asc 
+| BS Web Services | Roedingsmarkt 14, 20459 Hamburg, DE | http://bsws.de
+Unix is very simple, but it takes a genius to understand the simplicity.
+(Dennis Ritchie)
+
+
+
+----- End forwarded message -----
+
+-- 
+Department of Physics & Astronomy and Center for Simulational Physics
+University of Georgia !!! NEW !!! : Phone ++1 (706) 583 8227
+Athens, GA 30602-2451 Fax ++1 (706) 542 2492
+USA http://dilbert.physast.uga.edu/~andy/ 
+
+
+
+[Dillo-dev]Dillo 0.6.5 -- Compiling under Slackware 8.0
+
+From: Gil Andre <gandre@ar...> - 2002-05-03 14:59
+
+Hello, everyone.
+
+I have been running Dillo 0.6.4 for several weeks now, and
+I really like it. Configured it to open the Gnome help files
+by default, which a much, much better solution than using
+Mozilla or Galeon.
+
+I downloaded 0.6.5 today and attempted to compile it on my
+Linux Slackware 8.0 box, but it repeatedly fails to compile
+and/or configure properly.
+
+Under Slackware 8.0, Gnome is installed in "/opt/gnome" by
+default. the file gtk-config is in "/opt/gnome/bin" and the
+"gtk.h" file is in "/opt/gnome/include/gtk-1.2/gtk/"
+
+Dillo 0.6.5 complains it cannot find gtk-config and gtk.h,
+even if "configure" is launched with:
+
+./configure
+--with-gtk-prefix=/opt/gnome
+--with-gtk-exec-prefix=/opt/gnome/bin
+
+I also tried setting GTK_CONFIG to "/opt/gnome" and 
+"/opt/gnome/bin", but this did not work either.
+
+Here are the errors returned by "configure":
+
+_____
+
+which: no gtk-config in (/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin)
+which: no gtk12-config in (/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin)
+checking for gtk-config... no
+checking for GTK - version >= 1.2.0... no
+*** The gtk-config script installed by GTK could not be found
+*** If GTK was installed in PREFIX, make sure PREFIX/bin is in
+*** your path, or set the GTK_CONFIG environment variable to the
+*** full path to gtk-config.
+configure: WARNING: Unable to find Gtk+ with a version >= 1.2.0
+
+_____
+
+Please note that these errors are obtained even if paths have
+been given to "configure" on the command line, which makes it
+very confusing... 
+
+Is there anyone with Slackware experience that could offer tips
+or pointers on how to compile Dillo on a Slackware workstation?
+
+Any and all help is greatly appreciated!
+
+Final question: does Dillo 0.6.5 uses the same icons as v0.6.4?
+If yes, could I offer some (good-looking!) icons to replace the
+default ones?
+
+Many thanks in advance...
+
+-- 
+
+Gil Andre gandre@ar...
+Technical Writer
+Arkeia Corp. http://www.arkeia.com 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: CRX Driver <crxssi@ho...> - 2002-05-03 13:21
+
+I applied the patch successfully, and it appears I can get much further now 
+than before with the WebCalendar; but there are still problems with 
+authentication on other sections of the calendar. Doesn't seem to save the 
+cookies on exit now, but I am not sure.... I am off today, so I can only 
+test it a little bit. Will try more tests on Monday and let you know. 
+Anyone else that wants to test it can do so by going to 
+http://www.math.utexas.edu/users/mzou/webCal/try.html and creating their 
+own calendar; login, then try to create an appointment.
+
+Thank you very much!
+-Mark A. Davis
+
+
+>From: Jorgen Viksell <jorgen.viksell@te...>
+>To: CRX Driver <crxssi@ho...>
+>CC: john@ut..., dillo-dev@li...
+>Subject: Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+>Date: 03 May 2002 07:43:02 +0200
+>
+>tor 2002-05-02 klockan 21.43 skrev CRX Driver:
+> > What I am trying to do is use Dillo with "WebCalendar" (
+> > http://www.math.utexas.edu/webcalendar ) which is a fantastic web-based
+> > scheduling system. I have it loaded on the same host as Dillo, and I 
+>access
+> > it using either localhost/wcal/wcal.pl or
+> > taylor2.laketaylor.org/wcal/wcal.pl
+>
+>There is a problem with the handling of paths. I used g_dirname() to
+>strip of the filename, not knowing it also stripped of the rightmost /.
+> So in this case we compared the cookie's path /wcal/ with /wcal which
+>obviously fails.
+>
+>The attached patch fixes it.
+>
+>Regards,
+>Jörgen
+>
+><< patch-cookies-path >>
+
+
+Try Linux, the free, multitasking, multiuser, multiprocessing,
+multithreading, multivendor, multiplatform, multistandard,
+"multi-everything" operating system!
+
+
+_________________________________________________________________
+Join the worlds largest e-mail service with MSN Hotmail. 
+http://www.hotmail.com 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-05-03 05:39
+
+Attachments: patch-cookies-path      
+
+tor 2002-05-02 klockan 21.43 skrev CRX Driver:
+> OK, I am only PARTIALLY stupid. I saw no cookies, but they WERE written =
+to=20
+> the cookies file AFTER I exited dillo. So they are there, but don't appe=
+ar=20
+> to work. What I am trying to do is use Dillo with "WebCalendar" (=20
+> http://www.math.utexas.edu/webcalendar ) which is a fantastic web-based=20
+> scheduling system. I have it loaded on the same host as Dillo, and I acc=
+ess=20
+> it using either localhost/wcal/wcal.pl or=20
+> taylor2.laketaylor.org/wcal/wcal.pl
+
+There is a problem with the handling of paths. I used g_dirname() to
+strip of the filename, not knowing it also stripped of the rightmost /.
+So in this case we compared the cookie's path /wcal/ with /wcal which
+obviously fails.
+=20
+The attached patch fixes it.
+
+Regards,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: CRX Driver <crxssi@ho...> - 2002-05-03 02:26
+
+>From: John Utz <john@ut...>
+
+>Ok, tried the webcalandar and it misbehaved as you indicated.
+>i allso tried msn, because i expected that to be a cookie rich area :-)
+>cookies dont seem to be working. i agree.
+>
+>dont really know what to do about it tho...
+
+o o
+>
+___
+/ \
+
+
+
+--
+Try Linux, the free, multitasking, multiuser, multiprocessing,
+multithreading, multivendor, multiplatform, multistandard,
+"multi-everything" operating system!
+
+_________________________________________________________________
+MSN Photos is the easiest way to share and print your photos: 
+http://photos.msn.com/support/worldwide.aspx 
+
+
+
+Re: [Dillo-dev]Tool tips
+
+From: Ben Woolley <ben@ta...> - 2002-05-03 01:10
+
+Hello Jonathan and list,
+
+On Thu, 2 May 2002, jonathan chetwynd wrote:
+
+> can anyone tell me if tooltips (also known as labels, and frequently
+> showing alt or title info) are supported?
+> if so how does one see them?
+>
+> I'm using dillo on an ipaq, with touchscreen.
+
+In my dillorc file I have:
+
+# Show ALT popup for images?
+show_alt=YES
+
+
+
+I don't know about this functionality in Ipaq, though.
+
+I filed a bug report (#302) for not supporting title attributes (BTW, part
+of standard HTML), but I don't know C and therefore can't deal with this
+myself... yet. Title attributes are often very useful, and it seems that
+since alt is supported (at least on my setup), title shouldn't be too far
+behind. I often avoid Dillo for pages that I haven't visited yet, in case
+I miss something marked-up in the title attributes (I can go without
+stylesheets for awhile). Despite that, I started using Dillo for my main
+news site browser, if I don't have Galeon open already.
+
+Ben Woolley
+http://ben.tautology.org
+
+>
+> thanks
+>
+> jonathan
+>
+>
+> _______________________________________________________________
+>
+> Have big pipes? SourceForge.net is looking for download mirrors. We supply
+> the hardware. You get the recognition. Email Us: bandwidth@so...
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: John Utz <john@ut...> - 2002-05-02 20:08
+
+Ok, tried the webcalandar and it misbehaved as you indicated.
+
+i allso tried msn, because i expected that to be a cookie rich area :-)
+
+cookies dont seem to be working. i agree.
+
+dont really know what to do about it tho...
+
+On Thu, 2 May 2002, CRX Driver wrote:
+
+> OK, I am only PARTIALLY stupid. I saw no cookies, but they WERE written to 
+> the cookies file AFTER I exited dillo. So they are there, but don't appear 
+> to work. What I am trying to do is use Dillo with "WebCalendar" ( 
+> http://www.math.utexas.edu/webcalendar ) which is a fantastic web-based 
+> scheduling system. I have it loaded on the same host as Dillo, and I access 
+> it using either localhost/wcal/wcal.pl or 
+> taylor2.laketaylor.org/wcal/wcal.pl
+> 
+> It is local, so you can't access MY calendar server, but you can try the 
+> public one on that website, above. Just go to "try it out" then "create 
+> your own calendar on my demo server". Every time you move from one day to 
+> another on the calendar, it requires you to log in again (it uses cookies to 
+> keep you remembered). Works fine with Netscape and Mozilla but not with 
+> Dillo :(
+> 
+> Here is what my cookies looked like from the local server:
+> 
+> 0 localhost "" /wcal/ 0 2145830400 wcalusername 
+> mark2
+> 0 localhost "" /wcal/ 0 2145830400 wcalpassword 
+> majStH6uHqpfU
+> 0 taylor2.laketaylor.org "" /wcal/ 0 2145830400 
+> wcalusername mark2
+> 0 taylor2.laketaylor.org "" /wcal/ 0 2145830400 
+> wcalpassword majStH6uHqpfU
+> 
+> 
+> >From: John Utz <john@ut...>
+> >To: CRX Driver <crxssi@ho...>
+> >CC: dillo-dev@li...
+> >Subject: Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+> >Date: Thu, 2 May 2002 14:27:22 -0500 (CDT)
+> >
+> >can you supply a site for us to try? that might be helpful..
+> >
+> >On Thu, 2 May 2002, CRX Driver wrote:
+> >
+> > > I have downloaded, compiled and installed 0.6.5 with configure
+> > > --enable-cookies. I suppose it is possible I am doing something 
+> >wrong... It
+> > > does create ~/.dillo/cookies and cookiesrc files, it just never puts
+> > > anything in them. I edited cookiesrc to "DEFAULT=ACCEPT". Still 
+> >nothing.
+> > > I verified the test sites were using cookies by comparing with Mozilla 
+> >and
+> > > examining the cookies myself.
+> > >
+> > > Nobody has posted anything about cookies NOT working in 0.6.5, so I have 
+> >to
+> > > wonder if I am crazy...
+> > >
+> > > Built under Mandrake 8.2. Any assistance or ideas appreciated, 
+> >thanks.
+> > >
+> > > Mark A. Davis
+> > > Director of Information Systems
+> > > Lake Taylor Hospital
+> > > Norfolk VA 23502
+> --
+> Try Linux, the free, multitasking, multiuser, multiprocessing,
+> multithreading, multivendor, multiplatform, multistandard,
+> "multi-everything" operating system!
+> 
+> 
+> _________________________________________________________________
+> Send and receive Hotmail on your mobile device: http://mobile.msn.com
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: CRX Driver <crxssi@ho...> - 2002-05-02 19:44
+
+OK, I am only PARTIALLY stupid. I saw no cookies, but they WERE written to 
+the cookies file AFTER I exited dillo. So they are there, but don't appear 
+to work. What I am trying to do is use Dillo with "WebCalendar" ( 
+http://www.math.utexas.edu/webcalendar ) which is a fantastic web-based 
+scheduling system. I have it loaded on the same host as Dillo, and I access 
+it using either localhost/wcal/wcal.pl or 
+taylor2.laketaylor.org/wcal/wcal.pl
+
+It is local, so you can't access MY calendar server, but you can try the 
+public one on that website, above. Just go to "try it out" then "create 
+your own calendar on my demo server". Every time you move from one day to 
+another on the calendar, it requires you to log in again (it uses cookies to 
+keep you remembered). Works fine with Netscape and Mozilla but not with 
+Dillo :(
+
+Here is what my cookies looked like from the local server:
+
+0 localhost "" /wcal/ 0 2145830400 wcalusername 
+mark2
+0 localhost "" /wcal/ 0 2145830400 wcalpassword 
+majStH6uHqpfU
+0 taylor2.laketaylor.org "" /wcal/ 0 2145830400 
+wcalusername mark2
+0 taylor2.laketaylor.org "" /wcal/ 0 2145830400 
+wcalpassword majStH6uHqpfU
+
+
+>From: John Utz <john@ut...>
+>To: CRX Driver <crxssi@ho...>
+>CC: dillo-dev@li...
+>Subject: Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+>Date: Thu, 2 May 2002 14:27:22 -0500 (CDT)
+>
+>can you supply a site for us to try? that might be helpful..
+>
+>On Thu, 2 May 2002, CRX Driver wrote:
+>
+> > I have downloaded, compiled and installed 0.6.5 with configure
+> > --enable-cookies. I suppose it is possible I am doing something 
+>wrong... It
+> > does create ~/.dillo/cookies and cookiesrc files, it just never puts
+> > anything in them. I edited cookiesrc to "DEFAULT=ACCEPT". Still 
+>nothing.
+> > I verified the test sites were using cookies by comparing with Mozilla 
+>and
+> > examining the cookies myself.
+> >
+> > Nobody has posted anything about cookies NOT working in 0.6.5, so I have 
+>to
+> > wonder if I am crazy...
+> >
+> > Built under Mandrake 8.2. Any assistance or ideas appreciated, 
+>thanks.
+> >
+> > Mark A. Davis
+> > Director of Information Systems
+> > Lake Taylor Hospital
+> > Norfolk VA 23502
+--
+Try Linux, the free, multitasking, multiuser, multiprocessing,
+multithreading, multivendor, multiplatform, multistandard,
+"multi-everything" operating system!
+
+
+_________________________________________________________________
+Send and receive Hotmail on your mobile device: http://mobile.msn.com 
+
+
+
+Re: [Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: John Utz <john@ut...> - 2002-05-02 19:27
+
+can you supply a site for us to try? that might be helpful..
+
+On Thu, 2 May 2002, CRX Driver wrote:
+
+> I have downloaded, compiled and installed 0.6.5 with configure 
+> --enable-cookies. I suppose it is possible I am doing something wrong... It 
+> does create ~/.dillo/cookies and cookiesrc files, it just never puts 
+> anything in them. I edited cookiesrc to "DEFAULT=ACCEPT". Still nothing. 
+> I verified the test sites were using cookies by comparing with Mozilla and 
+> examining the cookies myself.
+> 
+> Nobody has posted anything about cookies NOT working in 0.6.5, so I have to 
+> wonder if I am crazy...
+> 
+> Built under Mandrake 8.2. Any assistance or ideas appreciated, thanks.
+> 
+> Mark A. Davis
+> Director of Information Systems
+> Lake Taylor Hospital
+> Norfolk VA 23502
+> 
+> --
+> Try Linux, the free, multitasking, multiuser, multiprocessing,
+> multithreading, multivendor, multiplatform, multistandard,
+> "multi-everything" operating system!
+> 
+> 
+> _________________________________________________________________
+> Send and receive Hotmail on your mobile device: http://mobile.msn.com
+> 
+> 
+> _______________________________________________________________
+> 
+> Have big pipes? SourceForge.net is looking for download mirrors. We supply
+> the hardware. You get the recognition. Email Us: bandwidth@so...
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]Dillo 0.6.5 Cookies not working
+
+From: CRX Driver <crxssi@ho...> - 2002-05-02 19:17
+
+I have downloaded, compiled and installed 0.6.5 with configure 
+--enable-cookies. I suppose it is possible I am doing something wrong... It 
+does create ~/.dillo/cookies and cookiesrc files, it just never puts 
+anything in them. I edited cookiesrc to "DEFAULT=ACCEPT". Still nothing. 
+I verified the test sites were using cookies by comparing with Mozilla and 
+examining the cookies myself.
+
+Nobody has posted anything about cookies NOT working in 0.6.5, so I have to 
+wonder if I am crazy...
+
+Built under Mandrake 8.2. Any assistance or ideas appreciated, thanks.
+
+Mark A. Davis
+Director of Information Systems
+Lake Taylor Hospital
+Norfolk VA 23502
+
+--
+Try Linux, the free, multitasking, multiuser, multiprocessing,
+multithreading, multivendor, multiplatform, multistandard,
+"multi-everything" operating system!
+
+
+_________________________________________________________________
+Send and receive Hotmail on your mobile device: http://mobile.msn.com 
+
+
+
+[Dillo-dev]Tool tips
+
+From: jonathan chetwynd <j.chetwynd@bt...> - 2002-05-02 14:42
+
+can anyone tell me if tooltips (also known as labels, and frequently 
+showing alt or title info) are supported?
+if so how does one see them?
+
+I'm using dillo on an ipaq, with touchscreen.
+
+thanks
+
+jonathan 
+
+
+
+Re: [Dillo-dev]introduction, plugins and wild ideas
+
+From: Paul Chamberlain <tif@ti...> - 2002-05-02 14:05
+
+Doug Kearns wrote:
+> On Thu, May 02, 2002 at 10:23:05AM +0100, Geoff Lane wrote:
+> > I also hope to provide a generic helper plugin that will allow
+> > quick-and-dirty plugins to be written using shell, perl or other
+> > languages.
+> 
+> Please do, I think this is important.
+
+Me too, but don't forget the security aspects of this.
+I had thought of mimicing CGI by manipulating stdin
+and the environment of locally executed programs. You
+might call it "localcgi:" or "exec:". For security I
+would recommend that only HTML from "exec:" or "file:"
+would be allowed to have these URLs.
+
+And BTW, I would think there would be quite a bit of
+optimizations available for handling one-pixel images.
+Probably the most significant of which is that there's
+guaranteed to be only one color. A scaled one-pixel
+image is equivalent to a simple filled rectangle, etc.
+--
+Paul Chamberlain, tif@ti... 
+
+
+
+Re: [Dillo-dev]introduction, plugins and wild ideas
+
+From: Doug Kearns <djkea2@mu...> - 2002-05-02 10:31
+
+On Thu, May 02, 2002 at 10:23:05AM +0100, Geoff Lane wrote:
+
+<snip>
+
+> I also hope to provide a generic helper plugin that will allow
+> quick-and-dirty plugins to be written using shell, perl or other
+> languages.
+
+Please do, I think this is important.
+
+Regards,
+Doug 
+
+
+
+[Dillo-dev]introduction, plugins and wild ideas
+
+From: Geoff Lane <zzassgl@tw...> - 2002-05-02 09:23
+
+Hello, I'm Geoff Lane and I've been asked to try and get the Dillo plugin
+implementation started. In the past I wrote the PNG image support for the
+Armadillo browser (I also wrote code to support a number of other image
+formats which didn't make it into Armadillo.)
+
+My objective is to get an initial implementation of the plugin code, based
+on current ideas (be they good or bad), developed and made available as soon
+as possible. Then everybody can rip it apart and tell me what a lousy
+programmer I am :-) In the process we will get a much better idea of what
+the plugin protocol should actually contain and how it should be
+implemented. I'm a firm believer in the "release early, release often"
+method of open software development.
+
+I hope to be able to show prototype plugins for mailto: and ftp:. I also
+hope to provide a generic helper plugin that will allow quick-and-dirty
+plugins to be written using shell, perl or other languages.
+
+Right now I'm working my way through the existing Dillo sources trying to
+understand the flow of data through the program. I guess it is going to
+take a couple of months before I can discuss the finer points of the IO code
+with confidence and start to write any code that is worth making public.
+
+OK, that's enough about me. Here's some other ideas I've been thinking
+about, one with actual code being developed and one which is just a vague
+design idea.
+
+Advert Buster
+
+The design of Dillo attempts to get a web page from the server onto the
+users screen as fast as possible. Anything that slows down the transfer is
+to be avoided if possible. Adverts tend to be large animated images
+provided by busy servers -- if we can stop these being accessed, Dillo will
+seem even faster and there is the added advantage that the adverts do not
+appear.
+
+With most other browsers, blocking adverts is done by using a small proxy
+program (You can also do tricks with /etc/hosts to block adverts but you
+cannot expect non-experts to do this.) The proxy checks URLs and substitutes
+a local replacement whenever an advert server is detected. If the proxy is
+not as fast as Dillo, the proxy will become a limiting factor when loading
+web pages.
+
+You cannot use a Dillo plugin to filter out adverts because _every_ URL
+would have to be handled by the plugin. This would negate the entire design
+of Dillo.
+
+An effective Advert Buster would have to be internal to Dillo. I already
+have some code that kind of works (at least it doesn't crash Dillo any more)
+for some kinds of advert server. I've got to tidy and port to the latest
+Dillo release then I'll let people know where to get it.
+
+(One thing I have discovered while developing this code is the huge number
+of single pixel GIFs that DoubleClick and others sprinkle about web pages
+for tracking purposes. As each requires a network connection to be
+established to a remote and possibly busy server these single pixel GIFs may
+be a a significant cause of slow page loading.)
+
+Image Plugins
+
+We want plugins so Dillo can remain small. Including specialist code to
+support mailto:, ftp:, news:, pop:, imap: etc leads to bloat and programs
+like Netscape that have runtime code sizes of 30Mbytes and greater. We
+accept the small overhead of running an external program for the less common
+types of URL. Dillo supports only three image formats, GIF, JPG and PNG,
+because these cover the overwhelming majority of images to be found on the
+http://www. But not supporting the less common image formats does mean that Dillo
+cannot be used for some specialist web based services.
+
+Everybody should be aware of NETPBM, Jef Poskanzer's collection of image
+format conversion programs. These allow conversion between a huge number of
+image formats by defining an intermediate image format called ppm - portable
+pixmap. It occurs to me that Dillo could support a vast, extensible,
+collection of image formats by allowing the use of image plugins. When
+Dillo detects an image format it doesn't support, an image plugin is started
+that performs a format conversion on-the-fly and Dillo sees the result in a
+format it can understand. I would also suggest that the Dillo core be
+enhanced to support PPM format images to avoid the need for double
+conversion (the fact I once did PPM support for Armadillo hasn't biased me
+at all...)
+
+Another use for image plugins would be to implement Scalable Vector Graphics
+(SVG -- http://www.w3.org/TR/2001/REC-SVG-20010904/) The vector instructions
+would be interpreted by the plugin and a PPM image generated for display.
+
+
+-- 
+/\ Geoff. Lane. /\ Manchester Computing /\ Manchester /\ M13 9PL /\ England /\
+
+4 food groups: fast, frozen, microwaved, and junk 
+
+
+
+Re: [Dillo-dev]GTK2 port
+
+From: xavier ordoquy <xordoquy@au...> - 2002-05-02 08:46
+
+On Thu, 2002-05-02 at 00:10, Jorgen Viksell wrote:
+> Hi!
+>=20
+> > Hello guys.
+> > I try to port my own applications to GTK2.
+> > It's nice and look stable enough.
+> > May be it's time to port dillo to GTK2?
+>=20
+> Xavier Ordoquy posted about having started this last august. I haven't
+> heard anything about it since.
+> http://www.geocrawler.com/mail/thread.php3?subject=3D%5BDillo-dev%5DGtk%2=
+B+2.0+Port&list=3D702
+>=20
+> I am willing to play with it if Xavier hasn't got time. There are some
+> goodies in GTK2. UTF8, more efficient drawing, etc.
+>=20
+> Cheers,
+> J=F6rgen
+
+Well, since my hard drive crashed loosing my work, I hadn't the
+willpower to redo it.
+I'll try to see if I can recover someting tonight, but I'm afraid it
+won't give much result.
+Anyway, I still can help you. You'll find me either on irc.gnome.org on
+#gnome or irc.openprojects.net on #gael. My nick is MCArkan.
+
+Regards.
+
+--=20
+Xavier Ordoquy
+"Complexity has nothing to do with intelligence.
+Simplicity does."
+(Larry Bossidy, CEO, Allied Signal) 
+
+
+
+[Dillo-dev]RE: GTK2 port
+
+From: Ken Hayber <khayber@so...> - 2002-05-02 01:25
+
+I just got through getting it to compile and link - but it crashes hard. =
+=20
+Lots of GTK/GDK errors. I took the 'I don't really know what I'm doing'=20=
+
+approach and let the compiler show me what needed changing.
+
+Now I'm firing up gdb/ddd to fix all the problems I caused. :-(
+
+Anyway, I'd also be willing to contribute. I'd love to see AA text in=20=
+
+Dillo which was my main reason for attempting this. But this being my=20=
+
+first GTK-anything effort, I'm on the steep part of the learning curve.
+
+
+Ken
+
+
+>Hi!
+>
+>> Hello guys.
+>> I try to port my own applications to GTK2.
+>> It's nice and look stable enough.
+>> May be it's time to port dillo to GTK2?
+>
+>Xavier Ordoquy posted about having started this last august. I haven't
+>heard anything about it since.
+=
+>http://www.geocrawler.com/mail/thread.php3?subject=3D%5BDillo-dev%5DGtk%2=
+B+
+2.0+Port&list=3D702
+>
+>I am willing to play with it if Xavier hasn't got time. There are some
+>goodies in GTK2. UTF8, more efficient drawing, etc.
+>
+>Cheers,
+>J=F6rgen
+
+"this .Sig no verb"
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+Ken Hayber
+mailto:khayber@so...
+http://khayber.dyndns.org 
+
+
+
+Re: [Dillo-dev]GTK2 port
+
+From: Jorgen Viksell <jorgen.viksell@te...> - 2002-05-01 22:06
+
+Hi!
+
+> Hello guys.
+> I try to port my own applications to GTK2.
+> It's nice and look stable enough.
+> May be it's time to port dillo to GTK2?
+
+Xavier Ordoquy posted about having started this last august. I haven't
+heard anything about it since.
+http://www.geocrawler.com/mail/thread.php3?subject=3D%5BDillo-dev%5DGtk%2B+=
+2.0+Port&list=3D702
+
+I am willing to play with it if Xavier hasn't got time. There are some
+goodies in GTK2. UTF8, more efficient drawing, etc.
+
+Cheers,
+J=F6rgen 
+
+
+
+[Dillo-dev]GTK2 port
+
+From: Grigory Bakunov <black@as...> - 2002-05-01 20:48
+
+Hello guys.
+I try to port my own applications to GTK2.
+It's nice and look stable enough.
+May be it's time to port dillo to GTK2? 
+
+
+
+Re: [Dillo-dev]patch for virtual host... games 
+
+From: John Utz <john@ut...> - 2002-05-01 20:08
+
+argh.
+
+i am so sorry vincent! i should have also reminded you that the patches 
+should go directly to jorge.
+
+i think that not sending my patch directly to jorge was the reason that 
+my navigation patch didnt get in..... i think :-)
+
+On Wed, 1 May 2002, Vincent Labrecque wrote:
+
+> 
+> and here's the feature one:
+> 
+> 
+> diff -pru dillo-0.6.4/src/IO/http.c ./IO/http.c
+> --- dillo-0.6.4/src/IO/http.c Thu Jan 24 09:00:04 2002
+> +++ ./IO/http.c Tue Apr 30 20:00:31 2002
+> @@ -154,7 +154,7 @@ static char *Http_query(const DilloUrl *
+> "Content-length: %ld\r\n"
+> "\r\n"
+> "%s",
+> - full_path->str, URL_HOST(url), s_port->str, VERSION,
+> + full_path->str, URL_HHOST(url), s_port->str, VERSION,
+> (glong)strlen(URL_DATA(url)), URL_DATA(url));
+> 
+> } else {
+> @@ -168,7 +168,7 @@ static char *Http_query(const DilloUrl *
+> full_path->str,
+> (URL_FLAGS(url) & URL_E2EReload) ?
+> "Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+> - URL_HOST(url), s_port->str, VERSION);
+> + URL_HHOST(url), s_port->str, VERSION);
+> }
+> 
+> str = query->str;
+> 
+> diff -pru dillo-0.6.4/src/url.c ./url.c
+> --- dillo-0.6.4/src/url.c Thu Jan 24 06:19:58 2002
+> +++ ./url.c Tue Apr 30 20:18:04 2002
+> @@ -57,11 +57,13 @@ gchar *a_Url_str(const DilloUrl *u)
+> if (!url->url_string) {
+> url->url_string = g_string_sized_new(60);
+> g_string_sprintf(
+> - url->url_string, "%s%s%s%s%s%s%s%s%s%s",
+> + url->url_string, "%s%s%s%s%s%s%s%s%s%s%s%s",
+> url->scheme ? url->scheme : "",
+> url->scheme ? ":" : "",
+> url->authority ? "//" : "",
+> url->authority ? url->authority : "",
+> + url->force_hostname ? "$" : "",
+> + url->force_hostname ? url->force_hostname : "",
+> (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
+> url->path ? url->path : "",
+> url->query ? "?" : "",
+> @@ -110,9 +112,9 @@ static DilloUrl *Url_object_new(const gc
+> 
+> /* remove leading & trailing space from buffer */
+> for (p = (gchar *)uri_str; isspace(*p); ++p);
+> - url->buffer = g_strchomp(g_strdup(p));
+> 
+> - s = (gchar *) url->buffer;
+> + s = url->buffer = g_strchomp(g_strdup(p));
+> +
+> p = strpbrk(s, ":/?#");
+> if (p && p[0] == ':' && p > s) { // scheme
+> *p = 0;
+> @@ -122,7 +124,7 @@ static DilloUrl *Url_object_new(const gc
+> // p = strpbrk(s, "/");
+> if (p && p[0] == '/' && p[1] == '/') { // authority
+> s = p + 2;
+> - p = strpbrk(s, "/?#");
+> + p = strpbrk(s, "$/?#");
+> if (p) {
+> memmove(s - 2, s, MAX(p - s, 1));
+> url->authority = s - 2;
+> @@ -133,6 +135,9 @@ static DilloUrl *Url_object_new(const gc
+> return url;
+> }
+> }
+> + p = strpbrk(s, "$");
+> + if (p)
+> + url->force_hostname = p + 1;
+> 
+> p = strpbrk(s, "?#");
+> if (p) { // path
+> @@ -178,6 +183,11 @@ void a_Url_free(DilloUrl *url)
+> 
+> /*
+> * Resolve the URL as RFC2396 suggests.
+> + *
+> + * Additionaly, we allow the IP$hostname syntax that i just invented to
+> + * allow virtual hosts games. (for example, if you know the IP of the
+> + * machine but it, for any reason, does not resolve. If that machines
+> + * uses vhosts you're pretty much screwed)
+> */
+> static GString *Url_resolve_relative(const gchar *RelStr,
+> DilloUrl *BaseUrlPar,
+> 
+> diff -pru dillo-0.6.4/src/url.h ./url.h
+> --- dillo-0.6.4/src/url.h Sun Jan 20 06:51:23 2002
+> +++ ./url.h Tue Apr 30 20:00:04 2002
+> @@ -46,7 +46,8 @@
+> #define URL_PATH(u) u->path
+> #define URL_QUERY(u) u->query
+> #define URL_FRAGMENT(u) u->fragment
+> -#define URL_HOST(u) a_Url_hostname(u)
+> +#define URL_HHOST(u) ((u)->force_hostname)?(u)->force_hostname:a_Url_hostname(u)
+> +#define URL_HOST(u) a_Url_hostname(u)
+> #define URL_PORT(u) (URL_HOST(u) ? u->port : u->port)
+> #define URL_FLAGS(u) u->flags
+> #define URL_DATA(u) u->data
+> @@ -80,6 +81,7 @@ struct _DilloUrl {
+> const gchar *query; // (no need to free them)
+> const gchar *fragment; //
+> const gchar *hostname; //
+> + const gchar *force_hostname;
+> gint port;
+> gint flags;
+> const gchar *data; /* POST */
+> 
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+Re: [Dillo-dev]patch for virtual host... games
+
+From: Jorge Arellano Cid <jcid@em...> - 2002-05-01 18:28
+
+Hi,
+
+On Tue, 30 Apr 2002, Vincent Labrecque wrote:
+
+>
+> Hi, here's a quite small diff.
+>
+> There is a little buffer overflow removal (look for the strncpy part),
+> strncpy is not assured to NUL-terminate the string.
+
+Well, I decided to fix two problems at the same time by making
+a new patch. It's already in CVS and it also removes the < 256
+hostname length restraint from http queries).
+
+
+Cheers
+Jorge.- 
+
+
+
+Re: [Dillo-dev]patch for virtual host... games 
+
+From: Vincent Labrecque <vincent@op...> - 2002-05-01 12:22
+
+and here's the feature one:
+
+
+diff -pru dillo-0.6.4/src/IO/http.c ./IO/http.c
+--- dillo-0.6.4/src/IO/http.c Thu Jan 24 09:00:04 2002
++++ ./IO/http.c Tue Apr 30 20:00:31 2002
+@@ -154,7 +154,7 @@ static char *Http_query(const DilloUrl *
+"Content-length: %ld\r\n"
+"\r\n"
+"%s",
+- full_path->str, URL_HOST(url), s_port->str, VERSION,
++ full_path->str, URL_HHOST(url), s_port->str, VERSION,
+(glong)strlen(URL_DATA(url)), URL_DATA(url));
+
+} else {
+@@ -168,7 +168,7 @@ static char *Http_query(const DilloUrl *
+full_path->str,
+(URL_FLAGS(url) & URL_E2EReload) ?
+"Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+- URL_HOST(url), s_port->str, VERSION);
++ URL_HHOST(url), s_port->str, VERSION);
+}
+
+str = query->str;
+
+diff -pru dillo-0.6.4/src/url.c ./url.c
+--- dillo-0.6.4/src/url.c Thu Jan 24 06:19:58 2002
++++ ./url.c Tue Apr 30 20:18:04 2002
+@@ -57,11 +57,13 @@ gchar *a_Url_str(const DilloUrl *u)
+if (!url->url_string) {
+url->url_string = g_string_sized_new(60);
+g_string_sprintf(
+- url->url_string, "%s%s%s%s%s%s%s%s%s%s",
++ url->url_string, "%s%s%s%s%s%s%s%s%s%s%s%s",
+url->scheme ? url->scheme : "",
+url->scheme ? ":" : "",
+url->authority ? "//" : "",
+url->authority ? url->authority : "",
++ url->force_hostname ? "$" : "",
++ url->force_hostname ? url->force_hostname : "",
+(url->path && url->path[0] != '/' && url->authority) ? "/" : "",
+url->path ? url->path : "",
+url->query ? "?" : "",
+@@ -110,9 +112,9 @@ static DilloUrl *Url_object_new(const gc
+
+/* remove leading & trailing space from buffer */
+for (p = (gchar *)uri_str; isspace(*p); ++p);
+- url->buffer = g_strchomp(g_strdup(p));
+
+- s = (gchar *) url->buffer;
++ s = url->buffer = g_strchomp(g_strdup(p));
++
+p = strpbrk(s, ":/?#");
+if (p && p[0] == ':' && p > s) { // scheme
+*p = 0;
+@@ -122,7 +124,7 @@ static DilloUrl *Url_object_new(const gc
+// p = strpbrk(s, "/");
+if (p && p[0] == '/' && p[1] == '/') { // authority
+s = p + 2;
+- p = strpbrk(s, "/?#");
++ p = strpbrk(s, "$/?#");
+if (p) {
+memmove(s - 2, s, MAX(p - s, 1));
+url->authority = s - 2;
+@@ -133,6 +135,9 @@ static DilloUrl *Url_object_new(const gc
+return url;
+}
+}
++ p = strpbrk(s, "$");
++ if (p)
++ url->force_hostname = p + 1;
+
+p = strpbrk(s, "?#");
+if (p) { // path
+@@ -178,6 +183,11 @@ void a_Url_free(DilloUrl *url)
+
+/*
+* Resolve the URL as RFC2396 suggests.
++ *
++ * Additionaly, we allow the IP$hostname syntax that i just invented to
++ * allow virtual hosts games. (for example, if you know the IP of the
++ * machine but it, for any reason, does not resolve. If that machines
++ * uses vhosts you're pretty much screwed)
+*/
+static GString *Url_resolve_relative(const gchar *RelStr,
+DilloUrl *BaseUrlPar,
+
+diff -pru dillo-0.6.4/src/url.h ./url.h
+--- dillo-0.6.4/src/url.h Sun Jan 20 06:51:23 2002
++++ ./url.h Tue Apr 30 20:00:04 2002
+@@ -46,7 +46,8 @@
+#define URL_PATH(u) u->path
+#define URL_QUERY(u) u->query
+#define URL_FRAGMENT(u) u->fragment
+-#define URL_HOST(u) a_Url_hostname(u)
++#define URL_HHOST(u) ((u)->force_hostname)?(u)->force_hostname:a_Url_hostname(u)
++#define URL_HOST(u) a_Url_hostname(u)
+#define URL_PORT(u) (URL_HOST(u) ? u->port : u->port)
+#define URL_FLAGS(u) u->flags
+#define URL_DATA(u) u->data
+@@ -80,6 +81,7 @@ struct _DilloUrl {
+const gchar *query; // (no need to free them)
+const gchar *fragment; //
+const gchar *hostname; //
++ const gchar *force_hostname;
+gint port;
+gint flags;
+const gchar *data; /* POST */ 
+
+
+
+Re: [Dillo-dev]patch for virtual host... games 
+
+From: Vincent Labrecque <vincent@op...> - 2002-05-01 12:20
+
+> my objection with this would be that it should be submitted as 2 separate 
+> patches..contributing vital security fixes is a worthy and wonderful 
+> thing, payloading it with your own personal favorite treat is kind of 
+> against the grain...
+> 
+> just my us$0.02....
+> 
+> johnu
+
+well, here goes the security diff. (i'll check the source-tree for other
+strn*() API misuse.)
+
+
+diff -pru dillo-0.6.4/src/IO/http.c ./IO/http.c
+--- dillo-0.6.4/src/IO/http.c Thu Jan 24 09:00:04 2002
++++ ./IO/http.c Tue Apr 30 20:00:31 2002
+@@ -334,7 +334,8 @@ static gint Http_get(ChainLink *Info, vo
+
+/* Proxy support */
+if (Http_must_use_proxy(Url)) {
+- strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname));
++ strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname) - 1);
++ hostname[sizeof hostname - 1] = 0;
+S->port = URL_PORT(HTTP_Proxy);
+S->use_proxy = TRUE;
+} else { 
+
+
+
+Re: [Dillo-dev]patch for virtual host... games
+
+From: John Utz <john@ut...> - 2002-05-01 04:21
+
+my objection with this would be that it should be submitted as 2 separate 
+patches..contributing vital security fixes is a worthy and wonderful 
+thing, payloading it with your own personal favorite treat is kind of 
+against the grain...
+
+just my us$0.02....
+
+johnu
+
+On Tue, 30 Apr 2002, Vincent Labrecque wrote:
+
+> 
+> Hi, here's a quite small diff.
+> 
+> There is a little buffer overflow removal (look for the strncpy part),
+> strncpy is not assured to NUL-terminate the string.
+> 
+> And there is the main part, a feature, non RFC compliant change :-)
+> 
+> It adds support for the connectHost$httpHost syntax. That allows me
+> to say what host provides the service, and what virtual host i want. The
+> use of this that spawned the idea is that i know the IP of a machine
+> providing HTTP service, it does not resolve, yet I want to access the
+> vhost.
+> 
+> I find this useful, maybe some others will, too.
+> 
+> Please check the patches carefuly, i don't know the codebase enough to
+> be 100% sure of my changes, even if they seem to work fine.
+> 
+> I'll be happy to reply to comments regarding this feature. (alternative
+> syntax, etc)
+> 
+> - Vincent
+> 
+> diff -pru dillo-0.6.4/src/IO/http.c ./IO/http.c
+> --- dillo-0.6.4/src/IO/http.c Thu Jan 24 09:00:04 2002
+> +++ ./IO/http.c Tue Apr 30 20:00:31 2002
+> @@ -154,7 +154,7 @@ static char *Http_query(const DilloUrl *
+> "Content-length: %ld\r\n"
+> "\r\n"
+> "%s",
+> - full_path->str, URL_HOST(url), s_port->str, VERSION,
+> + full_path->str, URL_HHOST(url), s_port->str, VERSION,
+> (glong)strlen(URL_DATA(url)), URL_DATA(url));
+> 
+> } else {
+> @@ -168,7 +168,7 @@ static char *Http_query(const DilloUrl *
+> full_path->str,
+> (URL_FLAGS(url) & URL_E2EReload) ?
+> "Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+> - URL_HOST(url), s_port->str, VERSION);
+> + URL_HHOST(url), s_port->str, VERSION);
+> }
+> 
+> str = query->str;
+> @@ -334,7 +334,8 @@ static gint Http_get(ChainLink *Info, vo
+> 
+> /* Proxy support */
+> if (Http_must_use_proxy(Url)) {
+> - strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname));
+> + strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname) - 1);
+> + hostname[sizeof hostname - 1] = 0;
+> S->port = URL_PORT(HTTP_Proxy);
+> S->use_proxy = TRUE;
+> } else {
+> 
+> diff -pru dillo-0.6.4/src/url.c ./url.c
+> --- dillo-0.6.4/src/url.c Thu Jan 24 06:19:58 2002
+> +++ ./url.c Tue Apr 30 20:18:04 2002
+> @@ -57,11 +57,13 @@ gchar *a_Url_str(const DilloUrl *u)
+> if (!url->url_string) {
+> url->url_string = g_string_sized_new(60);
+> g_string_sprintf(
+> - url->url_string, "%s%s%s%s%s%s%s%s%s%s",
+> + url->url_string, "%s%s%s%s%s%s%s%s%s%s%s%s",
+> url->scheme ? url->scheme : "",
+> url->scheme ? ":" : "",
+> url->authority ? "//" : "",
+> url->authority ? url->authority : "",
+> + url->force_hostname ? "$" : "",
+> + url->force_hostname ? url->force_hostname : "",
+> (url->path && url->path[0] != '/' && url->authority) ? "/" : "",
+> url->path ? url->path : "",
+> url->query ? "?" : "",
+> @@ -110,9 +112,9 @@ static DilloUrl *Url_object_new(const gc
+> 
+> /* remove leading & trailing space from buffer */
+> for (p = (gchar *)uri_str; isspace(*p); ++p);
+> - url->buffer = g_strchomp(g_strdup(p));
+> 
+> - s = (gchar *) url->buffer;
+> + s = url->buffer = g_strchomp(g_strdup(p));
+> +
+> p = strpbrk(s, ":/?#");
+> if (p && p[0] == ':' && p > s) { // scheme
+> *p = 0;
+> @@ -122,7 +124,7 @@ static DilloUrl *Url_object_new(const gc
+> // p = strpbrk(s, "/");
+> if (p && p[0] == '/' && p[1] == '/') { // authority
+> s = p + 2;
+> - p = strpbrk(s, "/?#");
+> + p = strpbrk(s, "$/?#");
+> if (p) {
+> memmove(s - 2, s, MAX(p - s, 1));
+> url->authority = s - 2;
+> @@ -133,6 +135,9 @@ static DilloUrl *Url_object_new(const gc
+> return url;
+> }
+> }
+> + p = strpbrk(s, "$");
+> + if (p)
+> + url->force_hostname = p + 1;
+> 
+> p = strpbrk(s, "?#");
+> if (p) { // path
+> @@ -178,6 +183,11 @@ void a_Url_free(DilloUrl *url)
+> 
+> /*
+> * Resolve the URL as RFC2396 suggests.
+> + *
+> + * Additionaly, we allow the IP$hostname syntax that i just invented to
+> + * allow virtual hosts games. (for example, if you know the IP of the
+> + * machine but it, for any reason, does not resolve. If that machines
+> + * uses vhosts you're pretty much screwed)
+> */
+> static GString *Url_resolve_relative(const gchar *RelStr,
+> DilloUrl *BaseUrlPar,
+> 
+> diff -pru dillo-0.6.4/src/url.h ./url.h
+> --- dillo-0.6.4/src/url.h Sun Jan 20 06:51:23 2002
+> +++ ./url.h Tue Apr 30 20:00:04 2002
+> @@ -46,7 +46,8 @@
+> #define URL_PATH(u) u->path
+> #define URL_QUERY(u) u->query
+> #define URL_FRAGMENT(u) u->fragment
+> -#define URL_HOST(u) a_Url_hostname(u)
+> +#define URL_HHOST(u) ((u)->force_hostname)?(u)->force_hostname:a_Url_hostname(u)
+> +#define URL_HOST(u) a_Url_hostname(u)
+> #define URL_PORT(u) (URL_HOST(u) ? u->port : u->port)
+> #define URL_FLAGS(u) u->flags
+> #define URL_DATA(u) u->data
+> @@ -80,6 +81,7 @@ struct _DilloUrl {
+> const gchar *query; // (no need to free them)
+> const gchar *fragment; //
+> const gchar *hostname; //
+> + const gchar *force_hostname;
+> gint port;
+> gint flags;
+> const gchar *data; /* POST */
+> Only in .: url.h~
+> 
+
+-- 
+
+John L. Utz III
+john@ut...
+
+Idiocy is the Impulse Function in the Convolution of Life 
+
+
+
+[Dillo-dev]patch for virtual host... games
+
+From: Vincent Labrecque <vincent@op...> - 2002-05-01 00:31
+
+Hi, here's a quite small diff.
+
+There is a little buffer overflow removal (look for the strncpy part),
+strncpy is not assured to NUL-terminate the string.
+
+And there is the main part, a feature, non RFC compliant change :-)
+
+It adds support for the connectHost$httpHost syntax. That allows me
+to say what host provides the service, and what virtual host i want. The
+use of this that spawned the idea is that i know the IP of a machine
+providing HTTP service, it does not resolve, yet I want to access the
+vhost.
+
+I find this useful, maybe some others will, too.
+
+Please check the patches carefuly, i don't know the codebase enough to
+be 100% sure of my changes, even if they seem to work fine.
+
+I'll be happy to reply to comments regarding this feature. (alternative
+syntax, etc)
+
+- Vincent
+
+diff -pru dillo-0.6.4/src/IO/http.c ./IO/http.c
+--- dillo-0.6.4/src/IO/http.c Thu Jan 24 09:00:04 2002
++++ ./IO/http.c Tue Apr 30 20:00:31 2002
+@@ -154,7 +154,7 @@ static char *Http_query(const DilloUrl *
+"Content-length: %ld\r\n"
+"\r\n"
+"%s",
+- full_path->str, URL_HOST(url), s_port->str, VERSION,
++ full_path->str, URL_HHOST(url), s_port->str, VERSION,
+(glong)strlen(URL_DATA(url)), URL_DATA(url));
+
+} else {
+@@ -168,7 +168,7 @@ static char *Http_query(const DilloUrl *
+full_path->str,
+(URL_FLAGS(url) & URL_E2EReload) ?
+"Cache-Control: no-cache\r\nPragma: no-cache\r\n" : "",
+- URL_HOST(url), s_port->str, VERSION);
++ URL_HHOST(url), s_port->str, VERSION);
+}
+
+str = query->str;
+@@ -334,7 +334,8 @@ static gint Http_get(ChainLink *Info, vo
+
+/* Proxy support */
+if (Http_must_use_proxy(Url)) {
+- strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname));
++ strncpy(hostname, URL_HOST(HTTP_Proxy), sizeof(hostname) - 1);
++ hostname[sizeof hostname - 1] = 0;
+S->port = URL_PORT(HTTP_Proxy);
+S->use_proxy = TRUE;
+} else {
+
+diff -pru dillo-0.6.4/src/url.c ./url.c
+--- dillo-0.6.4/src/url.c Thu Jan 24 06:19:58 2002
++++ ./url.c Tue Apr 30 20:18:04 2002
+@@ -57,11 +57,13 @@ gchar *a_Url_str(const DilloUrl *u)
+if (!url->url_string) {
+url->url_string = g_string_sized_new(60);
+g_string_sprintf(
+- url->url_string, "%s%s%s%s%s%s%s%s%s%s",
++ url->url_string, "%s%s%s%s%s%s%s%s%s%s%s%s",
+url->scheme ? url->scheme : "",
+url->scheme ? ":" : "",
+url->authority ? "//" : "",
+url->authority ? url->authority : "",
++ url->force_hostname ? "$" : "",
++ url->force_hostname ? url->force_hostname : "",
+(url->path && url->path[0] != '/' && url->authority) ? "/" : "",
+url->path ? url->path : "",
+url->query ? "?" : "",
+@@ -110,9 +112,9 @@ static DilloUrl *Url_object_new(const gc
+
+/* remove leading & trailing space from buffer */
+for (p = (gchar *)uri_str; isspace(*p); ++p);
+- url->buffer = g_strchomp(g_strdup(p));
+
+- s = (gchar *) url->buffer;
++ s = url->buffer = g_strchomp(g_strdup(p));
++
+p = strpbrk(s, ":/?#");
+if (p && p[0] == ':' && p > s) { // scheme
+*p = 0;
+@@ -122,7 +124,7 @@ static DilloUrl *Url_object_new(const gc
+// p = strpbrk(s, "/");
+if (p && p[0] == '/' && p[1] == '/') { // authority
+s = p + 2;
+- p = strpbrk(s, "/?#");
++ p = strpbrk(s, "$/?#");
+if (p) {
+memmove(s - 2, s, MAX(p - s, 1));
+url->authority = s - 2;
+@@ -133,6 +135,9 @@ static DilloUrl *Url_object_new(const gc
+return url;
+}
+}
++ p = strpbrk(s, "$");
++ if (p)
++ url->force_hostname = p + 1;
+
+p = strpbrk(s, "?#");
+if (p) { // path
+@@ -178,6 +183,11 @@ void a_Url_free(DilloUrl *url)
+
+/*
+* Resolve the URL as RFC2396 suggests.
++ *
++ * Additionaly, we allow the IP$hostname syntax that i just invented to
++ * allow virtual hosts games. (for example, if you know the IP of the
++ * machine but it, for any reason, does not resolve. If that machines
++ * uses vhosts you're pretty much screwed)
+*/
+static GString *Url_resolve_relative(const gchar *RelStr,
+DilloUrl *BaseUrlPar,
+
+diff -pru dillo-0.6.4/src/url.h ./url.h
+--- dillo-0.6.4/src/url.h Sun Jan 20 06:51:23 2002
++++ ./url.h Tue Apr 30 20:00:04 2002
+@@ -46,7 +46,8 @@
+#define URL_PATH(u) u->path
+#define URL_QUERY(u) u->query
+#define URL_FRAGMENT(u) u->fragment
+-#define URL_HOST(u) a_Url_hostname(u)
++#define URL_HHOST(u) ((u)->force_hostname)?(u)->force_hostname:a_Url_hostname(u)
++#define URL_HOST(u) a_Url_hostname(u)
+#define URL_PORT(u) (URL_HOST(u) ? u->port : u->port)
+#define URL_FLAGS(u) u->flags
+#define URL_DATA(u) u->data
+@@ -80,6 +81,7 @@ struct _DilloUrl {
+const gchar *query; // (no need to free them)
+const gchar *fragment; //
+const gchar *hostname; //
++ const gchar *force_hostname;
+gint port;
+gint flags;
+const gchar *data; /* POST */
+Only in .: url.h~ 
+

@@ -1,0 +1,309 @@
+[Dillo-dev]progress
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-06-28 17:45
+
+Hi there!
+
+We are getting closer to a new release due to several changes
+in the code. Current Changelog looks like this:
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+dillo-0.2.2 [July ?, 2000]
+
+- * Added a gtk_window_set_wmclass to all windows to prevent dialogs
+from having the same size as the main window. (Ex: with Sawfish)
+Patch Jörgen Viksell <vsksga@ho...>
+- * Fixed a segfault when calling "about:" method
+Patch: Dominic Wong <lwong@ch...>
+- * Added an option to force dillorc-defined colors (Try it with slashdot!)
+* Fixed display of encoded-URL-links on the status bar
+Patches: Adam Sampson <azz@gn...>
+- * Removed several compiler dependencies
+(detected with lcc on a 64 bit machine)
+* Modified mime.c and Url.c to use list.h, and eliminated hdlr.c
+* Standarized unsigned types to glib all around the code
+* Added some includes for libc5 compatibility
+* Modified IO_callback to avoid a CPU-hog (it happened in some systems).
+* Fixed a bug that added a trailing ampersand to GET and POST queries.
+* FIxed attribute parsing. It had nasty side effects; as providing
+wrong attribute values to POST and GET methods.
+* Joined Url.c and url.c into a single module.
+* Reimplemented URL resolving functions.
+* Implemented a new parser for "file:" URLs (Try "file:" & "file:.").
+Patches: Jorge Arellano Cid <jcid@ma...>
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+If you read it carefully, you'll notice several improvements,
+most notably:
+
+- POST & GET work better (google search is working!).
+- "file:" URLs got better handled.
+- slashdot is readable.
+- The code got more "portable" and stable.
+
+
+I'd like to include Jörgen patches too (if they get finished):
+
+> I have been working on getting checkbuttons and radiobuttons to render
+> properly, and it works now. Strangely enough it works when you call
+> gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget), FALSE), even though
+> this is supposed to be set by default...
+
+Maybe due to a lack of a window for the button widget.
+This happened with the horizontal ruler, and the first attempt
+to fix it, by packing it into an event box, worked OK.
+I'm not sure though, just a thing to check.
+
+> What bugs me now is that radio buttons appears as squares instead of
+> diamond-shaped.
+> I also worked on the SELECT stuff (width and height of the clist widget)
+> which now seems to work.
+
+If you finish them please let me know.
+
+
+- o -
+
+Dominic asks:
+
+> I have some questions about dillo. I find one dillo task in the task list
+> when open nothing. But if I open a web page, one more dillo appear in my task
+> list. Thus, two dillo in the task list. With top, I find both of them
+> consume the same memory size. Could you tell me why? Since netscape becomes 4
+> when a web page is opened, and I wonder why it happened.
+
+Well, that's due to threaded code (pthreads).
+When dillo starts, there's just a single thread running (the
+main thread). When another thread is spawned for the first time,
+(due to a DNS, or local file request), TWO more threads get
+running, one for the thread scheduler and other for the spawned
+process. When the spawned one finishes, the thread manager
+remains; if you 'ps aux | grep dillo', you'll see two processes
+that consume the same memory size but THAT'S NOT TRUE!!!
+Pthreads are light weight processes that run using the same
+memory space as the father (one of the advantages over fork).
+
+
+- o -
+
+CscHTML:
+
+Certainly to be taken into account.
+When I first downloaded it, found almost no documentation for
+it, appart from 350Kb of code and library dependencies.
+
+Haven't tested the speed yet.
+
+The biggest concern is the cost of making the widget change,
+and the loose of control over the rendering. Currently we have a
+widget set that needs moderate work to start handling tables (and
+that's lean, fast and already integrated to our browser).
+
+I think if we manage to provide a basic TABLE facility with Dw,
+developers will start to work together improving it. The
+advantage of having small, documented code is a nicer learning
+curve that lets developers jump-in quickly.
+BTW our main documentation fault is on Dw (dillo widget); any
+contribution will be highly appreciated. :-)
+
+On the other hand, if we fail to improve Dw, the change is
+almost forced (if possible).
+
+This remains an open issue.
+
+
+Jorge.-
+
+Ps: Thanks for reading this far.
+Ps2: Jörgen, I'll send you an email to your hotmail address, at
+the same time I send this one to the list, please let me
+know if you receive it (I've had problems with hotmail.com). 
+
+
+
+[Dillo-dev]CSCHTML widget
+
+From: <bigdaddy@ll...> - 2000-06-26 18:00
+
+Check this out
+http://www.cscmail.net/cschtml/
+
+this appears to be a GTK widget with _all_ html tags. I haven't done
+extensive research into this, but this could be huge. It may be worth
+while to look into this.
+
+-Mark
+
+"You can't get a blue screen on a black and white monitor." 
+
+
+
+[Dillo-dev]form fixes
+
+From: Jörgen Viksell <vsksga@ho...> - 2000-06-25 18:11
+
+Hi!
+
+I have been working on getting checkbuttons and radiobuttons to render 
+properly, and it works now. Strangely enough it works when you call
+gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget), FALSE), even though 
+this is supposed to be set by default...
+What bugs me now is that radio buttons appears as squares instead of 
+diamond-shaped.
+
+I also worked on the SELECT stuff (width and height of the clist widget) 
+which now seems to work.
+
+The patch can be found here:
+http://hem.passagen.se/vsksga/patches/patch-0.2.1-form_fixes
+
+I would appreciate if someone could try it out. And maybe fix the bugs =)
+
+// Jörgen
+________________________________________________________________________
+Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com 
+
+
+
+[Dillo-dev]ematic.com
+
+From: Jorge Arellano Cid <jcid@hu...> - 2000-06-21 02:37
+
+Hi everyone!
+
+
+First, I want to welcome every new member of this list. 
+
+I'm eager to "hear" your impressions and comments on dillo but
+it seems that the ematic server went down the hard way, and I
+haven't received mail since early Jun 18. So please, if you had
+sent me mail, please resend it to jcid@ma....
+
+We have new patches! I've also found a couple of bugs that
+will be nailed down pretty soon.
+
+
+regards
+Jorge.-
+
+
+
+-- 
+
+
+
+[Dillo-dev]dillo-0.2.1
+
+From: Jorge Arellano Cid <jcid@me...> - 2000-06-17 18:09
+
+Hi there!
+
+A lot of water went down the bridge! 
+Just check our new release (and website) at:
+http://dillo.so....net/
+
+(You'll find all the info there)
+
+Jorge.-
+-- 
+
+
+
+Re: [Dillo-dev]New release
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-06-07 14:21
+
+Andrew:
+
+> The new release seems to work well. Thanks!
+
+Good!
+It was tested on Slackware 7.0, Slackware 3.6 libc5 (with a few
+changes), Redhat 6.2 and Suse.
+
+It behaves very stable here and I hope it works the same for
+everyone.
+
+> Is it just me or has bug 9 disappeared? (The one with mishandled # tags).
+> I browsed around a page with them in it and I never saw page.html#a#b or
+> anything like that. 
+
+No, the bug IS there; it just hides! :)
+
+If you browse a page that has a # anchor to another page,
+there's no problem, but if the # refers to the same page -> BUG.
+
+Test this one: http://dillo.inf.utfsm.cl/test/spg.htm
+
+> And, for that matter, how many of those other bugs have been fixed in
+> Dillo 0.2.0 without the database being updated?
+
+Not a single one. The database reflects current state.
+
+I left bug #35 there cause the BUG remains there; mitigated but
+still alive...
+
+
+> Thanks,
+
+You're welcome.
+
+
+Jorge.-
+
+
+Pd: Updated "--" to "McPherson" 
+
+
+
+Re: [Dillo-dev]New release
+
+From: Andrew McPherson <andrew@ma...> - 2000-06-07 00:19
+
+The new release seems to work well. Thanks!
+
+Is it just me or has bug 9 disappeared? (The one with mishandled # tags).
+I browsed around a page with them in it and I never saw page.html#a#b or
+anything like that. Did somebody fix that without updating the bug-track
+engine?
+
+And, for that matter, how many of those other bugs have been fixed in
+Dillo 0.2.0 without the database being updated?
+
+Thanks,
+
+-Andrew 
+
+
+
+[Dillo-dev]New release
+
+From: Jorge Arellano Cid <jcid@em...> - 2000-06-03 03:16
+
+Hi!
+
+Its been a long long time since the last release (two months)
+and I want to apologize for this. Although work had been hectic
+on my side, I couldn't make it in less time...
+
+Well, an evolving model, and always releasing a better browser
+are good rules to follow.
+
+The good news is that we have a HALF-NEW browser!!!
+(Check the Changelog.who for details)
+
+I hope you enjoy this version.
+Feedback is encouraged.-
+
+
+Jorge.-
+
+
+Pd : I'll update the web site ASAP (maybe on Monday).
+
+Pd2: Luca:
+I didn't include your justification patch in this version
+cause it broke the rendering of some pages. 
+
+

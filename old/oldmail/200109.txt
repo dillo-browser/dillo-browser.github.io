@@ -1,0 +1,2932 @@
+Re: [Dillo-dev]next encodings patch
+
+From: Grigory Bakunov <black@as...> - 2001-09-28 01:47
+
+Date |28 Sep 2001 04:28:56 +0400
+From |Michael Govorun <mike@sh...>
+
+Hello!
+
+MG> Grigory Bakunov <black@as...> writes:
+
+>> REALY i look through dw_style.c code and doesn't see nothing difficult.
+>> But you need to change ALL gdk_font_load calls to gdk_fontset_load. It's all.
+>> So sed 's/gdk_font_load/gdk_fontset_load/g' and enjoy with dillo and your lovely charsets -)
+MG> Thanks. it works.
+
+MG> But there is another one problem - POST encodings. If server sends to you
+MG> page in (for example) cp1251 it expects POST data also in
+MG> cp1251. Now Dillo sends text as is.
+
+I work on it. It's not more difficult than recoding html -)
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]next encodings patch
+
+From: Michael Govorun <mike@sh...> - 2001-09-28 00:29
+
+Grigory Bakunov <black@as...> writes:
+
+> REALY i look through dw_style.c code and doesn't see nothing difficult.
+> But you need to change ALL gdk_font_load calls to gdk_fontset_load. It's all.
+> So sed 's/gdk_font_load/gdk_fontset_load/g' and enjoy with dillo and your lovely charsets -)
+Thanks. it works.
+
+But there is another one problem - POST encodings. If server sends to you
+page in (for example) cp1251 it expects POST data also in
+cp1251. Now Dillo sends text as is.
+
+-- 
+Michael Govorun 
+
+
+
+Re: [Dillo-dev]next encodings patch
+
+From: Michael Govorun <mike@sh...> - 2001-09-27 17:21
+
+Grigory Bakunov <black@as...> writes:
+
+> MG> Hmm. Not working for me :(
+> MG> It recodes, but not properly.
+
+> What type of problems you have ?
+
+Oh. I think my problem is: 
+
+Jorge Arellano Cid <jcid@ne...> writes:
+
+>Hi there!
+
+> Sometime ago there was a thread on fonts/character enocoding
+> problems. Current CVS has gtk_set_locale and Karsten's patch for
+> font loading.
+
+>> The problem is that search sequence for fonts is arbitrary, and ISO10646
+>> fonts can appear before ISO8859 fonts. Gtk doesn't handle ISO10646
+>> fonts properly, hence the resolution problems.
+
+> The fix I've applied is to hardcode the font encoding into the font
+> search string in dw_style.c.
+
+-- 
+Michael Govorun 
+
+
+
+Re: [Dillo-dev]next encodings patch
+
+From: Grigory Bakunov <black@as...> - 2001-09-27 15:46
+
+Date |27 Sep 2001 12:47:58 +0400
+From |Michael Govorun <mike@sh...>
+
+Hello!
+
+MG> Hello!
+
+MG> Grigory Bakunov <black@as...> writes:
+
+>> Hello.
+>> I'm new in this list so don't kick me strongly.
+>> I make a patch for force encodings selection.
+>> I drop it here
+
+MG> Hmm. Not working for me :(
+MG> It recodes, but not properly.
+
+MG> another thing:
+MG> What you think about configurable "Accept-Charset" http-header in
+MG> Http_query() function in IO/html.c.
+
+What type of problems you have ?
+I work on accept-charset now -)
+
+MG> -- 
+MG> Michael Govorun
+
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+[Dillo-dev]Re: Dillo Basic auth patch
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-27 15:35
+
+Hi,
+
+> To avoid confusion about who said what, please stick the right name
+> to the quote. :)
+
+Sorry for that. The confusion is my fault.
+I forwarded the small diskussion between Tor-Åke Franssons and me to the list.
+To avoid his email to be shown in the archive I removed the 
+corresponding lines in the subject and the mail-bodies. 
+I only recognized later, that email addresses in the mail-bodies 
+are protected by the archive automatically.
+
+Regards,
+Johannes Hofmann. 
+
+
+
+[Dillo-dev] Re: Dillo Basic auth patch
+
+From: Sam J. <mail@sa...> - 2001-09-27 10:40
+
+On Thursday 27 September 2001 12:31, Tor-=C5ke Fransson wrote:
+> Quoting Sam J. Engstrom:
+> >On Monday 24 September 2001 19:15, Johannes Hofmann wrote:
+> >> Seriously, i intend to use dillo in my ipaq, and using handwriting
+> >> recognition with '****' feedback is kind of hard. Also, i was not su=
+re
+> >> my base64 encoding routine(!) was solid, so i wanted to [...]
+>
+> Johannes Hofmann did not write that. I did.
+>
+> To avoid confusion about who said what, please stick the right name to =
+the
+> quote. :)
+
+That's odd, the automatic quoting seemed correct because the From-header=20
+in the mail says it's from Johannes Hofmann, even though your name is in =
+the=20
+bottom of the message, but I apparently cut it out before noticing. So I=20
+guess the original mail was forwarded to the list but I don't see any men=
+tion=20
+of that.
+
+> ... or just make a workaround, trap "entry_changed" and change the entr=
+y
+> contents, but that requires storing the password in some other place th=
+an
+> in the widget.
+
+Won't the passwords need to be stored somewhere anyway, to remember passw=
+ords=20
+to several sites during a session as other browsers do? It also would be =
+nice=20
+if you could clear them without restarting the browser.
+
+--=20
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+[Dillo-dev]Re: Dillo Basic auth patch
+
+From: <torkel@ly...> - 2001-09-27 09:31
+
+Quoting Sam J. Engstrom:
+
+>On Monday 24 September 2001 19:15, Johannes Hofmann wrote:
+>> Seriously, i intend to use dillo in my ipaq, and using handwriting
+>> recognition with '****' feedback is kind of hard. Also, i was not sure
+>> my base64 encoding routine(!) was solid, so i wanted to [...]
+
+
+Johannes Hofmann did not write that. I did.
+
+To avoid confusion about who said what, please stick the right name to the
+quote. :)
+
+> Maybe the password field could briefly show the newest letter and then
+> change it to an asterisk, like I've seen in some Nokia phones. So the
+> letter is
+> visible long enough to see what you've typed, but the whole password is
+> never shown. I use dillo on the ipaq all the time, and agree that seeing
+> what you're writing helps a lot. [...]
+
+That is a very good idea! But...
+the correct place to implement that feature is in the gtk library, make
+the 'visible' attribute an enum instead of gboolean, and have the function
+gtk_entry_draw_text() in gtkentry.c do the right thing.
+
+I.e we need to convince a lot of people this is a good idea, unless we
+want provide our own libgtk with dillo, or subclass our own gtk_entry and
+stuff that into dillo.
+
+Can't replace just the gtk_entry_draw_text() function externally either,
+it's hardwired into the gtkentry.c code in several places.
+
+... or just make a workaround, trap "entry_changed" and change the entry
+contents, but that requires storing the password in some other place than
+in the widget.
+
+Regards,
+Tor-Åke 
+
+
+
+Re: [Dillo-dev]next encodings patch
+
+From: Michael Govorun <mike@sh...> - 2001-09-27 08:48
+
+Hello!
+
+Grigory Bakunov <black@as...> writes:
+
+> Hello.
+> I'm new in this list so don't kick me strongly.
+> I make a patch for force encodings selection.
+> I drop it here
+
+Hmm. Not working for me :(
+It recodes, but not properly.
+
+another thing:
+What you think about configurable "Accept-Charset" http-header in
+Http_query() function in IO/html.c.
+
+
+-- 
+Michael Govorun 
+
+
+
+Re: [Dillo-dev]Re: Dillo Basic auth patch
+
+From: Sam J. <mail@sa...> - 2001-09-26 23:33
+
+On Monday 24 September 2001 19:15, Johannes Hofmann wrote:
+> Seriously, i intend to use dillo in my ipaq, and using handwriting
+> recognition with '****' feedback is kind of hard. Also, i was not sure my
+> base64 encoding routine(!) was solid, so i wanted to see that i really
+> gave it the right password. I trust that will be changed, should my patch
+> go into CVS.
+
+Maybe the password field could briefly show the newest letter and then change 
+it to an asterisk, like I've seen in some Nokia phones. So the letter is 
+visible long enough to see what you've typed, but the whole password is never 
+shown. I use dillo on the ipaq all the time, and agree that seeing what 
+you're writing helps a lot.
+
+Sorry, no patch for it, just the idea. I haven't even had time to test the 
+actual auth patch yet.
+
+-- 
+Sam J. Engstrom Tel. +358 400 462442 mail@sa...
+Managing Director Nemesol http://nemesol.fi 
+
+
+
+[Dillo-dev]next encodings patch
+
+From: Grigory Bakunov <black@as...> - 2001-09-26 22:27
+
+Hello.
+I'm new in this list so don't kick me strongly.
+I make a patch for force encodings selection.
+I drop it here
+
+http://lambda.asplinux.udm.net/pub/dillo/dillo.encodings.patch
+
+It's based on japanise encodings patch but can help
+all users who use nonlatin1 charsets (especialy this patch
+help for all cyrillic readers with our charsets hell).
+Patch use iconv and work with 'encodings' file that i
+drop into ~/.dillo/ (like bookmarks.html).
+File contain "Charset name" "iconv name" pairs in form
+<enc value="ASCII">AscII</enc>
+<enc value="KOI8-R">Cyrillic KOI8-R</enc>
+<enc value="CP1251">Cyrillic CP1251</enc>
+<enc value="IBM866">Cyrillic IBM866</enc>
+<enc value="UTF-8">Unicode</enc>
+etc...
+As you can see this patch help me to view unicode and other charsets page.
+
+Patch aplayed on current (Thu Sep 27) CVS.
+To check it drop 'encodings' file to your ~/.dillo/
+Name of iconv charsets you can get from
+iconv --list (for glibc iconv)
+
+
+___________________________________________________________________
+Truly yours, Grigory Bakunov
+ASPLinux Support Team
+http://www.asplinux.ru 
+
+
+
+Re: [Dillo-dev]Fwd: dillo patch for Fugly Fonts
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-26 20:33
+
+Hi there!
+
+Sometime ago there was a thread on fonts/character enocoding
+problems. Current CVS has gtk_set_locale and Karsten's patch for
+font loading.
+
+> The problem is that search sequence for fonts is arbitrary, and ISO10646
+> fonts can appear before ISO8859 fonts. Gtk doesn't handle ISO10646
+> fonts properly, hence the resolution problems.
+>
+> The fix I've applied is to hardcode the font encoding into the font
+> search string in dw_style.c.
+
+As I've explained before, dillo works in ISO8859-1, so this
+patch is OK by now (further info in [Project Notes]).
+
+To those of you that have had problems before, please test
+current CVS and report back whether it solves the problem or not.
+
+Ah, some of you may require: `LC_ALL=POSIX ./dillo`
+
+
+Good luck!
+Jorge.- 
+
+
+
+[Dillo-dev]Dillo for the blind and visually impaired.
+
+From: Simon Dobrisek <simond@lu...> - 2001-09-26 09:33
+
+Dear colleagues,
+
+I am a teaching assistant and part of my research work at our university
+is to develop a simple but usable web browser for the blind and visually
+impaired people.
+
+For some time we have been involved in a non-profit research project wher=
+e
+we developed a voice-driven text-to-speech system (HOMER II) for blind or
+visually impaired persons for reading Slovenian texts ( my country ;) ).
+
+Later on we got an idea to set a web portal entirely dedicated to such
+disabled persons in Slovenia and to develop a HOMER III system which
+includes an html parser. Additionally, we decided to enable use of mouse
+pointer when browsing through the available text at the portal (some
+useful info, daily newspapers, selected novels ... all preformated into
+simple html pages ... the portal does not exist yet :( ... but an interne=
+t
+source of nonstructed ASCII Slovenian texts does!)
+
+And then I "discovered" the dillo. We have already done some job and our
+extension of the dillo has a screen reading capabilities (with the
+Slovenian text-to-speech and a lot of beep sounds ;) ... it works only
+when pointer is in the "dw_page"). The working name of the system is
+"ihomer".
+
+I have to say that I am a rookie in GTK programming and the dillo project=
+.
+I hope I didn't pollute the code with too much unstable crap but it seems
+stable (as much as dillo is stable). Our extension of the source code wil=
+l
+be publicly available (without the Slovenian TTS but with the instruction=
+s
+how to integrate other language TTS ... actually we have version with the
+"dummy synthesis - delayed print" to the console window).
+
+And now the main point!
+
+Currently, I am stucked with a problem of how to hook on the low level
+signals of the GTK menus and buttons in the dillo. I would need to
+"intercept" the position of the pointer in the menu (better said, I need
+the menu or button label text beneath the pointer to send it to the TTS).
+
+TTS works in a separated thread with a time out function. This means that
+you can't stuff the TTS with some fast browsing. You need to stay in a
+position for some time to hear anything from the TTS. This feature of our
+TTS seem to be stable when browsing through the dw_page. (I hooked TTS on
+the motion_notify_event of the dw_page)
+
+Do you have any hint, instructions?
+
+Thanx!
+
+as.dr. Simon Dobri=B9ek
+
+simond@lu... 
+
+
+
+[Dillo-dev]Updated auth patch available
+
+From: <torkel@ly...> - 2001-09-25 23:16
+
+An updated basic auth patch is available at:
+
+http://www.lysator.liu.se/~torkel/computer/ipaq/dillo_auth0925.diff.gz
+
+I have merged in some changes from Pekka Lampila (handle
+http://user:pass@fo.../) and Johannes Hofmann (don't show password on
+screen).
+
+I also added some bits of my own and made the patch clean against todays
+CVS.
+
+Enjoy.
+
+//Tor-Åke 
+
+
+
+[Dillo-dev]International language support for dillo
+
+From: Hector Garcia Alvarez <hector@de...> - 2001-09-25 22:40
+
+Hi all
+
+I would like to add international language support into dillo.
+Of course those people using it on Palm like machine could compile it
+without this support to keep it smaller.
+Is anybody working on this already?
+How do I send the patch and where?
+
+Regards,
+
+H=E9ctor 
+
+
+
+[Dillo-dev]Re: Bookmark System
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-24 16:18
+
+Alex,
+
+> Hey, i'd like to start working on the bookmark system, i already have
+> added seperators and an "Add Seperator" option to the menubar. Is anyone
+> else working on the bookmark system?
+
+Yes, I read your posts. This issue was discussed on the
+list a long time ago; current bookmarks code far from good, we
+know, and the main reason for not being working it out, is the
+idea of making our bookmarks implementation based on the plugin
+interface.
+
+Since the plugin implementation had been procrastinated to
+favor higher priorities, so had the bookmarks code. As we're
+getting closer to resume our work with the plugin interface,
+you'd better wait until it's done and gauge its potential.
+
+For instance, now that tables are working good, a table based
+display with two main columns, one for bookmark category (left)
+and the other for their listings, seems quite adequate. Let's add
+a top panel for delete, move, create category, export as HTML ...
+functions, plus the necessary #anchor bindings from the left
+panel to the main one, and we have an interesting proposal...
+
+And as plugins are external programs, any not so common
+addition a user may want can be added to a specific custom plugin
+without requiring it to make into dillo's source base.
+
+The whole concept of dillo (simple) plugins is very powerful,
+but yet to be tested. Eric and I had put a lot of work into it,
+so I keep looking forward for the day it begins to work as
+planned. A simpler approach has been tested to work OK (old
+plugin scheme), and it supported FTP quite nicely.
+
+
+Cheers
+Jorge.- 
+
+
+
+[Dillo-dev]Re: Dillo Basic auth patch
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-24 16:15
+
+On Sat, 22 Sep 2001, Johannes Hofmann wrote:
+
+> Hm, so the right way to go would be protocol+hostname+port+realm...
+
+Ideally, yes. But you have no knowledge of what realm it is until you
+have received the reply header. Using the directory name you can however,
+make smart assumptions on what realm it is in, for example:
+
+if you enter a site at http://foo.bar.com/beer and it is in a certain
+realm, http://foo.bar.com/beer/heineken is probably in the same realm,
+while http://foo.bar.com/wine does not have to be.
+
+However, if you enter the site at http://foo.bar.com/ and authenticate
+there, beer and wine are assumed to be in the same realm with my method.
+
+I.e I use the "surfing pattern", to make guesses on what realm it is.
+I know it is not ideal. Should beer and wine be in the same realm, and you
+enter at beer, and then go to wine, you would have to enter a password
+even though you should not have to.
+
+> So I think best way to go would be your scheme, but in case of
+> authentication failure on a host we already have auth-info for, we
+> could look in the realm-list, if we already have auth-info for that
+> realm. If so, we could send it without bothering the user.
+
+Yes! That is a good idea. I'll think about how to implement that
+
+> There's just one thing I'm thinking about.
+> Once we have a ssl-connection with certificate-based server
+> authentication, we certainly don't want to send auth-info based on
+> protocol+hostname+port only, without checking for dns-spoofing.
+> But I do not know enough about how ssl-connections are handled. Are
+> they kept alive, so that authentication is needed only once?
+
+No, they are not necessarily kept alive. At least one site i know of (my
+bank) asks for authentication certificate over and over again while
+loading a page, which indicates it is not using keep-alive.
+I have not really looked into implementing certificate authentication, but
+i think it should be handled like this:
+
+1. client makes request
+2. server asks for client authentication certificate, sends server
+certificate
+3. client looks at server certificate and compare it with its stored
+certificate for this server
+4a. if 3. results in a match, client sends client certificate
+4b. if the certificates does not match, warn the user about spoofing
+4c. if we have no certificate for this server, notify the user, store
+the server certificate, and send client certificate.
+
+I believe this is how Netscape does it.
+
+I do not know how certificates are passed back and forth, and all of this
+seems too complicated and tideous for me to find time to implement
+it anytime soon, but please go ahead. :)
+
+Regards,
+Tor-Åke Fransson
+
+
+PS If you think we should let the other dillo people in on the discussion,
+feel free to forward this mail and mails preceeding it to
+dillo-dev@li... DS 
+
+
+
+[Dillo-dev]Re: Dillo Basic auth patch
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-24 16:14
+
+On Fri, Sep 21, 2001 at 11:48:14PM +0200, Tor-Åke Fransson wrote:
+> 
+> On Fri, 21 Sep 2001, Johannes Hofmann wrote:
+> 
+> > I just have a small addition to the auth patch, to hide passwords from
+> > too curious people
+> 
+> I was wondering how long it would take for someone to object to that ;)
+> 
+> Seriously, i intend to use dillo in my ipaq, and using handwriting
+> recognition with '****' feedback is kind of hard. Also, i was not sure my
+> base64 encoding routine(!) was solid, so i wanted to see that i really
+> gave it the right password. I trust that will be changed, should my patch
+> go into CVS.
+
+
+Yeah, I already thought you left it in cleartext for debugging...
+
+> 
+> > and a small modification to the auth data lookup.
+> > It looks up auth data based on the hostname, protocol, and port
+> > instead of the url prefix that was used before.
+> 
+> Since different subdirectories on same host can be different realms, you
+> need the path also, ergo:
+> 
+> protocol+hostname+port+path
+> 
+> http://hostname:port/path, see? ;)
+> 
+> > I think one also has to look it up based on the auth-realm, but I did
+> > not see how to implement that at the moment.
+> 
+> You could do it by realm, but the server will only tell you the realm
+> after you have done a request, which in effect doubles the number of
+> requests! I also had that approach at first, but i abandoned it, since
+> dillo does not handle keep-alive connections.
+> 
+> Even though it is not the 'right' thing to do, i think we can safely
+> assume all files in a directory are protected in the same realm. At least
+> it it very common to configure web servers that way.
+> 
+> Using _just_ the realm is not good either, because a realm is
+> not guaranteed to be unique. I just have to name my realm the same as
+> yours, and trick your users to come and surf on my site
+> to steal passwords. You would need protocol+host+port+path+realm. Easy way
+> out is to skip the realm alltogether, hard way is to implement keep-alive,
+> to not double the number of connections.
+> 
+> IMHO, leaking a password to the wrong realm is not that dangerous, unless
+> the server administrator lets users themselves change logging
+> configuration to steal the 'Authorization:' header line. Leaking it to the
+> wrong server is _much_ worse.
+> 
+> In conclusion, it is all a tradoff between user convenience, speed and
+> password security. I aimed for "very convenient", "fast" and "pretty
+> safe".
+>
+
+Hm, so the right way to go would be protocol+hostname+port+realm...
+I thought leaking the password to the right server, but a wrong realm
+would be acceptable. Therefore, I you choose auth-info based on
+protocol+hostname+port and try if it works out. If the realm is wrong,
+I have to enter a new password. I see that this allows only one realm
+per server at a time :-(
+So I think best way to go would be your scheme, but in case of
+authentication failure on a host we already have auth-info for, we
+could look in the realm-list, if we already have auth-info for that
+realm. If so, we could send it without bothering the user.
+
+There's just one thing I'm thinking about.
+Once we have a ssl-connection with certificate-based server
+authentication, we certainly don't want to send auth-info based on
+protocol+hostname+port only, without checking for dns-spoofing.
+But I do not know enough about how ssl-connections are handled. Are
+they kept alive, so that authentication is needed only once?
+
+Regards,
+Johannes Hofmann 
+
+
+
+[Dillo-dev]Re: Dillo Basic auth patch
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-24 16:14
+
+On Fri, 21 Sep 2001, Johannes Hofmann wrote:
+
+> I just have a small addition to the auth patch, to hide passwords from
+> too curious people
+
+I was wondering how long it would take for someone to object to that ;)
+
+Seriously, i intend to use dillo in my ipaq, and using handwriting
+recognition with '****' feedback is kind of hard. Also, i was not sure my
+base64 encoding routine(!) was solid, so i wanted to see that i really
+gave it the right password. I trust that will be changed, should my patch
+go into CVS.
+
+> and a small modification to the auth data lookup.
+> It looks up auth data based on the hostname, protocol, and port
+> instead of the url prefix that was used before.
+
+Since different subdirectories on same host can be different realms, you
+need the path also, ergo:
+
+protocol+hostname+port+path
+
+http://hostname:port/path, see? ;)
+
+> I think one also has to look it up based on the auth-realm, but I did
+> not see how to implement that at the moment.
+
+You could do it by realm, but the server will only tell you the realm
+after you have done a request, which in effect doubles the number of
+requests! I also had that approach at first, but i abandoned it, since
+dillo does not handle keep-alive connections.
+
+Even though it is not the 'right' thing to do, i think we can safely
+assume all files in a directory are protected in the same realm. At least
+it it very common to configure web servers that way.
+
+Using _just_ the realm is not good either, because a realm is
+not guaranteed to be unique. I just have to name my realm the same as
+yours, and trick your users to come and surf on my site
+to steal passwords. You would need protocol+host+port+path+realm. Easy way
+out is to skip the realm alltogether, hard way is to implement keep-alive,
+to not double the number of connections.
+
+IMHO, leaking a password to the wrong realm is not that dangerous, unless
+the server administrator lets users themselves change logging
+configuration to steal the 'Authorization:' header line. Leaking it to the
+wrong server is _much_ worse.
+
+In conclusion, it is all a tradoff between user convenience, speed and
+password security. I aimed for "very convenient", "fast" and "pretty
+safe".
+
+
+Best regards,
+Tor-Åke
+
+
+
+> *** interface.c.orig Fri Sep 21 18:10:18 2001
+> --- interface.c Fri Sep 21 18:08:34 2001
+> ***************
+> *** 1047,1052 ****
+> --- 1047,1053 ----
+> gtk_box_pack_start(GTK_BOX(box1),*passwd_dialog_uentry, FALSE,
+> FALSE, 0);
+> gtk_widget_show(*passwd_dialog_uentry);
+> *passwd_dialog_pentry=gtk_entry_new();
+> + gtk_entry_set_visibility((GtkEntry*) *passwd_dialog_pentry, FALSE);
+> gtk_box_pack_start(GTK_BOX(box1),*passwd_dialog_pentry, FALSE,
+> FALSE, 0);
+> gtk_widget_show(*passwd_dialog_pentry);
+> /* gtk_widget_show(frame); */
+>
+>
+>
+>
+> *** auth.c.orig Fri Sep 21 18:14:58 2001
+> --- auth.c Fri Sep 21 18:33:34 2001
+> ***************
+> *** 43,73 ****
+>
+> GString *Auth_byurl(DilloUrl *n)
+> {
+> ! gchar *offset;
+> ! int i,longest=-1,len=0,longlen=0;
+> ! gchar *ptr;
+>
+> if (n == NULL)
+> return NULL;
+> !
+> for (i=0;i<num_realms;i++)
+> {
+> ! /* is my compiler broken, why do i need this? */
+> ! ptr=((DilloUrl *) realms[i].base_url)->url_string->str;
+> ! if (NULL == (offset = strrchr(ptr,'/')))
+> ! offset=ptr+strlen(ptr);
+> ! if (strncmp(n->url_string->str,ptr,(char *) offset - (char *) ptr) == 0)
+> {
+> ! len=(gchar *) offset - (gchar *) ptr;
+> ! if (longlen <= len)
+> ! {
+> ! longlen=len;
+> ! longest=i;
+> ! }
+> }
+> }
+> - if (-1 != longest)
+> - return realms[longest].auth;
+>
+> return NULL;
+> }
+> --- 43,62 ----
+>
+> GString *Auth_byurl(DilloUrl *n)
+> {
+> ! int i;
+>
+> if (n == NULL)
+> return NULL;
+> !
+> for (i=0;i<num_realms;i++)
+> {
+> ! if (strcmp(n->hostname, realms[i].base_url->hostname) == 0 &&
+> ! strcmp(n->protocol, realms[i].base_url->protocol) == 0 &&
+> ! n->port == realms[i].base_url->port)
+> {
+> ! return realms[i].auth;
+> }
+> }
+>
+> return NULL;
+> }
+>
+>
+> 
+
+
+
+[Dillo-dev][Johannes.Hofmann@gmx.de: Dillo Basic auth patch]
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-24 16:13
+
+Hi,
+
+first of all I want to thank you for your cool dillo patches (auth and
+https).
+I just have a small addition to the auth patch, to hide passwords from
+too curious people and a small modification to the auth data lookup.
+It looks up auth data based on the hostname, protocol, and port 
+instead of the url prefix that was used before.
+I think one also has to look it up based on the auth-realm, but I did
+not see how to implement that at the moment.
+
+cheers,
+Johannes Hofmann
+
+
+
+*** interface.c.orig Fri Sep 21 18:10:18 2001
+--- interface.c Fri Sep 21 18:08:34 2001
+***************
+*** 1047,1052 ****
+--- 1047,1053 ----
+gtk_box_pack_start(GTK_BOX(box1),*passwd_dialog_uentry, FALSE,
+FALSE, 0);
+gtk_widget_show(*passwd_dialog_uentry);
+*passwd_dialog_pentry=gtk_entry_new();
++ gtk_entry_set_visibility((GtkEntry*) *passwd_dialog_pentry, FALSE);
+gtk_box_pack_start(GTK_BOX(box1),*passwd_dialog_pentry, FALSE,
+FALSE, 0);
+gtk_widget_show(*passwd_dialog_pentry);
+/* gtk_widget_show(frame); */
+
+
+
+
+*** auth.c.orig Fri Sep 21 18:14:58 2001
+--- auth.c Fri Sep 21 18:33:34 2001
+***************
+*** 43,73 ****
+
+GString *Auth_byurl(DilloUrl *n)
+{
+! gchar *offset;
+! int i,longest=-1,len=0,longlen=0;
+! gchar *ptr;
+
+if (n == NULL)
+return NULL;
+! 
+for (i=0;i<num_realms;i++)
+{
+! /* is my compiler broken, why do i need this? */
+! ptr=((DilloUrl *) realms[i].base_url)->url_string->str;
+! if (NULL == (offset = strrchr(ptr,'/')))
+! offset=ptr+strlen(ptr);
+! if (strncmp(n->url_string->str,ptr,(char *) offset - (char *) ptr) == 0)
+{
+! len=(gchar *) offset - (gchar *) ptr;
+! if (longlen <= len)
+! {
+! longlen=len;
+! longest=i;
+! }
+}
+}
+- if (-1 != longest)
+- return realms[longest].auth;
+
+return NULL;
+}
+--- 43,62 ----
+
+GString *Auth_byurl(DilloUrl *n)
+{
+! int i;
+
+if (n == NULL)
+return NULL;
+! 
+for (i=0;i<num_realms;i++)
+{
+! if (strcmp(n->hostname, realms[i].base_url->hostname) == 0 &&
+! strcmp(n->protocol, realms[i].base_url->protocol) == 0 &&
+! n->port == realms[i].base_url->port)
+{
+! return realms[i].auth;
+}
+}
+
+return NULL;
+} 
+
+
+
+Re: [Dillo-dev]installation
+
+From: Matthieu Camus <matthieu.camus@po...> - 2001-09-24 09:24
+
+Hi,
+
+Have you installed that package ? libjpeg62-devel-6b-19mdk
+
+Regards,
+Matthieu
+
+En r=E9ponse =E0 darren <backdoc@ne...>:
+
+> I found the link to dillo on the xfce website. Since I have been so
+> happy=20
+> with xfce, I figure anything they recommend must be worth a look. But,
+> I'm=20
+> having trouble installing it. =20
+>=20
+> As a side note, I joined this list in an effort to resolve my
+> installation=20
+> problem. But, I didn't realize this was the development list until
+> after I=20
+> had subscribed. The way to subscribe to the user's list and the way to
+>=20
+> unsubscribe to the dev list was not obvious (I didn't see it, anyway).
+>=20
+> So, pardon an installation question. =20
+>=20
+> I've tried compiling with the following options:
+>=20
+> ./configure --with-jpeg-lib=3D/usr/lib --with-jpeg-
+> inc=3D/usr/lib/qt2/include
+>=20
+>=20
+> But, I'm still getting the following errors when I compile:
+>=20
+> checking for jpeg_destroy_decompress in -ljpeg... no
+> configure: WARNING: *** JPEG support will not be included ***
+> no
+> configure: WARNING: *** JPEG support will not be included ***
+>=20
+>=20
+> Thanks for any help you can give,
+> Darren
+>=20
+> BTW, this is on Mandrake 8.0.
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+>=20
+Matthieu
+matthieu.camus@un... 
+
+
+
+[Dillo-dev]installation
+
+From: darren <backdoc@ne...> - 2001-09-23 20:29
+
+I found the link to dillo on the xfce website. Since I have been so happy 
+with xfce, I figure anything they recommend must be worth a look. But, I'm 
+having trouble installing it. 
+
+As a side note, I joined this list in an effort to resolve my installation 
+problem. But, I didn't realize this was the development list until after I 
+had subscribed. The way to subscribe to the user's list and the way to 
+unsubscribe to the dev list was not obvious (I didn't see it, anyway).
+
+So, pardon an installation question. 
+
+I've tried compiling with the following options:
+
+./configure --with-jpeg-lib=/usr/lib --with-jpeg- inc=/usr/lib/qt2/include
+
+
+But, I'm still getting the following errors when I compile:
+
+checking for jpeg_destroy_decompress in -ljpeg... no
+configure: WARNING: *** JPEG support will not be included ***
+no
+configure: WARNING: *** JPEG support will not be included ***
+
+
+Thanks for any help you can give,
+Darren
+
+BTW, this is on Mandrake 8.0. 
+
+
+
+Re: [Dillo-dev]Pending tasks
+
+From: Viksell <jorgen.viksell@te...> - 2001-09-23 10:38
+
+Jorge Arellano Cid wrote:
+> -----------------
+> Attribute parsing
+> -----------------
+>=20
+> As I posted before (Subject: "Attribute parsing"), this is a
+> high priority task that's pending. I received emails from Bruno
+> and J=F6rgen stating that they were willing to work on it, but not
+> knowing exactly were to start. My current schedule contemplates
+> working on this, the networking part of plugins, https and auth.
+> So If I start with the latter I'll have little time to help you
+> both, so J=F6rgen: if you feel confident enough to work on
+> attribute parsing, starting from my previous post, please let me
+> know so I can focus on networking; if not, let me know also so I
+> can start here.
+
+Sure, I'll do it.
+As I understand, it is just Html_get_attr that needs to be changed to
+support dynamic lengths and then move parsing of entities in there.
+Or are there any other "deeper" issues?
+
+> ------------------------
+> https, cookies and auth.
+> ------------------------
+>=20
+> There were three issues to this:
+>=20
+> 1) Stability (almost achieved)
+> 2) The specific implementation layer and network support
+> for them.
+> 3) https pages usually require working cookies.
+>=20
+> As Tor-Ake and J=F6rgen have advanced with 2 and 3, I'll need to
+> know what this schemes require from the networking layers (for
+> instance, cookies require sending back stored cookies).
+>=20
+> If you guys work together, and specify what you require from
+> the networking layers, and keep on improving the specific
+> implementation, it will come a time when I'll be free to
+> implement the underlaying support and hopefully then, it'll
+> become a matter of merging.
+
+I'll make a list of the required changes for cookies and send it to=20
+the list some time. Kind of basic stuff except for some oddities with
+different cookie versions...
+
+> Note that cookies should provide dillorc options for:
+>=20
+> - rejecting all cookies
+> - accepting only if the RootUrl and server match.
+> - accepting all
+
+Implemented with a separate file where you can set actions for a
+specific domain or for all domains.
+
+J=F6rgen 
+
+
+
+[Dillo-dev]Pending tasks
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-23 09:38
+
+Hi everyone!
+
+Now that 0.6.1 has achieved a significant stability gain, we
+can focus on several other tasks that were waiting in the
+priorities queue.
+
+Note that the stabilization is not completed, but advanced
+enough to let other tasks to be started.
+
+
+-----------------
+Attribute parsing
+-----------------
+
+As I posted before (Subject: "Attribute parsing"), this is a
+high priority task that's pending. I received emails from Bruno
+and J=F6rgen stating that they were willing to work on it, but not
+knowing exactly were to start. My current schedule contemplates
+working on this, the networking part of plugins, https and auth.
+So If I start with the latter I'll have little time to help you
+both, so J=F6rgen: if you feel confident enough to work on
+attribute parsing, starting from my previous post, please let me
+know so I can focus on networking; if not, let me know also so I
+can start here.
+
+Note that there're other interesting tasks in this post that if
+you feel more comfortable with, can be as helpful to work on.
+
+
+--------------------------------------
+Bug 216 (answers without content/type)
+--------------------------------------
+
+Yes, I also had this problem with ebay (made a little hack, and
+won my bid!). Since that moment the idea of handling this case
+the rigth way is present. Note that the problem arises from a
+http answer lacking the content/type info; the RFC says it SHOULD
+be present, so it's not an error :(
+
+The solution is simple, do you remember magic numbers and the
+'file' command? Well, that's the way to go. I don't mean calling
+'file' and parsing its output, but to examine the magic numbers
+file (and its format) for the small set of MIME types dillo
+supports:
+
+image/{png, jpeg, gif}
+text/{plain, html}
+
+and afterward, to create a custom function that returns the
+MIME type of a file, by examining a few bytes from the start of
+it. Ex:
+
+gchar *a_Mime_get_content_type(const gchar *FewBytesString);
+
+After having this function, it's just a matter of binding it to
+header parsing.
+
+
+--------------------
+Dicache memory usage
+--------------------
+
+The cache system (cache and dicache) uses a lot of memory for
+images, because it stores the original format and the RGB
+decompressed one.
+
+Flushing the dicache is not easy because image widgets use the
+dicache buffers directly. The right solution is to implement
+a memory usage threshold on the dicache, but that would require a
+significative effort...
+
+As a workaround, there's a posibility of binding the
+'about:splash' method (because it doesn't use images) to a
+dicache flushing function. i.e. whenever the splash screen is
+requested, the handling method asserts there's only a single
+browser window open and flushes the dicache (after displaying the
+splash).
+
+This is very far from a clean solution, but may serve those of
+you that feel in a dire need of it.
+
+
+-------
+Plugins
+-------
+
+One of the most procrastinated topics in dillo :(
+After attribute parsing is done, I'll be choosing between
+plugins and the networking part of https, cookies and auth.
+
+
+------------------------
+https, cookies and auth.
+------------------------
+
+There were three issues to this:
+
+1) Stability (almost achieved)
+2) The specific implementation layer and network support
+for them.
+3) https pages usually require working cookies.
+
+As Tor-Ake and J=F6rgen have advanced with 2 and 3, I'll need to
+know what this schemes require from the networking layers (for
+instance, cookies require sending back stored cookies).
+
+If you guys work together, and specify what you require from
+the networking layers, and keep on improving the specific
+implementation, it will come a time when I'll be free to
+implement the underlaying support and hopefully then, it'll
+become a matter of merging.
+
+Note that cookies should provide dillorc options for:
+
+- rejecting all cookies
+- accepting only if the RootUrl and server match.
+- accepting all
+- [confirm] -- this must be very well thought, for not
+annoying the user.
+
+-----------------
+Frames workaround
+-----------------
+
+Before the final implementation of frames, a workaround (as
+dicussed on the list) would be a nice addition. I'll be waiting
+until Livio finishes testing and polishing the current prototype.
+
+
+-------
+History
+-------
+
+We are working with Eric on it. Expect a full creative solution
+to be there sometime :) I'm crossing fingers.
+
+
+-----------------------
+BUG 205 (visited links)
+-----------------------
+
+This is not a bug, but a feature!
+In dillo, visited link sematic is "cached".
+(it has proven useful)
+
+Note: 205 will be removed soon from BugTrack.
+
+
+----------------
+nowrap and width
+----------------
+
+The workaround for this construct was removed in concordance
+with dillo's html parsing policy ([Project Notes]).
+
+Also note that the HTML 4.01 spec says WIDTH is a "recommended"
+cell width (hints in dillo's implementation), and NOWRAP
+"disables automatic text wrapping for this cell", and it adds
+"NOTE: if used carelessly, this attribute may result in
+excessively wide cells".
+
+So current implementation is compliant with both.
+
+
+
+Regards
+Jorge.- 
+
+
+
+Re: [Dillo-dev]word wrapping / page width
+
+From: Ulrich Schwarz <uschwarz@gm...> - 2001-09-21 10:32
+
+On Fri, Aug 31, 2001 at 03:39:41PM +0200, Sebastian Geerken wrote:
+
+>>> I thought of a workaround, which ignores the NOWRAP in this
+>>> case, in Html_tag_open_table_cell:
+
+> done
+
+Hm, the recent CVS version of dillo reverts to the old state before
+your patch, where NOWRAP is applied in conjunction with an existing
+WIDTH attribute.
+
+So long.
+Ulrich 
+
+
+
+[Dillo-dev]Patch to make capitalisation consistent in dillo interface
+
+From: Adam Sampson <azz@gn...> - 2001-09-21 02:32
+
+In dillo-0.6.1, some parts of the interface capitalise all words ("Find Text"),
+some capitalise some ("Open Link in New Window"), and some only capitalise the
+first ("Find text in page"). Also, the context menus have extra header items,
+which look odd and don't add significantly to usability (at least, when I'm
+using the menus I care about what I can do, not why I can do it!). This patch
+makes all the phrases I could find only capitalise the first word (because
+that's what Links does, and I happen to like it), and removes the menu headers;
+it also removes the ellipsis from the end of the Save file dialogs, since the
+Open ones don't have them, and it's consistent with what other GTK apps do).
+Feedback appreciated. :)
+
+--- dillo-0.6.1/src/commands.c Sun Aug 12 03:12:49 2001
++++ dillo-0.6.1-azz/src/commands.c Fri Sep 21 03:18:15 2001
+@@ -115,7 +115,7 @@
+GTK_SIGNAL_FUNC(gtk_widget_destroyed),
+&bw->viewsource_window);
+
+- gtk_window_set_title (GTK_WINDOW (window), "View Source");
++ gtk_window_set_title (GTK_WINDOW (window), "View source");
+gtk_container_border_width (GTK_CONTAINER (window), 0);
+
+box1 = gtk_vbox_new (FALSE, 0);
+@@ -139,7 +139,7 @@
+gtk_text_insert (GTK_TEXT (text), NULL, NULL, NULL, buf, size);
+gtk_text_thaw (GTK_TEXT (text));
+
+- button = gtk_button_new_with_label ("close");
++ button = gtk_button_new_with_label ("Close");
+gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+GTK_SIGNAL_FUNC(gtk_widget_destroy),
+GTK_OBJECT (window));
+--- dillo-0.6.1/src/interface.c Fri Sep 21 02:31:12 2001
++++ dillo-0.6.1-azz/src/interface.c Fri Sep 21 03:20:07 2001
+@@ -884,7 +884,7 @@
+if (!bw->openfile_dialog_window) {
+Interface_make_choose_file_dialog(
+&(bw->openfile_dialog_window),
+- "openfile_dialog", "Dillo", "Dillo: Open File",
++ "openfile_dialog", "Dillo", "Dillo: Open file",
+(GtkSignalFunc) Interface_openfile_ok_callback, (void *)bw);
+}
+
+@@ -1144,7 +1144,7 @@
+fflush(Web->stream);
+fstat(fileno(Web->stream), &st);
+fclose(Web->stream);
+- a_Interface_msg(Web->bw, "File saved (%d Bytes)", st.st_size);
++ a_Interface_msg(Web->bw, "File saved (%d bytes)", st.st_size);
+} else {
+if ( (Bytes = Client->BufSize - Web->SavedBytes) > 0 ) {
+Bytes = fwrite(Client->Buf + Web->SavedBytes, 1, Bytes, Web->stream);
+@@ -1231,7 +1231,7 @@
+if (!bw->save_dialog_window) {
+Interface_make_choose_file_dialog(
+&bw->save_dialog_window,
+- "save_dialog", "Dillo", "Dillo: Save URL as File...",
++ "save_dialog", "Dillo", "Dillo: Save URL as file",
+(GtkSignalFunc) Interface_file_save_url, (void *)bw );
+}
+url = a_Url_new(gtk_entry_get_text(GTK_ENTRY(bw->location)), NULL, 0, 0);
+@@ -1258,7 +1258,7 @@
+Interface_make_choose_file_dialog(
+&bw->save_link_dialog_window,
+"save_link_dialog", "Dillo", 
+- "Dillo: Save link as File...",
++ "Dillo: Save link as file",
+(GtkSignalFunc) Interface_file_save_link,
+(void *)bw);
+}
+--- dillo-0.6.1/src/menu.c Fri Jul 13 18:58:03 2001
++++ dillo-0.6.1-azz/src/menu.c Fri Sep 21 03:11:35 2001
+@@ -124,15 +124,15 @@
+
+/* FILE MENU */
+file_menu = Menu_new(menubar, tiny ? "_F" : "_File", FALSE, bw);
+- Menu_add(file_menu, "_New Browser", "<ctrl>N", bw,
++ Menu_add(file_menu, "_New browser", "<ctrl>N", bw,
+a_Commands_new_callback, bw);
+- Menu_add(file_menu, "_Open File...", "<ctrl>O", bw,
++ Menu_add(file_menu, "_Open file...", "<ctrl>O", bw,
+a_Commands_openfile_callback, bw);
+Menu_add(file_menu, "Open _URL...", "<ctrl>L", bw,
+a_Commands_openurl_callback, bw);
+Menu_add(file_menu, "_Preferences", "<ctrl>E", bw,
+a_Commands_prefs_callback, bw);
+- Menu_add(file_menu, "Close _Window", "<ctrl>W", bw,
++ Menu_add(file_menu, "Close _window", "<ctrl>W", bw,
+a_Commands_close_callback, bw);
+Menu_sep(file_menu);
+Menu_add(file_menu, "E_xit Dillo", "<ctrl>X", bw,
+@@ -141,7 +141,7 @@
+/* BOOKMARKS MENU */
+bookmarks_menu = Menu_new(menubar, tiny ? "_B" : "B_ookmarks", FALSE, bw);
+bw->bookmarks_menu = bookmarks_menu;
+- Menu_add(bookmarks_menu, "_View Bookmarks", NULL, bw,
++ Menu_add(bookmarks_menu, "_View bookmarks", NULL, bw,
+a_Commands_viewbm_callback, bw);
+Menu_sep(bookmarks_menu);
+a_Bookmarks_fill_new_menu(bw);
+@@ -164,21 +164,18 @@
+GtkWidget *menu;
+
+menu = gtk_menu_new();
+- Menu_sep(menu);
+- Menu_add(menu, " PAGE OPTIONS", NULL, bw, NULL, NULL);
+- Menu_sep(menu);
+- Menu_add(menu, "View page Source", NULL, bw,
++ Menu_add(menu, "View page source", NULL, bw,
+a_Commands_viewsource_callback, bw);
+
+Menu_add(menu, "Bookmark this page", NULL, bw,
+a_Commands_addbm_callback, bw);
+Menu_sep(menu);
+- Menu_add(menu, "_Find Text", "<ctrl>F", bw,
++ Menu_add(menu, "_Find text", "<ctrl>F", bw,
+a_Commands_findtext_callback, bw);
+bw->pagemarks_menuitem = Menu_add(menu, "Jump to...", NULL, bw, NULL, bw);
+
+Menu_sep(menu);
+- Menu_add(menu, "Save page As...", NULL, bw,
++ Menu_add(menu, "Save page as...", NULL, bw,
+a_Commands_save_callback, bw);
+
+return menu;
+@@ -193,15 +190,12 @@
+GtkWidget *copy;
+
+menu = gtk_menu_new();
+- Menu_sep(menu);
+- Menu_add(menu, " LINK OPTIONS", NULL, bw, NULL, NULL);
+- Menu_sep(menu);
+- Menu_add(menu, "Open Link in New Window", NULL, bw,
++ Menu_add(menu, "Open link in new window", NULL, bw,
+a_Commands_open_link_nw_callback, bw);
+- Menu_add(menu, "Add Bookmark for Link", NULL, bw,
++ Menu_add(menu, "Add bookmark for link", NULL, bw,
+a_Commands_addbm_callback, bw);
+
+- copy = Menu_add(menu, "Copy Link location", NULL, bw,
++ copy = Menu_add(menu, "Copy link location", NULL, bw,
+a_Commands_set_selection_callback, bw);
+gtk_signal_connect(GTK_OBJECT(copy), "selection_clear_event",
+GTK_SIGNAL_FUNC(a_Commands_clear_selection_callback), NULL);
+@@ -211,7 +205,7 @@
+GTK_SIGNAL_FUNC(a_Commands_give_selection_callback), NULL);
+
+Menu_sep(menu);
+- Menu_add(menu, "Save Link As...", NULL, bw,
++ Menu_add(menu, "Save link as...", NULL, bw,
+a_Commands_save_link_callback, bw);
+return menu;
+}
+
+-- 
+Adam Sampson <azz@gn...> <URL:http://azz.us-lot.org/> 
+
+
+
+[Dillo-dev]Patch for better display of XHTML documents
+
+From: Adam Sampson <azz@gn...> - 2001-09-21 02:09
+
+Hiya.
+
+Since XHTML documents are required to have an XML definition at the top and
+dillo's HTML parser considers <?...?> to just be text, the XML definitions are
+visible in dillo's HTML view. This patch makes dillo treat <?...?> as a tag;
+since it doesn't know what to do with <?xml, it just ignores it, and the
+document displays correctly.
+
+Thanks very much to all the people who've worked on Dillo; it's a really nice
+piece of software, and is now getting used as my default browser.
+
+--- dillo-0.6.1/src/html.c Fri Sep 14 01:00:39 2001
++++ dillo-0.6.1-azz/src/html.c Fri Sep 21 02:59:48 2001
+@@ -3504,7 +3504,7 @@
+token_start = buf_index;
+
+} else if (buf[buf_index] == '<' && (ch = buf[buf_index + 1]) &&
+- (isalpha(ch) || strchr("!/", ch)) ) {
++ (isalpha(ch) || strchr("!/?", ch)) ) {
+/* Tag */
+if (buf_index + 3 < bufsize && !strncmp(buf + buf_index, "<!--", 4)) {
+/* Comment: search for close of comment, skipping over
+
+-- 
+Adam Sampson <azz@gn...> <URL:http://azz.us-lot.org/> 
+
+
+
+[Dillo-dev]usability patch
+
+From: Martin Samuelsson <cosis@ly...> - 2001-09-20 22:33
+
+Attachments: dillo-userfriendly.patch      
+
+i made these changes to make dillo a little more user friendly.
+
+it adds vi like key movement and makes it possible to completly remove the 
+menubar. i am in no way saying that my patch is nice enough to get included,
+i'm not a coder. see it as inspiration on what end users want.
+
+what do you think?
+
+great work btw. the world really needs a browser like dillo. 
+
+
+
+[Dillo-dev]Re: remote url access
+
+From: Sean MacLennan <seanm@st...> - 2001-09-20 03:29
+
+Attachments: dillo-patch      
+
+Hi!
+
+Way back on 10/20/2000 I posted a problem with trying to get Mosaic
+style remote urls working with dillo. Well, I tried it again with
+0.6.1 and it works great! Attached is a patch to try it. For users of
+X?Emacs, the following allows you to try it with browse url:
+
+(setq browse-url-mosaic-program "dillo"
+browse-url-browser-function 'browse-url-mosaic)
+
+Thanks,
+Sean MacLennan 
+
+
+
+Re: [Dillo-dev]Updated https patch available
+
+From: Aaron Lehmann <aaronl@vi...> - 2001-09-19 07:46
+
+On Tue, Sep 18, 2001 at 10:34:17PM +0200, Tor-?ke Fransson wrote:
+> Finally fixed the POST method, and made https use the same query mechanism
+> as http. Which in turn means that my previous auth patch will work with
+> https also :)
+
+This is really cool!!!
+
+> Yesterday i managed reading webmail (IMP) on our corporate
+> intranet using auth and https in Dillo. Hotmail did not work though
+> (missing cookies) ;)
+
+I hope you'll do cookies next! :-) 
+
+
+
+RE: [Dillo-dev]Updated https patch available
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-19 07:21
+
+Hi,
+
+thanks for these cool patches! https and auth work great on my box
+(FreeBSD 4.4)
+
+Cheers,
+Johannes 
+
+
+
+[Dillo-dev]Updated https patch available
+
+From: <torkel@ly...> - 2001-09-18 20:34
+
+Finally fixed the POST method, and made https use the same query mechanism
+as http. Which in turn means that my previous auth patch will work with
+https also :)
+
+Yesterday i managed reading webmail (IMP) on our corporate
+intranet using auth and https in Dillo. Hotmail did not work though
+(missing cookies) ;)
+
+Https patch is at
+http://www.lysator.liu.se/~torkel/computer/ipaq/dillo_https.diff.gz
+
+...applies cleanly with -p1 on my cvs tree from last thursday (i'm on a
+56k modem!) ... oh, and you need OpenSSL.
+
+Regards,
+Tor-Åke 
+
+
+
+[Dillo-dev]Bookmark Seperator patch completed
+
+From: DraX <drax@wh...> - 2001-09-17 02:11
+
+Attachments: dillo_bookmarkseperator.patch      
+
+Attached is my completed patch to add seperators to the bookmark system,
+it now uses <hr>, instead of my deformed href stuff, and it follows the
+bookmark pattern more, which was required when i made it so all browsers
+would have seperators and not just the first.
+
+I hope everyone enjoys, and i hope it makes it into cvs! 
+
+
+
+[Dillo-dev]seperator patch nearly complete
+
+From: DraX <drax@wh...> - 2001-09-16 19:53
+
+ok http://www.stampede.org/~drax/commands.c menu.c bookmark.c
+
+work fine, except seperators aren't parsed by all browser windows, only
+the first, ie if i start a new window, it dosen't have seperators, except
+if i add them from the menu. That and i want to change it from using a
+deformed A HREF to using HR, ubt that will take some modifiying to the way
+it parses the bookmark file.
+
+Try them out, fix the bugs if you want, and as soon as they're all fixed
+i'll submit a real patch. 
+
+
+
+[Dillo-dev]Impl. Basic auth (patch available)
+
+From: <torkel@ly...> - 2001-09-16 19:40
+
+My post this thursday seems to have disappeared somewhere. (not in the
+mail archive) I'll try again:
+
+-------------------------------------------------
+
+Hi all.
+
+I rethinked the authentication scheme a bit. (No changes to DilloUrl) It
+now keeps a list of the base url's for which auth info exists, instead.
+
+Gui code is in place, and all in all it works pretty ok. The 401 page is
+displayed before the reload though. Not so nice. How do i stop dillo from
+displaying it before the user have had a chance to authenticate? I could
+load another (empty) page, but i want to keep the 401 page for displaying,
+should the user/pass be wrong.
+
+Patch is at
+http://www.lysator.liu.se/~torkel/computer/ipaq/dillo_auth.diff.gz
+
+The patch is against todays (thursday) CVS and should apply cleanly w/
+-p1. Even remembered to change the Makefile.in this time ;)
+
+I will post an updated https patch soon. Having trouble with POST.
+
+Regards,
+Tor-Åke 
+
+
+
+[Dillo-dev]Seperator is now working
+
+From: DraX <drax@wh...> - 2001-09-16 18:56
+
+the address in my last email now has a working seperator bookmark file,
+just need to add a "Add Seperator" menu option and then i'll make a patch. 
+
+
+
+[Dillo-dev]Adding seperator to bookmarks
+
+From: DraX <drax@wh...> - 2001-09-16 18:39
+
+out of boredom i started to modify on the bookmark system to allow
+seperators, by using a line like:
+
+<A HREF="SEP-ER-RATOR">SEP-ER-RATOR</A>
+
+Now i got it to the point where it can detect a "Seperator" call and not
+list the seperator in the bookmark list, but my minimal c/gtk skills are
+not giving me a way to put a seperator in. I tried using Menu_sep(), but
+that didn't exactly work, more like it gave me a resolution error on
+compile.
+
+http://www.stampede.org/~drax/bookmark.c includes the bookmark code
+modified to check for SEP-ER-RATOR, if anyone could help me out with
+making this all acutlly work.
+
+I've decided to help out with dillo, i'd fix up the bookmark manager, even
+have a nice little listview interface, and possibly add support for
+netscape style bookmarks, and maybe even XBEL.
+
+Any help getting this first patch completed would be much obliged, it's
+messy i know, i'll clean it up when i get it working :) 
+
+
+
+[Dillo-dev]Patch Manager ala bug manager
+
+From: DraX <drax@wh...> - 2001-09-16 16:28
+
+I was thinking it would be nice if we had a patch manager, that allowed
+people to submit there patches to it, so anyone could download and comment
+on them, this would give a central place to find pending features, and
+would just be sort of nice to have!
+
+I could do one in PHP, if you need someone to do it.
+
+Alex 
+
+
+
+RE: [Dillo-dev]about dillo
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-15 17:36
+
+Hi,
+
+dillo still have a lot of debug messages printed in stdin. You should be able
+to retrieve the lines looking like:
+
+Nav_open_url: Url=>http://dillo.so....net/<
+
+If you really want it in a file (say ~/.dillo/dillo.history), just launch dillo
+with:
+
+dillo > ~/.dillo/dillo.history
+
+And if you *really* want *only* the urls, just lanch dillo with:
+
+dillo | grep Nav_open_url > ~/.dillo/dillo.history
+
+Best,
+Eric
+
+-- En reponse de "[Dillo-dev]about dillo" de Manolo, le 15-Sep-2001 :
+> 
+> 
+> 
+> Hello.
+> 
+> I want to suggest something.
+> 
+> Because Dillo crashes sometimes -few- when i use it, its possible
+> include a "history" option for a more quick finding for the last
+> site that you visited before crashing?
+> 
+> A lot of thanks.
+> 
+> Salutations.
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 15-Sep-2001 a 10:26:04
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]about dillo
+
+From: Manolo <inetd@ma...> - 2001-09-15 14:56
+
+Hello.
+
+I want to suggest something.
+
+Because Dillo crashes sometimes -few- when i use it, its possible
+include a "history" option for a more quick finding for the last
+site that you visited before crashing?
+
+A lot of thanks.
+
+Salutations. 
+
+
+
+[Dillo-dev]0.6.1 release
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-14 04:03
+
+Hi everybody!
+
+Tonight I just released dillo-0.6.1!
+
+Please don't think that the before submitted patches were
+rejected; they're simply waiting for a second revision, or
+probably further improvement.
+
+Ah, FYI there're also a couple of new links on the web site:
+check the [Art] link for some neat images and the 'Free Software'
+in the [Links] section, for an interesting reading.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]meta refresh
+
+From: Viksell <jorgen.viksell@te...> - 2001-09-13 19:36
+
+Attachments: patch-meta      
+
+Hi all!
+
+I noticed bug #208 (meta refresh) and remembered that I did a fix for
+this a while ago. One thing I'm concerned about is if refresh times of
+zero should be allowed since it may be abused. Or it can be used to
+stress-test Dillo! ;-)
+
+As a bonus (or not) I'm throwing in a fix that I think is handy:
+Allowing forms with only one text-type input to be submitted by pressing
+enter, even if they have submit button(s). It seems to be standard
+behaviour in most browsers.
+If the form has more than one text input the next element is focused...
+
+Patch attached since FTP is playing up on me,
+
+Cheers,
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Implementing Basic authentication
+
+From: Viksell <jorgen.viksell@te...> - 2001-09-12 00:43
+
+On Tue, 2001-09-11 at 23:24, Tor-=C5ke Fransson wrote:
+>=20
+> What other useful features are not worked on? Cookies?
+
+I'm working on cookies.=20
+The old Netscape style cookies (version 0) works, except for some
+problems with timezones that has to be fixed.
+Version 1 cookies are about half-way done.
+
+At the moment, Dillo can't parse multiple set-cookie or set-cookie2
+responses in the HTTP header, so that also has to change to make
+everything work.
+
+// J=F6rgen 
+
+
+
+[Dillo-dev]Implementing Basic authentication
+
+From: <torkel@ly...> - 2001-09-11 23:24
+
+Hi all.
+
+To avoid duplicate efforts: is anyone implementing authentication?
+
+In either case i have been working on it for the last three days. Works
+like this:
+
+DilloUrl gets an extra attribute, Auth.
+The 401 return code is trapped in the cache (same place as 30x) and
+user is asked for username/password.
+Auth for the url that caused 401 is set to base64 encoded user/pass and a
+force reload is issued as for redirects.
+In html.c all places where DilloUrl's are created, they are checked for
+relativeness, and if so, they get Auth copied from the base url, so
+user/pass does not have to be entered for every object loaded.
+http.c checks for Auth in the url when creating the query, and if Auth is
+non-null, the query gets an extra line with authentication info.
+
+The performance to browsing unauthenticated is 5 extra lines of
+code executed per link/image on a page, and memory usage is up
+sizeof(GString *) for every DilloUrl created.
+
+This will be quite a big patch when finished (Gui gtk+ code remaining) and
+it will also affect my earlier https patch.
+
+ETA is this weekend. (if noone wants to look at it right now)
+
+What other useful features are not worked on? Cookies?
+
+Regards,
+Tor-Åke 
+
+
+
+Re: [Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-11 02:21
+
+FYI, the answer I had from gtk's mailining list:
+
+-- FW
+GTK takes strings in the encoding of the current locale. If you give
+it anything else, then your code is broken; it won't work in all
+locales.
+
+Your code works on Red Hat because the locale happens to be en_US or
+the like which uses Latin-1; on Debian in the "C" locale the encoding
+is ASCII, Latin-1 is not allowed.
+
+If you are hardcoding Latin-1 strings into your app, then you require
+a Latin-1 locale to run and work. It's that simple. Even if by some
+bad hack we could make it work in ASCII, it would be totally broken in
+every other non-Latin-1 locale.
+
+The usual way to solve this problem - make strings match the locale -
+is to translate them with gettext.
+
+GTK 2 will require every string to be in UTF-8. Also, Red Hat will
+probably move to all locales using the UTF-8 encoding at some point,
+so Latin-1 will not work even in en_US or fr_FR. Point being, in the
+future hardcoded Latin-1 strings won't work even in the locales that
+are currently Latin-1.
+
+Havoc
+-- end FW
+
+-- En reponse de "Re: [Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)" de
+Hugo Hallqvist, le 03-Sep-2001 :
+> On Mon, 03 Sep 2001 12:51:23 -0700 (PDT)
+> Eric GAUDET <egaudet@in...> wrote:
+> 
+>> I think I can investigate this problem, because a I can reproduce it both
+>> ways:
+>> - my personal computer is a (heavily customised) mandrake 6.2, and I have no
+>> problem displaying characters in the forms.
+>> - my computer at work is a debian, and I have the same problem Hugo has,
+>> with
+>> all non-ascii entities, for all form elements. For instance:
+> 
+> That is one common thing between us, my computer is running debian
+> unstable/testing, so I guess that should have something to do with it?
+> 
+> 
+>> <html><form> 
+>> <input type="submit" value="abc&eacute;">
+>> </form></html>
+>> will show an empty box, while value="abc&amp;" will of course show "abc&"
+>> 
+>> And that's a problem for me too, even if I don't speak swedish, because my
+>> primary language is french, which uses &eacute; a lot.
+> 
+> Have you tried gtk_set_locale() and if you have; did it work then?
+> 
+> -- 
+> //Hugo Hallqvist - hugha495@st...
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 10-Sep-2001 a 19:19:00
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Bugs in URLs (+ bug #194 + viewing Slashdot.org)
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-09 06:46
+
+-- En reponse de "Re: [Dillo-dev]Bugs in URLs (+ bug #194 + viewing
+Slashdot.org)" de Jorge Arellano Cid, le 08-Sep-2001 :
+> 
+> Hi,
+> 
+>> [...]
+>> I've sent this to
+>> Jorge already, but since more people here enjoy slashdot.org with CVS
+>> Dillo, the patch is at:
+>>
+>> http://www.linux.ime.usp.br/~livio/dillo/url.fix.999873136.diff
+> 
+> I just uploaded a modified patch to CVS.
+> 
+
+Well, I just tested it and I'd say we have a pretty good v0.6.1 !
+
+A nice "cherry on the cake"-feature would be one of the two lynx-style frames
+patches. I tryed both and both seem to do the trick. I kinda like better
+Livio's version, not for what they do (they look the same to me), but Livio's
+code seem much cleaner (way to go, Livio :-)
+
+Best,
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 08-Sep-2001 a 23:35:59
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+Re: [Dillo-dev]Bugs in URLs (+ bug #194 + viewing Slashdot.org)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-08 23:13
+
+Hi,
+
+> [...]
+> I've sent this to
+> Jorge already, but since more people here enjoy slashdot.org with CVS
+> Dillo, the patch is at:
+>
+> http://www.linux.ime.usp.br/~livio/dillo/url.fix.999873136.diff
+
+I just uploaded a modified patch to CVS.
+
+
+Greetings
+Jorge.- 
+
+
+
+[Dillo-dev][PATCH] Merging frame patches (w3m-style :)
+
+From: Livio Baldini Soares <livio@li...> - 2001-09-08 22:49
+
+Hi guys,
+
+since I'm very interested in this minimal frame support, I've
+decided to try to make my "merged" version of this patch. I loosely
+based this on a patch sent by Robert J Thomson and Hugo Hallqvist last
+patch. Well loosely because my implementation is a bit diferent.
+
+I'm a w3m fan (www.w3m.org), and it's frame support is very similar
+to lynx's, but when in nested frameset's, you can see it visually, as
+it makes nested lists. So this what I have done.
+
+The patch is, I think, pretty much clean, and is easily
+removable/replaceable. I would like to hear comments for improvement
+(specially from Hugo and Robert), before I send this off to Jorge. I
+don't believe there are any bugs, the patch is really simple. I've
+browsed through several framed sites, and haven't got any styles left
+over.
+
+The patch is at:
+http://www.linux.ime.usp.br/~livio/dillo/w3m_frames.999984467.diff
+
+PS: The reason I think this temporary fix is worth pursuing is because
+the real frame support can take a long time before finished. I
+personally think it will because it's a very hard feature to implement
+(I guess harder than tables). And also, this adds no code overhead on
+Dillo. It can be removed and replaced very easily when real frame
+support is done. Does anyone have anything against this patch?
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+RE: [Dillo-dev]bug #207, too long attributes
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-08 02:09
+
+-- En reponse de "[Dillo-dev]bug #207, too long attributes" de J=F6rgen V=
+iksell,
+le 08-Sep-2001 :
+> Hi all!
+>=20
+> Just thought I should mention that bug #207 seems to happen because of =
+a
+> too long attribute (<INPUT VALUE=3D...). This would be related to bug #=
+197
+> that Jorge gave his view on earlier.
+> Is anyone working on this? I am willing to help but I'm not sure where
+> to start.
+>=20
+> J=F6rgen
+>=20
+
+It seems the problem is fixed with the patch for long attributes I submit=
+ted to
+Jorge, which is:
+
+diff -pur dillo/src/html.c dillo.longurl/src/html.c
+--- dillo/src/html.c Mon Aug 27 14:44:12 2001
++++ dillo.longurl/src/html.c Tue Aug 28 23:10:34 2001
+@@ -3290,8 +3288,7 @@ static gint Html_match_attr(const char *
+static gint Html_get_attr_value(const char *tag, gint tagsize,
+char *data, gint datasize, gint strip)
+{
+- gint i =3D 0, j =3D -1, max =3D MAX(tagsize, datasize);
++ gint i =3D 0, j =3D -1, max =3D MIN(tagsize, datasize);
+=20
+if (tag[0] =3D=3D '"' || tag[0] =3D=3D '\'' ) {
+for (i =3D 1; strip && i < max && isspace(tag[i]); i++)
+
+
+>=20
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 07-Sep-2001 a 19:07:23
+"In theory, there's no difference between=20
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]lynx frames again
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-08 00:35
+
+Attachments: lynx-frames.patch      
+
+Hi!
+
+Thanks for the tips of how the style stuff in dillo works, especially Bob. I'm sure I have not fully understand it but yet here's a revised version of my patch. It is more stable now, atleast that's my impression. 
+
+Please feel free to enhance it, as I am sure it could be better written, at least the styles stuff.
+
+If I understood it correctly every page_add_text() adds 1 to the reference counter right? if so, one should be able to do style_unref directly after using the add_text function, however it won't work for me, just segfaulting if I do so. Maybe I did not understand it fully.
+
+
+
+Also, anyone know something about bug #204? It seems very sporadeosly, ehmm, I mean it shows up sometimes, sometimes not on the same page. Is this related to the contents of the page or is it something in dillo?
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+[Dillo-dev]Feature: don't load images [PATCH]
+
+From: <torkel@ly...> - 2001-09-07 23:15
+
+Attachments: dillo_noimg.diff      
+
+In my despair over not beeing able to figure out how to load pages
+with large images without running out of memory on my ipaq, i instead
+added an option to not load images at all.
+
+Ideally, i would like a way to not load all images on a page, should
+the page contain many large images, but instead cached uncompressed, and
+then uncompressed as they become exposed.
+
+Or simply a memory consumption high water mark whereover, image loading
+is automatically turned off. Better than running out of memory!
+
+Anyway... the included diff (against cvs of right now) adds this:
+
+Images on/off can be toggled from the menu (File menu, unfortunately, but
+in the abscence of a preferences dialogue it'll have to do).
+
+When images are off, the image url is replaced by a user-selectable
+url (dillorc) and then loaded. This means eventual alt= tags still
+cause a tooltip popup. Imagemaps will behave strange, but the code seemed
+to indicate they are quite broken anyway.
+
+
+Regards,
+Tor-Åke Fransson 
+
+
+
+[Dillo-dev]bug #207, too long attributes
+
+From: Viksell <jorgen.viksell@te...> - 2001-09-07 23:05
+
+Hi all!
+
+Just thought I should mention that bug #207 seems to happen because of a
+too long attribute (<INPUT VALUE=3D...). This would be related to bug #197
+that Jorge gave his view on earlier.
+Is anyone working on this? I am willing to help but I'm not sure where
+to start.
+
+J=F6rgen 
+
+
+
+Re: [Dillo-dev]Bugs in URLs (+ bug #194 + viewing Slashdot.org)
+
+From: Livio Baldini Soares <livio@li...> - 2001-09-07 16:02
+
+Hi Sebastian,
+
+Sebastian Geerken writes:
+> Hi,
+> 
+> there are some more bugs in URLs. I've written a small test program,
+> attached to this mail. Just compile
+> 
+> cc -o test-url `glib-config --cflags --libs` test-url.c url.c
+> 
+> and start it.
+
+(-: Wow.... nice little test program. Thanks to that I've made a
+"correct" (heheh, at least I think) fix the the URL problem at
+slashdot.org. It seems that both Bruno's and my patch were a little
+wrong and broke some URLs with `file:/` scheme. I've sent this to
+Jorge already, but since more people here enjoy slashdot.org with CVS
+Dillo, the patch is at:
+
+http://www.linux.ime.usp.br/~livio/dillo/url.fix.999873136.diff
+
+Please test it and send me feedback if you see that it doesn't work
+correctly on a particular page or link.
+
+best regards to all,
+
+-- 
+Livio <livio@li...> 
+
+
+
+Re: [Dillo-dev]How to add a link to a page?
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-09-07 12:51
+
+Hi Hugo,
+
+On Thu, Sep 06, 2001 at 03:33:53PM +0200, Hugo Hallqvist wrote:
+> On Wed, 05 Sep 2001 19:37:24 -0300
+> Livio Baldini Soares <livio@li...> wrote:
+> [...]
+> > changing the style of the link (change the color to X if link is
+> > visited or Y if not, make it underlined, etc).
+> 
+> This is where I start to get problems. If I want to use a style just briefly and then revert back to the style used before?
+> I copied some of the code from tag_a code and used it, and it displays correctly, but I get warnings on closing dillo that there are styles left.
+> 
+> > I'm really interested in this patch, and I'd be really glad if I
+> > could help you out more (if you want we could make this patch
+> > together -- but feel free to do it alone if you want that too).
+> 
+> What is the style I send to a_Dw_style_new function? I did not quite
+> understand that.
+
+There are some notes in doc/DwStyle.txt, but nothing about the HTML
+parser. You must fill a DwStyle structure (except the ref_count), and
+call a_Dw_style_new, to use it:
+
+DwStyle style_attrs, *style;
+
+style_attrs.foo = bar;
+// etc.
+style = a_Dw_style_new (&style_attrs, random_window);
+// do something with style
+
+After this, the attributes of style should not be changed anymore,
+since styles are often shared between different widgets etc.
+
+Most times, you simply copy the attributes of another style, and
+modify them:
+
+style_attrs = *another_style;
+style_attrs.foo = bar;
+style = a_Dw_style_new (&style_attrs, random_window);
+
+Some words about the stack: the topmost element contains a (reference
+to a) style which will be used to add the text to the current page. If
+you use a style only for a short while (e.g. in this case), you may
+use it this way:
+
+style_attrs = *html->stack[html->stack_top].style;
+style_attrs.foo = bar;
+style = a_Dw_style_new (&style_attrs, random_window);
+
+a_Dw_page_add_text will add a reference to it, so you must unref it at
+the end of Html_tag_open_frame.
+
+Just for completeness: In many cases, you want to set the style for
+the content of an element (e.g. <A>), then you must store it in the
+stack, look at the macro HTML_SET_TOP_ATTR. But this is not necessary
+in this case.
+
+> Also, why does dillo crash if I add a few lines of text, using the a_Dw_page_add_text in a function, even though I haven't touched anything else? 
+> I get a segmentation fault directly when I click a link if I use that function, see the Html_tag_open_frameset function for example.
+
+As far as I see, a style with a reference count of zero (which is so
+freed!) is used.
+
+Sebastian 
+
+
+
+Re: [Dillo-dev]table rendering on futurezone.orf.at
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-09-07 12:09
+
+On Fri, Sep 07, 2001 at 12:10:12PM +0200, Ulrich Schwarz wrote:
+> Hi, 
+> 
+> here's another issue about futurezone.orf.at rendering.
+> 
+> After the nowrap/width rendering problem was fixed, I've now found a
+> strange two-column rendering of the first paragraph on
+> Futurezone-subpages in dillo whereas other browsers use only one
+> column-rendering there.
+> 
+> e.g.
+> http://futurezone.orf.at/futurezone.orf?read=detail&id=80073&tmp=71566
+> http://futurezone.orf.at/futurezone.orf?read=detail&id=80131&tmp=5807
+> etc.
+
+I've tested the first one and found a violation: before the table cell
+with the text "Nach jahrelangen juristischen Konflikten ..." (the one
+which is positioned wrong), you'll find a </TR>, but no <TR>, just
+"</TR><TD>", so dillo does not add a new row. BTW, this behavior was
+different some time ago, but was changed for handling pages with
+"<TABLE><TD>", with a missing <TR>.
+
+Sebastian 
+
+
+
+[Dillo-dev]table rendering on futurezone.orf.at
+
+From: Ulrich Schwarz <uschwarz@gm...> - 2001-09-07 10:13
+
+Hi, 
+
+here's another issue about futurezone.orf.at rendering.
+
+After the nowrap/width rendering problem was fixed, I've now found a
+strange two-column rendering of the first paragraph on
+Futurezone-subpages in dillo whereas other browsers use only one
+column-rendering there.
+
+e.g.
+http://futurezone.orf.at/futurezone.orf?read=detail&id=80073&tmp=71566
+http://futurezone.orf.at/futurezone.orf?read=detail&id=80131&tmp=5807
+etc.
+
+So long.
+Ulrich 
+
+
+
+Re: [Dillo-dev]How to add a link to a page?
+
+From: Jason Kibblewhite <jkibble@te...> - 2001-09-06 20:53
+
+On Thu, Sep 06, 2001 at 03:33:53PM +0200, Hugo Hallqvist wrote:
+> On Wed, 05 Sep 2001 19:37:24 -0300
+> Livio Baldini Soares <livio@li...> wrote:
+> 
+> What is the style I send to a_Dw_style_new function? I did not quite understand that.
+> Also, why does dillo crash if I add a few lines of text, using the a_Dw_page_add_text in a function, even though I haven't touched anything else? 
+> I get a segmentation fault directly when I click a link if I use that function, see the Html_tag_open_frameset function for example.
+> 
+> Anyway, here is a first version. Feedback on stability welcome. :-)
+> 
+
+I don't frequent very many frames sites so it was hard to find places to
+test this. Some sites such as google's image browers produced instand
+segfaults without even giving me a change to click on a link, while
+still others such as http://www.tragicallyhip.com segfault when I put the mouse
+over the link, however the latter does work if I run dillo through
+strace. I'm not much of a C coder so I couldn't even begin to explain
+that.
+
+Nice work, even heavy frames pages like securityfocus.com work well.
+
+-- 
+All language designers are arrogant. Goes with the territory...
+-- Larry Wall 
+
+
+
+Re: [Dillo-dev]How to add a link to a page?
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-06 13:29
+
+Attachments: frames-lynx.patch      
+
+On Wed, 05 Sep 2001 19:37:24 -0300
+Livio Baldini Soares <livio@li...> wrote:
+
+> Wow! What a nice idea! I should of thought of that :-) It's a great
+> workaround (and should be real easy to implement too!) before real
+> frame support (which isn't easy at all :(, is complete.
+
+Yes, hopefully it will add some functionality, so one doesn't have to cut and paste so much.
+
+> Well, to add a link to a page you should first create and initialize
+> a DilloURL struct (using a_Url_new(url_string, base_url_string) from
+> src/url.c).
+
+Done, this was the easy part. :-)
+
+> This URL will contain the destination that the link will point
+> to. Then with the DilloURL, you should add it to the page, using
+> Html_new_link(html, url). This will add a new link in the DilloHtml's
+> linkblock (which is a list, like, html->linkblock->links[n]), the
+> Html_new_link() will return the index (n) of the link in the
+> linkblock->links array. Eventually you may want that index for
+
+Done too, didn't see that one at first in tag_a code.
+
+> changing the style of the link (change the color to X if link is
+> visited or Y if not, make it underlined, etc).
+
+This is where I start to get problems. If I want to use a style just briefly and then revert back to the style used before?
+I copied some of the code from tag_a code and used it, and it displays correctly, but I get warnings on closing dillo that there are styles left.
+
+> I'm really interested in this patch, and I'd be really glad if I
+> could help you out more (if you want we could make this patch
+> together -- but feel free to do it alone if you want that too).
+
+What is the style I send to a_Dw_style_new function? I did not quite understand that.
+Also, why does dillo crash if I add a few lines of text, using the a_Dw_page_add_text in a function, even though I haven't touched anything else? 
+I get a segmentation fault directly when I click a link if I use that function, see the Html_tag_open_frameset function for example.
+
+Anyway, here is a first version. Feedback on stability welcome. :-)
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+[Dillo-dev]0.6.1-pre
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-06 07:44
+
+Hi,
+
+just want to say, that dillo 0.6.1-pre feels a lot more stable than
+0.6.0.
+Just the latest CVS version (updated Sep 5 18:16) crashes on
+http://www.oreillynet.com.
+
+thanks,
+Johannes
+
+
+PS: I am running FreeBSD 4.3.
+Some info from the core file:
+
+bash-2.05$ gdb dillo dillo.core 
+GNU gdb 4.18
+Copyright 1998 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and
+you are
+welcome to change it and/or distribute copies of it under certain
+conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB. Type "show warranty" for
+details.
+This GDB was configured as "i386-unknown-freebsd"...
+Core was generated by dillo'.
+Program terminated with signal 11, Segmentation fault.
+Reading symbols from /usr/local/lib/libpng.so.4...done.
+Reading symbols from /usr/lib/libz.so.2...done.
+Reading symbols from /usr/X11R6/lib/libgtk12.so.2...done.
+Reading symbols from /usr/X11R6/lib/libgdk12.so.2...done.
+Reading symbols from /usr/local/lib/libgmodule12.so.3...done.
+Reading symbols from /usr/local/lib/libglib12.so.3...done.
+Reading symbols from /usr/local/lib/libintl.so.1...done.
+Reading symbols from /usr/lib/libxpg4.so.3...done.
+Reading symbols from /usr/X11R6/lib/libXext.so.6...done.
+Reading symbols from /usr/X11R6/lib/libX11.so.6...done.
+Reading symbols from /usr/lib/libm.so.2...done.
+Reading symbols from /usr/local/lib/libjpeg.so.9...done.
+Reading symbols from /usr/lib/libc_r.so.4...done.
+Reading symbols from /usr/X11R6/lib/libXThrStub.so.6...done.
+Reading symbols from /usr/libexec/ld-elf.so.1...done.
+#0 0x8053811 in Cache_redirect (entry=0x80d5030, Flags=1, bw=0x8093500)
+at cache.c:643
+643 NewUrl =
+a_Url_new(URL_STR(entry->Location),URL_STR(entry->Url),0,0);
+(gdb) p *entry
+$1 = {Url = 0x0, Type = 0x21 <Address 0x21 out of bounds>, Header =
+0xb, 
+Location = 0x3, Data = 0x0, ValidSize = 0, TotalSize = 4, BuffSize =
+5, 
+Flags = 28, io = 0x0, CCCQuery = 0x24, CCCAnswer = 0xb} 
+
+
+
+Re: [Dillo-dev]How to add a link to a page?
+
+From: Livio Baldini Soares <livio@li...> - 2001-09-05 22:37
+
+Howdy Hugo!
+
+Hugo Hallqvist writes:
+> Hi everyone!
+> 
+> I'm wondering how I should go about to add a link to a page in
+> dillo. I try to patch dillo to put up a link when framed pages are
+> viewed, so that I can click on one of them to view the page, just
+> like in lynx.
+
+Wow! What a nice idea! I should of thought of that :-) It's a great
+workaround (and should be real easy to implement too!) before real
+frame support (which isn't easy at all :(, is complete.
+
+> I looked at the tag_open_a but I cannot fully understand how the
+> links are added to the page and most of all displayed.
+
+Well, to add a link to a page you should first create and initialize
+a DilloURL struct (using a_Url_new(url_string, base_url_string) from
+src/url.c).
+
+This URL will contain the destination that the link will point
+to. Then with the DilloURL, you should add it to the page, using
+Html_new_link(html, url). This will add a new link in the DilloHtml's
+linkblock (which is a list, like, html->linkblock->links[n]), the
+Html_new_link() will return the index (n) of the link in the
+linkblock->links array. Eventually you may want that index for
+changing the style of the link (change the color to X if link is
+visited or Y if not, make it underlined, etc).
+
+I think that's about it. Although, probably I'm forgetting
+something.
+
+I'm really interested in this patch, and I'd be really glad if I
+could help you out more (if you want we could make this patch
+together -- but feel free to do it alone if you want that too).
+
+best regards!
+
+-- 
+Livio <livio@li...> 
+
+
+
+[Dillo-dev]How to add a link to a page?
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-05 22:09
+
+Hi everyone!
+
+I'm wondering how I should go about to add a link to a page in dillo. I try to patch dillo to put up a link when framed pages are viewed, so that I can click on one of them to view the page, just like in lynx.
+
+I looked at the tag_open_a but I cannot fully understand how the links are added to the page and most of all displayed. 
+If someone would make a brief explanation I would be grateful.
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+[Dillo-dev]Bugs in URLs
+
+From: Sebastian Geerken <sgeerken@st...> - 2001-09-05 12:55
+
+Attachments: test-url.c      
+
+Hi,
+
+there are some more bugs in URLs. I've written a small test program,
+attached to this mail. Just compile
+
+cc -o test-url `glib-config --cflags --libs` test-url.c url.c
+
+and start it.
+
+Sebastian 
+
+
+
+Fw: Re: [Dillo-dev]0.6.1-pre
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-05 06:32
+
+On Tue, 04 Sep 2001 19:13:00 -0700 (PDT)
+Eric GAUDET <egaudet@in...> wrote:
+
+I think so too. Regarding the stability I haven't noticed a single crash, and I've used it almost exclusively.
+Some images don't get loaded properly, however. I also noticed it consumes large amounts of memory after a while, as most I got up to 100 MB in memory consumption before I restarted dillo.
+
+Anyone know what the status of tabs, \n and \r support in <pre> tags is? They to shows up as dotted-boxes here, for example in dillo changelog.
+
+> IMHO we really need the url begining with "//" patch for next release:
+> slashdot's page is looking worse than ever.
+> 
+> > Do you remember my "Yesterday commit" post? It asked for some
+> > feedback on latest CVS stability; only Livio has answered. This
+> > is necessary before 0.6.1 release, because I need to know if it
+> > feels more stable than 0.6.0 or //Hugo Hallqvist - hugha495@st....
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+RE: [Dillo-dev]0.6.1-pre
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-05 02:13
+
+IMHO we really need the url begining with "//" patch for next release:
+slashdot's page is looking worse than ever.
+
+-- En reponse de "[Dillo-dev]0.6.1-pre" de Jorge Arellano Cid, le 04-Sep-2001 :
+> 
+> Hi everyone!
+> 
+> 
+> Do you remember my "Yesterday commit" post? It asked for some
+> feedback on latest CVS stability; only Livio has answered. This
+> is necessary before 0.6.1 release, because I need to know if it
+> feels more stable than 0.6.0 or not.
+> 
+> Thanks
+> Jorge.-
+> 
+> 
+> _______________________________________________
+> Dillo-dev mailing list
+> Dillo-dev@li...
+> https://lists.so....net/lists/listinfo/dillo-dev
+
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 04-Sep-2001 a 19:11:46
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]OpenBSD user(s) read this
+
+From: DraX <drax@wh...> - 2001-09-04 22:28
+
+Heh, if i can found out who it is :)
+
+To OpenBSD user(s): if you posted bug 200 please reply to me on the list
+or in private. 
+
+
+
+[Dillo-dev]0.6.1-pre
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-04 20:59
+
+Hi everyone!
+
+
+Do you remember my "Yesterday commit" post? It asked for some
+feedback on latest CVS stability; only Livio has answered. This
+is necessary before 0.6.1 release, because I need to know if it
+feels more stable than 0.6.0 or not.
+
+Thanks
+Jorge.- 
+
+
+
+Re: [Dillo-dev]Tiny memory leak with DilloImages (and HRuler proposal)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-04 19:04
+
+Livio,
+
+> Hello!
+>
+> Jorge, I've been chasing, what seems to be, a tiny (rare) memory
+> leak in the Html_tag_open_img(). It allocates a DilloImage (with
+> a_Image_new()). I believe this gets freed with the a_Dicache_close()
+> or on abort with a_Dicache_callback(). I was trying local browsing and
+> I think this might be causing some leakage, when the image is _not_
+> found. If the image is not found, it doens't get an dicache entry,
+> right?
+
+Right!
+
+> So this DilloImage is never freed... If my reasoning is
+> somewhat correct, than this should free those DilloImages:
+>
+> [patch here]
+>
+> -----------
+>
+> Or some other, more generic, mechanism...
+
+Yes, that structure should be freed within the stopping chain,
+not in the html parsing module. It took me several days to find a
+way of doing it that way!
+
+Currently the dicache bindings are mainly hacks that get the
+job done. BTW, if image loading is stopped, not only the Image
+structure is not freed, but also the image decoding data, ditto
+for abort.
+
+This dicache part needs a design review, but beware, it
+requires deep understanding of the whole CCC process. In general
+terms, from the cache and down (CCC realm), things are handled
+properly. Between the cache and Dw, there's a hacking breach!
+
+...and as you may guess, priorities have it almost forgotten :(
+
+> About the HRulers in Dillo, they have been bugging a bit. It seems
+> that they don't create some space around them, and therefore renders
+> some pages in a "tight" manner.
+> [...]
+
+Sebastian commited that
+(this is a delayed answer).
+
+
+Regards.- 
+
+
+
+[Dillo-dev]entities parsing?
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-04 10:06
+
+Hi everyone!
+
+When browsing around a few sites today, I saw one that creates a few dotted boxes in dillo. Everyone seems to be entities.
+http://www.msnbc.com/news/621347.asp?0dm=N14MT&cp1=1
+
+Is this bad html, or is the entities list in dillo incomplete?
+
+Most notably the asterisks, minus and apostroph (sp?) doesn't get correctly parsed.
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+[Dillo-dev]Possibility of having dillo <url> open a url in the current instance
+
+From: DraX <drax@wh...> - 2001-09-03 21:25
+
+What are the possibilityes of having dillo called with dillo <url> open a
+url in a currently running version of dillo? 
+
+
+
+Re: [Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)
+
+From: Hugo Hallqvist <hugha495@st...> - 2001-09-03 20:14
+
+On Mon, 03 Sep 2001 12:51:23 -0700 (PDT)
+Eric GAUDET <egaudet@in...> wrote:
+
+> I think I can investigate this problem, because a I can reproduce it both ways:
+> - my personal computer is a (heavily customised) mandrake 6.2, and I have no
+> problem displaying characters in the forms.
+> - my computer at work is a debian, and I have the same problem Hugo has, with
+> all non-ascii entities, for all form elements. For instance:
+
+That is one common thing between us, my computer is running debian unstable/testing, so I guess that should have something to do with it?
+
+
+> <html><form> 
+> <input type="submit" value="abc&eacute;">
+> </form></html>
+> will show an empty box, while value="abc&amp;" will of course show "abc&"
+> 
+> And that's a problem for me too, even if I don't speak swedish, because my
+> primary language is french, which uses &eacute; a lot.
+
+Have you tried gtk_set_locale() and if you have; did it work then?
+
+-- 
+//Hugo Hallqvist - hugha495@st... 
+
+
+
+RE: [Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)
+
+From: Eric GAUDET <egaudet@in...> - 2001-09-03 19:51
+
+-- En reponse de "[Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)" de
+Jorge Arellano Cid, le 03-Sep-2001 :
+> [Hugo wrote]
+> 
+>> I got problems with swedish (international?) characters in
+>> buttons and in lists. The characters for example &auml; shows up
+>> properly in the usual text on a page, but no when they are to be
+>> added in the dropdownlist in a form or as a button in a submit
+>> form.
+> 
+> They work for me!
+> 
+
+I think I can investigate this problem, because a I can reproduce it both ways:
+- my personal computer is a (heavily customised) mandrake 6.2, and I have no
+problem displaying characters in the forms.
+- my computer at work is a debian, and I have the same problem Hugo has, with
+all non-ascii entities, for all form elements. For instance:
+<html><form> 
+<input type="submit" value="abc&eacute;">
+</form></html>
+will show an empty box, while value="abc&amp;" will of course show "abc&"
+
+And that's a problem for me too, even if I don't speak swedish, because my
+primary language is french, which uses &eacute; a lot.
+
+Both computers are set LANG=en and LC_ALL not set.
+
+More info tomorrow, when I'm at my office.
+Meanwhile, I will volunteer for this bug in the bugtrack engine.
+
+> When visiting the page you suggested, I had no problems at all;
+> every character showed up properly. Note that I use dillo without
+> a gtk_set_locale() call (same as 0.6.0 release and CVS), and my
+> environment has:
+> 
+> LC_ALL=POSIX
+> LANG=C
+> 
+> Probably you have a swedish setting there (that's not a problem
+> though!).
+> 
+> Please correct me if I'm wrong: The main reason for not
+> including the gtk_set_locale() call in dillo, is that as dillo
+> works in latin1, and as GTK+ handles strings in the multibyte
+> encoding for the locale, a different locale encoding may result
+> in inconsistencies in character handling.
+> 
+> Note: ISO C says that all programs start by default in the
+> standar 'C' locale, so no explicit setting is required.
+> 
+> 
+> IN BRIEF: check out the above hints, and please confirm me that
+> you've got it working. If not, please ask Karsten, or some other
+> swedish users, and answer back to this list (this time I'll
+> reply quickly, because this subject is now on its turn).
+> 
+> 
+------------------------------------
+Eric GAUDET <egaudet@in...>
+Le 03-Sep-2001 a 12:42:11
+"In theory, there's no difference between 
+theory and practice; in practice, there is."
+------------------------------------ 
+
+
+
+[Dillo-dev]antialiased dillo
+
+From: Johannes Hofmann <Johannes.Hofmann@gm...> - 2001-09-03 18:51
+
+Hi,
+
+using gdkxft (http://philrsss.anu.edu.au/~josh/gdkxft/) dillo can render
+antialiased fonts now!
+Well, it gets pretty slow then :-( but it's fun.
+
+Cheers,
+Johannes. 
+
+
+
+[Dillo-dev]Missing feature
+
+From: <Juergen.Daubert@t-...> - 2001-09-03 17:30
+
+Hi all,
+
+first a great thanks to all developer of dillo !
+I'm using dillo since 0.3, version 0.6 works for
+me in most cases.
+
+But i really miss the possibility to browse through
+ftp sides. I dont't need any download features,
+nt does his work very well.
+
+Any ideas ... ?
+
+Greetings
+Jürgen
+
+-- 
+juergen.daubert@t-... 
+
+
+
+[Dillo-dev]BUG#199 (was: dillo patch for Fugly Fonts)
+
+From: Jorge Arellano Cid <jcid@ne...> - 2001-09-03 15:16
+
+Hi,
+
+This is an issue a wanted to answer from a long time, now is
+its turn, so lets get into it:
+
+> Karsten had told me that without this patch he gets boxes instead of
+> propper text.
+> [...]
+>
+> This is bad coding style -- it's a kluge, not a fix.
+>
+> The problem is that search sequence for fonts is arbitrary, and ISO10646
+> fonts can appear before ISO8859 fonts. Gtk doesn't handle ISO10646
+> fonts properly, hence the resolution problems.
+>
+> The fix I've applied is to hardcode the font encoding into the font
+> search string in dw_style.c.
+
+Note that although Karsten thinks his patch is not a clean fix,
+given current internal character handling in dillo (and to a
+lesser extent GTK+), it's very close to what's required.
+
+Dillo works in ISO-LATIN1; every page is encoded using it (for
+further details, refer to [Project Notes]), so, the idea of
+making an explicit request for the appropriate fonts is OK AFAIK.
+
+The only change I'd make is to raise a warning if latin1 fonts
+are not found, and to try to load the generic ones, so at least
+dillo can be started.
+
+
+[Hugo wrote]
+
+> I got problems with swedish (international?) characters in
+> buttons and in lists. The characters for example &auml; shows up
+> properly in the usual text on a page, but no when they are to be
+> added in the dropdownlist in a form or as a button in a submit
+> form.
+
+They work for me!
+
+When visiting the page you suggested, I had no problems at all;
+every character showed up properly. Note that I use dillo without
+a gtk_set_locale() call (same as 0.6.0 release and CVS), and my
+environment has:
+
+LC_ALL=POSIX
+LANG=C
+
+Probably you have a swedish setting there (that's not a problem
+though!).
+
+Please correct me if I'm wrong: The main reason for not
+including the gtk_set_locale() call in dillo, is that as dillo
+works in latin1, and as GTK+ handles strings in the multibyte
+encoding for the locale, a different locale encoding may result
+in inconsistencies in character handling.
+
+Note: ISO C says that all programs start by default in the
+standar 'C' locale, so no explicit setting is required.
+
+
+IN BRIEF: check out the above hints, and please confirm me that
+you've got it working. If not, please ask Karsten, or some other
+swedish users, and answer back to this list (this time I'll
+reply quickly, because this subject is now on its turn).
+
+
+> I experimented a little and dillo parses the entities
+> correctly, the string puts out nicely in the xterm window, but
+> gtk doesn't seem to like it when it is to add the
+> component(button for example).
+>
+> Maybe this has something to do with the gtk_set_locale thing?
+
+[answered above]
+
+> It is reported as bug #199.
+
+
+Regards
+Jorge.- 
+
+
+
+[Dillo-dev]Dillo Square Fonts
+
+From: Jon Bradley <kreator@gc...> - 2001-09-03 08:27
+
+I'm not sure if you can help me, I'm having a problem with dillo, atleast
+I've only seen this happen with the dillo program. Running dillo 0.6.0,
+and also the latest dillo CVS; the font letters, no matter what website,
+look like little square boxes, there is actually no readable character at
+all, just little square boxes in the correct font size.
+
+I noticed this after upgrading from X 4.0.1 binaries, to X 4.0.3 compiled
+and built by me on the local machine. Any recommendations on what to do
+about this?
+
+TIA.
+=-=-=-=-=-=-=-=-=-=-=-=
+Email: kreator@gc...
+bbs: telnet://toga.cx
+=-=-=-=-=-=-=-=-=-=-=-= 
+
+
+
+[Dillo-dev]Email of bug poster in bug reporting engine.
+
+From: DraX <drax@wh...> - 2001-09-01 22:51
+
+The email address of the person submittings a bug should be shown in the
+bugreporting engine.
+
+I'd like to help the person with bug 200, because i know it's not a dillo
+problem, as i use dillo for browsing on openbsd quite a bit :) 
+

@@ -1,0 +1,640 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Border Styles</title>
+
+<style type="text/css" media="all">
+.t1t { border: 1px solid purple; padding: 0px;}
+.t2t { border: 2px solid purple; padding: 0px;}
+.t3t { border: 3px solid purple; padding: 0px;}
+.t4t { border: 4px solid purple; padding: 0px;}
+.t5t { border: 5px solid purple; padding: 0px;}
+
+.t1s { border: 1px solid olive; padding: 0px;}
+.t2s { border: 2px solid olive; padding: 0px;}
+.t3s { border: 3px solid olive; padding: 0px;}
+.t4s { border: 4px solid olive; padding: 0px;}
+.t5s { border: 5px solid olive; padding: 0px;}
+
+.t1u { border: 1px double brown; padding: 0px; }
+.t2u { border: 2px double brown; padding: 0px; }
+.t3u { border: 3px double brown; padding: 0px; }
+.t4u { border: 4px double brown; padding: 0px; }
+.t5u { border: 5px double brown; padding: 0px; }
+
+.t1i { border: 1px inset green; padding: 0px; }
+.t2i { border: 2px inset green; padding: 0px; }
+.t3i { border: 3px inset green; padding: 0px; }
+.t4i { border: 4px inset green; padding: 0px; }
+.t5i { border: 5px inset green; padding: 0px; }
+
+.t1o { border: 1px outset green; padding: 0px; }
+.t2o { border: 2px outset green; padding: 0px; }
+.t3o { border: 3px outset green; padding: 0px; }
+.t4o { border: 4px outset green; padding: 0px; }
+.t5o { border: 5px outset green; padding: 0px; }
+
+.t1r { border: 1px ridge sienna; padding: 0px;}
+.t2r { border: 2px ridge sienna; padding: 0px;}
+.t3r { border: 3px ridge sienna; padding: 0px;}
+.t4r { border: 4px ridge sienna; padding: 0px;}
+.t5r { border: 5px ridge sienna; padding: 0px;}
+
+.t1g { border: 1px groove sienna; padding: 0px;}
+.t2g { border: 2px groove sienna; padding: 0px;}
+.t3g { border: 3px groove sienna; padding: 0px;}
+.t4g { border: 4px groove sienna; padding: 0px;}
+.t5g { border: 5px groove sienna; padding: 0px;}
+
+.t1d { border: 1px dotted navy; padding: 0px;}
+.t2d { border: 2px dotted navy; padding: 0px;}
+.t3d { border: 3px dotted navy; padding: 0px;}
+.t4d { border: 4px dotted navy; padding: 0px;}
+.t5d { border: 5px dotted navy; padding: 0px;}
+
+.t1a { border: 1px dashed navy; padding: 0px;}
+.t2a { border: 2px dashed navy; padding: 0px;}
+.t3a { border: 3px dashed navy; padding: 0px;}
+.t4a { border: 4px dashed navy; padding: 0px;}
+.t5a { border: 5px dashed navy; padding: 0px;}
+
+.cell {
+ margin: 0px;
+ border: 0px;
+ padding: 0px;
+}
+
+.bds {
+ border-style: solid;
+ border-top: 10px solid green;
+ border-right: 20px solid red;
+ border-left: 5px solid red;
+ border-bottom: 30px solid green;
+}
+.bdu {
+ border-style: double;
+ border-top: 10px double green;
+ border-right: 20px double red;
+ border-left: 5px double red;
+ border-bottom: 30px double green;
+}
+.bdi {
+ border-style: inset;
+ border-top: 10px inset green;
+ border-right: 20px inset red;
+ border-left: 5px inset red;
+ border-bottom: 30px inset green;
+}
+.bdo {
+ border-style: outset;
+ border-top: 10px outset green;
+ border-right: 20px outset red;
+ border-left: 5px outset red;
+ border-bottom: 30px outset green;
+}
+.bdr {
+ border-style: ridge;
+ border-top: 10px ridge green;
+ border-right: 20px ridge red;
+ border-left: 5px ridge red;
+ border-bottom: 30px ridge green;
+}
+.bdg {
+ border-style: groove;
+ border-top: 10px groove green;
+ border-right: 20px groove red;
+ border-left: 5px groove red;
+ border-bottom: 30px groove green;
+}
+.bdd {
+ border-style: dotted;
+ border-top: 10px dotted green;
+ border-right: 20px dotted red;
+ border-left: 5px dotted red;
+ border-bottom: 30px dotted green;
+}
+.bda {
+ border-style: dashed;
+ border-top: 10px dashed green;
+ border-right: 20px dashed red;
+ border-left: 5px dashed red;
+ border-bottom: 30px dashed green;
+}
+
+.one {border: 20px; border-style:dotted solid dashed double;}
+.two {border: 20px; border-style:dotted solid dashed;}
+.three {border: 20px; border-style:dotted solid;}
+.four {border: 20px; border-style:dotted;}
+.five {border: 20px; border-style:solid dotted;}
+.e {border:20px none;}
+.f {border:20px hidden;}
+.g {border:20px groove;}
+.h {border:20px double;}
+.i {border:20px ridge;}
+.j {border:20px inset teal;}
+.k {border:20px outset;}
+.l {border: 20px; border-style:double ridge;}
+.m {border: 20px; border-style:groove double;}
+
+</style>
+</head>
+
+<body>
+<big>1. Different border-styles in varying widths:</big>
+<br><br>
+<table style="border: 2px solid maroon;">
+<tr>
+
+<td>solid
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1s"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1s"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1s"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1s"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1s"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1s"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2s"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2s"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2s"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2s"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2s"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2s"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3s"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3s"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3s"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3s"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3s"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3s"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4s"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4s"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4s"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4s"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4s"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4s"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5s"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5s"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5s"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5s"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5s"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5s"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>double
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1u"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1u"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1u"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1u"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1u"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1u"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2u"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2u"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2u"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2u"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2u"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2u"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3u"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3u"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3u"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3u"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3u"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3u"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4u"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4u"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4u"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4u"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4u"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4u"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5u"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5u"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5u"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5u"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5u"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5u"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>inset
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1i"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1i"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1i"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1i"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1i"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1i"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2i"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2i"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2i"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2i"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2i"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2i"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3i"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3i"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3i"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3i"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3i"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3i"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4i"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4i"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4i"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4i"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4i"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4i"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5i"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5i"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5i"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5i"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5i"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5i"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>outset
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1o"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1o"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1o"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1o"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1o"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1o"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2o"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2o"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2o"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2o"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2o"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2o"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3o"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3o"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3o"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3o"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3o"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3o"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4o"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4o"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4o"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4o"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4o"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4o"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5o"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5o"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5o"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5o"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5o"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5o"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>ridge
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1r"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1r"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1r"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1r"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1r"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1r"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2r"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2r"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2r"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2r"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2r"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2r"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3r"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3r"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3r"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3r"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3r"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3r"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4r"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4r"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4r"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4r"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4r"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4r"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5r"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5r"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5r"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5r"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5r"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5r"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>groove
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1g"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1g"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1g"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1g"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1g"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1g"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2g"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2g"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2g"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2g"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2g"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2g"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3g"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3g"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3g"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3g"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3g"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3g"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4g"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4g"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4g"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4g"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4g"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4g"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5g"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5g"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5g"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5g"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5g"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5g"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>dotted
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1d"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1d"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1d"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1d"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1d"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1d"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2d"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2d"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2d"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2d"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2d"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2d"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3d"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3d"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3d"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3d"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3d"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3d"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4d"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4d"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4d"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4d"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4d"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4d"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5d"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5d"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5d"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5d"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5d"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5d"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+<td>dashed
+
+ <table>
+ <tr>
+ <td>
+  <table class="t1a"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t1a"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t1a"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t1a"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t1a"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t1t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t1a"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t2a"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t2a"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t2a"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t2a"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t2a"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t2t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t2a"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t3a"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t3a"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t3a"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t3a"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t3a"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t3t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t3a"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t4a"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t4a"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t4a"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t4a"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t4a"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t4t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t4a"><tr><td class="cell"><img src="gray10x10.png"></table>
+ <td>
+  <table class="t5a"><tr><td class="cell"><img src="gray1x1.png"></table>
+  <table class="t5a"><tr><td class="cell"><img src="gray2x2.png"></table>
+  <table class="t5a"><tr><td class="cell"><img src="gray3x3.png"></table>
+  <table class="t5a"><tr><td class="cell"><img src="gray4x4.png"></table>
+  <table class="t5a"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <table class="t5t"><tr><td class="cell"><img src="gray5x5.png"></table>
+  <br><table class="t5a"><tr><td class="cell"><img src="gray10x10.png"></table>
+ </table>
+
+
+</table>
+
+<br><br>
+<table cellpadding="20">
+<tr>
+<td>
+ <table class="bds">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdu">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdi">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdo">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdr">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdg">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bdd">
+   <tr><td class="cell"><img src="Red.png"></table>
+<td>
+ <table class="bda">
+   <tr><td class="cell"><img src="Red.png"></table>
+</table>
+
+
+<br><br>
+<hr border="4">
+<big>2.- Mixed styles and single-style progressive width:</big>
+<br><br>
+<table border="0" cellspacing="10">
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td class="one"><img src="sq.gif"><br>dotted solid dashed double
+<td class="two"><img src="sq.gif"><br>dotted solid dashed
+<td class="three"><img src="sq.gif"><br>dotted solid
+<td class="four"><img src="sq.gif"><br>dotted
+<td class="five"><img src="sq.gif"><br>solid dotted
+<td class="e"><img src="sq.gif"><br>none
+<td class="f"><img src="sq.gif"><br>hidden
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td class="g"><img src="sq.gif"><br>groove
+<td class="h"><img src="sq.gif"><br>double
+<td class="i"><img src="sq.gif"><br>ridge
+<td class="j"><img src="sq.gif"><br>inset
+<td class="k"><img src="sq.gif"><br>outset
+<td class="l"><img src="sq.gif"><br>double ridge
+<td class="m"><img src="sq.gif"><br>groove double
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px inset chocolate;"><img src="sq.gif"><br>inset 1px
+<td style="border:2px inset chocolate;"><img src="sq.gif"><br>inset 2px
+<td style="border:3px inset chocolate;"><img src="sq.gif"><br>inset 3px
+<td style="border:4px inset chocolate;"><img src="sq.gif"><br>inset 4px
+<td style="border:5px inset chocolate;"><img src="sq.gif"><br>inset 5px
+<td style="border:6px inset chocolate;"><img src="sq.gif"><br>inset 6px
+<td style="border:7px inset chocolate;"><img src="sq.gif"><br>inset 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px double;"><img src="sq.gif"><br>double 1px
+<td style="border:2px double;"><img src="sq.gif"><br>double 2px
+<td style="border:3px double;"><img src="sq.gif"><br>double 3px
+<td style="border:4px double;"><img src="sq.gif"><br>double 4px
+<td style="border:5px double;"><img src="sq.gif"><br>double 5px
+<td style="border:6px double;"><img src="sq.gif"><br>double 6px
+<td style="border:7px double;"><img src="sq.gif"><br>double 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px dotted;"><img src="sq.gif"><br>dotted 1px
+<td style="border:2px dotted;"><img src="sq.gif"><br>dotted 2px
+<td style="border:3px dotted;"><img src="sq.gif"><br>dotted 3px
+<td style="border:4px dotted;"><img src="sq.gif"><br>dotted 4px
+<td style="border:5px dotted;"><img src="sq.gif"><br>dotted 5px
+<td style="border:6px dotted;"><img src="sq.gif"><br>dotted 6px
+<td style="border:7px dotted;"><img src="sq.gif"><br>dotted 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px dashed;"><img src="sq.gif"><br>dashed 1px
+<td style="border:2px dashed;"><img src="sq.gif"><br>dashed 2px
+<td style="border:3px dashed;"><img src="sq.gif"><br>dashed 3px
+<td style="border:4px dashed;"><img src="sq.gif"><br>dashed 4px
+<td style="border:5px dashed;"><img src="sq.gif"><br>dashed 5px
+<td style="border:6px dashed;"><img src="sq.gif"><br>dashed 6px
+<td style="border:7px dashed;"><img src="sq.gif"><br>dashed 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px ridge;"><img src="sq.gif"><br>ridge 1px
+<td style="border:2px ridge;"><img src="sq.gif"><br>ridge 2px
+<td style="border:3px ridge;"><img src="sq.gif"><br>ridge 3px
+<td style="border:4px ridge;"><img src="sq.gif"><br>ridge 4px
+<td style="border:5px ridge;"><img src="sq.gif"><br>ridge 5px
+<td style="border:6px ridge;"><img src="sq.gif"><br>ridge 6px
+<td style="border:7px ridge;"><img src="sq.gif"><br>ridge 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px groove;"><img src="sq.gif"><br>groove 1px
+<td style="border:2px groove;"><img src="sq.gif"><br>groove 2px
+<td style="border:3px groove;"><img src="sq.gif"><br>groove 3px
+<td style="border:4px groove;"><img src="sq.gif"><br>groove 4px
+<td style="border:5px groove;"><img src="sq.gif"><br>groove 5px
+<td style="border:6px groove;"><img src="sq.gif"><br>groove 6px
+<td style="border:7px groove;"><img src="sq.gif"><br>groove 7px
+<tr>
+<td style="border:1px solid firebrick;"><img src="sq.gif"><br>solid 1px
+<td style="border:1px solid;"><img src="sq.gif"><br>solid 1px
+<td style="border:2px solid;"><img src="sq.gif"><br>solid 2px
+<td style="border:3px solid;"><img src="sq.gif"><br>solid 3px
+<td style="border:4px solid;"><img src="sq.gif"><br>solid 4px
+<td style="border:5px solid;"><img src="sq.gif"><br>solid 5px
+<td style="border:6px solid;"><img src="sq.gif"><br>solid 6px
+<td style="border:7px solid;"><img src="sq.gif"><br>solid 7px
+
+</table>
+
+</body>
+</html>
