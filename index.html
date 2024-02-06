@@ -10,9 +10,7 @@ body {
   margin: 3em;
   font-family: sans-serif;
 }
-/*a { color: black }*/
 .main {
-  /*background: lightgreen;*/
   margin: 2em auto;
   width: 50em;
 }
@@ -29,6 +27,9 @@ h3 {
   background: #f5f5f5 }
 .github-logo { height: 1.5em; vertical-align: middle; }
 .shot { width: 8em; margin: 0; border: none }
+table, th, td { padding: 0.25em; border-collapse: collapse; border: solid 1px #ddd; }
+th { background-color: #eee; }
+table { margin: 1.5em; }
   </style>
   </head>
   <body>
@@ -47,7 +48,7 @@ h3 {
         <li>Uses the fast and bloat-free <a href="https://www.fltk.org/">FLTK</a> GUI library.</li>
         <li>Support for HTTP, HTTPS, FTP and local files.</li>
         <li>Extensible with plugins written in any language
-          (<a href="https://github.com/topics/dillo-plugin">search on GitHub</a>).
+          (<a href="#plugins">see the list of plugins</a>).
         </li>
         <li>Is free software licensed with the GPLv3.</li>
         <li>Helps authors to comply with web standards by using the
@@ -93,7 +94,66 @@ h3 {
         <li>Implement some new feature or fix some bug and send us a
           patch or create a pull request.</li>
       </ul>
-      <p style="text-align: center">
+      <h2 id=plugins>Plugins</h2>
+	  <p>Dillo can <em>easily</em> be extended by plugins to support new
+	  protocols. Plugins are written in any language and interact using the
+	  standard input and output. Here are some of them:</p>
+	  <!-- Keep the list sorted by protocol name -->
+      <table>
+        <thead>
+          <tr>
+            <th>Plugin</th>
+            <th>Protocol</th>
+            <th>Language</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tr>
+          <td><a href="https://github.com/dillo-browser/dillo-plugin-gemini">dillo-plugin-gemini</a></td>
+          <td>gemini://</td>
+          <td>Bash</td>
+          <td><a href="https://en.wikipedia.org/wiki/Gemini_(protocol)">Gemini protocol</a> plugin</td>
+        </tr>
+        <tr>
+          <td><a
+              href="https://github.com/dillo-browser/dillo-plugin-gopher">dillo-plugin-gopher</a></td>
+          <td>gopher://</td>
+          <td>C</td>
+          <td><a href="https://en.wikipedia.org/wiki/Gopher_(protocol)">Gopher
+              protocol</a> plugin</td>
+        </tr>
+        <tr>
+          <td><a
+              href="https://github.com/dillo-browser/dillo-plugin-ipfs">dillo-plugin-ipfs</a></td>
+          <td>ipfs://, ipns://</td>
+          <td>Go</td>
+          <td><a href="https://en.wikipedia.org/wiki/InterPlanetary_File_System">IPFS
+              protocol</a> plugin</td>
+        </tr>
+        <tr>
+          <td><a
+              href="https://github.com/dillo-browser/dillo-plugin-man">dillo-plugin-man</a></td>
+          <td>man://</td>
+          <td>Bash</td>
+          <td>Renders <a href="https://en.wikipedia.org/wiki/Man_page">man
+              pages</a> in HTML</td>
+        </tr>
+        <tr>
+          <td><a
+              href="https://github.com/dillo-browser/dillo-plugin-spartan">dillo-plugin-spartan</a></td>
+          <td>spartan://</td>
+          <td>Bash</td>
+          <td><a href="https://portal.mozz.us/spartan/spartan.mozz.us/">Spartan
+              protocol</a> plugin</td>
+        </tr>
+      </table>
+      <p>To add a new plugin to this list,
+      <a href="https://github.com/dillo-browser/dillo-browser.github.io/pulls">open
+        a PR</a>
+      or
+      <a href="mailto:dillo-dev@mailman3.com">send an email</a>
+      with a link to your repository and a short description.</p>
+      <p style="text-align: center; margin-top: 2em">
         <a href="https://github.com/dillo-browser/dillo">GitHub</a> - 
         <a rel="me" href="https://fosstodon.org/@dillo">Mastodon</a> - 
         <a href="irc://irc.libera.chat/#dillo">IRC</a> - 
