@@ -16,6 +16,12 @@ jobs:
       with:
         repository: 'dillo-browser/dillo'
         path: dillo
+        fetch-depth: 0 # Required for "git describe" to work properly
+    - name: Set the Dillo git commit in Doxygen config
+      working-directory: dillo/
+      run: |
+        sed -i "s/^PROJECT_NUMBER  *=/PROJECT_NUMBER=$(git describe)/" Doxyfile
+        grep PROJECT_NUMBER Doxyfile
     - name: Build Doxygen docs
       uses: mattnotmitt/doxygen-action@1.9.8
       with:
