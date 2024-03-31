@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>What happened to dillo.org?</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <style>
+body {
+  background: white;
+  line-height: 1.5;
+  margin: 3em;
+  font-family: sans-serif;
+}
+.main {
+  margin: 2em auto;
+  width: 50em;
+}
+h1 {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em
+}
+h3 {
+  color: #56f;
+  background: #f0f0f0;
+  padding: 0.5em
+}
+img {
+  width: 100%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+footer {
+  text-align: center;
+  margin-top: 2em;
+}
+  </style>
+  </head>
+
+<body>
+<div class="main">
+<h1>What happened to dillo.org?</h1>
+<i>Written on 2024-03-31.</i>
+<p>
+<h2>Summary</h2>
+<p>The domain <code>dillo.org</code> expired in 2022 and shortly after someone
+bought it and placed a Wordpress blog withspam posts and some content copied
+from the original Dillo website.
+Please, <em>don't link to <code>dillo.org</code></em>, use instead the new
+website 
+<a href="https://dillo-browser.github.io/">https://dillo-browser.github.io/</a>.
+There is also a copy of the original 
+<a href="https://dillo-browser.github.io/old/">old website</a> in case you need to
+link to an old page.
+<h2>Background</h2>
+<p>
+First, keep in mind that the domain <code>dillo.org</code> was used to serve
+several things:
+<ul>
+<li>The Dillo website since 
+  <a href="http://web.archive.org/web/20030726012045/http://www.dillo.org/">at
+    least 2003</a>.
+<li>The mail server (which included Jorge email, jcid@dillo.org).
+<li>The developer mailing list at lists.dillo.org.
+<li>The Mercurial repository at hg.dillo.org.
+</ul>
+<p>
+So, a failure in the DNS would cause all those services to become
+<em>unreachable</em>, specially the mail server. Developers were using 
+<code>@dillo.org</code> email addresses to communicate among themselves and to
+the mailing list.
+<p>
+To understand the development situation of Dillo in 2022, we can take a
+closer look at the commit frequency. It can be computed from the Git
+repository<sup>[<a href="#fn1">1</a>]</sup>,
+but keep in mind that it only covers the timeline <em>after</em> October of
+2007, when it was switched from CVS to Mercurial (and later to Git, keeping the
+history)<sup>[<a href="#fn2">2</a>]</sup>:
+<img alt="Commits stalled in 2017" src="img/commits.png">
+</p>
+<p>The development of Dillo decayed from 2014 to 2017. The last 3.0.5 version 
+was released on 2015 and the next 3.1 release never happened.
+The main architect of the rendering engine, Sebastian Geerken, 
+<a href="https://groups.google.com/g/dillo/c/Kpuh3d6nNL8/">passed away</a> on
+September 2016.
+<p>The last email I found from Jorge (the main developer of
+Dillo) was from
+<a href="https://groups.google.com/g/dillo/c/UQ1nWyMa3yo/m/07qhu9KqAgAJ">2019</a>,
+recommending to use the development version on the Mercurial repository, instead
+of waiting for the 3.1 release:
+
+<blockquote>
+<pre>
+...
+> According to the info on
+> https://hg.dillo.org/dillo/raw-file/default/ChangeLog, dillo-3.1 [not
+> released yet].
+> I will probably wait until they release it officially.
+
+IMHO, you should get it. It's being stable for years.
+
+-- 
+Cheers
+Jorge.-
+</pre>
+</blockquote>
+
+<p>
+From the commit history and the mailing list messages one can reach the
+conclusion that Dillo was not really being maintained around 2022. So it
+is not a surprise that nobody was giving much attention to the domain renewal.
+<h2>Expiration</h2>
+<p>
+From the Web Archive you can see that the domain name <code>dillo.org</code>
+<a href="http://web.archive.org/web/20220602023156/https://www.dillo.org/">
+  was parked around Jun of 2022</a> and shortly after it displayed this
+<a href="http://web.archive.org/web/20220810101323/http://dillo.org/contact.txt">message</a>:
+<blockquote>
+<pre>
+Domain For Sale
+For more high authority domain names for sale, please contact hello@criticalhit.net
+</pre>
+</blockquote>
+<p>
+The moment the domain expired it took down the website, but also the mail
+server used to reach the developers, as well as the mailing list. This
+difficulted any attempt to reach them to warn about the domain expiration.
+<p>
+A notice was published on Hacker News when the
+<a href="https://news.ycombinator.com/item?id=32448104">domain was for sale</a>
+on August, and a month later when the
+<a href="https://news.ycombinator.com/item?id=32991598">domain was "back"</a>.
+Interestingly, the user <code>gurjeet</code> offered to buy the domain
+back to the developers (thanks!), but they rejected:
+<blockquote>
+<pre>
+I have decided not to sell the domain, and keep it. I have reuploaded the
+original site from WayBackMachine, ...
+</pre>
+</blockquote>
+<p>
+However, they didn't upload the original site. They created a Wordpress blog
+(Dillo cannot render it very well) and copied some content from the original
+dillo.org, along with some blog posts that read like advertisements. You can
+track their activity by looking at the 
+<a href="https://dillo.org/post-sitemap.xml">site map</a>.
+<p>
+Based on the content of the CriticalHit webpage, I assume they are placing
+blog posts on dillo.org with a link to someone's page who has paid to get more
+clicks, exploiting the situation where dillo.org it is still linked by many
+places. I don't know if there are any laws that could protect us against this
+type of
+<a href="https://en.wikipedia.org/wiki/Domain_drop_catching">abuse</a>.
+The company seems to be based on
+<a href="https://www.criticalhit.net/terms-of-use/">South Africa law</a>.
+<h2>Aftermath</h2>
+<p>
+In the meanwhile, we have setup a new website based on GitHub pages (so
+hopefully it won't dissapear soon) at 
+<a href="https://dillo-browser.github.io/">https://dillo-browser.github.io/</a>
+which also includes a copy of the original content of the 
+<a href="https://dillo-browser.github.io/old/">old website</a> as it was before
+the domain expired.
+<p>
+The repository was transformed into Git and is kept in
+GitHub<sup>[<a href="#fn3">3</a>]</sup>
+at 
+<a
+  href="https://github.com/dillo-browser/dillo">https://github.com/dillo-browser/dillo</a>.
+The mailing list archives were recovered from the original server and they are
+available
+<a href="https://lists.mailman3.com/postorius/lists/dillo-dev.mailman3.com/">in
+the new mailing list</a>.
+<p>
+Until we have a better plan on taking back dillo.org, please don't link to that
+website as it is not trustworthy. If you can help us, please send and email to the
+mailing list
+<a href="dillo-dev@dillo-dev@mailman3.com">dillo-dev@mailman3.com</a>.
+<section>
+<hr>
+<ol>
+  <li id="fn1">
+    <p>Here is the command to generate the plot in case you want to investigate
+    on your own:</p>
+    <pre>
+% git log --pretty='format:%cd' --date=format:'%Y' | sort | uniq -c \
+  | awk '$2&gt;2000{print $2,$1}' \
+  | gnuplot -p -e "set grid; set term pngcairo size 1000,300;\
+set output \"commits.png\"; \
+set title 'Number of commits in the Dillo repository over time since 2007'; \
+plot '-' title 'commits' with linespoints lw 2 lc rgb \"black\""
+    </pre>
+  </li>
+  <li id="fn2">
+    <p>Notice that this plot is very different from the
+    <a href="https://github.com/dillo-browser/dillo/graphs/contributors">one in
+      GitHub</a>, as they only
+    count contributions from users of GitHub and none of the main developers had an
+    account there:
+    <img alt="Missing a lot of commits" src="img/commits-gh.png">
+    </p>
+  </li>
+  <li id="fn3">
+    <p>This decision is not permanent, but it seems to be a good starting point.
+    It makes GitHub another single point of failure, but on the other hand, it
+    allows us to run the CI builds for "free" on several platforms.</p>
+  </li>
+</ol>
+</section>
+<footer>
+<a href="index.html">&larr; Home</a>
+</footer>
+</div>
+</body>
+</html>
