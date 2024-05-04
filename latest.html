@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Dillo release 3.1.0-rc1</title>
+    <title>Dillo release 3.1.0</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <style>
 body {
@@ -11,7 +11,7 @@ body {
   margin: 3em;
   font-family: sans-serif;
 }
-article {
+.main {
   margin: 2em auto;
   width: 50em;
 }
@@ -20,6 +20,7 @@ h1 {
   margin-bottom: 0.25em
 }
 img {
+  border: 0;
   width: 100%;
   margin-top: 1em;
   margin-bottom: 1em;
@@ -32,21 +33,22 @@ footer {
   </head>
 
 <body>
-<article>
-<h1>Dillo release 3.1.0-rc1</h1>
-<i>Updated on 2024-04-11</i>
+<div class="main">
+<h1>Dillo release 3.1.0</h1>
+<i>Released on 2024-05-04</i>
 
 <h2>Summary of changes</h2>
 
-<p><em><b>Note:</b> The 3.1.0-rc1 is a
-  <a href="https://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate">release
-    candidate version</a> intended for early testers.
-  The stable release 3.1.0 will be released in a few weeks if there are no
-  more issues.
-</em></p>
-
 <p>Since the last release 3.0.5 from 2015 a lot of things have happened to the
-Dillo project. Here is a short timeline to put things into perspective:</p>
+Dillo project.
+
+<a href="img/commits-author.png">
+<img
+  alt="A plot of number of commits over time colored by authors. There is a missing gap from mid 2002 to mid 2008. And from 2017 to end of 2023 there is almost no commits."
+  src="img/commits-author.png">
+</a>
+
+Here is a short timeline to put things into perspective:
 
 <ul>
   <li>On 2016, the main developer of the layout engine, Sebastian Geerken,
@@ -68,7 +70,8 @@ Dillo project. Here is a short timeline to put things into perspective:</p>
 as well as fixes and small features introduced in 2024. Here is a summary:
 <ul>
   <li>Add support for floating HTML elements, which involved a big redesign.</li>
-  <li>Add support for OpenSSL, LibreSSL and mbed TLS for HTTPS.</li>
+  <li>Add support for OpenSSL, LibreSSL and mbed TLS for HTTPS, which is now
+    enabled by default.</li>
   <li>Add a CI pipeline to build Dillo on Ubuntu, MacOS, FreeBSD and
     Windows (via cygwin).</li>
   <li>Add automatic HTML rendering tests.</li>
@@ -80,7 +83,7 @@ as well as fixes and small features introduced in 2024. Here is a summary:
 <h2>Download</h2>
 
 To download the release, get it from the
-<a href="https://github.com/dillo-browser/dillo/releases/tag/v3.1.0-rc1">GitHub
+<a href="https://github.com/dillo-browser/dillo/releases/tag/v3.1.0">GitHub
 releases</a>.
 
 <h2>Detailed changes</h2>
@@ -126,7 +129,7 @@ This is the list of changes from the ChangeLog of this release:
       <li>Doxygen fixes.</li>
     </ul>
   </li>
-  <li>Patches by corvid and Benjamin Johnson
+  <li>Patches by corvid and Benjamin Johnson:
     <ul>
       <li>Move HTTPS from dpi into the browser, enable SNI, check more locations
         for CA bundles and add --with-ca-certs-file and --with-ca-certs-dir to
@@ -134,13 +137,13 @@ This is the list of changes from the ChangeLog of this release:
       </li>
     </ul>
   </li>
-  <li>Patches by Johannes Hofmann
+  <li>Patches by Johannes Hofmann:
     <ul>
       <li>Fix bookmarks DPI crash.</li>
       <li>Fix OSX compilation issue with xembed.</li>
     </ul>
   </li>
-  <li>Patches by Rodrigo Arias Mallo &lt;rodarima@gmail.com&gt;
+  <li>Patches by Rodrigo Arias Mallo &lt;rodarima@gmail.com&gt;:
     <ul>
       <li>Fix DuckDuckGo search links</li>
       <li>Add scroll_step option to control the mouse wheel vertical step</li>
@@ -163,12 +166,20 @@ This is the list of changes from the ChangeLog of this release:
       <li>Fix W3C validator and remove broken WDG validator.</li>
       <li>Simplify bookmark DPI page style and improve readability.</li>
       <li>Improve the Dillo manual available from the help button.</li>
+      <li>Improve detection of XHTML documents.</li>
+      <li>Install desktop file with Dillo icon.</li>
+      <li>Add version in user manual and about:splash.</li>
+    </ul>
+  </li>
+  <li>Patches by Mark Walker:
+    <ul>
+      <li>Add http_force_https mode.</li>
     </ul>
   </li>
 </ul>
 <footer>
 <a href="index.html">&larr; Home</a>
 </footer>
-</article>
+</div>
 </body>
 </html>
