@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Dillo release 3.1.1</title>
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+<body>
+<div class="main">
+<h1>Dillo release 3.1.1</h1>
+<span class="date">Released on 2024-06-08</span>
+<nav>
+<a href="/">Home</a> /
+<a href="/release">Release</a> /
+<a href="/release/3.1.1">3.1.1</a>
+</nav>
+
+
+<h2>Summary of changes</h2>
+
+<p>
+The 3.1.1 release contains only minor bug fixes. The changes from the
+<a href="../3.1.0">previous release</a> include:
+
+<ul>
+  <li>Patches by Rodrigo Arias Mallo:
+    <ul>
+      <li>Disable TLSv1.3 in Mbed TLS 3.6.0 until it is supported (fixes build
+        on Alpine Linux).</li>
+      <li>Add workaround for Cygwin and OpenSSL with
+        <code>--disable-threaded-dns</code>.</li>
+      <li>Fix distcheck when HTML tests are enabled.</li>
+      <li>Fix an OpenSSL bug when the server closes the connection prematurely
+        and <code>SSL_get_error()</code> returns
+        <code>SSL_ERROR_ZERO_RETURN</code>.</li>
+    </ul>
+  </li>
+  <li>Patches by Matt Jolly:
+    <ul>
+      <li>Add HTML tests to the distributed tarball.</li>
+    </ul>
+  </li>
+  <li>Patches by dogma:
+    <ul>
+      <li>Gracefully handle warnings from PNG images.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Download</h2>
+
+<p>
+To download the 3.1.1 release, get it from the
+<a href="https://github.com/dillo-browser/dillo/releases/tag/v3.1.1">GitHub
+release page</a> or directly from the links below:
+<ul>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.tar.bz2">dillo-3.1.1.tar.bz2 (0.98M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.tar.bz2.asc">signature</a>)</li>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.tar.gz">dillo-3.1.1.tar.gz (1.2M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.tar.gz.asc">signature</a>)</li>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.zip">dillo-3.1.1.zip (1.4M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.1.1/dillo-3.1.1.zip.asc">signature</a>)</li>
+</ul>
+</div>
+</body>
+</html>
