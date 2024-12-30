@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dillo RFC 003 - UNIX sockets in URLs</title>
+<style>
+body {
+  background: white;
+  line-height: 1.5;
+  margin: 3em;
+  font-family: sans-serif;
+  max-width: 72ch;
+}
+h1 { margin-bottom: 1em; }
+header { border: solid 1px #ddd; background: #f5f5f5; padding: 0.25em 1em }
+dt { font-weight: bold }
+dd { margin-left: 2ch; }
+pre { padding-left: 4ch; }
+</style>
+</head>
+<body>
+
+<h1>Dillo RFC 003 - UNIX sockets in URLs</h1>
+
+<header>
+<dl>
+<dt>State</dt><dd>Draft</dd>
+<dt>Date</dt><dd>Draft on 2024-12-30</dd>
+<dt>Author</dt><dd>Rodrigo Arias Mallo
+  &lt;<a href="mailto:rodarima@gmail.com">rodarima@gmail.com</a>&gt;</dd>
+</dl>
+</header>
+
+<h2>Abstract</h2>
+
+<p>This document adds UNIX sockets support to URLs by using host names with the TLD
+&ldquo;.unix&rdquo; and a unix.hosts file that describe where in the file system
+the socket file is located for a given host.</p>
+
+<h2>Proposal</h2>
+
+<p>UNIX sockets allow permissions to be established on a socket so that only a user
+or a group of users can connect to it. However, the HTTP protocol doesn&rsquo;t make
+provisions to specify how to connect to UNIX sockets, and instead it uses TCP
+to connect to a given host, which is resolved via DNS to an IP address.</p>
+
+<p>To allow connecting to UNIX sockets, we propose using a special top level
+domain (TLD) &ldquo;.unix&rdquo; which can be mapped to a local UNIX socket. In
+this way, an URL like the following:</p>
+
+<pre><code>http://example.unix/index.html
+</code></pre>
+
+<p>Will search for a socket file mapped to &ldquo;example.unix&rdquo; and
+perform a HTTP query over that socket to retrieve the &ldquo;/index.html&rdquo;
+file. Similarly, other protocols like Gopher or Gemini can work with UNIX
+sockets in the same way.</p>
+
+<p>This scheme allows a user to place the sockets in any path of their choosing,
+which doesn&rsquo;t need to be revealed in the URL.</p>
+
+<p>To support this scheme, a unix.hosts file is be used with a similar syntax as
+the hosts file, in such a way that a user can define its own aliases:</p>
+
+<pre><code>unix:~/.dillo/example.sock    example.unix
+</code></pre>
+
+<p>Similarly, a system-wide configuration could be made available, and still
+inherit the benefits from UNIX permissions:</p>
+
+<pre><code>unix:/var/lib/foobar.sock     foobar.unix
+</code></pre>
+
+<p>This proposal fails gracefully when a URL referring to a UNIX socket is
+opened by a program that doesn&rsquo;t support UNIX hosts, as the top level
+domain &ldquo;.unix&rdquo; doesn&rsquo;t exist
+[<a href="https://data.iana.org/TLD/tlds-alpha-by-domain.txt">1</a>].
+Additionally, a program may determine that a host ending with .unix will use a
+UNIX connection, so it is not needed to query any DNS server.</p>
+
+<p>If no entry is found on the unix.hosts file for a given .unix host a default
+set of locations for the UNIX socket could be attempted, but this is left out of
+the current proposal.</p>
+
+<h2>Implementation details</h2>
+
+<p>This proposal could be implemented by any program that performs network
+operations, it is not specific to Dillo. The following sections apply only to
+Dillo itself, but may serve as a reference to other implementations.</p>
+
+<h3>The unix.hosts file</h3>
+
+<p>The format of the hosts file extends the syntax of /etc/hosts to allow hosts
+that begin with the &ldquo;unix:&rdquo; prefix and are followed by a path. The
+rest of the line defines aliases to that socket separated by white-spaces.</p>
+
+<pre><code>unix:/var/lib/foobar.sock  foobar.unix
+</code></pre>
+
+<p>The symbol ~ is expanded by the value of the <code>$HOME</code> variable of
+the user performing the lookup. Therefore, to define sockets in the user home
+directory:</p>
+
+<pre><code>unix:~/foobar.sock  foobar.unix  foo-bar.unix
+</code></pre>
+
+<h3>UNIX host resolution</h3>
+
+<p>The process to resolve a UNIX host is quite simple. First, determine if the
+URL host name ends in &ldquo;.unix&rdquo;. If so, follow the steps below.
+Otherwise, proceed with the current host resolution, possibly querying DNS
+servers.</p>
+
+<p>To find how to connect to a .unix host, identify a matching entry in the
+hosts.unix file by looking at all the aliases for each UNIX socket. If there is
+a match, use the unix socket patch of that line and the socket() interface with
+the <code>AF_UNIX</code> family.</p>
+
+<h3>Multiple entries</h3>
+
+<p>In order to give users the ability to redefine aliases to their own UNIX
+sockets, the entries in the unix.hosts file have precedence over the ones in the
+system-wide unix.hosts configuration file.</p>
+
+</body>
+</html>
