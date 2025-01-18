@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Dillo release 3.2.0</title>
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+<body>
+<div class="main">
+<h1>Dillo release 3.2.0</h1>
+<span class="date">Released on 2025-01-18</span>
+<nav>
+<a href="/">Home</a> /
+<a href="/release">Release</a> /
+<a href="/release/3.2.0">3.2.0</a>
+</nav>
+
+
+<h2>Summary of changes</h2>
+
+<p>The 3.2.0 release contains several new features, configuration options and bug
+fixes.
+
+<p>We added SVG support for <b>math formulas</b> and other simple SVG images by
+patching the <a href="https://github.com/memononen/nanosvg">nanosvg library</a>.
+This is specially relevant for Wikipedia math articles <sup><a href="#fn1">1</a></sup>.
+
+<figure>
+<a href="wiki-math.png">
+  <img  alt="A comparison of the old wikipedia page where formulas are not
+             rendered vs the new release where the formulas are shown
+             properly"src="wiki-math.png"></a>
+</figure>
+
+We also added optional support for WebP images via
+<a href="https://chromium.googlesource.com/webm/libwebp">libwebp</a>.
+You can use the new option <code>ignore_image_formats</code> to
+ignore image formats that you may not trust (libwebp had 
+<a href="https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=libwebp">some
+  CVEs recently</a>).
+
+<p>A new <b>scrollbar page navigation mode</b> was introduced to help read
+websites as if they are books, reducing the usage of the mouse wheel. To enable
+it, set the option <code>scrollbar_page_mode</code> to <code>YES</code>.
+Clicking anywhere on the vertical scrollbar with the left mouse button will
+scroll the view one page down. With the right mouse button, one page up. You can
+also configure how much overlap from the previous page is shown in the next one
+with the new option <code>scroll_page_overlap</code>.
+
+<p>The vertical scrollbar can now be placed on the <b>left side</b> of the page
+with the option <code>scrollbar_on_left</code>. While this may be strange at
+first, I find it more pleasant as it keeps it next to the beginning of the
+text where I'm usually already looking while reading.
+
+<p>A new option <code>link_action</code> allows users to define <b>custom
+commands to open new URLs</b>. These appear on the link menu when
+right clicking an hyperlink. You can define multiple options to create multiple
+entries.
+
+<figure>
+<a href="link-menu.png">
+  <img width=50% src="link-menu.png" alt="A link menu showing several entries
+  for a youtube link, with MPV player being shown while Open in MPV is
+  selected in the menu"></a>
+</figure>
+
+
+<p>Websites can now be <b>zoomed</b> by using the shortcuts <code>Ctrl +</code>
+to make text bigger and <code>Ctrl -</code> to make it smaller, <code>Ctrl
+0</code> to reset the normal size. Set the default zoom level with the
+<code>zoom_factor</code> option.
+
+<p>The SIGUSR1 signal now causes the current page to be reloaded. This is useful
+to implement a <b>live view</b> while editing a web page. Here is a simple way
+to do it with the <a href="http://eradman.com/entrproject/">entr(1)</a> tool:
+<pre><code>$ ls index.html | entr killall -USR1 dillo</code></pre>
+
+<h2>Download</h2>
+
+<p>
+To download the 3.2.0 release, get it from the
+<a href="https://github.com/dillo-browser/dillo/releases/tag/v3.2.0">GitHub
+release page</a> or directly from the links below:
+<ul>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.tar.bz2">dillo-3.2.0.tar.bz2 (1.1M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.tar.bz2.asc">signature</a>)</li>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.tar.gz">dillo-3.2.0.tar.gz (1.3M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.tar.gz.asc">signature</a>)</li>
+  <li><a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.zip">dillo-3.2.0.zip (1.5M)</a> 
+     (<a href="https://github.com/dillo-browser/dillo/releases/download/v3.2.0/dillo-3.2.0.zip.asc">signature</a>)</li>
+</ul>
+
+<h2>Detailed changes</h2>
+<p>This is the list of changes from the ChangeLog of this release: 
+
+<ul>
+  <li>Patches by Alex, Rodrigo Arias Mallo:
+    <ul>
+      <li>Add <code>new_tab_page</code> option to open a custom new tab
+        page.</li>
+    </ul>
+  </li>
+  <li>Patches by Rodrigo Arias Mallo
+    <ul>
+<li>Ignore empty page title for tab labels.
+<li>Fix segfault when clicking the "Done" button in downloads dialog.</li>
+<li>Add zoom support using Ctrl +/-/0 and the "zoom_factor" option.</li>
+<li>Fix wrong redirect by meta refresh without URL.</li>
+<li>Display JSON as plain text.</li>
+<li>Add line number anchors in HTML source view.</li>
+<li>Make Dillo strictly C99, C++11 and POSIX-2001 compliant, without depending on
+  GNU extensions.</li>
+<li>Perform an emergency stop of the layout engine loop after 1000 iterations to
+  prevent a hang.</li>
+<li>Fix use-after-free on errors in TLS connection.</li>
+<li>Add scrollbar_page_mode option to easily scroll full pages with the
+  mouse.</li>
+<li>Control the page overlap with the scroll_page_overlap option.</li>
+<li>Set focus_new_tab=NO and show_quit_dialog=NO by default.</li>
+<li>Fix GET requests over HTTPS via a proxy.</li>
+<li>Improve image resize logic to always try to preserve the aspect ratio.</li>
+<li>Reload current page on SIGUSR1 signal</li>
+<li>Print library versions and enabled features with dillo -v.</li>
+<li>Allow image formats to be ignored with the "ignore_image_formats"
+  option.</li>
+<li>Add the "link_action" option to define custom menu entries to open links
+  with external programs or scripts.</li>
+<li>Add support for line fragments in plain text files
+  (file://foo/bar.txt#L42).</li>
+    </ul>
+  </li>
+  <li>Patches by dogma, Rodrigo Arias Mallo:
+    <ul>
+      <li>Add primitive support for SVG using the nanosvg.h library.</li>
+      <li>Add support for ch, rem, vw, vh, vmin and vmax CSS units.</li>
+      <li>Allow placing the scrollbar on the left side.</li>
+      <li>Add support for WebP images.</li>
+    </ul>
+  </li>
+  <li>Patches by Xavier Del Campo Romero, Rodrigo Arias Mallo:
+    <ul>
+      <li>Avoid expensive search for multipart/form-data boundaries.</li>
+    </ul>
+  </li>
+</ul>
+
+<section>
+<p>
+<hr>
+<ol>
+  <li id="fn1">
+    <p>Wikipedia still displays the MathML text of sites, to hide it add these
+    lines to your <code>~/.dillo/style.css</code> file:</p>
+    <pre>
+/* Remove mathml from Wikipedia; it will be shown as SVG formulas */
+.mwe-math-mathml-display, .mwe-math-mathml-inline { display: none !important; }
+    </pre>
+</ol>
+</section>
+</div>
+
+</body>
+</html>
