@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Resurrecting Dillo</title>
+    <!-- <link rel="stylesheet" href="css/gruvbox-light.css"> -->
+    <!-- <link rel="stylesheet" href="css/gruvbox-dark.css"> -->
+<style>
+html, body { font-size: 22px; margin: 0; }
+div { margin: 0 2em; min-height: 120vh; /* border: 1px solid blue; */ }
+pre { padding: 10px; display: inline-block; }
+h1 { margin: 0; padding: 1em 0; /* border: solid 1px black; */ }
+ul { margin: 0; }
+li { margin-top: 0.5em; }
+div.title { text-align: center; }
+div.title h1 { padding: 2em 0 0.25em 0; font-size: 2.5em; }
+div.title h2 { margin-top: 0.1em; }
+div.title img { margin: 1em; }
+div.title p.author { font-size: 1.1em; }
+div.title p.email { font-size: 0.8em; }
+div.title p.date { padding-top: 1em; }
+
+div.section { text-align: center; }
+div.section h1 { padding: 30vh 0 0.25em 0; font-size: 2.5em; }
+div.section h2 { margin-top: 0.1em; }
+
+/*div#end { text-align: center; }*/
+/*div#end h1 { padding-top: 130px; font-size: 45px; }*/
+span.box { background: #eee; border: dotted 2px black; padding: 2px; display:inline-block; }
+span.hi { background: #ffea00; border: solid 1px gray; padding: 1px; display:inline-block; }
+pre>code { background: #f3f3f3; display:inline-block; }
+
+/* Figures */
+/* div figure .center { text-align:center; margin: 1em; } */
+/* figure img .center { text-align:center; max-width: 100%; } */
+figure img { text-align:center; max-width: 100%; }
+
+/* Tables */
+table { width: 100%; margin: 0; padding: 0; font-size: 16px; border-bottom: 2px solid black; border-top: 2px solid black; }
+th { border-bottom: 2px solid black; padding: 0.5em 0em }
+td { padding: 0.25em 0.5em; }
+table.center td { text-align: center }
+figure { margin: 1em }
+figcaption { margin: 1em 0.5em; font-size: 14px; }
+
+</style>
+</head>
+<body>
+<div class="title" id="title"><h1>Resurrecting Dillo</h1>
+  <h2>25th year aniversary!</h2>
+  <img src="img/logo.png">
+  <p class="author">Rodrigo Arias Mallo</p>
+  <p class="email">rodarima@gmail.com</p>
+  <p class="date">2025-02-05</p>
+</div>
+<div id="me"><h1>About me</h1>
+  <ul>
+    <li>I'm a computer scientist at the Barcelona Supercomputer Center (HPC)</li>
+    <li>I've been using Dillo for about 10 years on old computers</li>
+    <li>I mostly program in C</li>
+    <li>Simplicity is beautiful</li>
+  </ul>
+</div>
+<div id="intro"><h1>What is Dillo?</h1>
+  <ul>
+    <li>Dillo is a very lightweight graphical web browser</li>
+    <li>Has its own rendering engine and uses FLTK for the UI</li>
+    <li>Support for a reasonable subset of HTML and CSS</li>
+    <li>Doesn't support Javascript</li>
+    <li>25 years old project, since 1999</li>
+  </ul>
+</div>
+<div id="intro2"><h1>What is Dillo?</h1>
+  <ul>
+    <li>Dillo is a very lightweight graphical web browser</li>
+    <li>Has its own rendering engine and uses FLTK for the UI</li>
+    <li>Support for a reasonable subset of HTML and CSS</li>
+    <li>Doesn't support Javascript</li>
+    <li>25 years old project, since 1999</li>
+    <li>This presentation is shown <b>in Dillo itself!</b></li>
+  </ul>
+</div>
+<div id="objectives"><h1>Objectives</h1>
+  <ul>
+    <li>Lower the barrier of entry to the web (computational / network)
+    </li>
+    <li>User privacy (no cookies by default, no JS, no telemetry)</li>
+    <li>Efficiency (fast and stream rendering, small codebase)</li>
+    <li>Easy to use for users by default</li>
+  </ul>
+</div>
+<div id="abandoned"><h1>Abandoned in 2017</h1>
+  <ul>
+    <li>In 2016, rendering engine developer
+      <span style="color: #e11414">█</span>
+      Sebastian Geerken passed away</li>
+    <li>In 2017, lead developer
+      <span style="color: #319e2a">█</span>
+      Jorge Arellano Cid not active anymore</li>
+    <li>In 2022, DNS lost and someone took over dillo.org to serve SPAM</li>
+    <li><b>Gone: Email server, website, repo, mailing list, bug tracker</b></li>
+    <li>Last official release 3.0.5 in 2015, some unreleased changes since then</li>
+  </ul>
+  <figure><img src="img/v3.0.5.png"></figure>
+</div>
+<div id="resurrection"><h1>Resurrection in 2024</h1>
+  <ul>
+    <li>In early 2024 I decided to try to resurrect it</li>
+    <li>Old content recovered and backed up on GitHub and archive.org</li>
+    <li>Setup a GitHub organization and a new website:
+      <a href="https://dillo-browser.github.io">https://dillo-browser.github.io</a></li>
+    <li>New mailing list at dillo-dev@mailman3.com </li>
+    <li>Donations at Liberapay 
+      <a href="https://liberapay.com/dillo/">https://liberapay.com/dillo/</a>
+      and IRC channel at libera: #dillo</li>
+  </ul>
+  <figure><img src="img/v3.0.5.png"></figure>
+</div>
+<div id="release-3.1.0"><h1>Release 3.1.0 after 9 years!</h1>
+  <ul>
+    <li>Automatic HTML rendering tests</li>
+    <li>GitHub CI pipeline to build and pass the test suite</li>
+    <li>Added support for OpenSSL/LibreSSL along with Mbed TLS</li>
+    <li><b>Released version 3.1.0</b> with minimal changes</li>
+    <li>Quickly adopted by several Linux/BSD distributions</li>
+  </ul>
+  <figure><img src="img/v3.1.0.png"></figure>
+</div>
+<div id="release-3.2.0"><h1>Release 3.2.0 two weeks ago</h1>
+  <ul>
+    <li>SVG support for Wikipedia math formulas, WebP too</li>
+    <li>Scrollbar page navigation mode</li>
+    <li>Open URLs with custom programs or commands</li>
+    <li>Zoom control with <code>Ctrl +/-/0</code></li>
+    <li>Reload the current page with SIGUSR1</li>
+  </ul>
+  <figure><img src="img/v3.2.0.png"></figure>
+</div>
+<div class="section" id="demo-usage">
+  <h1>Usage demo</h1>
+</div>
+<div id="testing-netbook">
+  <h1>Old netbook for testing</h1>
+  <ul>
+    <li>Intel Atom N455 from 2010, <b>the CPU is 15 years old!</b></li>
+    <li>1 core at 1.66 GHz with 2 HW threads (Hyper Threading)</li>
+    <li>Very small cache: L1d 24 KiB / L1i 32 KiB / L2 512 KiB / <b>L3 Nope</b></li>
+    <li>RAM is 2 GiB with 4 GiB of SWAP</li>
+    <li>Fast SSD as disk</li>
+    <li><b>Bought second hand for 30 € + new SSD disk</b></li>
+  </ul>
+</div>
+<div id="link-actions"><h1>Open link with external tools</h1>
+  <ul>
+    <li>Dillo doesn't play audio or video</li>
+    <li>But you can just open the URL in any program you like:
+      <pre>link_action="Open in MPV:mpv $url"
+link_action="Open in Firefox:firefox $url"</pre>
+    </li>
+    <li>Example:
+      <a href="https://www.youtube.com/watch?v=A6mb9qt2-3o">
+        https://www.youtube.com/watch?v=A6mb9qt2-3o</a>
+    </li>
+    <li>Geo links:
+      <a href="geo:50.812375,4.380734">FOSDEM</a>,
+	  <a href="geo:41.387890,2.187120">Barcelona</a>
+    </li>
+  </ul>
+</div>
+<div id="proto"><h1>Extensible with plugins</h1>
+  <ul>
+    <li>Plugins implement new protocols in <b>any language</b></li>
+    <li>Similar to <b>CGI</b> scripts but simpler</li>
+    <li>Gemini (C/Go): 
+      <a href="gemini://gemini.circumlunar.space/users/hundredrabbits/weather.gmi">Weather</a>, 
+      <a href="gemini://warmedal.se/~antenna/">Antenna</a>
+    </li>
+    <li>Gopher (C):
+      <a href="gopher://sdf.org">SDF</a>,
+      <a href="gopher://gopher.floodgap.com">Floodgap</a>
+	</li>
+    <li><a href="file:~/.dillo/dpi/man/man.filter.dpi">Man</a> (Bash):
+      <a href="man:dillo">Dillo</a>,
+      <a href="man:gittutorial(7)">Git tutorial</a>,
+      <a href="man:gcc(1)">Gcc</a> (big!)</li>
+    <li><a
+        href="https://www.theguardian.com/education/2019/mar/28/paywalls-block-scientific-progress-research-should-be-open-to-everyone">Bloated
+        page</a> &rightarrow; <a href="rdrview:https://www.theguardian.com/education/2019/mar/28/paywalls-block-scientific-progress-research-should-be-open-to-everyone">Reader mode</a></li>
+  </ul>
+</div>
+<div id="bad-sites"><h1>Examples of <i>bloated</i> websites</h1>
+<p>Anything that you find in the "modern" Web is broken or bloated, requiring
+you to run JavaScript to display mostly text websites:</p>
+<ul>
+  <li>Big tech:
+    <a href="https://www.reddit.com/r/linux/comments/3m32sb/soo_i_tried_new_browsers_review/">Reddit</a>,
+    <a href="https://www.facebook.com/NetworkZoneISP/posts/dillo-is-a-minimalistic-web-browser-particularly-intended-for-older-or-slower-co/2241077379475961/">Facebook</a>,
+    <a href="https://x.com/nasa">Twitter/X</a>,
+    <a href="https://www.youtube.com/watch?v=A6mb9qt2-3o">YouTube</a>,
+    <a href="https://www.google.com/maps">Google Maps</a>
+  </li>
+  <li>News:
+    <a
+      href="https://www.nytimes.com/1998/01/23/business/browser-war-a-concession-and-a-push.html">The
+      New York Times</a>,
+    <a href="https://www.theguardian.com/global/2015/mar/22/web-browser-came-back-haunt-microsoft">The Guardian</a>,
+    <a href="https://www.bbc.com/news/technology-16284196">BBC</a>,
+    <a href="http://news.bbc.co.uk/2/hi/science/nature/14035.stm">BBC old</a>
+  </li>
+  <li>Misc:
+    <a href="https://fosstodon.org/@dillo">Mastodon</a>,
+    <a href="https://bandcamp.com/">Bandcamp</a>
+  </li>
+  <li>Search engines:
+    <a href="https://www.google.com/">Google</a><sup
+      style="color:red">New!</sup>,
+    <a href="https://www.bing.com/">Bing</a>
+  </li>
+</ul>
+</div>
+<div id="simple-sites"><h1>Examples of <i>simple</i> websites</h1>
+<p>These websites work well with a subset of HTML and CSS and degrade nicely
+without JavaScript:</p>
+<ul>
+  <li>Blogs/personal:
+    <a href="https://wiki.xxiivv.com/site/varvara.html">XXIIVV</a>,
+    <a href="https://100r.co/site/home.html">100r.co</a>,
+    <a href="https://datagubbe.se/decusab/">Datagubbe</a>,
+    <a href="https://idlewords.com/2023/1/why_not_mars.htm">idlewords.com</a>,
+    <a href="https://seirdy.one/">Seirdy</a>
+  </li>
+  <li>News/link agregators:
+    <a href="https://text.npr.org/">NPR (text)</a>,
+    <a href="https://lwn.net/Articles/1004544/">LWN</a>,
+    <a href="https://news.ycombinator.com/">HN</a>,
+    <a href="https://lobste.rs/">Lobste.rs</a>
+  </li>
+  <li>Forums:
+    <a href="https://forum.puppylinux.com/viewtopic.php?t=4499">phpBB</a>,
+    <a href="https://daemonforums.org/showthread.php?t=9674">vBulletin</a>,
+    <a href="https://www.bttr-software.de/forum/board_entry.php?id=10797">Little
+      forum</a>,
+    <a href="https://commandcenter.blogspot.com/">
+      WordPress</a>
+  </li>
+  <li>
+    Alternative frontends:
+    <a href="https://yewtu.be">Invidious (YouTube)</a>,
+    <a href="https://tn.vern.cc">Tent (Bandcamp)</a>,
+    <a href="https://brutaldon.org/user/dillo">Brutaldon (Mastodon)</a>
+  <li>Search engines:
+    <a href="https://wiby.me/?q=solar+panel">Wiby</a>,
+    <a href="https://www.mojeek.com/">Mojeek</a>,
+    <a href="https://lite.duckduckgo.com/lite">DuckDuckGo (lite)</a>...
+    (more at
+    <a href="https://seirdy.one/posts/2021/03/10/search-engines-with-own-indexes/">
+      Seirdy post</a>)
+  </li>
+</ul>
+</div>
+<div class="section" id="performance-section">
+  <h1>Performance and complexity</h1>
+</div>
+<div id="performance-gap"><h1>Performance gap</h1>
+  <figure><img style="max-height:65vh" src="img/gap.png"></figure>
+  <a href="https://infrequently.org/2024/01/performance-inequality-gap-2024/">Source</a>
+</div>
+<div id="performance-measurements">
+  <h1>Performance measurements</h1>
+  <ul>
+    <li>All measurements are done in this netbook.</li>
+    <li>Intel Atom N455 from 2010, <b>CPU is 15 years</b></li>
+    <li>The page loaded is the Dillo website:
+      <a href="https://dillo-browser.github.io">
+        https://dillo-browser.github.io</a></li>
+    <li>The results show <b>CPU time spent</b> measured with perf stat</li>
+  </ul>
+  <figure style="width:40em">
+    <table class="center">
+      <tr><th>Browser   <th>Version      <th>Open browser    <th>New tab</tr>
+      <tr><td>Dillo     <td>3.2.0        <td>0.9 s   <td>0.2 s     </tr>
+      <tr><td>Netsurf   <td>3.11         <td>2.5 s   <td>1.9 s     </tr>
+      <tr><td>Chromium  <td>130.0.6723.91<td>26.9 s  <td>6.5 s     </tr>
+      <tr><td>Firefox   <td>132.0        <td>80.6 s  <td>19.0 s    </tr>
+    </table>
+  </figure>
+</div>
+<div id="lines-code">
+  <h1>Codebase complexity</h1>
+  <ul>
+    <li>A large codebase is a barrier for patches.</li>
+    <li>Dillo is very small compared with "big" browsers.</li>
+    <li>Distributed in a <b>single floppy disk!</b></li>
+  </ul>
+  <p>
+  <figure style="width:40em">
+    <table class="center">
+      <tr><th>Browser   <th>Version      <th>SLOC (C/C++) <th>Tarball size </tr>
+      <tr><td>Dillo     <td>3.2.0        <td>71k          <td>1.32 MiB     </tr>
+      <tr><td>Netsurf   <td>3.11         <td>412k         <td>8.66 MiB     </tr>
+      <tr><td>Firefox   <td>134.0        <td>11.4M        <td>576 MiB      </tr>
+      <tr><td>Chromium  <td>134.0.6955.1 <td>18.6M        <td>1157 MiB?    </tr>
+    </table>
+  </figure>
+</div>
+<div id="build-support">
+  <h1>Low barrier for compiling</h1>
+  <ul>
+    <li>Apart from <i>using</i> the browser, it is also important to be able to <b>hack it</b></li>
+    <li>Two main constraints: <b>build time</b> and <b>peak memory (RSS)</b> required for linking</li>
+    <li>Can be hacked with 15 year old machines in reasonable time</li>
+  </ul>
+  <p>
+  <figure style="width:35em">
+    <table class="center">
+      <tr><th>Machine   <th>CPU        <th>Year   <th>Jobs <th>Wall time¹ <th>Peak RSS</tr>
+      <tr><td>Toy       <td>N455       <td>2010   <td>1    <td>6 min 33 s <td>131 MiB</tr>
+      <tr><td>Toy       <td>N455       <td>2010   <td>2    <td>5 min 20 s <td>134 MiB</tr>
+      <tr><td>Hop       <td>i7-10700F  <td>2020   <td>1    <td>31 s       <td>128 MiB</tr>
+      <tr><td>Hop       <td>i7-10700F  <td>2020   <td>8    <td>8.5 s      <td>125 MiB</tr>
+    </table>
+    <figcaption>
+    <p>¹ <i>Shows the wall clock time to rebuild the whole browser with
+    GCC, measured with GNU time(1) (not the builtin time command).</i>
+    </figcaption>
+  </figure>
+</div>
+<div id="end">
+  <h1>The end</h1>
+  <ul>
+    <li>Remember that not everyone can get the latest computer or fast networks.</li>
+    <li>But everyone should be able to read the content of the Web.</li>
+    <li>Allow people to <b>choose</b> using newer technologies like JS or
+      fallback to plain HTML.</li>
+    <br>
+    <li>Thanks for your attention!</li>
+    <li>Questions? Some page you want to test?</li>
+  </ul>
+</div>
+</body>
+</html>

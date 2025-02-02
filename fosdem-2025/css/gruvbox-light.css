@@ -1,0 +1,22 @@
+body {
+  background: #fbf1c7;
+  color: #3c3836;
+}
+
+pre {
+  background: #eee;
+}
+
+.hi {
+  background: #ffff00;
+}
+
+div#title {
+  /*background: #ffffea;*/
+  background: #fbf1c7;
+  color: #3c3836;
+}
+
+div#end {
+  background: #ffffea;
+}
