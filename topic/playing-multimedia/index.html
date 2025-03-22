@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Playing multimedia with Dillo</title>
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+<header>
+  <span class="date">Written on 2025-03-16</span>
+  <nav>
+    <a href="/">Home</a> /
+    <a href="/topic">Topic Guide</a> /
+    <a href="/topic/playing-multimedia">Playing multimedia</a>
+  </nav>
+</header>
+<main>
+  <h1>Playing multimedia with Dillo</h1>
+  <p>Dillo doesn't have the capability to play audio or video directly from the
+  browser, however it can <em>easily</em> offload this task to other programs.
+  This page collects some examples of how to do watch videos and listen to audio
+  tracks or podcasts by using an external player program. In particular we will
+  cover mpv with yt-dlp which supports YouTube and Bandcamp among many other
+  sites.
+  <img src="dillo-tv.png" alt="A black and white drawing of an armadillo
+            watching a futuristic looking TV playing the famous video of Rick
+            Astley, Never Gonna Give You Up">
+  </p>
+  <h2>Requisites</h2>
+  <p>You will need at least Dillo
+  <a href="/release/3.2.0/">version 3.2.0</a> to open URLs in external
+  programs, be sure to install an <a href="/release">updated version</a> or
+  built it yourself from source.</p>
+  <p>To play multimedia files you will also need
+  <a href="https://mpv.io/">mpv</a> along with
+  <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> tool to extract video
+  and audio streams from
+  <a
+    href="https://raw.githubusercontent.com/yt-dlp/yt-dlp/master/supportedsites.md">several
+    sites</a>.
+  There are other alternatives, but these are the ones I have tested and they
+  seem to work fine. Be sure to use an <b>updated version</b> of yt-dlp, as it
+  is likely that old versions don't work anymore.</p>
+
+  <h2>Opening URLs in mpv</h2>
+  <p>Apart from opening video and audio URLs, <a href="https://mpv.io/">Mpv</a> can 
+  also open URLs that contain embedded video or audio elements by extracting the
+  relevant sources from the website with the help of
+  <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>
+  under the hood. For example, a YouTube video can be directly opened like so:
+  <blockquote>
+    <pre>$ mpv '<a href="https://www.youtube.com/watch?v=ZZ5LpwO-An4">https://www.youtube.com/watch?v=ZZ5LpwO-An4</a>'</pre>
+  </blockquote>
+  As well as any Bandcamp album:
+  <blockquote>
+    <pre>$ mpv '<a href="https://tokyoskaparadiseorchestra.bandcamp.com/album/35">https://tokyoskaparadiseorchestra.bandcamp.com/album/35</a>'</pre>
+  </blockquote>
+  <p>When opening <em>audio</em> files, mpv won't show a new window and will read
+  the input keys from the stdin of the console. As we will be using Dillo to run
+  mpv, we change the <code>force-window</code> option to always open a window by
+  setting in the <code>~/.config/mpv/mpv.conf</code> config file this option:
+  <blockquote>
+    <pre>force-window=yes</pre>
+  </blockquote>
+  <p>You can also specify this option from the command line if you prefer to do it
+  only for Dillo. You may want to also specify other options regarding the
+  quality of videos, see the <a href="man:mpv(1)">mpv(1) manual page</a>.</p>
+
+  <p>In order to open an URL in mpv, we simply add this line to the
+  <code>~/.dillo/dillorc</code> config file:
+  <blockquote>
+    <pre>link_action="Open in mpv:mpv $url &amp;"</pre>
+  </blockquote>
+  The <code>$url</code> variable is set by Dillo to the value of the URL of the
+  hyperlink. The <code>&amp;</code> (ampersand) at the end ensures that when
+  Dillo is closed, the mpv process continues running.
+  <p>You will need to close Dillo and open it again for the changes to
+  take effect. Now when you are over a link, you can click with the right
+  mouse button and select the new <em>Open in mpv</em> option, and the link
+  should be opened by mpv. You can try with the above two links.
+
+  <p>To search, consider using an alternative YouTube frontend like 
+  <a href="https://yewtu.be">Invidious</a> which doesn't need JavaScript.</p>
+
+  <h2>Playing URLs in a queue</h2>
+  <p>While opening a single video or audio URL is helpful, often multiple
+  videos or audio links are intended to be opened in sequence. This can be
+  achieved by using the <a href="man:mpv#JSON_IPC">mpv control socket</a> and a
+  small script that queues them in the current playlist (there are other tools,
+  but this method has almost no extra requirements). To use this technique
+  you will need to install the
+  <a href="http://www.dest-unreach.org/socat/">socat</a> program as well, to
+  communicate with the UNIX socket.
+  <p>We will add two modes of playing elements, play next in the queue or add at
+  the end of the queue. The <code>$url</code> variable will provide the URL that
+  we should open, and the first argument will control where it gets added in the
+  queue. With mpv, this is controlled by the <code>loadfile</code> command,
+  which accepts the <code>insert-next</code> and <code>append-next</code> options.
+  <p>Create the <code>~/.dillo/mpv/</code> directory and place the following
+  script in the file <code>~/.dillo/mpv/queue.sh</code>, and make it executable
+  with <code>chmod +x ~/.dillo/mpv/queue.sh</code>:
+  <blockquote><pre>#!/bin/sh
+
+if [ -z "$url" ]; then
+  echo "error: url not set" &gt;&amp;2
+  exit 1
+fi
+
+mode=${1:-append-next}
+sockfile=~/.dillo/mpv/mpv.sock
+conffile=~/.dillo/mpv/mpv.conf
+
+# Try queueing it by appending it, see loadfile in mpv(1) manual
+echo "loadfile $url $mode" | socat - "UNIX-CONNECT:$sockfile" &amp;&amp; exit 0
+
+# Otherwise start a new mpv server in the background
+mpv --include="$conffile" --input-ipc-server="$sockfile" "$url" &amp;
+</pre></blockquote>
+
+  <p>Additionally, create a custom mpv configuration file at
+  <code>~/.dillo/mpv/mpv.conf</code> with the following content:
+  <blockquote><pre># Always show the player window even if it is only audio
+force-window=yes
+
+# Keep the player open after playing all files
+idle=yes
+
+# Select small video formats (optional)
+# ytdl-format="best[height&lt;500]"</pre></blockquote>
+  <p>You can add more options that will only affect mpv when running in this
+  queued mode, for example to disable video and only play audio which would
+  reduce bandwidth usage, but these are enough for now.
+
+  <p>Then add these two new actions in <code>~/.dillo/dillorc</code> to play
+  files in the queue and restart Dillo:
+
+  <blockquote>
+    <pre>link_action="Queue next in mpv:~/.dillo/mpv/queue.sh insert-next"
+link_action="Queue last in mpv:~/.dillo/mpv/queue.sh append-play"</pre>
+  </blockquote>
+
+  <p>The first time that you queue an URL, a new instance of mpv will start which
+  will setup the socket, and will remain opened even if the file ends. Succesive
+  URLs will be added to the playlist at the specified position.</p>
+
+  <p>Notice that the mpv program is running in the background, and if you close
+  Dillo it will continue playing. You can in fact open Dillo later and queue
+  more items and so on.</p>
+
+  <h2>Closing remarks</h2>
+  <p>The <code>queue.sh</code> script always opens all URLs in the same way, but
+  you could handle different URLs in different ways. The <code>$origin</code>
+  variable is also available with the value of the URL <em>from</em> which the
+  link was opened, which can also be used to determine how to load the URL.</p>
+  <p>You can also add more options, for example to handle audio and video
+  separately with different mpv options for each type, or particular options for
+  your hardware to better use the video hardware decoder (if present).</p>
+  <p>Finally, this technique works for any other program that can handle URLs
+  which can be configured to be used with Dillo in the same way.</p>
+</main>
+<footer>
+<a href="../index.html">&larr; Back</a>
+</footer>
+  </body>
+</html>

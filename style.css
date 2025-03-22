@@ -1,12 +1,10 @@
 body {
   background: white;
   line-height: 1.5;
-  margin: 3em;
+  margin: 3em auto;
+  padding: 0 3em; /* Fix for Dillo */
   font-family: sans-serif;
-}
-.main {
-  margin: 2em auto;
-  width: 50em;
+  max-width: 72ch;
 }
 h1 {
   margin-top: 0.25em;
@@ -21,6 +19,16 @@ img {
 figure {
   text-align: center;
   margin: 1em;
+}
+footer {
+  text-align: center;
+  margin-top: 2em;
+  clear: both;
+}
+pre {
+  padding: 0.25em;
+  background: #f7f7f7;
+  border-left: solid 2px #ccc;
 }
 .date {
   font-style: italic;
