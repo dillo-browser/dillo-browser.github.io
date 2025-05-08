@@ -34,30 +34,37 @@ footer {
     <main>
     <h1>Progressive Enhancement Class</h1>
     <p>
-	Authors of HTML pages often assume JavaScript is supported and enabled in
-	the browser. While this is usually the case, there are situations in which
-	the client doesn't support or cannot enable it. When JavaScript is not
-	available the functionality that remains compared with the reference page
-	(with JS enabled) can be classified in the following classes:
+	Authors of HTML pages often assume features like JavaScript, CSS, and
+	embedded content are supported and enabled in the browser. While this is
+	usually the case, there are situations in which the client doesn't support or
+	cannot enable it. When non-HTML features are unavailable, the functionality
+	that remains compared with the reference page (with non-HTML enabled) can be
+	classified in the following classes:
     </p>
     <dl>
       <dt>Class A</dt>
       <dd>
-        All the essential and non-essential functionality works well.
-        It maintains a high degree of similarity with the reference page.
+				All the essential and non-essential functionality works well.
+				With JavaScript disabled, it maintains a high degree of similarity with
+				the reference page.
+				All content is available directly in the page's HTML; everything else
+				is optional or has an adequate fallback.
       </dd>
       <dt>Class B</dt>
       <dd>
-        The important functionality works well, but some non-essential
-        functionality doesn't work.
-        There may be minor changes of similarity with the reference page.
+				The important functionality works well, but some non-essential
+				functionality doesn't work.
+				There may be minor changes of similarity with the reference page when
+				disabling JavaScript.
+				Some ancillary embedded content is missing from the HTML, without
+				adequate fallbacks.
       </dd>
       <dt>Class C</dt>
       <dd>
         Some important functionality is not available.
         There may be important changes in similarity with the reference page.
       </dd>
-      <dt>Class D</dt>
+      <dt>Class F</dt>
       <dd>
         The page shows an error, is unusable or doesn't load any content.
       </dd>
