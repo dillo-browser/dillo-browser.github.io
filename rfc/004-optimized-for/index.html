@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dillo RFC 004 - Optimized-for META tag</title>
+<style>
+body {
+  background: white;
+  line-height: 1.5;
+  margin: 3em;
+  font-family: sans-serif;
+  max-width: 72ch;
+}
+h1 { margin-bottom: 1em; }
+header { border: solid 1px #ddd; background: #f5f5f5; padding: 0.25em 1em }
+dt { font-weight: bold }
+dd { margin-left: 2ch; }
+pre { padding-left: 4ch; }
+</style>
+</head>
+<body>
+
+<h1>Dillo RFC 004 - Optimized-for META tag</h1>
+
+<header>
+<dl>
+<dt>State</dt><dd>Draft</dd>
+<dt>Date</dt><dd>Draft on 2025-08-02</dd>
+<dt>Author</dt><dd>Rodrigo Arias Mallo
+  &lt;<a href="mailto:rodarima@gmail.com">rodarima@gmail.com</a>&gt;</dd>
+</dl>
+</header>
+
+<h2>Abstract</h2>
+
+<blockquote>
+<p>This document proposes the <em>optimized-for</em> meta tag to indicate
+web browsers that the authors have explicitly made an effort to improve the page
+for an specific browser.</p>
+</blockquote>
+
+<h2>Background</h2>
+
+<p>Some HTML authors have optimized their websites by removing features that are
+not yet supported in Dillo or by adjusting the CSS rules so that some
+limitations or bugs are not present.
+
+<p>The effect of this behavior causes pages to appear well rendered in Dillo,
+which is a priori an improvement in the overall experience. However, if a page
+has been optimized or not for a given browser is often not easy to determine
+unless explicitly stated.
+
+<p>When testing Dillo on a set of real websites, we need to be sure that those
+pages are not optimized for Dillo, as otherwise it would skew our perception.
+
+<h2>Proposal</h2>
+
+<p>To address this issue, web authors are encouraged to tag their pages if they
+were optimized for Dillo (or other web browsers). We propose the following meta
+tag:</p>
+
+<pre><code>
+&lt;meta name="optimized-for" content="dillo"&gt;
+</code></pre>
+
+<p>Multiple entries must be specified in multiple tags:
+
+<pre><code>
+&lt;meta name="optimized-for" content="dillo"&gt;
+&lt;meta name="optimized-for" content="elinks"&gt;
+&lt;meta name="optimized-for" content="w3m"&gt;
+</code></pre>
+
+<p>The version of the web browser can be <em>optionally</em> specified after the
+<code>/</code> separator, like it would appear in the <code>User-Agent</code>
+HTTP header:
+
+<pre><code>
+&lt;meta name="optimized-for" content="dillo/3.2.0"&gt;
+&lt;meta name="optimized-for" content="elinks/0.11"&gt;
+</code></pre>
+
+<p>Including the version is encouraged, as it will let developers know which
+features were available when the optimization was performed. Multiple version
+lines can also be provided for the same web browser.
+
+<h2>Parsing</h2>
+
+<p>When a web browser loads an HTML page which has an <code>optimized-for</code>
+meta tag that matches the current browser, it can <em>optionally</em> show such
+information in the user interface, so that developers are aware that they are
+seeing a optimized page for that browser.
+
+</body>
+</html>
