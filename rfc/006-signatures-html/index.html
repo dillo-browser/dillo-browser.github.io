@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dillo RFC-006: Signatures in HTML</title>
+  <!-- The RFC is also signed :-) -->
+  <link rel="signature" type="application/pgp-signature" href="index.html.sig">
+  <style>
+    body {
+      background: white;
+      line-height: 1.5;
+      margin: 3em;
+      font-size: 16px;
+      font-family: sans-serif;
+      max-width: 72ch;
+    }
+    h1 { font-size: 24px; margin-bottom: 1em; }
+    header { border: solid 1px #ddd; background: #f5f5f5; padding: 0.25em 1em }
+    dt { font-weight: bold }
+    dd { margin-left: 2ch; }
+    ol { margin-left: 2ch; }
+    pre { margin: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>Dillo RFC-006: Signatures in HTML</h1>
+  <header>
+    <dl>
+      <dt>State</dt><dd>Draft</dd>
+      <dt>Updated</dt><dd>2025-11-15</dd>
+      <dt>Author</dt><dd>Rodrigo Arias Mallo
+        (<a href="mailto:rodarima@gmail.com">rodarima@gmail.com</a>)
+      </dd>
+    </dl>
+  </header>
+  <main>
+    <h2>Abstract</h2>
+
+    <p>This document introduces a new link tag to specify a signature in HTML
+    documents based on OpenPGP. It also describes how to present the signature
+    information to users reading the document and how to verify it.</p>
+
+    <h2>Motivation</h2>
+
+    <p>When a user fetches an HTML document via the HTTPS protocol from a given
+    site, the user can trust that the site is legitimate by checking the TLS
+    certificate and follow the chain until a trusted CA. However, losing the DNS
+    record of the site would cause all content to lose the trust that it had
+    originally, even if the content is copied verbatim elsewhere.
+
+    <p>A mirrored copy cannot be trusted unless the author controls the
+    mirror server as well.
+
+    <p>Signing the HTML document itself would allow users to verify that the
+    content is legitimate and has not been tampered with, regardless of the
+    transport mechanism used to deliver it to the user.
+
+    <p>The <a href="https://www.rfc-editor.org/rfc/rfc9580">OpenPGP specification
+      RFC-9580</a> describes an standard on how to sign and verify
+    signatures and several implementations are widely available to users, so it
+    will be used as the signature format.
+
+    <h2>Introduction</h2>
+
+    <p>An OpenPGP signature is added to an HTML document by first including a
+    <code>link</code> tag in the <code>head</code> section with the following
+    three mandatory attributes:
+    <ul>
+      <li>The <code>rel</code> attribute must be set to
+        <code>signature</code>.</li>
+      <li>The <code>type</code> attribute must be set to the MIME type of the
+        OpenPGP signature file which is
+        <code>application/pgp-signature</code>.</li>
+      <li>The <code>href</code> attribute must be set to the location of the
+        signature file.</li>
+    </ul>
+
+    <p>Multiple signatures can be added by including multiple <code>link</code>
+    tags in the head. All signature tags must be added to the HTML document
+    before the signatures are created. The signature files are then computed
+    from the HTML document and placed in their respective files as described by
+    the <code>href</code> attribute.
+
+    <h3>Example with GnuPG</h3>
+    <p>To add an OpenPGP signature to an <code>index.html</code> HTML
+    document using GnuPG:
+    <ol>
+      <li>Include a <code>link</code> tag in the head with the attribute
+        <code>rel="signature"</code> as follows:
+        <pre>&lt;link rel="signature"
+  type="application/pgp-signature"
+  href="index.html.sig"&gt;</pre>
+      </li>
+      <li>Sign the HTML document and generate a detached signature with the
+        specified name. Example with GnuPG:
+        <pre>$ gpg --output index.html.sig --detach-sig index.html</pre>
+      </li>
+      <li>Download both the HTML and signature files then verify that the
+        signature matches. Example with GnuPG:
+        <pre>$ gpg --verify index.html.sig index.html</pre>
+      </li>
+    </ol>
+    <p>This HTML document is also signed following the above steps.</p>
+
+    <h2>Limitations</h2>
+
+    <p>The signature <strong>only covers the HTML file</strong>, not any
+    external resource that may be referenced such as CSS, JS, images, fonts or
+    documents in iframes. Those resources could be altered in such a way that
+    the content of the document may change.
+
+    <p>A simple example can be build with a <code>style.css</code> like so:
+    <pre>.hide { display: none; }</pre>
+
+    <p>And a segment of <code>index.html</code> that hides content when the CSS
+    file is loaded, changing the meaning of the sentence:
+    <pre>I &lt;span class=hide&gt;don't&lt;/span&gt; accept the contract.</pre>
+
+    <p>Similarly, CSS media rules or JavaScript code may cause elements to
+    change causing the meaning to change depending on the user reading the
+    document or other factors.
+
+    <p>Authors should not include any additional resources in a signed HTML
+    file. They won't be loaded when a user requests to see the HTML signed
+    document only.
+
+    <h2>Considerations</h2>
+
+    <p>The current model assumes that authors won't create misleading
+    documents, as it would be possible to change the meaning of the document
+    even without including external resources, using embedded JS or CSS rules.
+
+    <p>It is not enough to verify that a signature is valid, the key must be
+    trusted by the user reading the document. Otherwise an actor could simply
+    sign a changed document with its own key and pretend it is the original
+    author. Users are expected to know how the web of trust works.
+
+    <p>An attacker that is able to control the content of the HTML document
+    (for example transmitted over HTTP) could simply remove any signatures and
+    tamper the document. We assume that trust cannot be established unless a
+    valid signature is present.
+
+    <p>The type of the signature is exclusively determined by the
+    <code>type</code> attribute in the HTML document and is therefore signed as
+    well, so that it is not possible for an attacker to modify the Content-Type
+    in the HTTP headers of the signature file to confuse the user agent and
+    cause it to consider the signature not recognized.
+
+    <h2>Usage by user agents</h2>
+
+    <p>When a user agent (i.e web browser) loads a document that contains a
+    signature it should inform the user of its presence. A user must be able to
+    distinguish if a document has a signature compared with a document without a
+    signature.
+
+    <p>The user can then request all signatures to be verified, which should
+    indicate who signed the document and if the signature is valid.
+
+    <p>To verify the signature(s), the user agent downloads all signatures and
+    runs the verification process for each. The output of the verification
+    should be displayed to the user, indicating the level of trust on the
+    signatures. Signatures with a non-recognized type should be indicated as
+    such.
+
+    <p>User agents should detect if a document contains external resources (CSS,
+    JS, images...) and inform the user if that is the case. The user should be
+    able to see the rendered document without including any external resources.
+
+    <h2>Provisions</h2>
+
+    <p>The current signature tag can be extended to include other types apart
+    from OpenPGP. The type attribute should be changed to the corresponding MIME
+    type of the format used.
+
+    <p>It is expected that other types of signatures also provide a mechanism to
+    determine the authenticity of the signature owner.
+
+	<h2>See also</h2>
+	<ul>
+		<li>James Tomasino,
+			<i><a href="https://labs.tomasino.org/signing-posts-with-gpg/">
+					Signing Posts with gpg</a></i> (2023)</li>
+		<li>Pouya Abbassi,
+			<i><a href="https://pouyacode.net/signing-webpages.html">
+					Signing HTML documents using PGP</a></i> (2021)</li>
+	</ul>
+  </main>
+</body>
+</html>
